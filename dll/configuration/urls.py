@@ -18,12 +18,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import TemplateView
+from dll.user.views import TestView
 
-
-class TestView(TemplateView):
-    template_name = 'dll/base.html'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', TestView.as_view())
-]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

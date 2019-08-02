@@ -25,7 +25,7 @@ SECRET_KEY = '09-b#pd8#xkqn@_np*(l@!ndi1gy08_h9za=kq^e#5#^*+fk#2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,6 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'webpack_loader',
+    'guardian',
+    'easy_thumbnails',
+    'filer',
+    'mptt',
+    'taggit',
+    'polymorphic',
+    'django_extensions',
+    'dll.user',
+    'dll.content',
+    'dll.general'
 ]
 
 MIDDLEWARE = [
@@ -142,3 +152,20 @@ WEBPACK_LOADER = {
         'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
     }
 }
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+FILER_IMAGE_MODEL = 'general.CustomFilerImage'
+
+AUTH_USER_MODEL = 'user.DllUser'
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # this is default
+    'guardian.backends.ObjectPermissionBackend',
+)
+
+DEFAULT_USER_USERNAME = 'TUHH'
+DEFAULT_USER_EMAIL = 'victor@blueshoe.de'
+
+TAGGIT_CASE_INSENSITIVE = True
+
+SITE_ID = 1  # this is for django-flatpages
