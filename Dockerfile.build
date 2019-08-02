@@ -1,0 +1,7 @@
+FROM node:12.7.0
+RUN mkdir /node_deps
+COPY package.json /node_deps/
+COPY package-lock.json /node_deps/
+WORKDIR /node_deps
+RUN npm install
+COPY webpack.config.js /node_deps/

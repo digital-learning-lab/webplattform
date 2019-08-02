@@ -3,6 +3,13 @@ version: '3'
 services:
   db:
     image: postgres
+  webpack:
+    command: npm run start
+    volumes:
+      - ./dll/static:/node_deps/static
+    build:
+      context: .
+      dockerfile: Dockerfile.build
   web:
     build: .
     command: python manage.py runserver 0.0.0.0:8000
