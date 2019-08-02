@@ -1,0 +1,12 @@
+{% extends 'dll/base.html' %}
+{% load thumbnail %}
+
+{% block body %}
+    <p>Welcome {{ request.user }}</p>
+    <img src="{% thumbnail request.user.image 200x200 %}" alt="">
+    <ul>
+        {% for user in users %}
+            <li><a href="/?user={{ user.pk }}">{{ user }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
