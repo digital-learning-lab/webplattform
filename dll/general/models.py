@@ -1,19 +1,14 @@
 import logging
-import re
 
 from django.conf import settings
 from django.db import models
 
-# Create your models here.
-from django.utils.text import slugify
 from django.utils.translation import ugettext_lazy as _
 
 from django_extensions.db.fields import AutoSlugField
 from django_extensions.db.models import TimeStampedModel
-from filer.fields.file import FilerFileField
-from filer.models import Image, BaseImage
+from filer.models import BaseImage
 
-from .managers import PublisherQuerySet
 from .utils import custom_slugify
 
 
@@ -63,10 +58,6 @@ class DllSlugField(AutoSlugField):
 
     def slugify_function(self, value):
         return custom_slugify(value)
-
-
-class CustomFilerImage(TimeStampedModel, BaseImage):
-    rights_confirmed = models.DateField(null=True)
 
 
 class NewsletterSubscription(TimeStampedModel):

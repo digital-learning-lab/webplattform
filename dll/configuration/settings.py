@@ -155,7 +155,6 @@ WEBPACK_LOADER = {
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-FILER_IMAGE_MODEL = 'general.CustomFilerImage'
 
 AUTH_USER_MODEL = 'user.DllUser'
 AUTHENTICATION_BACKENDS = (

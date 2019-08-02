@@ -10,13 +10,13 @@ from django.conf import settings
 from django.core.files import File
 from django.core.management import BaseCommand
 from django.utils import timezone
-from filer.models import Folder, Image
+from filer.models import Image
 from psycopg2._range import NumericRange
 
-from content.models import TeachingModule, ContentLink, Competence, SubCompetence, Trend, Tool, ToolApplication, \
+from dll.content.models import TeachingModule, ContentLink, Competence, SubCompetence, Trend, Tool, ToolApplication, \
     OperatingSystem, Subject, SchoolType
-from general.utils import custom_slugify, get_default_tuhh_user
-from user.models import DllUser
+from dll.general.utils import custom_slugify, get_default_tuhh_user
+from dll.user.models import DllUser
 
 logger = logging.getLogger('dll.importer')
 

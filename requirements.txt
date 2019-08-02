@@ -9,3 +9,4 @@ bpython==0.18
 django-taggit==1.1.0
 pandas==0.25.0
 xlrd==1.2.0  # pandas extension
+dateparser==0.7.1
