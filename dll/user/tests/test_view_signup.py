@@ -41,7 +41,8 @@ class SuccessfulSignupTests(TestCase):
             'last_name': 'Doe',
             'email': 'test@blueshoe.de',
             'password1': '@%$hnsd345',
-            'password2': '@%$hnsd345'
+            'password2': '@%$hnsd345',
+            'terms_accepted': True
         }
         self.response = self.client.post(url, data)
         self.profile_url = reverse('user:profile')
@@ -50,8 +51,7 @@ class SuccessfulSignupTests(TestCase):
         self.assertRedirects(self.response, self.profile_url)
 
     def test_user_creation(self):
-        self.assertTrue(USER_MODEL.objects.exists())  # TODO: check if the anonymous user from guardian does not
-                                                      #  also counts as a user
+        self.assertTrue(USER_MODEL.objects.count() > 1)  # the anonymous user
 
     def test_user_authentication(self):
         response = self.client.get(self.profile_url)
@@ -72,4 +72,4 @@ class InvalidSignUpTests(TestCase):
         self.assertTrue(form.errors)
 
     def test_dont_create_user(self):
-        self.assertFalse(USER_MODEL.objects.exists())
+        self.assertTrue(USER_MODEL.objects.count() == 1)  # the anonymous user
