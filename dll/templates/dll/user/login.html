@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_ul }}
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>
