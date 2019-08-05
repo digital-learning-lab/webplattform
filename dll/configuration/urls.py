@@ -23,7 +23,7 @@ from dll.user.views import TestView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', TestView.as_view()),
+    path('', TestView.as_view(), name='home'),
     path('user/', include('dll.user.urls', namespace='user'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
