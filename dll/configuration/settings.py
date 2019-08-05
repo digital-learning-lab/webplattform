@@ -168,3 +168,6 @@ DEFAULT_USER_EMAIL = 'victor@blueshoe.de'
 TAGGIT_CASE_INSENSITIVE = True
 
 SITE_ID = 1  # this is for django-flatpages
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+LOGOUT_REDIRECT_URL = 'home'
