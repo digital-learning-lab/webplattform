@@ -51,6 +51,7 @@ class SignUpView(FormView):
             'token': account_activation_token.make_token(user),
         })
         user.email_user(subject, message)
+        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
         return redirect('user:profile')
 
 
