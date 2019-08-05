@@ -3,7 +3,8 @@
 
 {% block body %}
     <p>Welcome {{ request.user }}</p>
-    <p>{{ user.is_authenticated }}. Click <a href="{% url 'user:logout' %}">here</a> to log out</p>
+    <p>Logged in: {{ user.is_authenticated }}. Click <a href="{% url 'user:logout' %}">here</a> to log out</p>
+    <p><a href="{% url 'user:login' %}">Log in</a></p>
     <img src="{% thumbnail request.user.image 200x200 %}" alt="">
     <h1>Login</h1>
     <ul>
