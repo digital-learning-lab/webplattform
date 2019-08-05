@@ -20,3 +20,7 @@ class TestView(TemplateView):
         ctx = super(TestView, self).get_context_data(**kwargs)
         ctx['users'] = DllUser.objects.all()
         return ctx
+
+
+class SignUpView(TemplateView):
+    template_name = 'dll/user/signup.html'
