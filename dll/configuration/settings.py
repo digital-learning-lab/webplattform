@@ -164,7 +164,24 @@ AUTHENTICATION_BACKENDS = (
 
 DEFAULT_USER_USERNAME = 'TUHH'
 DEFAULT_USER_EMAIL = 'victor@blueshoe.de'
+DEFAULT_USER_PASSWORD = 'test1234'
 
 TAGGIT_CASE_INSENSITIVE = True
 
 SITE_ID = 1  # this is for django-flatpages
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'dll': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
+        },
+    },
+}

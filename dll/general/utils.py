@@ -6,9 +6,13 @@ from django.utils.text import slugify
 
 
 def get_default_tuhh_user():
-    return get_user_model().objects.get_or_create(
+    user, created = get_user_model().objects.get_or_create(
         username=settings.DEFAULT_USER_EMAIL,
-        email=settings.DEFAULT_USER_EMAIL)[0]
+        email=settings.DEFAULT_USER_EMAIL)
+    if created:
+        user.set_password(settings.DEFAULT_USER_PASSWORD)
+        user.save()
+    return user
 
 
 def multiple_replace(dictionary, text):

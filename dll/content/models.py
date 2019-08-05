@@ -1,7 +1,7 @@
 import logging
 import os
 
-from django.contrib.postgres.fields import IntegerRangeField
+from django.contrib.postgres.fields import IntegerRangeField, JSONField
 from django.core.files import File
 from django.db import models
 from django.dispatch import receiver
@@ -38,6 +38,7 @@ class Content(PublisherModel, PolymorphicModel):
     additional_info = models.TextField(_("Hinweise/Anmerkungen/Hintergrund"), max_length=500, blank=True, null=True)
     competences = models.ManyToManyField('Competence', verbose_name=_("Kompetenzen"))
     sub_competences = models.ManyToManyField('SubCompetence', verbose_name=_("Subkompetenzen"))
+    json_data = JSONField(default=dict)
 
     tags = TaggableManager()
     objects = PolymorphicManager.from_queryset(ContentQuerySet)()

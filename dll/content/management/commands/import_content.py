@@ -9,6 +9,7 @@ import pandas as pd
 from django.conf import settings
 from django.core.files import File
 from django.core.management import BaseCommand
+from django.db.utils import DataError
 from django.utils import timezone
 from filer.models import Image
 from psycopg2._range import NumericRange
@@ -90,11 +91,14 @@ TEACHING_MODULES_KEYS_MAPPING = {
 
 
 class Command(BaseCommand):
-    TOOLS_FOLDER = os.path.join(settings.BASE_DIR, 'import_data', 'inhalte', 'Tool')
-    TRENDS_FOLDER = os.path.join(settings.BASE_DIR, 'import_data', 'inhalte', 'Trend')
-    TEACHING_MODULES_FOLDER = os.path.join(settings.BASE_DIR, 'import_data', 'inhalte', 'UBaustein')
+    def add_arguments(self, parser):
+        parser.add_argument('-f', '--folder', type=str)
 
     def handle(self, *args, **options):
+        base_dir = options['folder']
+        self.TOOLS_FOLDER = os.path.join(base_dir, 'inhalte', 'Tool')
+        self.TRENDS_FOLDER = os.path.join(base_dir, 'inhalte', 'Trend')
+        self.TEACHING_MODULES_FOLDER = os.path.join(base_dir, 'inhalte', 'UBaustein')
         self._import_tools()
         self._import_teaching_modules()
         self._import_trends()
@@ -158,7 +162,6 @@ class Command(BaseCommand):
                 pass
 
             author = get_default_tuhh_user()
-            # TODO check `populate_db_tools.py` line 234. additional coauthors are added here for what?
 
             # Try to update/create the Trend
             try:
@@ -276,9 +279,7 @@ class Command(BaseCommand):
 
             # Try to connect Tool to other content
             try:
-                for name in filter(None, map(lambda x: x.strip(), data['aehnliche_tools'].split(';'))):
-                    related_tool, created = Tool.objects.get_or_create(name=name, author=get_default_tuhh_user())
-                    tool.related_content.add(related_tool)
+                self._parse_related_content(tool, data)
             except Exception as e:
                 logger.exception(e)
 
@@ -398,21 +399,7 @@ class Command(BaseCommand):
 
             # Try to connect Trend to other content
             try:
-                for name in filter(None, map(lambda x: x.strip(), data['aehnliche_trends'].split(';'))):
-                    try:
-                        related_trend = Trend.objects.get(name=name)  # TODO: old script does get_or_create
-                        trend.related_content.add(related_trend)
-                    except Trend.DoesNotExist:
-                        pass
-                for name in filter(None, map(lambda x: x.strip(), data['uBaustein'].split(';'))):
-                    try:
-                        related_teaching_module = TeachingModule.objects.get(name=name)
-                        trend.related_content.add(related_teaching_module)
-                    except TeachingModule.DoesNotExist:
-                        pass
-                for name in filter(None, map(lambda x: x.strip(), data['tool'].split(';'))):
-                    related_tool, created = Tool.objects.get_or_create(name=name, author=get_default_tuhh_user())
-                    trend.related_content.add(related_tool)  # TODO: should trends also create blank tools?
+                self._parse_related_content(trend, data)
             except Exception as e:
                 logger.exception(e)
 
@@ -452,10 +439,13 @@ class Command(BaseCommand):
                 if state is None:
                     logger.warning('No state specified for TeachingModule {}'.format(folder))
 
-                if 'datum' in data.keys():
-                    date = dateparser.parse(data.get('datum'))
-                else:
-                    date = timezone.now()
+                try:
+                    if 'datum' in data.keys():
+                        date = dateparser.parse(data.get('datum'))
+                    else:
+                        date = timezone.now()
+                except TypeError:
+                    logger.warning('Could not parse date {} for TeachingModule {}'.format(data.get('datum'), folder))
                 try:
                     class_range = self._parse_school_class_range(data['jahrgangsstufe'])
                     class_range = NumericRange(*class_range)
@@ -577,9 +567,7 @@ class Command(BaseCommand):
 
             # Try to connect TeachingModule to other content
             try:
-                for name in filter(None, map(lambda x: x.strip(), data['tool'].split(';'))):
-                    related_tool, created = Tool.objects.get_or_create(name=name, author=get_default_tuhh_user())
-                    teaching_module.related_content.add(related_tool)
+                self._parse_related_content(teaching_module, data)
             except Exception as e:
                 logger.exception(e)
 
@@ -589,6 +577,42 @@ class Command(BaseCommand):
             except Exception as e:
                 logger.exception(e)
                 continue
+
+    @staticmethod
+    def _parse_related_content(obj, data):
+        for name in filter(None, map(lambda x: x.strip(), data.get('aehnliche_trends', '').split(';'))):
+            try:
+                related_trend, created = Trend.objects.get_or_create(name=name, author=get_default_tuhh_user())
+                if created:
+                    related_trend.json_data['from_import'] = True
+                    related_trend.save()
+                obj.related_content.add(related_trend)
+            except Trend.MultipleObjectsReturned:
+                logger.error('Multiple Trends with the name ({name}) for {cls} in folder {folder}'.format(
+                    name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
+        for name in filter(None, map(lambda x: x.strip(), data.get('uBaustein', '').split(';'))):
+            try:
+                related_teaching_module, created = TeachingModule.objects.get_or_create(
+                    name=name,
+                    author=get_default_tuhh_user())
+                if created:
+                    related_teaching_module.json_data['from_import'] = True
+                    related_teaching_module.save()
+                obj.related_content.add(related_teaching_module)
+            except TeachingModule.MultipleObjectsReturned:
+                logger.error('Multiple TeachingModules with the name ({name}) for {cls} in folder {folder}'.format(
+                    name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
+        for name in filter(None, map(lambda x: x.strip(), data.get('tool', '').split(';'))):
+            try:
+                related_tool, created = Tool.objects.get_or_create(name=name, author=get_default_tuhh_user())
+                if created:
+                    related_tool.json_data['from_import'] = True
+                    related_tool.save()
+                obj.related_content.add(related_tool)
+            except Tool.MultipleObjectsReturned:
+                logger.error('Multiple Tools with the name ({name}) for {cls} in folder {folder}'.format(
+                    name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
+
 
     @staticmethod
     def _import_image_from_path_to_folder(image_path, image_name, folder):
@@ -629,7 +653,7 @@ class Command(BaseCommand):
     @staticmethod
     def _parse_links(value):
         links = []
-        l = filter(None, value.split(';'))
+        l = filter(None, map(lambda x: x.strip(), value.split(';')))
         for s in l:
             m = re.match(r"\[([^\[\]]+)\]\(([^)]+)", s)
             text, href = m.group(1, 2)
@@ -693,7 +717,7 @@ class Command(BaseCommand):
         try:
             return mapping[value]
         except KeyError:
-            return None  # TODO: default value for licence?
+            return 8  # TODO: default value for licence?
 
     @staticmethod
     def _parse_tool_status(value):
