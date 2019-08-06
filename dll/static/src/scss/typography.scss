@@ -1,0 +1,18 @@
+// Montserrat Font loaded from Google APIs
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,400i,600,700&display=swap');
+
+// DLL Icon Font
+
+@font-face {
+    font-family: 'dll_icons';
+    src: url('../../fonts/dll_icons.eot');
+    src: url('../../fonts/dll_icons.eot?#iefix') format('embedded-opentype'),
+        url('../../fonts/dll_icons.woff2') format('woff2'),
+        url('../../fonts/dll_icons.woff') format('woff'),
+        url('../../fonts/dll_icons.ttf') format('truetype'),
+        url('../../fonts/dll_icons.svg#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+

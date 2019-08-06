@@ -1,5 +1,6 @@
 Django>=2.0,<3.0
 psycopg2>=2.7,<3.0
+django-meta==1.5.2
 django-webpack-loader>=0.6.0
 django-guardian==2.0.0
 django-extensions==2.2.1
