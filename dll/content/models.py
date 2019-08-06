@@ -1,6 +1,8 @@
 import logging
 import os
 
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import IntegerRangeField, JSONField
 from django.core.files import File
 from django.db import models
@@ -10,6 +12,7 @@ from django_extensions.db.models import TimeStampedModel
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
 from filer.models import Folder, Image
+from guardian.shortcuts import assign_perm, remove_perm
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 from taggit.managers import TaggableManager
@@ -420,3 +423,23 @@ class ToolApplication(TimeStampedModel):
 def auto_delete_filer_image_on_delete(sender, instance, **kwargs):
     if instance.image:
         instance.image.delete()
+
+
+@receiver(models.signals.m2m_changed, sender=Content.co_authors.through)
+def update_co_authors_permissions(sender, instance, **kwargs):
+    action = kwargs['action']
+    content_type = ContentType.objects.get_for_model(instance)
+    codename = 'change_' + content_type.model
+    permission = Permission.objects.get(
+        content_type=content_type,
+        codename=codename
+    )
+    if kwargs['pk_set']:
+        if action == 'post_add':
+            users = DllUser.objects.filter(pk__in=kwargs['pk_set'])
+            for user in users:
+                assign_perm(permission, user, instance)
+        elif action == 'post_remove':
+            users = DllUser.objects.filter(pk__in=kwargs['pk_set'])
+            for user in users:
+                remove_perm(permission, user, instance)
