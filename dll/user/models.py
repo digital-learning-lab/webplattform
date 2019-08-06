@@ -26,3 +26,10 @@ class DllUser(AbstractUser):
     def get_profile_image(self):
         # TODO: default images depending on gender
         return None
+
+    def qs_of_personal_content(self):
+        from dll.content.models import Content
+        return Content.objects.filter(author=self)
+
+    def qs_of_coauthored_content(self):
+        return self.collaborative_content.filter(co_authors=self)

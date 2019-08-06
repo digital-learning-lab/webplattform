@@ -6,6 +6,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView
 
+from dll.content.models import Content
 from dll.user.tokens import account_activation_token
 from .forms import SignUpForm
 
@@ -31,6 +32,12 @@ class TestView(TemplateView):
 
 class ProfileView(TemplateView):
     template_name = 'dll/user/profile.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ProfileView, self).get_context_data(**kwargs)
+        ctx['own_content'] = self.request.user.qs_of_personal_content()
+        ctx['coauthored_content'] = self.request.user.qs_of_coauthored_content()
+        return ctx
 
 
 class SignUpView(FormView):
