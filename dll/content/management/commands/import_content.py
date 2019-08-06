@@ -669,7 +669,8 @@ class Command(BaseCommand):
                 obj, created = DllUser.objects.get_or_create(username=author)
                 if created:
                     obj.json_data['from_import'] = True
-                    obj.set_password(settings.DEFAULT_IMPORTED_USER_PASSWORD)
+                    password = author.split()[-1] + '_dll_2019'
+                    obj.set_password(password)
                     obj.save()
                 author_list.append(obj)
         else:
@@ -711,7 +712,7 @@ class Command(BaseCommand):
             return mapping[value]
         except KeyError:
             logger.warning("Could not parse value for Trend licence {}. Default to None".format(value))
-            return None
+            return 'german'
 
     @staticmethod
     def _parse_trend_licence(value):
@@ -720,7 +721,7 @@ class Command(BaseCommand):
         try:
             return mapping[value]
         except KeyError:
-            return 8
+            return 2
 
     @staticmethod
     def _parse_tool_status(value):

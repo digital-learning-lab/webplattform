@@ -98,6 +98,7 @@ class Tool(Content):
     )
 
     PRIVACY_CHOICES = (
+        (0, _("Unbekannt")),
         (1, _("Es werden keinerlei Daten erhoben")),
         (2, _("Personenbezogene Daten wie z.B. Logins werden geschützt auf dem Server abgelegt. "
               "Es greift die EU-Datenschutz-Grundverordnung.")),
@@ -141,10 +142,11 @@ class Trend(Content):
     )
 
     CATEGORY_CHOICES = (
-        (0, _("Forschung")),
-        (1, _("Portal")),
-        (2, _("Praxisbeispiel")),
-        (3, _("Veröffentlichung")),
+        (0, _("Keine Angaben")),
+        (1, _("Forschung")),
+        (2, _("Portal")),
+        (3, _("Praxisbeispiel")),
+        (4, _("Veröffentlichung")),
     )
 
     language = models.CharField(_("Sprache"), max_length=10, choices=LANGUAGE_CHOICHES, blank=True, null=True)
