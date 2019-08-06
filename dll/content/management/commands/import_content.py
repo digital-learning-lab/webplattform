@@ -700,7 +700,7 @@ class Command(BaseCommand):
             return mapping[value]
         except KeyError:
             logger.warning("Could not parse value for Trend licence {}. Default to None".format(value))
-            return None  # TODO: default value for category?
+            return None
 
     @staticmethod
     def _parse_trend_language(value):
@@ -709,7 +709,7 @@ class Command(BaseCommand):
             return mapping[value]
         except KeyError:
             logger.warning("Could not parse value for Trend licence {}. Default to None".format(value))
-            return None  # TODO: default value for language?
+            return None
 
     @staticmethod
     def _parse_trend_licence(value):
@@ -718,7 +718,7 @@ class Command(BaseCommand):
         try:
             return mapping[value]
         except KeyError:
-            return 8  # TODO: default value for licence?
+            return 8
 
     @staticmethod
     def _parse_tool_status(value):
@@ -727,7 +727,7 @@ class Command(BaseCommand):
                 return value
         except KeyError:
             logger.warning("Could not parse value for Tool status {}. Default to None".format(value))
-            return None  # TODO: default value for status?
+            return None
 
     @staticmethod
     def _parse_tool_registration(value):
@@ -740,7 +740,7 @@ class Command(BaseCommand):
                 raise ValueError
         except ValueError:
             logger.warning("Could not parse value for Tool registration {}. Default to True".format(value))
-            return True  # TODO: default value for registration?
+            return None
 
     @staticmethod
     def _parse_tool_usk(value):
@@ -748,7 +748,7 @@ class Command(BaseCommand):
             return value
         else:
             logger.warning("Could not parse value for Tool licence {}. Default to usk18".format(value))
-            return 'usk18'  # TODO: default value for usk?
+            return None
 
     @staticmethod
     def _parse_tool_privacy(value):
@@ -756,7 +756,7 @@ class Command(BaseCommand):
             return int(value)
         except ValueError:
             logger.warning("Could not parse value for Tool privacy {}. Default to 4".format(value))
-            return 4  # TODO: default value for privacy?
+            return 4
 
     @staticmethod
     def _parse_tool_applications(value):
