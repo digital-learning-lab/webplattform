@@ -6,6 +6,7 @@ import re
 import dateparser
 import numpy as np
 import pandas as pd
+from django.conf import settings
 from django.core.files import File
 from django.core.management import BaseCommand
 from django.utils import timezone
@@ -668,6 +669,7 @@ class Command(BaseCommand):
                 obj, created = DllUser.objects.get_or_create(username=author)
                 if created:
                     obj.json_data['from_import'] = True
+                    obj.set_password(settings.DEFAULT_IMPORTED_USER_PASSWORD)
                     obj.save()
                 author_list.append(obj)
         else:
