@@ -6,10 +6,8 @@ import re
 import dateparser
 import numpy as np
 import pandas as pd
-from django.conf import settings
 from django.core.files import File
 from django.core.management import BaseCommand
-from django.db.utils import DataError
 from django.utils import timezone
 from filer.models import Image
 from psycopg2._range import NumericRange
@@ -668,6 +666,9 @@ class Command(BaseCommand):
         if authors:
             for author in authors:
                 obj, created = DllUser.objects.get_or_create(username=author)
+                if created:
+                    obj.json_data['from_import'] = True
+                    obj.save()
                 author_list.append(obj)
         else:
             author_list.append(get_default_tuhh_user())

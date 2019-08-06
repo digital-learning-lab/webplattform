@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 from filer.fields.image import FilerImageField
 from django.utils.translation import ugettext_lazy as _
@@ -19,6 +20,7 @@ class DllUser(AbstractUser):
     )
     profile_image = FilerImageField(null=True, blank=True, on_delete=models.CASCADE)
     slug = DllSlugField(populate_from='username')
+    json_data = JSONField(default=dict)
 
     @property
     def get_profile_image(self):
