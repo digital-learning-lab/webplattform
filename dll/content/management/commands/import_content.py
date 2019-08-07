@@ -6,7 +6,6 @@ import re
 import dateparser
 import numpy as np
 import pandas as pd
-from django.conf import settings
 from django.core.files import File
 from django.core.management import BaseCommand
 from django.utils import timezone
@@ -15,7 +14,8 @@ from psycopg2._range import NumericRange
 
 from dll.content.models import TeachingModule, ContentLink, Competence, SubCompetence, Trend, Tool, ToolApplication, \
     OperatingSystem, Subject, SchoolType
-from dll.general.utils import custom_slugify, get_default_tuhh_user
+from dll.general.utils import custom_slugify
+from dll.user.utils import get_default_tuhh_user
 from dll.user.models import DllUser
 
 logger = logging.getLogger('dll.importer')
@@ -90,11 +90,14 @@ TEACHING_MODULES_KEYS_MAPPING = {
 
 
 class Command(BaseCommand):
-    TOOLS_FOLDER = os.path.join(settings.BASE_DIR, 'import_data', 'inhalte', 'Tool')
-    TRENDS_FOLDER = os.path.join(settings.BASE_DIR, 'import_data', 'inhalte', 'Trend')
-    TEACHING_MODULES_FOLDER = os.path.join(settings.BASE_DIR, 'import_data', 'inhalte', 'UBaustein')
+    def add_arguments(self, parser):
+        parser.add_argument('-f', '--folder', type=str)
 
     def handle(self, *args, **options):
+        base_dir = options['folder']
+        self.TOOLS_FOLDER = os.path.join(base_dir, 'inhalte', 'Tool')
+        self.TRENDS_FOLDER = os.path.join(base_dir, 'inhalte', 'Trend')
+        self.TEACHING_MODULES_FOLDER = os.path.join(base_dir, 'inhalte', 'UBaustein')
         self._import_tools()
         self._import_teaching_modules()
         self._import_trends()
@@ -158,7 +161,6 @@ class Command(BaseCommand):
                 pass
 
             author = get_default_tuhh_user()
-            # TODO check `populate_db_tools.py` line 234. additional coauthors are added here for what?
 
             # Try to update/create the Trend
             try:
@@ -276,9 +278,7 @@ class Command(BaseCommand):
 
             # Try to connect Tool to other content
             try:
-                for name in filter(None, map(lambda x: x.strip(), data['aehnliche_tools'].split(';'))):
-                    related_tool, created = Tool.objects.get_or_create(name=name, author=get_default_tuhh_user())
-                    tool.related_content.add(related_tool)
+                self._parse_related_content(tool, data)
             except Exception as e:
                 logger.exception(e)
 
@@ -398,21 +398,7 @@ class Command(BaseCommand):
 
             # Try to connect Trend to other content
             try:
-                for name in filter(None, map(lambda x: x.strip(), data['aehnliche_trends'].split(';'))):
-                    try:
-                        related_trend = Trend.objects.get(name=name)  # TODO: old script does get_or_create
-                        trend.related_content.add(related_trend)
-                    except Trend.DoesNotExist:
-                        pass
-                for name in filter(None, map(lambda x: x.strip(), data['uBaustein'].split(';'))):
-                    try:
-                        related_teaching_module = TeachingModule.objects.get(name=name)
-                        trend.related_content.add(related_teaching_module)
-                    except TeachingModule.DoesNotExist:
-                        pass
-                for name in filter(None, map(lambda x: x.strip(), data['tool'].split(';'))):
-                    related_tool, created = Tool.objects.get_or_create(name=name, author=get_default_tuhh_user())
-                    trend.related_content.add(related_tool)  # TODO: should trends also create blank tools?
+                self._parse_related_content(trend, data)
             except Exception as e:
                 logger.exception(e)
 
@@ -452,10 +438,13 @@ class Command(BaseCommand):
                 if state is None:
                     logger.warning('No state specified for TeachingModule {}'.format(folder))
 
-                if 'datum' in data.keys():
-                    date = dateparser.parse(data.get('datum'))
-                else:
-                    date = timezone.now()
+                try:
+                    if 'datum' in data.keys():
+                        date = dateparser.parse(data.get('datum'))
+                    else:
+                        date = timezone.now()
+                except TypeError:
+                    logger.warning('Could not parse date {} for TeachingModule {}'.format(data.get('datum'), folder))
                 try:
                     class_range = self._parse_school_class_range(data['jahrgangsstufe'])
                     class_range = NumericRange(*class_range)
@@ -577,9 +566,7 @@ class Command(BaseCommand):
 
             # Try to connect TeachingModule to other content
             try:
-                for name in filter(None, map(lambda x: x.strip(), data['tool'].split(';'))):
-                    related_tool, created = Tool.objects.get_or_create(name=name, author=get_default_tuhh_user())
-                    teaching_module.related_content.add(related_tool)
+                self._parse_related_content(teaching_module, data)
             except Exception as e:
                 logger.exception(e)
 
@@ -589,6 +576,42 @@ class Command(BaseCommand):
             except Exception as e:
                 logger.exception(e)
                 continue
+
+    @staticmethod
+    def _parse_related_content(obj, data):
+        for name in filter(None, map(lambda x: x.strip(), data.get('aehnliche_trends', '').split(';'))):
+            try:
+                related_trend, created = Trend.objects.get_or_create(name=name, author=get_default_tuhh_user())
+                if created:
+                    related_trend.json_data['from_import'] = True
+                    related_trend.save()
+                obj.related_content.add(related_trend)
+            except Trend.MultipleObjectsReturned:
+                logger.error('Multiple Trends with the name ({name}) for {cls} in folder {folder}'.format(
+                    name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
+        for name in filter(None, map(lambda x: x.strip(), data.get('uBaustein', '').split(';'))):
+            try:
+                related_teaching_module, created = TeachingModule.objects.get_or_create(
+                    name=name,
+                    author=get_default_tuhh_user())
+                if created:
+                    related_teaching_module.json_data['from_import'] = True
+                    related_teaching_module.save()
+                obj.related_content.add(related_teaching_module)
+            except TeachingModule.MultipleObjectsReturned:
+                logger.error('Multiple TeachingModules with the name ({name}) for {cls} in folder {folder}'.format(
+                    name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
+        for name in filter(None, map(lambda x: x.strip(), data.get('tool', '').split(';'))):
+            try:
+                related_tool, created = Tool.objects.get_or_create(name=name, author=get_default_tuhh_user())
+                if created:
+                    related_tool.json_data['from_import'] = True
+                    related_tool.save()
+                obj.related_content.add(related_tool)
+            except Tool.MultipleObjectsReturned:
+                logger.error('Multiple Tools with the name ({name}) for {cls} in folder {folder}'.format(
+                    name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
+
 
     @staticmethod
     def _import_image_from_path_to_folder(image_path, image_name, folder):
@@ -629,7 +652,7 @@ class Command(BaseCommand):
     @staticmethod
     def _parse_links(value):
         links = []
-        l = filter(None, value.split(';'))
+        l = filter(None, map(lambda x: x.strip(), value.split(';')))
         for s in l:
             m = re.match(r"\[([^\[\]]+)\]\(([^)]+)", s)
             text, href = m.group(1, 2)
@@ -644,6 +667,11 @@ class Command(BaseCommand):
         if authors:
             for author in authors:
                 obj, created = DllUser.objects.get_or_create(username=author)
+                if created:
+                    obj.json_data['from_import'] = True
+                    password = author.split()[-1] + '_dll_2019'
+                    obj.set_password(password)
+                    obj.save()
                 author_list.append(obj)
         else:
             author_list.append(get_default_tuhh_user())
@@ -675,7 +703,7 @@ class Command(BaseCommand):
             return mapping[value]
         except KeyError:
             logger.warning("Could not parse value for Trend licence {}. Default to None".format(value))
-            return None  # TODO: default value for category?
+            return None
 
     @staticmethod
     def _parse_trend_language(value):
@@ -684,7 +712,7 @@ class Command(BaseCommand):
             return mapping[value]
         except KeyError:
             logger.warning("Could not parse value for Trend licence {}. Default to None".format(value))
-            return None  # TODO: default value for language?
+            return 'german'
 
     @staticmethod
     def _parse_trend_licence(value):
@@ -693,7 +721,7 @@ class Command(BaseCommand):
         try:
             return mapping[value]
         except KeyError:
-            return None  # TODO: default value for licence?
+            return 2
 
     @staticmethod
     def _parse_tool_status(value):
@@ -702,7 +730,7 @@ class Command(BaseCommand):
                 return value
         except KeyError:
             logger.warning("Could not parse value for Tool status {}. Default to None".format(value))
-            return None  # TODO: default value for status?
+            return None
 
     @staticmethod
     def _parse_tool_registration(value):
@@ -715,7 +743,7 @@ class Command(BaseCommand):
                 raise ValueError
         except ValueError:
             logger.warning("Could not parse value for Tool registration {}. Default to True".format(value))
-            return True  # TODO: default value for registration?
+            return None
 
     @staticmethod
     def _parse_tool_usk(value):
@@ -723,7 +751,7 @@ class Command(BaseCommand):
             return value
         else:
             logger.warning("Could not parse value for Tool licence {}. Default to usk18".format(value))
-            return 'usk18'  # TODO: default value for usk?
+            return None
 
     @staticmethod
     def _parse_tool_privacy(value):
@@ -731,7 +759,7 @@ class Command(BaseCommand):
             return int(value)
         except ValueError:
             logger.warning("Could not parse value for Tool privacy {}. Default to 4".format(value))
-            return 4  # TODO: default value for privacy?
+            return 4
 
     @staticmethod
     def _parse_tool_applications(value):

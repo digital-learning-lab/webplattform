@@ -163,13 +163,34 @@ AUTHENTICATION_BACKENDS = (
 )
 
 DEFAULT_USER_USERNAME = 'TUHH'
-DEFAULT_USER_EMAIL = 'victor@blueshoe.de'
+DEFAULT_USER_EMAIL = 'digital.learning.lab@tuhh.de'
+DEFAULT_USER_PASSWORD = '?&~ pCYqyj2Q4]/a?w#P`'
+SHELL_PLUS = "plain"  # bpython does not work atm
 
 TAGGIT_CASE_INSENSITIVE = True
 
 SITE_ID = 1  # this is for django-flatpages
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'dll': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
+        },
+    },
+}
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 LOGIN_REDIRECT_URL = 'user:profile'
 LOGOUT_REDIRECT_URL = 'home'
+
+# WARNING: Do not use this, because we have separate permissions for the different polymorphic models
+# GUARDIAN_GET_CONTENT_TYPE = 'polymorphic.contrib.guardian.get_polymorphic_base_content_type'
