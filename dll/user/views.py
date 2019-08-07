@@ -27,6 +27,9 @@ class TestView(TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super(TestView, self).get_context_data(**kwargs)
         ctx['users'] = USER_MODEL.objects.all()
+        ctx['teaching_modules'] = Content.objects.teaching_modules()
+        ctx['tools'] = Content.objects.tools()
+        ctx['trends'] = Content.objects.trends()
         return ctx
 
 
