@@ -132,8 +132,14 @@ class ReviewAcceptTests(BaseTestCase):
     def test_review_status(self):
         self.assertEqual(self.content.review.status, Review.ACCEPTED)
 
-    # def test_content_has_a_public_instance(self):
-    #     self.assertFalse(self.content.get_published() is None)
+    def test_draft_still_exists(self):
+        self.assertTrue(TeachingModule.objects.filter(pk=self.content.pk).exists())
+
+    def test_content_has_a_public_instance(self):
+        self.assertFalse(self.content.get_published() is None)
+
+    def test_draft_and_public_have_different_pks(self):
+        self.assertFalse(self.content.pk == self.content.get_published().pk)
 
     def test_reviewer_cannot_edit_review(self):
         self.assertFalse(self.bsb_reviewer.has_perm('content.change_review', self.content.review))
