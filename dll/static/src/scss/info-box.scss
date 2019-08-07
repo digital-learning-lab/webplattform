@@ -20,6 +20,7 @@ $info-box__left-spacing: 1.5rem;
 
 }
 .info-box__image-container {
+  display: none;
   height: 140px;
   overflow: hidden;
 }
@@ -29,6 +30,7 @@ $info-box__left-spacing: 1.5rem;
 .info-box__body {
   font-weight: $font-weight-light;
   line-height: 1.3rem;
+  hyphens: auto;
   padding: 1.25rem $info-box__left-spacing;
   margin-bottom: 1rem;
   text-align: left;
@@ -47,5 +49,10 @@ $info-box__left-spacing: 1.5rem;
     margin-top: -2px;
     margin-right: 3px;
     vertical-align: middle;
+  }
+}
+@media (min-width: 992px) {
+  .info-box__image-container {
+    display: block;
   }
 }
