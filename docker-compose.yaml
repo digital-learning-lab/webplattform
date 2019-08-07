@@ -2,7 +2,7 @@ version: '3'
 
 services:
   db:
-    image: postgres
+    image: postgres:11
   webpack:
     command: npm run start
     volumes:
@@ -11,8 +11,15 @@ services:
       context: .
       dockerfile: Dockerfile.build
   web:
-    build: .
+    build:
+        context: .
+        dockerfile: Dockerfile.dev
     command: python manage.py runserver 0.0.0.0:8000
+    environment:
+      - DATABASE_USER=postgres
+      - DATABASE_NAME=postgres
+      - DATABASE_HOST=db
+      - DJANGO_DEBUG=True
     volumes:
       - .:/code
     user: "1000:1000"
