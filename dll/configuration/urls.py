@@ -17,14 +17,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
-from dll.user.views import TestView
 
+from dll.content.views import HomePageView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('', TestView.as_view()),
-    path('', include('django.contrib.flatpages.urls')),
+    path('', HomePageView.as_view()),
+    # path('', include('django.contrib.flatpages.urls')),
     path('user/', include('dll.user.urls', namespace='user'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

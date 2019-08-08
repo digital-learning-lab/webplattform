@@ -117,6 +117,10 @@ class TeachingModule(Content):
     def type(self):
         return 'teaching-module'
 
+    @property
+    def type_verbose(self):
+        return 'Unterrichtsbaustein'
+
 
 class Tool(Content):
     STATUS_CHOICES = (
@@ -159,6 +163,10 @@ class Tool(Content):
         permissions = (
             ('review_tool', _("Can review Tool")),
         )
+
+    @property
+    def type_verbose(self):
+        return 'Tool'
 
     @property
     def type(self):
@@ -207,6 +215,11 @@ class Trend(Content):
     @property
     def type(self):
         return 'trend'
+
+    @property
+    def type_verbose(self):
+        return 'Trend'
+
 
     class Meta:
         permissions = (
