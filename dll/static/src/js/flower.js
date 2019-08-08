@@ -1,4 +1,7 @@
-function mouseOverEffect(object, svgDoc, komp, color="black") {
+function mouseOverEffect(object, svgDoc, komp, color) {
+    if (!color) {
+        color = 'black';
+    }
     object.setAttribute("cursor", "pointer");
     var id_value =  object.getAttribute( 'data-element_type' );
     var element = svgDoc.getElementById(id_value);
@@ -9,7 +12,10 @@ function mouseOverEffect(object, svgDoc, komp, color="black") {
     }
 }
 
-function mouseOutEffect(object, svgDoc, komp, color="white") {
+function mouseOutEffect(object, svgDoc, komp, color) {
+    if (!color) {
+        color = 'white'
+    }
     var id_value =  object.getAttribute( 'data-element_type' );
     var element = svgDoc.getElementById(id_value);
     if (komp) {
@@ -49,10 +55,10 @@ window.onload = function () {
 
     for (var i = 0; i < kompetenzen.length; i++) {
         // get ID-Value of SVG-Element
-        kompetenzen[i].addEventListener("click", function(){
+        kompetenzen[i].addEventListener('click', function() {
             // relocate to a new page
             var id_value = this.getAttribute( 'data-element_type' );
-            window.location="/kompetenz/" + id_value + "?ubausteine=on&tools=on&trends=on";
+            window.location = "/kompetenz/" + id_value + "?ubausteine=on&tools=on&trends=on";
 
         });
 
