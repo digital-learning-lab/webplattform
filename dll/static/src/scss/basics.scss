@@ -1,0 +1,15 @@
+body {
+  background-color: rgba(204, 216, 224, 1);
+  font-family: $font-body;
+  overflow-x: hidden;
+  padding-top: 80px;
+}
+a {
+  text-decoration: none;
+  color: $color--smalt-blue;
+  font-weight: $font-weight-semi-bold;
+  &:hover {
+    color: $color--daintree;
+    text-decoration: none;
+  }
+}

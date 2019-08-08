@@ -81,6 +81,10 @@ class TeachingModule(Content):
     subjects = models.ManyToManyField('Subject', verbose_name=_("Unterrichtsfach"))
     school_types = models.ManyToManyField('SchoolType', verbose_name=_("Schulform"))
 
+    @property
+    def type(self):
+        return 'teaching-module'
+
 
 class Tool(Content):
     STATUS_CHOICES = (
@@ -118,6 +122,10 @@ class Tool(Content):
     description = models.TextField(_("Beschreibung"), null=True, blank=True)
     usage = models.TextField(_("Nutzung"), null=True, blank=True)
     url = models.OneToOneField('ContentLink', on_delete=models.CASCADE, null=True)
+
+    @property
+    def type(self):
+        return 'tool'
 
 
 class Trend(Content):
@@ -158,6 +166,10 @@ class Trend(Content):
     central_contents = models.TextField(_("Zentrale Inhalte"), blank=True, null=True)
     url = models.URLField(_("Website"), blank=True, null=True)
     citation_info = models.CharField(_("Zitierhinweis"), max_length=500, blank=True, null=True)
+
+    @property
+    def type(self):
+        return 'trend'
 
 
 class OperatingSystem(models.Model):
