@@ -1,5 +1,4 @@
 .search-form {
-    margin-top: 27px;
     display: none;
 }
 .search-form__submit {
@@ -31,6 +30,7 @@
 }
 @media (min-width: 576px) {
     .search-form {
+        margin-top: 27px;
         display: inline-block;
     }
 }
