@@ -1,6 +1,8 @@
 import logging
 import os
 
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import IntegerRangeField, JSONField
 from django.core.files import File
 from django.db import models
@@ -10,13 +12,15 @@ from django_extensions.db.models import TimeStampedModel
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
 from filer.models import Folder, Image
+from guardian.shortcuts import assign_perm, remove_perm
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 from taggit.managers import TaggableManager
 
 from .managers import ContentQuerySet
 from dll.general.models import DllSlugField, PublisherModel
-from dll.general.utils import get_default_tuhh_user, GERMAN_STATES
+from dll.user.utils import get_default_tuhh_user, get_bsb_reviewer_group, get_tuhh_reviewer_group
+from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
 
 
@@ -45,6 +49,29 @@ class Content(PublisherModel, PolymorphicModel):
 
     def __str__(self):
         return f"{self.name} ({self.__class__.__name__})"
+
+    @property
+    def review(self):
+        try:
+            return self.reviews.get(is_active=True)
+        except Review.DoesNotExist:
+            return None
+        except Review.MultipleObjectsReturned:
+            logger.error("Multiple active reviews returned for Content with pk {}. "
+                         "Setting the latest one as active".format(self.pk))
+            review_pks = self.reviews.filter(is_active=True).order_by('-modified').values_list('pk', flat=True)
+            active_review = Review.objects.get(pk=review_pks[0])
+            Review.objects.filter(pk__in=review_pks[1:]).update(is_active=False)
+            return active_review
+
+    def submit_for_review(self):
+        if self.review:
+            # content was probably declined and now resubmitted
+            review = self.review
+            review.status = Review.IN_PROGRESS
+            review.save()
+        else:
+            Review.objects.create(content=self, is_active=True)
 
     def suggest_related_content(self):
         """Suggested related content based on Solr results"""
@@ -80,6 +107,11 @@ class TeachingModule(Content):
     expertise = models.TextField(_("Fachkompetenzen"), max_length=500, null=True, blank=True)
     subjects = models.ManyToManyField('Subject', verbose_name=_("Unterrichtsfach"))
     school_types = models.ManyToManyField('SchoolType', verbose_name=_("Schulform"))
+
+    class Meta:
+        permissions = (
+            ('review_teachingmodule', _("Can review Teaching Module")),
+        )
 
     @property
     def type(self):
@@ -122,6 +154,11 @@ class Tool(Content):
     description = models.TextField(_("Beschreibung"), null=True, blank=True)
     usage = models.TextField(_("Nutzung"), null=True, blank=True)
     url = models.OneToOneField('ContentLink', on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        permissions = (
+            ('review_tool', _("Can review Tool")),
+        )
 
     @property
     def type(self):
@@ -170,6 +207,34 @@ class Trend(Content):
     @property
     def type(self):
         return 'trend'
+
+    class Meta:
+        permissions = (
+            ('review_trend', _("Can review Trend")),
+        )
+
+
+class Review(TimeStampedModel):
+    NEW, IN_PROGRESS, ACCEPTED, DECLINED = 0, 1, 2, 3
+    STATUS_CHOICES = (
+        (NEW, _("Neu")),
+        (IN_PROGRESS, _("In Bearbeitung")),
+        (ACCEPTED, _("Akzeptiert")),
+        (DECLINED, _("Abgelehnt")),
+    )
+    content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='reviews')
+    json_data = JSONField(default=dict)
+    is_active = models.BooleanField(default=False)
+    status = models.IntegerField(choices=STATUS_CHOICES, default=NEW)
+
+    def accept(self):
+        self.status = self.ACCEPTED
+        self.save()
+        self.content.publish()
+
+    def decline(self):
+        self.status = self.DECLINED
+        self.save()
 
 
 class OperatingSystem(models.Model):
@@ -430,5 +495,78 @@ class ToolApplication(TimeStampedModel):
 
 @receiver(models.signals.post_delete, sender=Content)
 def auto_delete_filer_image_on_delete(sender, instance, **kwargs):
+    # for reasons unknown, this works without specifying the concrete sender model
     if instance.image:
         instance.image.delete()
+
+
+def assign_author_permissions(sender, instance, created, **kwargs):
+    if created:
+        content_type = ContentType.objects.get_for_model(instance)
+        codenames = [x + content_type.model for x in ('add_', 'view_', 'change_', 'delete_')]
+        for codename in codenames:
+            permission = Permission.objects.get(
+                content_type=content_type,
+                codename=codename
+            )
+            assign_perm(permission, instance.author, instance)
+
+
+for subclass in Content.__subclasses__():
+    models.signals.post_save.connect(assign_author_permissions, sender=subclass)
+
+
+@receiver(models.signals.m2m_changed, sender=Content.co_authors.through)
+def update_co_authors_permissions(sender, instance, **kwargs):
+    action = kwargs['action']
+    content_type = ContentType.objects.get_for_model(instance)
+    codename = 'change_' + content_type.model
+    permission = Permission.objects.get(
+        content_type=content_type,
+        codename=codename
+    )
+    if kwargs['pk_set']:
+        if action == 'post_add':
+            users = DllUser.objects.filter(pk__in=kwargs['pk_set'])
+            for user in users:
+                assign_perm(permission, user, instance)
+        elif action == 'post_remove':
+            users = DllUser.objects.filter(pk__in=kwargs['pk_set'])
+            for user in users:
+                remove_perm(permission, user, instance)
+
+
+@receiver(models.signals.post_save, sender=Review)
+def toggle_permissions_based_on_review_status(sender, instance: Review, **kwargs):
+    content_type = ContentType.objects.get_for_model(instance.content)
+    codename = 'change_' + content_type.model
+    change_permission = Permission.objects.get(
+        content_type=content_type,
+        codename=codename
+    )
+    change_review_permission = Permission.objects.get(
+        content_type=ContentType.objects.get_for_model(instance),
+        codename='change_review'
+    )
+
+    if instance.status in [Review.NEW, Review.IN_PROGRESS]:
+        remove_perm(change_permission, instance.content.author, instance.content)
+        for co_author in instance.content.co_authors.all():
+            remove_perm(change_permission, co_author, instance.content)
+        if isinstance(instance.content, TeachingModule):
+            group = get_bsb_reviewer_group()
+            assign_perm(change_review_permission, group, instance)
+        elif isinstance(instance.content, Tool) or isinstance(instance.content, Trend):
+            group = get_tuhh_reviewer_group()
+            assign_perm(change_review_permission, group, instance)
+
+    elif instance.status in [Review.ACCEPTED, Review.DECLINED]:
+        assign_perm(change_permission, instance.content.author, instance.content)
+        for co_author in instance.content.co_authors.all():
+            assign_perm(change_permission, co_author, instance.content)
+        if isinstance(instance.content, TeachingModule):
+            group = get_bsb_reviewer_group()
+            remove_perm(change_review_permission, group, instance)
+        elif isinstance(instance.content, Tool) or isinstance(instance.content, Trend):
+            group = get_tuhh_reviewer_group()
+            remove_perm(change_review_permission, group, instance)

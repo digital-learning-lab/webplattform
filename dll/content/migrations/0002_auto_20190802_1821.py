@@ -3,7 +3,7 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import dll.general.utils
+import dll.user.utils
 import filer.fields.image
 import taggit.managers
 
@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='content',
             name='author',
-            field=models.ForeignKey(on_delete=models.SET(dll.general.utils.get_default_tuhh_user), to=settings.AUTH_USER_MODEL, verbose_name='Autor'),
+            field=models.ForeignKey(on_delete=models.SET(dll.user.utils.get_default_tuhh_user), to=settings.AUTH_USER_MODEL, verbose_name='Autor'),
         ),
         migrations.AddField(
             model_name='content',

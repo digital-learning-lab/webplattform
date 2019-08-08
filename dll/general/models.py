@@ -35,6 +35,32 @@ class PublisherModelBase(TimeStampedModel):
     class Meta:
         abstract = True
 
+    @property
+    def is_draft(self):
+        return self.publisher_is_draft == self.STATE_DRAFT
+
+    @property
+    def is_published(self):
+        return self.publisher_is_draft == self.STATE_PUBLISHED
+
+    def get_draft(self):
+        """
+        Returns draft version of any instance (draft or public)
+        :return:
+        """
+        if self.is_draft:
+            return self
+        return self.publisher_draft
+
+    def get_published(self):
+        """
+        Returns published version of any instance (draft or public)
+        :return:
+        """
+        if self.is_published:
+            return self
+        return self.publisher_linked
+
 
 class PublisherModel(PublisherModelBase):
     # objects = PublisherQuerySet.as_manager()
@@ -51,7 +77,17 @@ class PublisherModel(PublisherModelBase):
             return
         else:
             logger.debug('Publish {} with pk {}'.format(self.__class__.__name__, self.pk))
-            return
+            draft_obj = self
+            if draft_obj.publisher_linked:
+                draft_obj.publisher_linked.delete()
+
+            publish_obj = self.__class__.objects.get(pk=self.pk)
+            publish_obj.pk = None
+            publish_obj.id = None
+            publish_obj.publisher_is_draft = self.STATE_PUBLISHED
+            publish_obj.save()
+            draft_obj.publisher_linked = publish_obj
+            draft_obj.save()
 
 
 class DllSlugField(AutoSlugField):

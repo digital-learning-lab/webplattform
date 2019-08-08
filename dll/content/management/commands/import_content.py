@@ -6,7 +6,6 @@ import re
 import dateparser
 import numpy as np
 import pandas as pd
-from django.conf import settings
 from django.core.files import File
 from django.core.management import BaseCommand
 from django.utils import timezone
@@ -15,7 +14,8 @@ from psycopg2._range import NumericRange
 
 from dll.content.models import TeachingModule, ContentLink, Competence, SubCompetence, Trend, Tool, ToolApplication, \
     OperatingSystem, Subject, SchoolType
-from dll.general.utils import custom_slugify, get_default_tuhh_user
+from dll.general.utils import custom_slugify
+from dll.user.utils import get_default_tuhh_user
 from dll.user.models import DllUser
 
 logger = logging.getLogger('dll.importer')

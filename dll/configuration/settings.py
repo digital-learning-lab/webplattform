@@ -198,3 +198,11 @@ LOGGING = {
         },
     },
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+LOGIN_REDIRECT_URL = 'user:profile'
+LOGOUT_REDIRECT_URL = 'home'
+
+# WARNING: Do not use this, because we have separate permissions for the different polymorphic models
+# GUARDIAN_GET_CONTENT_TYPE = 'polymorphic.contrib.guardian.get_polymorphic_base_content_type'

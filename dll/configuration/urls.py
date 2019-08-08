@@ -25,6 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # path('', TestView.as_view()),
     path('', include('django.contrib.flatpages.urls')),
+    path('user/', include('dll.user.urls', namespace='user'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

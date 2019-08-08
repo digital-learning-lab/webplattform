@@ -1,4 +1,5 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Permission
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from filer.fields.image import FilerImageField
@@ -26,3 +27,10 @@ class DllUser(AbstractUser):
     def get_profile_image(self):
         # TODO: default images depending on gender
         return None
+
+    def qs_of_personal_content(self):
+        from dll.content.models import Content
+        return Content.objects.filter(author=self)
+
+    def qs_of_coauthored_content(self):
+        return self.collaborative_content.filter(co_authors=self)
