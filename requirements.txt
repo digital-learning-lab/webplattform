@@ -16,3 +16,4 @@ dateparser==0.7.1
 environs==5.2.0
 uwsgi==2.0.18
 easy-thumbnails==2.6.0
+django-ckeditor==5.7.1

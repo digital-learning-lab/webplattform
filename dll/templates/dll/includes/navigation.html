@@ -20,6 +20,11 @@
   </div>
   <nav class="navigation">
     <ul class="navigation__items">
+      {% if request.path != '/' %}
+        <li class="navigation__item js-navigation__item">
+          <a href="/">Home</a>
+        </li>
+      {% endif %}
       <li class="navigation__item js-navigation__item">
         <a href="/#dll-aufbau">Was ist das dll?</a>
       </li>
@@ -30,7 +35,7 @@
         <a href="{% url 'newsletter' %}">Newsletter</a>
       </li>
       <li class="navigation__item js-navigation__item">
-        <a href="">FAQ</a>
+        <a href="{% url 'faq' %}">FAQ</a>
       </li>
     </ul>
   </nav>

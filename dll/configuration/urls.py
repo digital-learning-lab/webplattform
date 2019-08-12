@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.flatpages import views
 from django.urls import path, include
 
 from dll.content.views import HomePageView, ImprintView, DataPrivacyView, StructureView, UsageView, DevelopmentView, \
@@ -32,6 +33,7 @@ urlpatterns = [
     path('newsletter', NewsletterRegisterView.as_view(), name='newsletter'),
     path('newsletter/abmelden', NewsletterUnregisterView.as_view(), name='newsletter-unregister'),
     path('kontakt', ContactView.as_view(), name='contact'),
+    path('faq/', views.flatpage, {'url': '/faq/'}, name='faq'),
     # path('', include('django.contrib.flatpages.urls')),
     path('user/', include('dll.user.urls', namespace='user'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

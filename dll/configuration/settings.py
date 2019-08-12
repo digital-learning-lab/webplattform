@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'taggit',
     'polymorphic',
     'django_extensions',
+    'ckeditor',
     'dll.user',
     'dll.content',
     'dll.general'

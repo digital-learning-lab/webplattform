@@ -53,7 +53,9 @@ ul {
 label {
   font-weight: $font-weight-bold;
 }
-
+hr {
+  border: 1px dashed gray;
+}
 @media (min-width: 992px) {
   body {
     padding-bottom: 155px;

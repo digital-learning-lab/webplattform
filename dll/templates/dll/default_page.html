@@ -6,7 +6,9 @@
       <div class="col col-12 col-md-10 col-xl-9">
         <div class="section-info">
           <div class="section-info__body">
-            {% include 'dll/includes/breadcrumbs.html' %}
+            {% block breadcrumbs %}
+              {% include 'dll/includes/breadcrumbs.html' %}
+            {% endblock %}
             {% block content %}{% endblock %}
           </div>
         </div>
