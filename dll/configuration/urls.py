@@ -35,7 +35,7 @@ urlpatterns = [
     path('kontakt', ContactView.as_view(), name='contact'),
     path('faq/', views.flatpage, {'url': '/faq/'}, name='faq'),
     # path('', include('django.contrib.flatpages.urls')),
-    path('user/', include('dll.user.urls', namespace='user'))
+    path('', include('dll.user.urls', namespace='user'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

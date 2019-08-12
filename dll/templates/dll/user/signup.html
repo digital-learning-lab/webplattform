@@ -1,16 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Sign up</title>
-</head>
-<body>
-<h1>Sign up</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_ul }}
-    <button type="submit">Submit</button>
-</form>
+{% extends 'dll/default_page.html' %}
+{% load crispy_forms_tags %}
+{% load i18n %}
 
-</body>
-</html>
+{% block content %}
+  <div class="row">
+    <div class="col-12 col-md-8">
+      <h1>Registrierung</h1>
+      <form method="post">
+        {% crispy form %}
+        <button class="button button--primary" type="submit">Absenden</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

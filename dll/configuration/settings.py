@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'taggit',
     'polymorphic',
     'django_extensions',
+    'crispy_forms',
     'ckeditor',
     'dll.user',
     'dll.content',
@@ -204,6 +205,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 LOGIN_REDIRECT_URL = 'user:profile'
 LOGOUT_REDIRECT_URL = 'home'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # WARNING: Do not use this, because we have separate permissions for the different polymorphic models
 # GUARDIAN_GET_CONTENT_TYPE = 'polymorphic.contrib.guardian.get_polymorphic_base_content_type'

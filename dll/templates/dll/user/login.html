@@ -1,14 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Login</title>
-</head>
-<body>
-<form method="post" novalidate>
-    {% csrf_token %}
-    {{ form.as_ul }}
-    <button type="submit">Submit</button>
-</form>
-</body>
-</html>
+{% extends 'dll/default_page.html' %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12 col-md-8">
+      <h1>Login</h1>
+      <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="button button--primary" type="submit">Absenden</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

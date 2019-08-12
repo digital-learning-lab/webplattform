@@ -14,14 +14,20 @@ class DllUser(AbstractUser):
         ('female', _("Weiblich")),
     )
 
+    email = models.EmailField(_('email address'), blank=True, unique=True)
+
     gender = models.CharField(max_length=10, choices=GENDER_OPTIONS)
     doi_confirmed = models.BooleanField(
         _('Double-opt-in confirmed'),
         default=False,
     )
-    profile_image = FilerImageField(null=True, blank=True, on_delete=models.CASCADE)
+
     slug = DllSlugField(populate_from='username')
     json_data = JSONField(default=dict)
+
+    USERNAME_FIELD = 'email'
+    EMAIL_FIELD = 'email'
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'gender']
 
     @property
     def get_profile_image(self):
