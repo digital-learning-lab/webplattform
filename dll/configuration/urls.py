@@ -18,11 +18,20 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 
-from dll.content.views import HomePageView
+from dll.content.views import HomePageView, ImprintView, DataPrivacyView, StructureView, UsageView, DevelopmentView, \
+    NewsletterRegisterView, NewsletterUnregisterView, ContactView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', HomePageView.as_view()),
+    path('', HomePageView.as_view(), name='home'),
+    path('impressum', ImprintView.as_view(), name='imprint'),
+    path('datenschutz', DataPrivacyView.as_view(), name='data-privacy'),
+    path('struktur', StructureView.as_view(), name='structure'),
+    path('nutzung', UsageView.as_view(), name='usage'),
+    path('entwicklung', DevelopmentView.as_view(), name='development'),
+    path('newsletter', NewsletterRegisterView.as_view(), name='newsletter'),
+    path('newsletter/abmelden', NewsletterUnregisterView.as_view(), name='newsletter-unregister'),
+    path('kontakt', ContactView.as_view(), name='contact'),
     # path('', include('django.contrib.flatpages.urls')),
     path('user/', include('dll.user.urls', namespace='user'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

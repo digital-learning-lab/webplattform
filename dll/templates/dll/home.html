@@ -13,6 +13,7 @@
     </div>
   </section>
 
+
   <section class="mb-5">
     <div class="row justify-content-center no-gutters">
       <div class="col col-12 col-md-10 col-lg-9 col-xl-8">
@@ -40,12 +41,12 @@
                 <article class="info-box">
                   <div class="info-box__head">Struktur</div>
                   <div class="info-box__image-container">
-                    <img class="info-box__image" src="{% static 'img/struktur_preview.png' %}" srcset="{% static 'img/struktur_preview.png' %} 1x, {% static 'img/struktur_preview_large.png' %} 2x" alt="Skizze zur Struktur des dll">
+                    <img class="info-box__image" src="{% static 'img/content/struktur_preview.png' %}" srcset="{% static 'img/content/struktur_preview.png' %} 1x, {% static 'img/content/struktur_preview_large.png' %} 2x" alt="Skizze zur Struktur des dll">
                   </div>
                   <div class="info-box__body">
                     Entlang von sechs Kompetenzbereichen für die digitale Welt werden im dll Inhalte für Lehrkräfte zur Gestaltung ihres Fachunterrichts mit digitalen Medien bereitgestellt.
                   </div>
-                  <a href="/" class="info-box__link">
+                  <a href="{% url 'structure' %}" class="info-box__link">
                     weiterlesen
                   </a>
                 </article>
@@ -54,12 +55,12 @@
                 <article class="info-box">
                   <div class="info-box__head">Nutzung</div>
                   <div class="info-box__image-container">
-                    <img class="info-box__image" src="{% static 'img/nutzung_preview.png' %}" srcset="{% static 'img/nutzung_preview.png' %} 1x, {% static 'img/nutzung_preview_large.png' %} 2x" alt="Sizze zur Nutzung des dll">
+                    <img class="info-box__image" src="{% static 'img/content/nutzung_preview.png' %}" srcset="{% static 'img/content/nutzung_preview.png' %} 1x, {% static 'img/content/nutzung_preview_large.png' %} 2x" alt="Sizze zur Nutzung des dll">
                   </div>
                   <div class="info-box__body">
                     Lehrkräfte können mit dem dll ihren Unterricht neu (digital) gestalten, verschiedene Tools kennenlernen und sich über schulischen Fachunterricht in digitalen Zeiten informieren.
                   </div>
-                  <a href="/" class="info-box__link">
+                  <a href="{% url 'usage' %}" class="info-box__link">
                     weiterlesen
                   </a>
                 </article>
@@ -68,12 +69,12 @@
                 <article class="info-box">
                   <div class="info-box__head">Entwicklung</div>
                   <div class="info-box__image-container">
-                    <img class="info-box__image" src="{% static 'img/entwicklung_preview.png' %}" srcset="{% static 'img/entwicklung_preview.png' %} 1x, {% static 'img/entwicklung_preview_large.png' %} 2x" alt="Skizze zur Entwicklung des dll">
+                    <img class="info-box__image" src="{% static 'img/content/entwicklung_preview.png' %}" srcset="{% static 'img/content/entwicklung_preview.png' %} 1x, {% static 'img/content/entwicklung_preview_large.png' %} 2x" alt="Skizze zur Entwicklung des dll">
                   </div>
                   <div class="info-box__body">
                     Das dll wird hier in einer ersten Version veröffentlicht. Das Konzept und die Webplattform werden kontinuierlich weiterentwickelt und erweitert.
                   </div>
-                  <a href="/" class="info-box__link">
+                  <a href="{% url 'development' %}" class="info-box__link">
                     weiterlesen
                   </a>
                 </article>
