@@ -1,0 +1,67 @@
+.sidebar {
+  color: rgba(255, 255, 255, 1);
+  font-weight: $font-weight-semi-bold;
+  height: 100%;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+}
+.sidebar--teaching-module {
+  background-color: $color--teaching-module;
+}
+.sidebar--trend {
+  background-color: $color--trend;
+}
+.sidebar--tool {
+  background-color: $color--tool;
+}
+.sidebar__headline {
+  margin: 0;
+  padding: 0 2rem;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+.sidebar__information {
+  list-style: none;
+  padding: 0 2rem;
+}
+.sidebar__information-item {
+  display: flex;
+  font-weight: $font-weight-semi-bold;
+  margin-bottom: 2rem;
+  li {
+    font-weight: $font-weight-semi-bold;
+  }
+}
+.sidebar__information-icon {
+  margin-right: 10px;
+  font-size: 1.75rem;
+}
+.sidebar__nav {
+  padding-left: 0;
+  list-style: none;
+}
+.sidebar__nav-item {
+  border-top: 2px solid white;
+  &:last-child {
+    border-bottom: 2px solid white;
+  }
+}
+.sidebar__nav-link {
+  color: rgba(255, 255, 255, 1);
+  padding: 1rem 1rem;
+  padding-left: 2rem;
+  text-transform: uppercase;
+  &:active, &:hover, &:focus, &:link {
+    color: rgba(255, 255, 255, 1);
+  }
+  &:hover {
+    background-color: $color--daintree;
+  }
+  &.active {
+    background-color: $color--daintree;
+  }
+}
+.sidebar__nav-link-item {
+  float: right;
+  margin-top: -4px;
+}

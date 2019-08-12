@@ -1,0 +1,63 @@
+{% extends 'dll/content/detail.html' %}
+
+{% block sidebar_information %}
+  <li class="sidebar__information-item">
+    <span class="sidebar__information-icon icon-settings"></span>
+    <ul class="list-unstyled">
+      {% for app in object.applications.all %}
+        <li>{{ app.name }}</li>
+      {% endfor %}
+    </ul>
+  </li>
+  <li class="sidebar__information-item">
+    <span class="sidebar__information-icon icon-registration"></span>
+    Registrierung:
+    {% if object.requires_registration %}
+      Erforderlich
+    {% else %}
+      Nicht erforderlich
+    {% endif %}
+  </li>
+  <li class="sidebar__information-item">
+    <span class="sidebar__information-icon icon-hexagon"></span>
+    Datenschutz: {{ object.get_privacy_display }}
+  </li>
+{% endblock %}
+
+{% block sidebar_navigation_items %}
+  <li class="sidebar__nav-item">
+    <a class="sidebar__nav-link nav-link active" id="overview-tab" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">
+      Überblick
+      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+    </a>
+  </li>
+  <li class="sidebar__nav-item">
+    <a class="sidebar__nav-link nav-link" id="hints-tab" data-toggle="pill" href="#hints" role="tab" aria-controls="hints" aria-selected="true">
+      Hinweise & Tutorials
+      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+    </a>
+  </li>
+  <li class="sidebar__nav-item">
+    <a class="sidebar__nav-link nav-link" id="modules-tab" data-toggle="pill" href="#modules" role="tab" aria-controls="modules" aria-selected="true">
+      Bausteine
+      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+    </a>
+  </li>
+  <li class="sidebar__nav-item">
+    <a class="sidebar__nav-link nav-link" id="similar-tools-tab" data-toggle="pill" href="#similar-tools" role="tab" aria-controls="similar-tools" aria-selected="true">
+      Ähnliche Tools
+      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+    </a>
+  </li>
+{% endblock %}
+
+{% block tab_contents %}
+<div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+  {% include 'dll/content/tools/overview.html' %}
+</div>
+<div class="tab-pane fade" id="hints" role="tabpanel" aria-labelledby="hints-tab">
+  {% include 'dll/content/tools/hints.html' %}
+</div>
+<div class="tab-pane fade" id="modules" role="tabpanel" aria-labelledby="modules-tab">123</div>
+<div class="tab-pane fade" id="similar-tools" role="tabpanel" aria-labelledby="similar-tools-tab">123</div>
+{% endblock %}

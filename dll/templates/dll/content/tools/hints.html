@@ -1,0 +1,73 @@
+<h2>Hinweise</h2>
+
+<div class="information-area information-area--{{ object.type }}">
+  <div class="information-area__title information-area__title">
+    Registrierung
+  </div>
+  <div class="information-area__body">
+    {% if object.requires_registration %}
+      Erforderlich
+    {% else %}
+      Nicht erforderlich
+    {% endif %}
+  </div>
+</div>
+
+{% if object.usk %}
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Altersbeschränkung
+    </div>
+    <div class="information-area__body">
+      {{ object.get_usk_display }}
+    </div>
+  </div>
+{% endif %}
+
+{% if object.usage %}
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Nutzung
+    </div>
+    <div class="information-area__body">
+      {{ object.usage|linebreaksbr }}
+    </div>
+  </div>
+{% endif %}
+
+{% if object.has_tutorial_links %}
+  <h2>Tutorials</h2>
+  {% if object.textual_links %}
+    <div class="information-area information-area--{{ object.type }}">
+      <div class="information-area__title information-area__title">
+        Schriftliche Anleitungen
+      </div>
+      <div class="information-area__body">
+        <ul class="list-unstyled">
+          {% for link in object.textual_links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.name }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+  {% if object.video_links %}
+    <div class="information-area information-area--{{ object.type }}">
+      <div class="information-area__title information-area__title">
+        Video-Anleitungen
+      </div>
+      <div class="information-area__body">
+        <ul class="list-unstyled">
+          {% for link in object.video_links %}
+            <li>
+              <a href="{{ link.url }}">{{ link.name }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+

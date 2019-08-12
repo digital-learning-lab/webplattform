@@ -1,10 +1,10 @@
 import random
 
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
 
-from dll.content.models import Content, TeachingModule, Trend, Tool
+from dll.content.models import Content, TeachingModule, Trend, Tool, Competence
 
 
 class BreadcrumbMixin(ContextMixin):
@@ -85,4 +85,15 @@ class ContactView(TemplateView, BreadcrumbMixin):
     template_name = 'dll/contact.html'
     breadcrumb_title = 'Kontakt'
     breadcrumb_url = reverse_lazy('contact')
+
+
+class ToolDetailView(DetailView):
+    model = Tool
+    template_name = 'dll/content/tool_detail.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ToolDetailView, self).get_context_data(**kwargs)
+        ctx['competences'] = Competence.objects.all()
+        return ctx
+
 

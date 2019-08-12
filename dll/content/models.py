@@ -6,7 +6,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import IntegerRangeField, JSONField
 from django.core.files import File
 from django.db import models
+from django.db.models import Q
 from django.dispatch import receiver
+from django.urls import reverse
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 from filer.fields.file import FilerFileField
@@ -131,6 +134,18 @@ class Content(PublisherModel, PolymorphicModel):
         self.image = filer_image
         self.save()
 
+    @cached_property
+    def video_links(self):
+        return self.contentlink_set.filter(type='video')
+
+    @cached_property
+    def textual_links(self):
+        return self.contentlink_set.filter(Q(type='href') | Q(type='literature'))
+
+    @cached_property
+    def has_tutorial_links(self):
+        return bool(self.textual_links.count() + self.video_links.count())
+
     class Meta:
         ordering = ['slug']
 
@@ -216,6 +231,9 @@ class Tool(Content):
     @property
     def type(self):
         return 'tool'
+
+    def get_absolute_url(self):
+        return reverse('tool-detail', kwargs={'slug': self.slug})
 
     def copy_relations(self, src, dst):
         super(Tool, self).copy_relations(src, dst)

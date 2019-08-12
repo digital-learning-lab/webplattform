@@ -1,0 +1,52 @@
+{% extends 'dll/base.html' %}
+{% load thumbnail %}
+
+{% block body %}
+  <div class="row justify-content-center mt-5 mb-5">
+    <div class="col col-12 col-lg-11 col-xl-8">
+      <div class="row">
+        <div class="col col-12 offset-lg-4 col-lg-8">
+          {% include 'dll/includes/breadcrumbs.html' %}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col col-12 col-lg-4">
+            <div class="sidebar sidebar--{{ object.type }}">
+              <h3 class="sidebar__headline">{{ object.type_verbose }} - Informationen</h3>
+              <ul class="sidebar__information">
+                <li class="sidebar__information-item">
+                  <span class="sidebar__information-icon icon-hexagon"></span>
+                  <ul class="list-unstyled">
+                    {% for competence in object.competences.all %}
+                      <li>{{ competence.name }}</li>
+                    {% endfor %}
+                  </ul>
+                </li>
+                {% block sidebar_information %}{% endblock %}
+              </ul>
+              <ul class="nav flex-column sidebar__nav" role="tablist" aria-orientation="vertical">
+                {% block sidebar_navigation_items %}{% endblock %}
+              </ul>
+            </div>
+        </div>
+        <div class="col col-12 col-lg-8">
+          <article class="section-info">
+            <header>
+              <img src="{% thumbnail object.image 690x450 upscale=True %}" srcset="{% thumbnail object.image 690x450 upscale=True %} 1x, {% thumbnail object.image 1280x900 %} 2x" alt="{{ object.name }}">
+              <div class="content-info">
+                <div class="content-info__type"></div>
+                <h1 class="content-info__title"></h1>
+                <p class="conent-info__teaser"></p>
+                <div class="content-info__link"></div>
+              </div>
+            </header>
+            <div class="tab-content">
+              {% block tab_contents %}{% endblock %}
+            </div>
+          </article>
+        </div>
+
+      </div>
+      </div>
+    </div>
+{% endblock %}

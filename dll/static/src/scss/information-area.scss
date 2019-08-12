@@ -1,0 +1,38 @@
+.information-area {
+  padding: 1rem 1.5rem;
+  border: 1px solid black;
+  background-color: white;
+  margin-bottom: 2rem;
+}
+.information-area__title {
+  font-weight: $font-weight-semi-bold;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+.information-area--teaching-module {
+  .information-area__title,
+  .information-area__icon--active {
+    color: $color--teaching-module;
+  }
+}
+.information-area--trend {
+  .information-area__title,
+  .information-area__icon--active {
+    color: $color--trend;
+  }
+}
+.information-area--tool {
+  .information-area__title,
+  .information-area__icon--active {
+    color: $color--tool;
+  }
+}
+.information-area__body {
+  font-weight: $font-weight-regular;
+}
+.information-area__icon {
+  color: rgba(211, 211, 211, 1);
+  font-size: 2rem;
+  margin-right: 0.5rem;
+}
