@@ -5,131 +5,134 @@
 // DLL Icon Font
 
 @font-face {
-    font-family: 'dll_icons';
-    src: url('../../fonts/dll_icons.eot');
-    src: url('../../fonts/dll_icons.eot?#iefix') format('embedded-opentype'),
-        url('../../fonts/dll_icons.woff2') format('woff2'),
-        url('../../fonts/dll_icons.woff') format('woff'),
-        url('../../fonts/dll_icons.ttf') format('truetype'),
-        url('../../fonts/dll_icons.svg#icomoon') format('svg');
-    font-weight: normal;
-    font-style: normal;
+  font-family: 'dll_icons';
+  src:  url('../../fonts/dll_icons.eot?vckmkm');
+  src:  url('../../fonts/dll_icons.eot?vckmkm#iefix') format('embedded-opentype'),
+    url('../../fonts/dll_icons.ttf?vckmkm') format('truetype'),
+    url('../../fonts/dll_icons.woff?vckmkm') format('woff'),
+    url('../../fonts/dll_icons.svg?vckmkm#icomoon') format('svg');
+  font-weight: normal;
+  font-style: normal;
 }
 
-[class*='icon-'],
-[class*='icon-'] {
-    font-family: 'dll_icons';
-    display: inline-block;
-    font-style: normal;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'dll_icons' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.dll-dll_emblem:after {
-  content: "\0030";
+.icon-icons-01:before,
+.icon-suchen-verarbeiten-aufbewahren:before {
+  content: "\e900";
 }
-.dll-info:after, .dll-1:after,
-.icon-suchen-verarbeiten-aufbewahren:after {
-  content: "\31";
+.icon-icons-02:before,
+.icon-kommunizieren-kooperieren:before {
+  content: "\e901";
 }
-.dll-koop:after, .dll-2:after,
-.icon-kommunizieren-kooperieren:after {
-  content: "\32";
+.icon-icons-03:before,
+.icon-produzieren-prasentieren:before {
+  content: "\e902";
 }
-.dll-prod:after, .dll-3:after,
-.icon-produzieren-prasentieren:after {
-  content: "\33";
+.icon-icons-04:before,
+.icon-schutzen-sicher-agieren:before {
+  content: "\e903";
 }
-.dll-sichern:after, .dll-4:after,
-.icon-schutzen-sicher-agieren:after {
-  content: "\34";
+.icon-icons-05:before,
+.icon-problemlosen-handeln:before {
+  content: "\e904";
 }
-.dll-prob:after, .dll-5:after,
-.icon-problemlosen-handeln:after {
-  content: "\35";
+.icon-icons-06:before,
+.icon-analysieren-reflektieren:before {
+  content: "\e905";
 }
-.dll-kritik:after, .dll-6:after,
-.icon-analysieren-reflektieren:after {
-  content: "\36";
+.icon-icons-07:before,
+.icon-upload:before {
+  content: "\e906";
 }
-.dll-upload:after,
-.icon-upload:after {
-  content: "\37";
+.icon-icons-08:before {
+  content: "\e907";
 }
-.dll-autor:after {
-  content: "\38";
+.icon-icons-09:before {
+  content: "\e908";
 }
-.dll-hexagon:after {
-  content: "\39";
+.icon-icons-10:before {
+  content: "\e909";
 }
-.dll-fachbereich:after {
-  content: "\21";
+.icon-icons-11:before {
+  content: "\e90a";
 }
-.dll-stufe:after {
-  content: "\79";
+.icon-icons-12:before {
+  content: "\e90b";
 }
-.dll-zeitumfang:after {
-  content: "\78";
+.icon-icons-13:before {
+  content: "\e90c";
 }
-.dll-schulform:after {
-  content: "\63";
+.icon-icons-14:before {
+  content: "\e90d";
 }
-.dll-kategorie:after {
-  content: "\76";
+.icon-icons-15:before {
+  content: "\e90e";
 }
-.dll-zielgruppe:after {
-  content: "\62";
+.icon-icons-16:before {
+  content: "\e90f";
 }
-.dll-sprache:after {
-  content: "\6e";
+.icon-icons-17:before {
+  content: "\e910";
 }
-.dll-lizenz:after {
-  content: "\6d";
+.icon-icons-18:before {
+  content: "\e911";
 }
-.dll-erscheinungsdatum:after {
-  content: "\2c";
+.icon-icons-19:before {
+  content: "\e912";
 }
-.dll-anwendung:after {
-  content: "\2e";
+.icon-icons-20:before {
+  content: "\e913";
 }
-.dll-registrierung:after {
-  content: "\2d";
+.icon-icons-21:before {
+  content: "\e914";
 }
-.dll-infohex-active:after, .dll-1ha:after {
-  content: "\71";
+.icon-icons-22:before {
+  content: "\e915";
 }
-.dll-koophex-active:after, .dll-2ha:after {
-  content: "\77";
+.icon-icons-23:before {
+  content: "\e916";
 }
-.dll-prodhex-active:after, .dll-3ha:after {
-  content: "\65";
+.icon-icons-24:before {
+  content: "\e917";
 }
-.dll-sichernhex-active:after, .dll-4ha:after {
-  content: "\72";
+.icon-icons-25:before {
+  content: "\e918";
 }
-.dll-probhex-active:after, .dll-5ha:after {
-  content: "\74";
+.icon-icons-26:before {
+  content: "\e919";
 }
-.dll-kritikhex-active:after, .dll-6ha:after {
-  content: "\7a";
+.icon-icons-27:before {
+  content: "\e91a";
 }
-.dll-infohex:after, .dll-1h:after {
-  content: "\61";
+.icon-icons-28:before {
+  content: "\e91b";
 }
-.dll-koophex:after, .dll-2h:after {
-  content: "\73";
+.icon-icons-29:before {
+  content: "\e91c";
 }
-.dll-prodhex:after, .dll-3h:after {
-  content: "\64";
+.icon-icons-30:before {
+  content: "\e91d";
 }
-.dll-sichernhex:after, .dll-4h:after {
-  content: "\66";
+.icon-icons-31:before {
+  content: "\e91e";
 }
-.dll-probhex:after, .dll-5h:after {
-  content: "\67";
+.icon-icons-32:before {
+  content: "\e91f";
 }
-.dll-kritikhex:after, .dll-6h:after {
-  content: "\68";
+.icon-icons-33:before {
+  content: "\e920";
 }

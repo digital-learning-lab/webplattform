@@ -79,6 +79,7 @@
 .content-teaser__competences {
   font-size: 2rem;
   padding-left: 15px;
+  vertical-align: middle;
 }
 .content-teaser__competence {
   margin-right: 5px;
@@ -87,7 +88,8 @@
   font-size: 1.5rem;
 }
 .content-teaser__upload-date-container {
+  border-left: 2px solid $color--teaching-module;
   padding-left: 15px;
   margin-left: 15px;
-  border-left: 2px solid $color--teaching-module;
+  vertical-align: middle;
 }
