@@ -1,6 +1,7 @@
 {% extends 'dll/content/detail.html' %}
 
 {% block sidebar_information %}
+  {% if object.applications.all.count > 0 %}
   <li class="sidebar__information-item">
     <span class="sidebar__information-icon icon-settings"></span>
     <ul class="list-unstyled">
@@ -9,6 +10,7 @@
       {% endfor %}
     </ul>
   </li>
+  {% endif %}
   <li class="sidebar__information-item">
     <span class="sidebar__information-icon icon-registration"></span>
     Registrierung:
@@ -37,27 +39,39 @@
       <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
     </a>
   </li>
+  {% if object.related_teaching_modules %}
   <li class="sidebar__nav-item">
     <a class="sidebar__nav-link nav-link" id="modules-tab" data-toggle="pill" href="#modules" role="tab" aria-controls="modules" aria-selected="true">
       Bausteine
       <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
     </a>
   </li>
+  {% endif %}
+  {% if object.related_tools %}
   <li class="sidebar__nav-item">
     <a class="sidebar__nav-link nav-link" id="similar-tools-tab" data-toggle="pill" href="#similar-tools" role="tab" aria-controls="similar-tools" aria-selected="true">
       Ähnliche Tools
       <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
     </a>
   </li>
+  {% endif %}
 {% endblock %}
 
 {% block tab_contents %}
-<div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
-  {% include 'dll/content/tools/overview.html' %}
-</div>
-<div class="tab-pane fade" id="hints" role="tabpanel" aria-labelledby="hints-tab">
-  {% include 'dll/content/tools/hints.html' %}
-</div>
-<div class="tab-pane fade" id="modules" role="tabpanel" aria-labelledby="modules-tab">123</div>
-<div class="tab-pane fade" id="similar-tools" role="tabpanel" aria-labelledby="similar-tools-tab">123</div>
+  <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+    {% include 'dll/content/tools/overview.html' %}
+  </div>
+  <div class="tab-pane fade" id="hints" role="tabpanel" aria-labelledby="hints-tab">
+    {% include 'dll/content/tools/hints.html' %}
+  </div>
+  {% if object.related_teaching_modules %}
+    <div class="tab-pane fade" id="modules" role="tabpanel" aria-labelledby="modules-tab">
+      {% include 'dll/content/tools/teaching_modules.html' %}
+    </div>
+  {% endif %}
+  {% if object.related_tools %}
+    <div class="tab-pane fade" id="similar-tools" role="tabpanel" aria-labelledby="similar-tools-tab">
+      {% include 'dll/content/tools/similar_tools.html' %}
+    </div>
+  {% endif %}
 {% endblock %}

@@ -146,6 +146,14 @@ class Content(PublisherModel, PolymorphicModel):
     def has_tutorial_links(self):
         return bool(self.textual_links.count() + self.video_links.count())
 
+    @cached_property
+    def related_teaching_modules(self):
+        return TeachingModule.objects.filter(related_content__in=[self.pk])
+
+    @cached_property
+    def related_tools(self):
+        return Tool.objects.filter(related_content__in=[self.pk])
+
     class Meta:
         ordering = ['slug']
 

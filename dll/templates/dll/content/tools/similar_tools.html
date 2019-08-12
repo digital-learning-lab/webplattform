@@ -1,0 +1,5 @@
+<h2>Ähnliche Tools</h2>
+
+{% for module in object.related_tools %}
+  {% include 'dll/includes/content_teaser.html' with content=module %}
+{% endfor %}

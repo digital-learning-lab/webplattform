@@ -11,9 +11,10 @@
       </div>
       <div class="row">
         <div class="col col-12 col-lg-4">
-            <div class="sidebar sidebar--{{ object.type }}">
-              <h3 class="sidebar__headline">{{ object.type_verbose }} - Informationen</h3>
-              <ul class="sidebar__information">
+          <div class="sidebar sidebar--{{ object.type }}">
+            <h3 class="sidebar__headline">{{ object.type_verbose }} - Informationen</h3>
+            <ul class="sidebar__information">
+              {% if object.competences.all.count > 0 %}
                 <li class="sidebar__information-item">
                   <span class="sidebar__information-icon icon-hexagon"></span>
                   <ul class="list-unstyled">
@@ -22,12 +23,13 @@
                     {% endfor %}
                   </ul>
                 </li>
-                {% block sidebar_information %}{% endblock %}
-              </ul>
-              <ul class="nav flex-column sidebar__nav" role="tablist" aria-orientation="vertical">
-                {% block sidebar_navigation_items %}{% endblock %}
-              </ul>
-            </div>
+              {% endif %}
+              {% block sidebar_information %}{% endblock %}
+            </ul>
+            <ul class="nav flex-column sidebar__nav" role="tablist" aria-orientation="vertical">
+              {% block sidebar_navigation_items %}{% endblock %}
+            </ul>
+          </div>
         </div>
         <div class="col col-12 col-lg-8">
           <article class="section-info">
@@ -47,6 +49,6 @@
         </div>
 
       </div>
-      </div>
     </div>
+  </div>
 {% endblock %}
