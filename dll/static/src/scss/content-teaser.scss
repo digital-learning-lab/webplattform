@@ -51,6 +51,7 @@
   display: inline-block;
   padding: 10px 1rem;
   width: 68%;
+  height: 100%;
   vertical-align: top;
   &:hover {
     color: rgba(255, 255, 255, 1);
@@ -75,4 +76,18 @@
   height: 80px;
   font-style: italic;
 }
-.content-teaser__competences {}
+.content-teaser__competences {
+  font-size: 2rem;
+  padding-left: 15px;
+}
+.content-teaser__competence {
+  margin-right: 5px;
+}
+.icon-upload {
+  font-size: 1.5rem;
+}
+.content-teaser__upload-date-container {
+  padding-left: 15px;
+  margin-left: 15px;
+  border-left: 2px solid $color--teaching-module;
+}

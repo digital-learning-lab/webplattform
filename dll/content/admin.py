@@ -20,5 +20,6 @@ class ContentAdmin(admin.ModelAdmin):
 class FlatPageAdmin(FlatPageAdmin):
     form = FlatPageAdminForm
 
+
 admin.site.register(Competence)
 admin.site.register(SubCompetence)

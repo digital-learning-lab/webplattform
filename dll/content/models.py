@@ -303,6 +303,10 @@ class Competence(TimeStampedModel):
     cid = models.SmallIntegerField(unique=True, editable=False)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=600)
+    slug = DllSlugField(
+        max_length=512,
+        populate_from='name'
+    )
 
     def __str__(self):
         return dict(self.DEFAULT_NAMES)[int(self.cid)]
@@ -421,6 +425,10 @@ class SubCompetence(TimeStampedModel):
     cid = models.SmallIntegerField(unique=True, editable=False)
     name = models.CharField(max_length=500)
     competence = models.ForeignKey('Competence', on_delete=models.CASCADE)
+    slug = DllSlugField(
+        max_length=512,
+        populate_from='name'
+    )
 
     def save(self, **kwargs):
         if self.pk is None:
