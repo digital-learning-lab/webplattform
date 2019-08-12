@@ -2,6 +2,9 @@
   margin-top: 25px;
   margin-bottom: 25px;
   max-width: 100%;
+  img {
+    max-width: 100%;
+  }
 }
 @media (min-width: 1400px) {
   .content-image {

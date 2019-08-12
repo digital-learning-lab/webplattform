@@ -29,9 +29,9 @@ class HomePageView(TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super(HomePageView, self).get_context_data(**kwargs)
         content_pks = []
-        content_pks += random.choices(TeachingModule.objects.values_list('pk', flat=True), k=2)
-        content_pks += random.choices(Trend.objects.values_list('pk', flat=True), k=2)
-        content_pks += random.choices(Tool.objects.values_list('pk', flat=True), k=2)
+        content_pks += random.choices(TeachingModule.objects.drafts().values_list('pk', flat=True), k=2)
+        content_pks += random.choices(Trend.objects.drafts().values_list('pk', flat=True), k=2)
+        content_pks += random.choices(Tool.objects.drafts().values_list('pk', flat=True), k=2)
         ctx['contents'] = Content.objects.filter(pk__in=content_pks)
         return ctx
 
