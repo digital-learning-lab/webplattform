@@ -19,3 +19,15 @@ def flatpage_breadcrumbs(context):
             'title': flatpage_title
         }
     ]
+
+@register.simple_tag
+def simple_breadcrumb(page_name):
+    return [
+        {
+            'title': 'Home',
+            'url': '/'
+        },
+        {
+            'title': page_name
+        }
+    ]

@@ -1,6 +1,12 @@
 {% extends 'dll/default_page.html' %}
 {% load crispy_forms_tags %}
 {% load i18n %}
+{% load breadcrumb_tags %}
+
+{% block breadcrumbs %}
+  {% simple_breadcrumb 'Registrierung' as breadcrumbs %}
+  {{ block.super }}
+{% endblock %}
 
 {% block content %}
   <div class="row">
