@@ -1,5 +1,8 @@
+import re
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core import mail
 from django.test import TestCase
 from django.urls import reverse
 
@@ -17,11 +20,17 @@ class SuccessfulLoginTests(TestCase):
             'last_name': 'Doe',
             'email': 'test@blueshoe.de',
             'password1': '@%$hnsd345',
-            'password2': '@%$hnsd345'
+            'password2': '@%$hnsd345',
+            'terms_accepted': True
         }
         self.response = self.client.post(signup_url, data)
-        logout_url = reverse('user:logout')
-        self.client.get(logout_url)
+
+        # confirm registration
+        link = re.search(r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
+                         mail.outbox[0].body)
+        activation_link = link.group(0)
+        self.client.get(activation_link)
+
         self.login_url = reverse('user:login')
         self.profile_url = reverse('user:profile')
 

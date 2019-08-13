@@ -1,8 +1,10 @@
 from django.contrib.auth.models import Group
+from django.core.files import File
 from django.test import TestCase
+from filer.models import File as FilerFile
 from guardian.shortcuts import assign_perm
 
-from dll.content.models import TeachingModule, Review
+from dll.content.models import TeachingModule, Review, ContentLink, ContentFile
 from dll.user.models import DllUser
 
 
@@ -66,8 +68,27 @@ class BaseTestCase(TestCase):
         bsb_reviewer_group.user_set.add(self.bsb_reviewer)
         self.tuhh_reviewer = DllUser.objects.create(**tuhh_reviewer)
         tuhh_reviewer_group.user_set.add(self.tuhh_reviewer)
-        self.content = TeachingModule.objects.create(name='Foo', author=self.author)
+        self.content = TeachingModule.objects.create(
+            name='Foo',
+            author=self.author,
+        )
+        self.content.update_or_add_image_from_path('dll/static/img/cc_license.png', image_name='Test Image.jpg')
+        self.content.tags.add('tag1', 'tag2', 'tag3')
+
+        # related content
+        self.content.related_content.add(TeachingModule.objects.create(
+            name='Bar',
+            author=self.other_author
+        ))
+
+        # co authors
         self.content.co_authors.add(self.co_author)
+
+        # links and files
+        ContentLink.objects.create(url='https://www.foo.org', name='FooLink', type='href', content=self.content)
+        file = File(open('dll/static/img/cc_license.png', 'rb'), name='BarFile')
+        filer_file = FilerFile.objects.create(file=file)
+        ContentFile.objects.create(file=filer_file, title='BarFile', content=self.content)
 
 
 class ContentCreationTests(BaseTestCase):
@@ -113,6 +134,9 @@ class ReviewDeclineTests(BaseTestCase):
     def test_review_status(self):
         self.assertEqual(self.content.review.status, Review.DECLINED)
 
+    def test_content_has_no_public_version(self):
+        self.assertTrue(self.content.get_published() is None)
+
     def test_reviewer_cannot_edit_review(self):
         self.assertFalse(self.bsb_reviewer.has_perm('content.change_review', self.content.review))
 
@@ -129,8 +153,11 @@ class ReviewAcceptTests(BaseTestCase):
         self.content.submit_for_review()
         self.content.review.accept()
 
+        self.draft = self.content.get_draft()
+        self.public = self.content.get_published()
+
     def test_review_status(self):
-        self.assertEqual(self.content.review.status, Review.ACCEPTED)
+        self.assertTrue(self.content.reviews.filter(status=Review.ACCEPTED).exists())
 
     def test_draft_still_exists(self):
         self.assertTrue(TeachingModule.objects.filter(pk=self.content.pk).exists())
@@ -138,14 +165,58 @@ class ReviewAcceptTests(BaseTestCase):
     def test_content_has_a_public_instance(self):
         self.assertFalse(self.content.get_published() is None)
 
+    def test_content_relations_have_different_pks(self):
+        self.assertTrue(self.public.contentlink_set.exists())
+        self.assertTrue(self.public.contentfile_set.exists())
+        self.assertFalse(set(self.draft.contentlink_set.all()) == set(self.public.contentlink_set.all()))
+        self.assertFalse(set(self.draft.contentfile_set.all()) == set(self.public.contentfile_set.all()))
+
+    def test_public_and_draft_have_same_authors(self):
+        self.assertEqual(self.draft.author, self.public.author)
+        self.assertEqual(set(self.draft.co_authors.all()), set(self.public.co_authors.all()))
+
+    def test_public_and_draft_have_same_tags(self):
+        self.assertEqual(set(self.draft.tags.all()), set(self.public.tags.all()))
+
+    def test_public_and_draft_have_same_related_content(self):
+        self.assertEqual(set(self.draft.related_content.all()), set(self.public.related_content.all()))
+
     def test_draft_and_public_have_different_pks(self):
         self.assertFalse(self.content.pk == self.content.get_published().pk)
-
-    def test_reviewer_cannot_edit_review(self):
-        self.assertFalse(self.bsb_reviewer.has_perm('content.change_review', self.content.review))
 
     def test_author_can_edit_content(self):
         self.assertTrue(self.author.has_perm('content.change_teachingmodule', self.content))
 
     def test_co_author_can_edit_content(self):
         self.assertTrue(self.co_author.has_perm('content.change_teachingmodule', self.content))
+
+
+class ContentEditAfterPublishingTests(BaseTestCase):
+    def setUp(self):
+        super().setUp()
+        # accept first version
+        self.content.submit_for_review()
+        self.content.review.accept()
+
+        self.draft = self.content.get_draft()
+        self.public1 = self.content.get_published()
+
+        # modify draft
+        self.draft.name = 'Foo2'
+        self.draft.save()
+
+        # submit modified draft for review
+        self.draft.submit_for_review()
+        self.draft.review.accept()
+        self.public2 = self.content.get_published()
+
+    def test_draft_edit_does_not_affect_public(self):
+        self.assertFalse(self.draft.name == self.public1.name)
+
+    def test_new_review_was_created(self):
+        self.assertTrue(self.draft.reviews.count() == 2)
+
+    def test_old_public_version_does_not_exist(self):
+        cls = self.content.__class__
+        with self.assertRaises(cls.DoesNotExist):
+            cls.objects.get(pk=self.public1.pk)

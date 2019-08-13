@@ -1,5 +1,8 @@
+import re
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core import mail
 from django.test import TestCase
 from django.urls import reverse, resolve
 
@@ -45,10 +48,17 @@ class SuccessfulSignupTests(TestCase):
             'terms_accepted': True
         }
         self.response = self.client.post(url, data)
+        self.home_url = reverse('home')
         self.profile_url = reverse('user:profile')
 
+        # confirm registration
+        link = re.search(r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
+                         mail.outbox[0].body)
+        activation_link = link.group(0)
+        self.client.get(activation_link)
+
     def test_redirection(self):
-        self.assertRedirects(self.response, self.profile_url)
+        self.assertRedirects(self.response, self.home_url)
 
     def test_user_creation(self):
         self.assertTrue(USER_MODEL.objects.count() > 1)  # the anonymous user

@@ -49,8 +49,8 @@ class SignUpView(FormView):
     email_template = 'dll/user/email/account_activation_email.html'
 
     def form_valid(self, form):
-        user = form.save(commit=False)  # TODO: should the user be active without confirming his email?
-        # user.is_active = False
+        user = form.save(commit=False)
+        user.is_active = False
         user.save()
         current_site = get_current_site(self.request)
         subject = 'Activate Your MySite Account'
@@ -61,8 +61,7 @@ class SignUpView(FormView):
             'token': account_activation_token.make_token(user),
         })
         user.email_user(subject, message)
-        login(self.request, user, backend='django.contrib.auth.backends.ModelBackend')
-        return redirect('user:profile')
+        return redirect('home')
 
 
 def activate_user(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'):
