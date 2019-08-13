@@ -1,8 +1,7 @@
-from django.contrib.auth.models import AbstractUser, Permission
-from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from filer.fields.image import FilerImageField
+from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
 from dll.general.models import DllSlugField
@@ -29,10 +28,9 @@ class DllUser(AbstractUser):
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'gender']
 
-    @property
-    def get_profile_image(self):
-        # TODO: default images depending on gender
-        return None
+    @cached_property
+    def full_name(self):
+        return f'{self.first_name} {self.last_name}'
 
     def qs_of_personal_content(self):
         from dll.content.models import Content

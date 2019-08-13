@@ -1,4 +1,25 @@
 {% extends 'dll/content/detail.html' %}
+{% load static %}
+
+
+{% block content_additional_information %}
+  {% if object.url %}
+    <div class="col">
+      <div class="content-info__link">
+        <span class="fas fa-at"></span>
+        <a href="{{ object.url.url }}">{{ object.url.name }}</a>
+      </div>
+    </div>
+  {% endif %}
+
+  {{ block.super }}
+  {% if 'tuhh' in object.json_data.signed_by %}
+    <div class="col">
+      <img class="content-info__partner-logo" src="{% static 'img/partners/tuhh_logo.svg' %}" alt="Logo TUHH">
+    </div>
+  {% endif %}
+{% endblock %}
+
 
 {% block sidebar_information %}
   {% if object.applications.all.count > 0 %}
@@ -25,6 +46,7 @@
     Datenschutz: {{ object.get_privacy_display }}
   </li>
 {% endblock %}
+
 
 {% block sidebar_navigation_items %}
   <li class="sidebar__nav-item">

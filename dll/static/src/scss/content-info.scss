@@ -1,0 +1,39 @@
+.content-info--teaching-module {
+  .content-info__type {
+    color: $color--teaching-module;
+  }
+}
+.content-info--tool {
+  .content-info__type {
+    color: $color--tool;
+  }
+}
+.content-info--trend {
+  .content-info__type {
+    color: $color--trend;
+  }
+}
+.content-info__image {
+  margin-bottom: 15px;
+}
+.content-info__type {
+  font-size: 0.8rem;
+  font-weight: $font-weight-semi-bold;
+  text-transform: uppercase;
+}
+.content-info__teaser {
+  font-style: italic;
+}
+.content-info__link {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  span {
+    display: inline-block;
+    font-size: 1.4rem;
+    margin-right: 5px;
+    vertical-align: middle;
+  }
+}
+.content-info__partner-logo {
+  max-width: 180px;
+}
