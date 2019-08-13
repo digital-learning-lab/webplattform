@@ -38,3 +38,15 @@
 .content-info__partner-logo {
   max-width: 180px;
 }
+.content-info__upload-icon {
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+.content-info__upload-date {
+  text-transform: uppercase;
+  font-weight: $font-weight-semi-bold;
+  font-size: 0.8rem;
+  display: inline-block;
+  vertical-align: middle;
+}

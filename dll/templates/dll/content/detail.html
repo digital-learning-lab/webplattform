@@ -39,11 +39,11 @@
                 <div class="content-info__type">{{ object.type_verbose }}</div>
                 <h1 class="content-info__title">{{ object.name }}</h1>
                 {% if object.teaser %}<p class="content-info__teaser">{{ object.teaser|linebreaksbr }}</p>{% endif %}
-                <div class="row">
+                <div class="row align-items-center">
                   {% block content_additional_information %}
                     {% if object.full_name or object.co_authors.all.count %}
-                    <div class="col">
-                      <ul class="list-unstyled">
+                    <div class="col-12 col-sm-auto mb-4">
+                      <ul class="list-unstyled mb-0">
                         <li>{{ object.author.full_name }}</li>
                         {% for author in object.co_authors.all %}
                           <li>{{ author.full_name }}</li>
