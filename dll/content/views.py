@@ -109,3 +109,5 @@ class TeachingModuleDetailView(ContentDetailView):
     template_name = 'dll/content/teaching_module_detail.html'
 
 
+class CompetenceFilterView(TemplateView):
+    template_name = 'dll/filter/competence.html'

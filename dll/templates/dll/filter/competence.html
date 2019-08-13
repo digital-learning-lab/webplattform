@@ -1,0 +1,15 @@
+{% extends 'dll/base.html' %}
+{% load render_bundle from webpack_loader %}
+
+{% block body %}
+  <div class="row justify-content-center">
+    <div class="col col-12 col-xl-10">
+      <div class="row">
+        <div class="col col-12 offset-lg-4 col-lg-8">
+          {% include 'dll/includes/breadcrumbs.html' %}
+        </div>
+      </div>
+      <div id="filter-app"></div>
+    </div>
+  </div>
+{% endblock %}

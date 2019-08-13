@@ -18,6 +18,7 @@ const hotReload = process.env.HOT_RELOAD === '1';
 const vueRule = {
   test: /\.vue$/,
   use: 'vue-loader',
+  include: path.resolve('./static/src/js'),
   exclude: /node_modules/
 };
 
@@ -82,7 +83,8 @@ if (devMode) {
 
 module.exports = {
   entry: {
-    main: path.join(__dirname, './static/src/js/index.js')
+    main: path.join(__dirname, './static/src/js/index.js'),
+    filter: path.join(__dirname, './static/src/js/filter.js')
   },
   output: {
     path: path.resolve(__dirname, './static/dist/'),
