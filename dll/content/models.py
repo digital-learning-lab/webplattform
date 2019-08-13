@@ -270,7 +270,6 @@ class Trend(Content):
     publisher = ArrayField(models.CharField(max_length=200), verbose_name=_("Herausgeber"), default=list)
     publisher_date = models.DateField(_("Datum der Veröffentlichung"), blank=True, null=True)
     central_contents = models.TextField(_("Zentrale Inhalte"), blank=True, null=True)
-    url = models.URLField(_("Website"), blank=True, null=True)  # todo + this can be multiple markdown links
     citation_info = models.CharField(_("Zitierhinweis"), max_length=500, blank=True, null=True)
 
     @property
@@ -527,6 +526,12 @@ class ContentLink(TimeStampedModel):
         on_delete=models.CASCADE,
         null=True  # null=True because can be a one2one relation to e.g. Tool
     )
+
+
+class TrendLink(TimeStampedModel):
+    url = models.URLField(max_length=2083)
+    name = models.CharField(max_length=300)
+    trend = models.ForeignKey('Trend', on_delete=models.CASCADE)
 
 
 class ContentFile(TimeStampedModel):

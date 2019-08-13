@@ -13,7 +13,7 @@ from filer.models import Image
 from psycopg2._range import NumericRange
 
 from dll.content.models import TeachingModule, ContentLink, Competence, SubCompetence, Trend, Tool, ToolApplication, \
-    OperatingSystem, Subject, SchoolType
+    OperatingSystem, Subject, SchoolType, TrendLink
 from dll.general.utils import custom_slugify
 from dll.user.utils import get_default_tuhh_user
 from dll.user.models import DllUser
@@ -340,7 +340,6 @@ class Command(BaseCommand):
                         'licence': licence,
                         'additional_info': data['hintergrund'],
                         'citation_info': data['zHinweis'],
-                        'url': data['website'],
                         'base_folder': folder,
                     },
                 )
@@ -388,6 +387,17 @@ class Command(BaseCommand):
                             name=text,
                             content=trend,
                             type='href'
+                        )
+                    except AttributeError:
+                        logger.error('Could not parse link {} for Trend {}'.format(md_link, folder))
+                        continue
+                for md_link in filter(None, data['website'].split(';')):
+                    try:
+                        text, href = self._parse_markdown_link(md_link)
+                        link = TrendLink.objects.create(
+                            url=href,
+                            name=text,
+                            trend=trend,
                         )
                     except AttributeError:
                         logger.error('Could not parse link {} for Trend {}'.format(md_link, folder))
