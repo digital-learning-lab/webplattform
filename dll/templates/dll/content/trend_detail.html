@@ -3,16 +3,25 @@
 
 
 {% block content_additional_information %}
+
+  {# TODO ARRAYFIELD publisher #}
+
   {% if object.url %}
+    {# TODO ARRAYFIELD #}
     <div class="col">
       <div class="content-info__link">
         <span class="fas fa-at"></span>
-        <a href="{{ object.url.url }}">{{ object.url.name }}</a>
+        <ul class="list-unstyled">
+          {% for url in object.urls %}
+
+          {% endfor %}
+        </ul>
       </div>
     </div>
   {% endif %}
 
   {{ block.super }}
+
   {% if 'tuhh' in object.json_data.signed_by %}
     <div class="col">
       <img class="content-info__partner-logo" src="{% static 'img/partners/tuhh_logo.svg' %}" alt="Logo TUHH">
@@ -22,29 +31,46 @@
 
 
 {% block sidebar_information %}
-  {% if object.applications.all.count %}
-  <li class="sidebar__information-item">
-    <span class="sidebar__information-icon icon-settings"></span>
-    <ul class="list-unstyled">
-      {% for app in object.applications.all %}
-        <li>{{ app.name }}</li>
-      {% endfor %}
-    </ul>
-  </li>
+  {% if object.category %}
+    <li class="sidebar__information-item">
+      <span class="sidebar__information-icon icon-category"></span>
+      {{ object.get_category_display }}
+    </li>
   {% endif %}
-  <li class="sidebar__information-item">
-    <span class="sidebar__information-icon icon-registration"></span>
-    Registrierung:
-    {% if object.requires_registration %}
-      Erforderlich
-    {% else %}
-      Nicht erforderlich
-    {% endif %}
-  </li>
-  <li class="sidebar__information-item">
-    <span class="sidebar__information-icon icon-hexagon"></span>
-    Datenschutz: {{ object.get_privacy_display }}
-  </li>
+
+  {% if object.target_group %}
+    <li class="sidebar__information-item">
+      <span class="sidebar__information-icon icon-search"></span>
+      {{ object.target_group }}
+      {# TODO ARRAYFIELD #}
+{#      <ul class="list-unstyled">#}
+{#        {% for group in object.target_group %}#}
+{#          <li>{{ group }}</li>#}
+{#        {% endfor %}#}
+{#      </ul>#}
+    </li>
+  {% endif %}
+
+  {% if object.language %}
+    <li class="sidebar__information-item">
+      <span class="sidebar__information-icon icon-language"></span>
+      {{ object.get_language_display }}
+    </li>
+  {% endif %}
+
+  {% if object.publisher_date %}
+    <li class="sidebar__information-item">
+      <span class="sidebar__information-icon icon-release-date"></span>
+      {{ object.publisher_date }}
+    </li>
+  {% endif %}
+
+  {% if object.licence %}
+    <li class="sidebar__information-item">
+      <span class="sidebar__information-icon fab fa-creative-commons"></span>
+      <a href="https://creativecommons.org/licenses/" target="_blank">{{ object.get_licence_display }}</a>
+    </li>
+  {% endif %}
 {% endblock %}
 
 
@@ -57,22 +83,14 @@
   </li>
   <li class="sidebar__nav-item">
     <a class="sidebar__nav-link nav-link" id="hints-tab" data-toggle="pill" href="#hints" role="tab" aria-controls="hints" aria-selected="true">
-      Hinweise & Tutorials
+      Hinweise
       <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
     </a>
   </li>
-  {% if object.related_teaching_modules %}
+  {% if object.related_content.count %}
   <li class="sidebar__nav-item">
-    <a class="sidebar__nav-link nav-link" id="modules-tab" data-toggle="pill" href="#modules" role="tab" aria-controls="modules" aria-selected="true">
-      Bausteine
-      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
-    </a>
-  </li>
-  {% endif %}
-  {% if object.related_tools %}
-  <li class="sidebar__nav-item">
-    <a class="sidebar__nav-link nav-link" id="similar-tools-tab" data-toggle="pill" href="#similar-tools" role="tab" aria-controls="similar-tools" aria-selected="true">
-      Ähnliche Tools
+    <a class="sidebar__nav-link nav-link" id="related-content-tab" data-toggle="pill" href="#related-content" role="tab" aria-controls="related-content" aria-selected="true">
+      Verknüpfte Inhalte
       <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
     </a>
   </li>
@@ -81,19 +99,14 @@
 
 {% block tab_contents %}
   <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
-    {% include 'dll/content/tools/overview.html' %}
+    {% include 'dll/content/trends/overview.html' %}
   </div>
   <div class="tab-pane fade" id="hints" role="tabpanel" aria-labelledby="hints-tab">
-    {% include 'dll/content/tools/hints.html' %}
+    {% include 'dll/content/trends/hints.html' %}
   </div>
-  {% if object.related_teaching_modules %}
-    <div class="tab-pane fade" id="modules" role="tabpanel" aria-labelledby="modules-tab">
-      {% include 'dll/content/tools/teaching_modules.html' %}
-    </div>
-  {% endif %}
-  {% if object.related_tools %}
-    <div class="tab-pane fade" id="similar-tools" role="tabpanel" aria-labelledby="similar-tools-tab">
-      {% include 'dll/content/includes/tools.html' with headline='Ähnliche Tools' %}
+  {% if object.related_content.count %}
+    <div class="tab-pane fade" id="related-content" role="tabpanel" aria-labelledby="related-content-tab">
+      {% include 'dll/content/trends/related_content.html' %}
     </div>
   {% endif %}
 {% endblock %}
