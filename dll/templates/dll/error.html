@@ -1,0 +1,10 @@
+{% extends 'dll/default_page.html' %}
+
+{% block content %}
+  <h1>Fehler {% block status_code %}{% endblock %} - {% block status_message %}{% endblock %}</h1>
+  {% block description %}{% endblock %}
+  <a href="/" class="button button--primary">
+    Zur <i class="dll dll-dll_emblem dll-lg" style="font-weight:normal"></i> Startseite
+  </a>
+{% endblock %}
+

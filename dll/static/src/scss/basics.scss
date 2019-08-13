@@ -1,0 +1,63 @@
+html, body {
+  min-height: 100vh;
+  position: relative;
+}
+body {
+  background-color: rgba(204, 216, 224, 1);
+  font-family: $font-body;
+  overflow-x: hidden;
+  padding-top: 80px;
+  padding-bottom: 250px;
+}
+a {
+  text-decoration: none;
+  color: $color--smalt-blue;
+  font-weight: $font-weight-semi-bold;
+  &:hover {
+    color: $color--daintree;
+    text-decoration: none;
+  }
+}
+p {
+  font-weight: $font-weight-light;
+}
+h1 {
+  font-size: 28px;
+  font-weight: $font-weight-light;
+  line-height: 1.3rem;
+  margin: 0.67em 0;
+}
+h2 {
+  font-size: 23px;
+  font-weight: $font-weight-bold;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  line-height: 1.3rem;
+}
+h3 {
+  font-size: 18px;
+  font-weight: $font-weight-semi-bold;
+  line-height: 1.3rem;
+  margin-bottom: 1rem;
+}
+h4 {
+  font-size: 18px;
+  font-weight: $font-weight-light;
+  line-height: 1.3rem;
+  margin-top: 1.33rem;
+  margin-bottom: 1.33rem;
+}
+ul {
+  font-weight: $font-weight-regular;
+}
+label {
+  font-weight: $font-weight-bold;
+}
+hr {
+  border: 1px dashed gray;
+}
+@media (min-width: 992px) {
+  body {
+    padding-bottom: 155px;
+  }
+}

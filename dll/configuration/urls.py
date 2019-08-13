@@ -16,14 +16,27 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
-from django.views.generic import TemplateView
+from django.contrib.flatpages import views
+from django.urls import path, include
 
-
-class TestView(TemplateView):
-    template_name = 'dll/base.html'
+from dll.content.views import HomePageView, ImprintView, DataPrivacyView, StructureView, UsageView, DevelopmentView, \
+    NewsletterRegisterView, NewsletterUnregisterView, ContactView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', TestView.as_view())
-]  + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('', HomePageView.as_view(), name='home'),
+    path('impressum', ImprintView.as_view(), name='imprint'),
+    path('datenschutz', DataPrivacyView.as_view(), name='data-privacy'),
+    path('struktur', StructureView.as_view(), name='structure'),
+    path('nutzung', UsageView.as_view(), name='usage'),
+    path('entwicklung', DevelopmentView.as_view(), name='development'),
+    path('newsletter', NewsletterRegisterView.as_view(), name='newsletter'),
+    path('newsletter/abmelden', NewsletterUnregisterView.as_view(), name='newsletter-unregister'),
+    path('kontakt', ContactView.as_view(), name='contact'),
+    path('faq/', views.flatpage, {'url': '/faq/'}, name='faq'),
+    # path('', include('django.contrib.flatpages.urls')),
+    path('user/', include('dll.user.urls', namespace='user'))
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

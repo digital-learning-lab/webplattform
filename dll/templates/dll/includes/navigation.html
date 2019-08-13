@@ -1,0 +1,42 @@
+{% load static %}
+<header class="header fixed-top js-header">
+  <a href="/" class="logo">
+      <img class="logo__claim" src="{% static 'img/logo/dll_logo_rgb_claim_rechts.png' %}" srcset="{% static 'img/logo/dll_logo_rgb_claim_rechts.png' %} 1x, {% static 'img/logo/dll_logo_rgb_claim_rechts_large.png' %} 2x" alt="digital.learning.lab Logo">
+      <img class="logo__no-claim" src="{% static '/img/logo/dll_logo_rgb_ohne_claim.png' %}" srcset="{% static '/img/logo/dll_logo_rgb_ohne_claim.png' %} 1x, {% static '/img/logo/dll_logo_rgb_ohne_claim_large.png' %} 2x" alt="digital.learning.lab Logo">
+  </a>
+  <div class="float-right">
+    <form class="search-form" action="/search" method="get" accept-charset="utf-8" role="search">
+      <button class="search-form__submit" type="submit">
+        <i class="fa fa-search"></i>
+      </button>
+      <input class="search-form__field" id="searchbox" name="q" type="text" placeholder="Das dll durchsuchen">
+    </form>
+    <button class="navigation-toggle js-navigation-toggle">
+      <span class="navigation-toggle__stripe"></span>
+      <span class="navigation-toggle__stripe"></span>
+      <span class="navigation-toggle__stripe"></span>
+      <span class="navigation-toggle__close"></span>
+    </button>
+  </div>
+  <nav class="navigation">
+    <ul class="navigation__items">
+      {% if request.path != '/' %}
+        <li class="navigation__item js-navigation__item">
+          <a href="/">Home</a>
+        </li>
+      {% endif %}
+      <li class="navigation__item js-navigation__item">
+        <a href="/#dll-aufbau">Was ist das dll?</a>
+      </li>
+      <li class="navigation__item js-navigation__item">
+        <a href="{% url 'contact' %}">Kontakt</a>
+      </li>
+      <li class="navigation__item js-navigation__item">
+        <a href="{% url 'newsletter' %}">Newsletter</a>
+      </li>
+      <li class="navigation__item js-navigation__item">
+        <a href="{% url 'faq' %}">FAQ</a>
+      </li>
+    </ul>
+  </nav>
+</header>

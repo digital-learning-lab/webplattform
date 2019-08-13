@@ -1,0 +1,41 @@
+{% extends 'dll/default_page.html' %}
+
+{% block content %}
+
+  <h2>Kontaktformular</h2>
+  <p>Vielen Dank für Ihr Interesse am digital.learning.lab.<br>
+    Über das nachfolgende Kontaktformular können Sie uns Feedback zu den Unterrichtsbausteinen,
+    den Tools und den Trends sowie zum digital.learning.lab allgemein geben. Außerdem können Sie sich auch bezüglich der Erstellung eigener Unterrichtsbausteine im Rahmen des
+    digital.learning.lab gerne an uns wenden.</p>
+  <p>Wir freuen uns auf Ihre Nachricht.</p>
+  <div class="row">
+    <form method="post" class="col col-12 col-lg-8">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="id_from_email">Ihre E-Mail-Adresse*:</label>
+        <input class="form-control" type="email" name="from_email" required="" id="id_from_email">
+      </div>
+      <div class="form-group">
+        <label for="id_subject">Der Grund für Ihre Kontaktaufnahme*:</label>
+        <select class="form-control" name="subject" required="" id="id_subject">
+          <option value="" selected="">Bitte wählen Sie</option>
+
+          <option value="stabsstelle-digitalisierung@bsb.hamburg.de">Anregungen zu den Unterrichtsbausteinen | E-Mail an die BSB</option>
+
+          <option value="digital.learning.lab@tuhh.de">Anregungen zu Tools, Trends und zum dll allgemein | E-Mail an die TUHH</option>
+
+          <option value="stabsstelle-digitalisierung@bsb.hamburg.de">Einreichung eigener Unterrichtsbausteine | E-Mail an die BSB</option>
+
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="id_message">Ihre Mitteilung*:</label>
+        <textarea class="form-control" name="message" required="" cols="40" rows="10" id="id_message"></textarea>
+      </div>
+      <button class="button button--primary" type="submit">
+        Absenden
+      </button>
+    </form>
+  </div>
+  <p class="semibold">* Pflichtfelder</p>
+{% endblock %}

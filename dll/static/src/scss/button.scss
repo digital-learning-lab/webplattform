@@ -1,0 +1,14 @@
+.button {
+  line-height: 1.7;
+  padding: 0.5rem 2rem;
+  color: white;
+  margin: 1rem 0;
+  border: 0;
+  font-weight: $font-weight-semi-bold;
+}
+.button--primary {
+  background-color: $color--oracle;
+  &:hover {
+    background-color: $color--smalt-blue;
+  }
+}
