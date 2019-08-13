@@ -20,7 +20,8 @@ from django.contrib.flatpages import views
 from django.urls import path, include
 
 from dll.content.views import HomePageView, ImprintView, DataPrivacyView, StructureView, UsageView, DevelopmentView, \
-    NewsletterRegisterView, NewsletterUnregisterView, ContactView, ToolDetailView
+    NewsletterRegisterView, NewsletterUnregisterView, ContactView, ToolDetailView, TrendDetailView, \
+    TeachingModuleDetailView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,6 +36,8 @@ urlpatterns = [
     path('kontakt', ContactView.as_view(), name='contact'),
     path('faq', views.flatpage, {'url': '/faq/'}, name='faq'),
     path('tools/<slug:slug>', ToolDetailView.as_view(), name='tool-detail'),
+    path('trends/<slug:slug>', TrendDetailView.as_view(), name='trend-detail'),
+    path('unterrichtsbausteine/<slug:slug>', TeachingModuleDetailView.as_view(), name='teaching-module-detail'),
     # path('', include('django.contrib.flatpages.urls')),
     path('', include('dll.user.urls', namespace='user'))
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

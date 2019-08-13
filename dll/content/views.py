@@ -87,13 +87,25 @@ class ContactView(TemplateView, BreadcrumbMixin):
     breadcrumb_url = reverse_lazy('contact')
 
 
-class ToolDetailView(DetailView):
+class ContentDetailView(DetailView):
+    def get_context_data(self, **kwargs):
+        ctx = super(ContentDetailView, self).get_context_data(**kwargs)
+        ctx['competences'] = Competence.objects.all()
+        return ctx
+
+
+class ToolDetailView(ContentDetailView):
     model = Tool
     template_name = 'dll/content/tool_detail.html'
 
-    def get_context_data(self, **kwargs):
-        ctx = super(ToolDetailView, self).get_context_data(**kwargs)
-        ctx['competences'] = Competence.objects.all()
-        return ctx
+
+class TrendDetailView(ContentDetailView):
+    model = Trend
+    template_name = 'dll/content/trend_detail.html'
+
+
+class TeachingModuleDetailView(ContentDetailView):
+    model = TeachingModule
+    template_name = 'dll/content/teaching_module_detail.html'
 
 

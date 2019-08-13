@@ -1,0 +1,52 @@
+<h2>Einstieg</h2>
+
+{% if object.learning_goals %}
+<div class="information-area information-area--{{ object.type }}">
+  <div class="information-area__title information-area__title">
+    Ziele
+  </div>
+  <div class="information-area__body">
+    {{ object.learning_goals|linebreaksbr }}
+  </div>
+</div>
+{% endif %}
+
+{% if object.expertise %}
+<div class="information-area information-area--{{ object.type }}">
+  <div class="information-area__title information-area__title">
+    Fachkompetenzen
+  </div>
+  <div class="information-area__body">
+    {{ object.expertise|linebreaksbr }}
+  </div>
+</div>
+{% endif %}
+
+<div class="information-area information-area--{{ object.type }}">
+  <div class="information-area__title information-area__title">
+    Kompetenzen in der Digitalen Welt
+  </div>
+  <div class="information-area__body">
+    <ul class="list-unstyled">
+      {% for competence in object.competences.all %}
+        <li>{{ competence.name }}</li>
+      {% endfor %}
+    </ul>
+    {% for competence in competences %}
+      <span class="information-area__icon icon-{{ competence.slug }}{% if competence in object.competences.all %} information-area__icon--active{% endif %}"></span>
+    {% endfor %}
+  </div>
+</div>
+
+
+{% if object.equipment %}
+<div class="information-area information-area--{{ object.type }}">
+  <div class="information-area__title information-area__title">
+    Medienausstattung
+  </div>
+  <div class="information-area__body">
+    {{ object.equipment|linebreaksbr }}
+  </div>
+</div>
+{% endif %}
+

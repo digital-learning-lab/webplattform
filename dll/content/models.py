@@ -30,6 +30,20 @@ from dll.user.models import DllUser
 logger = logging.getLogger('dll.content.models')
 
 
+LICENCE_CHOICES = (
+    (0, _("CC0")),
+    (1, _("CC BY")),
+    (2, _("CC BY 4.0")),
+    (3, _("CC BY-NC")),
+    (4, _("CC BY-NC-ND")),
+    (5, _("CC BY-NC-SA")),
+    (6, _("CC BY-ND")),
+    (7, _("CC BY-SA")),
+    (8, _("CC BY-SA 4.0")),
+    (9, _("urheberrechtlich geschützt")),
+)
+
+
 class Content(PublisherModel, PolymorphicModel):
     name = models.CharField(_("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200)
     slug = DllSlugField(populate_from='name')
@@ -135,6 +149,10 @@ class Content(PublisherModel, PolymorphicModel):
         self.save()
 
     @cached_property
+    def content_files(self):
+        return self.contentfile_set.all()
+
+    @cached_property
     def video_links(self):
         return self.contentlink_set.filter(type='video')
 
@@ -154,6 +172,10 @@ class Content(PublisherModel, PolymorphicModel):
     def related_tools(self):
         return Tool.objects.filter(related_content__in=[self.pk])
 
+    @cached_property
+    def related_trends(self):
+        return Trend.objects.filter(related_content__in=[self.pk])
+
     class Meta:
         ordering = ['slug']
 
@@ -170,6 +192,7 @@ class TeachingModule(Content):
     expertise = models.TextField(_("Fachkompetenzen"), max_length=500, null=True, blank=True)
     subjects = models.ManyToManyField('Subject', verbose_name=_("Unterrichtsfach"))
     school_types = models.ManyToManyField('SchoolType', verbose_name=_("Schulform"))
+    licence = models.IntegerField(_("Lizenz"), choices=LICENCE_CHOICES, blank=True, null=True)
 
     class Meta:
         permissions = (
@@ -188,6 +211,10 @@ class TeachingModule(Content):
         super(TeachingModule, self).copy_relations(src, dst)
         dst.subjects.add(*src.subjects.all())
         dst.school_types.add(*src.school_types.all())
+
+
+    def get_absolute_url(self):
+        return reverse('teaching-module-detail', kwargs={'slug': self.slug})
 
 
 class Tool(Content):
@@ -266,19 +293,6 @@ class Trend(Content):
         ('russian', _("Russisch")),
     )
 
-    LICENCE_CHOICES = (
-        (0, _("CC0")),
-        (1, _("CC BY")),
-        (2, _("CC BY 4.0")),
-        (3, _("CC BY-NC")),
-        (4, _("CC BY-NC-ND")),
-        (5, _("CC BY-NC-SA")),
-        (6, _("CC BY-ND")),
-        (7, _("CC BY-SA")),
-        (8, _("CC BY-SA 4.0")),
-        (9, _("urheberrechtlich geschützt")),
-    )
-
     CATEGORY_CHOICES = (
         (0, _("Keine Angaben")),
         (1, _("Forschung")),
@@ -304,6 +318,9 @@ class Trend(Content):
     @property
     def type_verbose(self):
         return 'Trend'
+
+    def get_absolute_url(self):
+        return reverse('trend-detail', kwargs={'slug': self.slug})
 
     def copy_relations(self, src, dst):
         super(Trend, self).copy_relations(src, dst)

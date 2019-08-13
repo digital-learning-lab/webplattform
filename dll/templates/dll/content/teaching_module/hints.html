@@ -1,0 +1,18 @@
+<h2>Hinweise &amp; Links</h2>
+
+{% if not object.additional_info and not object.has_tutorial_links %}
+  <p>Hier sind keine weiteren Einträge vorhanden.</p>
+{% endif %}
+
+{% if object.additional_info %}
+<div class="information-area information-area--{{ object.type }}">
+  <div class="information-area__title information-area__title">
+    Hinweise
+  </div>
+  <div class="information-area__body">
+    {{ object.additional_info|linebreaksbr }}
+  </div>
+</div>
+{% endif %}
+
+{% include 'dll/content/includes/links.html' with literature_title='Weiterführende Literatur und Links' video_title='Medialinks' %}

@@ -14,7 +14,7 @@
           <div class="sidebar sidebar--{{ object.type }}">
             <h3 class="sidebar__headline">{{ object.type_verbose }} - Informationen</h3>
             <ul class="sidebar__information">
-              {% if object.competences.all.count > 0 %}
+              {% if object.competences.all.count %}
                 <li class="sidebar__information-item">
                   <span class="sidebar__information-icon icon-hexagon"></span>
                   <ul class="list-unstyled">
@@ -35,13 +35,13 @@
           <article class="section-info">
             <header>
               <div class="content-info content-info--{{ object.type }}">
-                <img class="content-info__image" src="{% thumbnail object.image 690x450 upscale=True %}" srcset="{% thumbnail object.image 690x450 upscale=True %} 1x, {% thumbnail object.image 1280x900 %} 2x" alt="{{ object.name }}">
+                <img class="content-info__image" src="{% thumbnail object.image 750x500 upscale=True %}" srcset="{% thumbnail object.image 750x500 upscale=True %} 1x, {% thumbnail object.image 1500x1000 %} 2x" alt="{{ object.name }}">
                 <div class="content-info__type">{{ object.type_verbose }}</div>
                 <h1 class="content-info__title">{{ object.name }}</h1>
                 {% if object.teaser %}<p class="content-info__teaser">{{ object.teaser|linebreaksbr }}</p>{% endif %}
                 <div class="row">
                   {% block content_additional_information %}
-                    {% if object.full_name or object.co_authors.all.count > 0 %}
+                    {% if object.full_name or object.co_authors.all.count %}
                     <div class="col">
                       <ul class="list-unstyled">
                         <li>{{ object.author.full_name }}</li>

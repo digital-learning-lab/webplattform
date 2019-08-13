@@ -1,0 +1,45 @@
+<h2>Details</h2>
+
+{% if object.subject_of_tuition %}
+<div class="information-area information-area--{{ object.type }}">
+  <div class="information-area__title information-area__title">
+    Informationen zum Unterrichtsgegenstand
+  </div>
+  <div class="information-area__body">
+    {{ object.subject_of_tuition|linebreaksbr }}
+  </div>
+</div>
+{% endif %}
+
+{% if object.description %}
+<div class="information-area information-area--{{ object.type }}">
+  <div class="information-area__title information-area__title">
+    Beschreibung des Unterrichtsbausteins
+  </div>
+  <div class="information-area__body">
+    {{ object.description|linebreaksbr }}
+  </div>
+</div>
+{% endif %}
+
+{% if object.educational_plan_reference %}
+<div class="information-area information-area--{{ object.type }}">
+  <div class="information-area__title information-area__title">
+    Bildungsplanbezug
+  </div>
+  <div class="information-area__body">
+    {{ object.educational_plan_reference|linebreaksbr }}
+  </div>
+</div>
+{% endif %}
+
+{% if object.differentiating_attribute %}
+<div class="information-area information-area--{{ object.type }}">
+  <div class="information-area__title information-area__title">
+    Möglichkeiten der Differenzierung / Individualisierung
+  </div>
+  <div class="information-area__body">
+    {{ object.differentiating_attribute|linebreaksbr }}
+  </div>
+</div>
+{% endif %}

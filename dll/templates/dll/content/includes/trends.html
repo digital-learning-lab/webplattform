@@ -1,0 +1,7 @@
+<h2>{{ headline }}</h2>
+
+{% for module in object.related_trends %}
+  <div class="mb-5">
+    {% include 'dll/includes/content_teaser.html' with content=module %}
+  </div>
+{% endfor %}

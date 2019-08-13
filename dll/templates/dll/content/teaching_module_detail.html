@@ -1,0 +1,151 @@
+{% extends 'dll/content/detail.html' %}
+{% load static %}
+
+
+{% block content_additional_information %}
+  {% if object.url %}
+    <div class="col">
+      <div class="content-info__link">
+        <span class="fas fa-at"></span>
+        <a href="{{ object.url.url }}">{{ object.url.name }}</a>
+      </div>
+    </div>
+  {% endif %}
+
+  {{ block.super }}
+  {% if 'tuhh' in object.json_data.signed_by %}
+    <div class="col">
+      <img class="content-info__partner-logo" src="{% static 'img/partners/tuhh_logo.svg' %}" alt="Logo TUHH">
+    </div>
+  {% endif %}
+{% endblock %}
+
+
+{% block sidebar_information %}
+  {% if object.subjects.all.count %}
+    <li class="sidebar__information-item">
+      <span class="sidebar__information-icon icon-subject"></span>
+      <ul class="list-unstyled">
+        {% for subject in object.subjects.all %}
+          <li>{{ subject.name }}</li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endif %}
+
+  {% if object.school_class %}
+    <li class="sidebar__information-item">
+      <span class="sidebar__information-icon icon-level"></span>
+      Stufe {{ object.school_class.lower }} - {{ object.school_class.upper }}
+    </li>
+  {% endif %}
+
+  {% if object.estimated_time %}
+    <li class="sidebar__information-item">
+      <span class="sidebar__information-icon icon-time"></span>
+      {{ object.estimated_time }}
+    </li>
+  {% endif %}
+
+  {% if object.school_types.all.count %}
+    <li class="sidebar__information-item">
+      <span class="sidebar__information-icon icon-school"></span>
+      <ul class="list-unstyled">
+        {% for school_type in object.school_types.all %}
+          <li>{{ school_type.name }}</li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endif %}
+
+  {% if object.state %}
+    <li class="sidebar__information-item">
+      <span class="sidebar__information-icon fas fa-map-marker-alt"></span>
+      {{ object.get_state_display }}
+    </li>
+  {% endif %}
+
+  {% if object.licence %}
+    <li class="sidebar__information-item">
+      <span class="sidebar__information-icon fab fa-creative-commons"></span>
+      {{ object.get_licence_display }}
+    </li>
+  {% endif %}
+
+
+{% endblock %}
+
+
+{% block sidebar_navigation_items %}
+  <li class="sidebar__nav-item">
+    <a class="sidebar__nav-link nav-link active" id="entry-tab" data-toggle="pill" href="#entry" role="tab" aria-controls="entry" aria-selected="true">
+      Einstieg
+      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+    </a>
+  </li>
+  <li class="sidebar__nav-item">
+    <a class="sidebar__nav-link nav-link" id="detail-tab" data-toggle="pill" href="#detail" role="tab" aria-controls="detail" aria-selected="true">
+      Details
+      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+    </a>
+  </li>
+  {% if object.additional_info or object.has_tutorial_links %}
+  <li class="sidebar__nav-item">
+    <a class="sidebar__nav-link nav-link" id="hints-tab" data-toggle="pill" href="#hints" role="tab" aria-controls="hints" aria-selected="true">
+      Hinweise & Links
+      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+    </a>
+  </li>
+  {% endif %}
+  {% if object.related_teaching_modules %}
+  <li class="sidebar__nav-item">
+    <a class="sidebar__nav-link nav-link" id="material-tab" data-toggle="pill" href="#material" role="tab" aria-controls="material" aria-selected="true">
+      Material
+      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+    </a>
+  </li>
+  {% endif %}
+  {% if object.related_tools %}
+  <li class="sidebar__nav-item">
+    <a class="sidebar__nav-link nav-link" id="tools-tab" data-toggle="pill" href="#tools" role="tab" aria-controls="tools" aria-selected="true">
+      Tools
+      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+    </a>
+  </li>
+  {% endif %}
+  {% if object.related_trends %}
+  <li class="sidebar__nav-item">
+    <a class="sidebar__nav-link nav-link" id="trends-tab" data-toggle="pill" href="#trends" role="tab" aria-controls="trends" aria-selected="true">
+      Trends
+      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+    </a>
+  </li>
+  {% endif %}
+{% endblock %}
+
+{% block tab_contents %}
+  <div class="tab-pane fade show active" id="entry" role="tabpanel" aria-labelledby="entry-tab">
+    {% include 'dll/content/teaching_module/entry.html' %}
+  </div>
+  <div class="tab-pane fade" id="detail" role="tabpanel" aria-labelledby="detail-tab">
+    {% include 'dll/content/teaching_module/detail.html' %}
+  </div>
+  <div class="tab-pane fade" id="material" role="tabpanel" aria-labelledby="material-tab">
+    {% include 'dll/content/teaching_module/material.html' %}
+  </div>
+  {% if object.additional_info or object.has_tutorial_links %}
+  <div class="tab-pane fade" id="hints" role="tabpanel" aria-labelledby="hints-tab">
+    {% include 'dll/content/teaching_module/hints.html' %}
+  </div>
+  {% endif %}
+  {% if object.related_tools %}
+    <div class="tab-pane fade" id="tools" role="tabpanel" aria-labelledby="tools-tab">
+      {% include 'dll/content/includes/tools.html' with headline='Tools' %}
+    </div>
+  {% endif %}
+  {% if object.related_trends %}
+    <div class="tab-pane fade" id="trends" role="tabpanel" aria-labelledby="trends-tab">
+      {% include 'dll/content/includes/trends.html' with headline='Trends' %}
+    </div>
+  {% endif %}
+{% endblock %}

@@ -28,9 +28,14 @@ class DllUser(AbstractUser):
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'gender']
 
+    def __str__(self):
+        return f'{self.username} - {self.full_name} - ({self.email})'
+
     @cached_property
     def full_name(self):
-        return f'{self.first_name} {self.last_name}'
+        return f'{self.username}'
+        # TODO importer
+        # return f'{self.first_name} {self.last_name}'
 
     def qs_of_personal_content(self):
         from dll.content.models import Content
