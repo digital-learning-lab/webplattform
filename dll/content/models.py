@@ -3,7 +3,7 @@ import os
 
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.postgres.fields import IntegerRangeField, JSONField
+from django.contrib.postgres.fields import IntegerRangeField, JSONField, ArrayField
 from django.core.files import File
 from django.db import models
 from django.dispatch import receiver
@@ -34,7 +34,7 @@ class Content(PublisherModel, PolymorphicModel):
     co_authors = models.ManyToManyField(DllUser, related_name='collaborative_content', verbose_name=_("Kollaborateure"))
     image = FilerImageField(on_delete=models.SET_NULL, null=True, verbose_name=_('Anzeigebild'))
     teaser = models.TextField(max_length=140, verbose_name=_("Teaser"), null=True, blank=True)
-    learning_goals = models.TextField(_("Lernziele"), max_length=500, null=True, blank=True)
+    learning_goals = ArrayField(models.CharField(max_length=200), verbose_name=_("Lernziele"), default=list)
     related_content = models.ManyToManyField('self', verbose_name=_("Verwandte Tools/Trends/Unterrichtsbausteine"))
     view_count = models.PositiveIntegerField(default=0)
     base_folder = models.CharField(max_length=100, null=True)
@@ -137,14 +137,16 @@ class Content(PublisherModel, PolymorphicModel):
 
 class TeachingModule(Content):
     description = models.TextField(_("Beschreibung"), null=True, blank=True)
-    subject_of_tuition = models.TextField(_("Unterichtsgegenstand"), null=True, blank=True)
+    subject_of_tuition = ArrayField(models.CharField(max_length=200), verbose_name=_("Unterichtsgegenstand"),
+                                    default=list)
     educational_plan_reference = models.TextField(_("Bildungsplanbezug"), null=True, blank=True)
     school_class = IntegerRangeField(verbose_name=_("Jahrgangsstufe"), null=True, blank=True)
-    estimated_time = models.CharField(max_length=250)
-    equipment = models.TextField(_("Ausstattung"), max_length=500)
+    # estimated time e.g. Doppelstunde,unterrichtsbegleitend
+    estimated_time = ArrayField(models.CharField(max_length=200), verbose_name=_("Zeitumfang"), default=list)
+    equipment = ArrayField(models.CharField(max_length=200), verbose_name=_("Ausstattung"), default=list)
     state = models.CharField(_("Bundesland"), max_length=22, choices=GERMAN_STATES, null=True, blank=True)
     differentiating_attribute = models.TextField(_("Differenzierung"), max_length=500)
-    expertise = models.TextField(_("Fachkompetenzen"), max_length=500, null=True, blank=True)
+    expertise = ArrayField(models.CharField(max_length=200), verbose_name=_("Fachkompetenzen"), default=list)
     subjects = models.ManyToManyField('Subject', verbose_name=_("Unterrichtsfach"))
     school_types = models.ManyToManyField('SchoolType', verbose_name=_("Schulform"))
 
@@ -197,8 +199,8 @@ class Tool(Content):
     status = models.CharField(_("Status"), max_length=7, choices=STATUS_CHOICES, default=None, null=True)
     requires_registration = models.BooleanField(null=True, blank=False)
     usk = models.CharField(_("Altersfreigabe"), max_length=5, choices=USK_CHOICES, null=True, blank=True)
-    pro = models.CharField(_("Pro"), max_length=500, null=True, blank=True)
-    contra = models.CharField(_("Kontra"), max_length=500, null=True, blank=True)
+    pro = ArrayField(models.CharField(max_length=200), verbose_name=_("Pro"), default=list)
+    contra = ArrayField(models.CharField(max_length=200), verbose_name=_("Kontra"), default=list)
     privacy = models.IntegerField(_("Datenschutz"), choices=PRIVACY_CHOICES, null=True, blank=True)
     description = models.TextField(_("Beschreibung"), null=True, blank=True)
     usage = models.TextField(_("Nutzung"), null=True, blank=True)
@@ -264,11 +266,11 @@ class Trend(Content):
     language = models.CharField(_("Sprache"), max_length=10, choices=LANGUAGE_CHOICHES, blank=True, null=True)
     licence = models.IntegerField(_("Lizenz"), choices=LICENCE_CHOICES, blank=True, null=True)
     category = models.IntegerField(_("Kategorie"), choices=CATEGORY_CHOICES, blank=True, null=True)
-    target_group = models.CharField(_("Zielgruppe"), max_length=250, blank=True, null=True)
-    publisher = models.CharField(_("Herausgeber"), max_length=250, blank=True, null=True)
+    target_group = ArrayField(models.CharField(max_length=200), verbose_name=_("Zielgruppe"), default=list)
+    publisher = ArrayField(models.CharField(max_length=200), verbose_name=_("Herausgeber"), default=list)
     publisher_date = models.DateField(_("Datum der Veröffentlichung"), blank=True, null=True)
     central_contents = models.TextField(_("Zentrale Inhalte"), blank=True, null=True)
-    url = models.URLField(_("Website"), blank=True, null=True)
+    url = models.URLField(_("Website"), blank=True, null=True)  # todo + this can be multiple markdown links
     citation_info = models.CharField(_("Zitierhinweis"), max_length=500, blank=True, null=True)
 
     @property

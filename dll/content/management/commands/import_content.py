@@ -162,7 +162,7 @@ class Command(BaseCommand):
 
             author = get_default_tuhh_user()
 
-            # Try to update/create the Trend
+            # Try to update/create the Tool
             try:
                 logger.debug("Update or create Trend from folder {}".format(folder))
                 tool, created = Tool.objects.update_or_create(
@@ -171,14 +171,14 @@ class Command(BaseCommand):
                         # 'image': filer_image,
                         'author': author,
                         'teaser': data['teaser'],
-                        'description': data['beschreibung'],
+                        'description': self._replace_semicolon_with_newline(data['beschreibung']),
                         'status': status,
                         'requires_registration': requires_registration,
                         'usk': usk,
-                        'pro': data['pro'],
-                        'contra': data['kontra'],
+                        'pro': self._parse_semicolon_separated_values(data['pro']),
+                        'contra': self._parse_semicolon_separated_values(data['kontra']),
                         'privacy': privacy,
-                        'usage': data['nutzung'],
+                        'usage': self._replace_semicolon_with_newline(data['nutzung']),
                         'additional_info': data['anmerkung'],
                         'base_folder': folder,
                     },
@@ -284,7 +284,7 @@ class Command(BaseCommand):
 
             # Try to publish the new Trend
             try:
-                tool.publish()
+                tool.submit_for_review()
             except Exception as e:
                 logger.exception(e)
                 continue
@@ -329,13 +329,13 @@ class Command(BaseCommand):
                     defaults={
                         'name': data['name'],
                         'author': author,
-                        'target_group': data['zielgruppe'],
+                        'target_group': self._parse_semicolon_separated_values(data['zielgruppe']),
                         'category': category,
-                        'publisher': data['herausgeber'],
+                        'publisher': self._parse_semicolon_separated_values(data['herausgeber']),
                         'publisher_date': publisher_date,
                         'language': language,
                         'teaser': data['teaser'],
-                        'learning_goals': data['zielsetzung'],
+                        'learning_goals': self._parse_semicolon_separated_values(data['zielsetzung']),
                         'central_contents': data['zInhalt'],
                         'licence': licence,
                         'additional_info': data['hintergrund'],
@@ -404,7 +404,7 @@ class Command(BaseCommand):
 
             # Try to publish the new Trend
             try:
-                trend.publish()
+                trend.submit_for_review()
             except Exception as e:
                 logger.exception(e)
                 continue
@@ -464,13 +464,13 @@ class Command(BaseCommand):
                     defaults={
                         'name': data['name'].strip(),
                         'author': authors[0],
-                        'learning_goals': data['lernziele'],
+                        'learning_goals': self._parse_semicolon_separated_values(data['lernziele']),
                         'teaser': data['teaser'],
-                        'expertise': data['fachkompetenz'],
-                        'estimated_time': data['zeitumfang'],
-                        'equipment': data['ausstattung'],
+                        'expertise': self._parse_semicolon_separated_values(data['fachkompetenz']),
+                        'estimated_time': self._parse_semicolon_separated_values(data['zeitumfang']),
+                        'equipment': self._parse_semicolon_separated_values(data['ausstattung']),
                         'school_class': class_range,
-                        'subject_of_tuition': data['unterrichtsgeg'],
+                        'subject_of_tuition': self._parse_semicolon_separated_values(data['unterrichtsgeg']),
                         'description': data['beschreibung'],
                         'educational_plan_reference': data['bildungsplanbezug'],
                         'state': state,
@@ -572,7 +572,7 @@ class Command(BaseCommand):
 
             # Try to publish the new TeachingModule
             try:
-                teaching_module.publish()
+                teaching_module.submit_for_review()
             except Exception as e:
                 logger.exception(e)
                 continue
@@ -642,6 +642,14 @@ class Command(BaseCommand):
         gen = map(lambda x: custom_slugify(x.strip()), value.split(';'))
         gen = filter(None, gen)
         return list(gen)
+
+    @staticmethod
+    def _parse_semicolon_separated_values(value):
+        return list(map(lambda x: x.strip(), value.split(';')))
+
+    @staticmethod
+    def _replace_semicolon_with_newline(value):
+        return value.replace(';', '\n')
 
     @staticmethod
     def _parse_markdown_link(value):

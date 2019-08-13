@@ -119,3 +119,11 @@ class Message(TimeStampedModel):
     subject = models.CharField(max_length=140)
     content = models.TextField()
     message_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+
+
+class ArrayLength(models.Func):
+    """
+    Annotate array fields with their length
+    usage: MyModel.objects.all().annotate(field_len=ArrayLength('field')).order_by('field_len')
+    """
+    function = 'CARDINALITY'
