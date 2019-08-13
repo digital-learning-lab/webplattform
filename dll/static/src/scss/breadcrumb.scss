@@ -1,0 +1,10 @@
+.breadcrumb {
+  background-color: transparent;
+  padding: 0;
+}
+.breadcrumb-item + .breadcrumb-item::before {
+  content: '>'
+}
+.breadcrumb-item {
+  font-weight: $font-weight-regular;
+}

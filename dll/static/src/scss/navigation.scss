@@ -1,0 +1,112 @@
+.navigation-toggle {
+  height: 45px;
+  width: 45px;
+  border-radius: 5px;
+  background-color: $color--daintree;
+  border: 0;
+  margin-right: 32px;
+  margin-left: 30px;
+  padding-top: 6px;
+  margin-top: 27px;
+  vertical-align: top;
+  position: relative;
+  line-height: 0;
+  z-index: 1;
+  &:hover {
+    background-color: $color--smalt-blue;
+  }
+}
+.navigation-toggle--is-active {
+  background-color: darken($color--smalt-blue, 10%);
+  .navigation-toggle__stripe {
+    display: none;
+  }
+  .navigation-toggle__close {
+    display: block;
+  }
+}
+.navigation-toggle__stripe {
+  background-color: rgba(255, 255, 255, 1);
+  display: inline-block;
+  width: 22px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 5px;
+  margin-top: 0;
+  height: 3px;
+  border-radius: 1px;
+}
+.navigation-toggle__close {
+  display: none;
+  position: absolute;
+  right: 7px;
+  top: 10px;
+  width: 32px;
+  height: 32px;
+  opacity: 1;
+}
+.navigation-toggle__close:hover {
+  opacity: 1;
+}
+.navigation-toggle__close:before,
+.navigation-toggle__close:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 25px;
+  width: 5px;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 1);
+}
+.navigation-toggle__close:before {
+  transform: rotate(45deg);
+}
+.navigation-toggle__close:after {
+  transform: rotate(-45deg);
+}
+.navigation {
+  background-color: $color--daintree;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  right: 0;
+  transition: transform 400ms, width 400ms;
+  transform: translateX(100%);
+  width: 100%;
+}
+.navigation--is-active {
+  transform: translateX(0%);
+}
+.navigation__items {
+  list-style: none;
+  padding: 0 50px;
+  margin-top: 93px;
+}
+.navigation__item {
+  border-top: 1px solid white;
+  padding: 15px 0;
+  a {
+    display: inline-block;
+    width: 100%;
+    text-decoration: none;
+    text-align: center;
+    font-size: 20px;
+    color: #818181;
+    transition: 0.3s color;
+    font-weight: $font-weight-light;
+    &:hover {
+      color: rgba(255, 255, 255, 1);
+    }
+    &:visited, &:link, &:active, &:focus {
+      color: #818181;
+    }
+  }
+}
+.navigation__item:last-child {
+  border-bottom: 1px solid white;
+}
+@media (min-width: 768px) {
+  .navigation {
+    width: 400px;
+  }
+}

@@ -45,6 +45,10 @@ const assetRule = {
 
 const plugins = [
   new BundleTracker({ filename: 'webpack-stats.json', path: path.resolve(__dirname, './static/dist/') }),
+  new webpack.ProvidePlugin({
+    $: "jquery",
+    jQuery: "jquery"
+  }),
   new VueLoaderPlugin(),
   new MiniCssExtractPlugin({
     filename: devMode ? '[name].css' : '[name].[hash].css',
@@ -93,7 +97,7 @@ module.exports = {
     writeToDisk: true
   },
   module: { rules: [vueRule, jsRule, styleRule, assetRule] },
-  externals: { jquery: 'jQuery', Sentry: 'Sentry' },
+  // externals: { jquery: 'jQuery', Sentry: 'Sentry' },
   plugins,
   optimization: {
     minimizer: [

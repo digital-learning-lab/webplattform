@@ -1,0 +1,11 @@
+{% extends 'dll/default_page.html' %}
+{% load flatpage_tags %}
+
+{% block breadcrumbs %}
+  {% flatpage_breadcrumbs as breadcrumbs %}
+  {{ block.super }}
+{% endblock %}
+
+{% block content %}
+  {{ flatpage.content }}
+{% endblock %}

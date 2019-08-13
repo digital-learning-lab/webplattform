@@ -1,0 +1,150 @@
+{% extends 'dll/base.html' %}
+{% load static %}
+
+{% block body %}
+<main>
+  <section class="section-competence">
+    <div class="row no-gutters justify-content-center">
+      <div class="col col-12 col-sm-8 col-md-7 col-lg-6 col-xl-4 text-center">
+        <object type="image/svg+xml" id="dllflower" data="{% static 'img/dllflower.svg' %}" class="section-competence__flower">
+          Ihr Browser unterstützt kein SVG
+        </object>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="mb-5">
+    <div class="row justify-content-center no-gutters">
+      <div class="col col-12 col-md-10 col-lg-9 col-xl-8">
+        <div class="news-alert">
+          <h3 class="news-alert__headline">Neue Fortbildung zum dll</h3>
+          <p class="news-alert__body">
+            Sie möchten Ihre Kompetenzen im Umgang mit dem dll erweitern? <br>
+            Fobizz bietet Ihnen eine kostenlose Fortbildung mit abschließendem Zertifikat. <br>
+            Zur Fortbildung gelangen Sie hier.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-5" id="dll-aufbau">
+    <div class="row no-gutters justify-content-center">
+      <div class="col col-12 col-md-10 col-lg-9 col-xl-8">
+        <div class="section-info">
+          <h3 class="section-info__headline">Was ist das dll?</h3>
+          <div class="section-info__body">
+            <p class="text-center">Das digital.learning.lab ist ein Hamburger Kompetenzzentrum für die Unterrichtsgestaltung in digitalen Zeiten. Lehrkräfte finden hier Anregungen und Unterstützung, ihren Unterricht unter Berücksichtigung der Kompetenzen für eine digitalisierte Lebens- und Arbeitswelt weiter zu entwickeln.</p>
+            <div class="row">
+              <div class="col col-12 col-lg-4 mb-4">
+                <article class="info-box">
+                  <div class="info-box__head">Struktur</div>
+                  <div class="info-box__image-container">
+                    <img class="info-box__image" src="{% static 'img/content/struktur_preview.png' %}" srcset="{% static 'img/content/struktur_preview.png' %} 1x, {% static 'img/content/struktur_preview_large.png' %} 2x" alt="Skizze zur Struktur des dll">
+                  </div>
+                  <div class="info-box__body">
+                    Entlang von sechs Kompetenzbereichen für die digitale Welt werden im dll Inhalte für Lehrkräfte zur Gestaltung ihres Fachunterrichts mit digitalen Medien bereitgestellt.
+                  </div>
+                  <a href="{% url 'structure' %}" class="info-box__link">
+                    weiterlesen
+                  </a>
+                </article>
+              </div>
+              <div class="col col-12 col-lg-4 mb-4">
+                <article class="info-box">
+                  <div class="info-box__head">Nutzung</div>
+                  <div class="info-box__image-container">
+                    <img class="info-box__image" src="{% static 'img/content/nutzung_preview.png' %}" srcset="{% static 'img/content/nutzung_preview.png' %} 1x, {% static 'img/content/nutzung_preview_large.png' %} 2x" alt="Sizze zur Nutzung des dll">
+                  </div>
+                  <div class="info-box__body">
+                    Lehrkräfte können mit dem dll ihren Unterricht neu (digital) gestalten, verschiedene Tools kennenlernen und sich über schulischen Fachunterricht in digitalen Zeiten informieren.
+                  </div>
+                  <a href="{% url 'usage' %}" class="info-box__link">
+                    weiterlesen
+                  </a>
+                </article>
+              </div>
+              <div class="col col-12 col-lg-4 mb-4">
+                <article class="info-box">
+                  <div class="info-box__head">Entwicklung</div>
+                  <div class="info-box__image-container">
+                    <img class="info-box__image" src="{% static 'img/content/entwicklung_preview.png' %}" srcset="{% static 'img/content/entwicklung_preview.png' %} 1x, {% static 'img/content/entwicklung_preview_large.png' %} 2x" alt="Skizze zur Entwicklung des dll">
+                  </div>
+                  <div class="info-box__body">
+                    Das dll wird hier in einer ersten Version veröffentlicht. Das Konzept und die Webplattform werden kontinuierlich weiterentwickelt und erweitert.
+                  </div>
+                  <a href="{% url 'development' %}" class="info-box__link">
+                    weiterlesen
+                  </a>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-5">
+    <div class="row no-gutters justify-content-center">
+      <div class="col col-12 col-md-10 col-lg-9 col-xl-8">
+        <div class="section-info">
+          <h3 class="section-info__headline">Vorgeschlagene Uploads</h3>
+          <div class="section-info__body">
+            <div class="row">
+              {% for content in contents %}
+                <div class="col col-12 col-xl-6 mb-5">
+                {% include 'dll/includes/content_teaser.html' %}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mb-5">
+    <div class="row no-gutters justify-content-center">
+      <div class="col col-12 col-md-10 col-lg-9 col-xl-8">
+        <div class="section-info">
+          <h3 class="section-info__headline">Verbundpartner</h3>
+          <div class="section-info__body">
+            <div class="row align-items-center justify-content-around">
+              <div class="col col-12 col-sm-6 col-lg-2 mb-5">
+                <div class="partner-logo">
+                  <a href="https://www.itbh-hh.de/" class="partner-logo__link" target="_blank">
+                    <img src="{% static 'img/partners/ITBH_Logo_cmyk.svg' %}" alt="" class="partner-logo__image">
+                  </a>
+                </div>
+              </div>
+              <div class="col col-12 col-sm-6 col-lg-3 mb-5">
+                <div class="partner-logo">
+                  <a href="https://www.tuhh.de/" class="partner-logo__link" target="_blank">
+                    <img src="{% static 'img/partners/tuhh_logo.svg' %}" alt="" class="partner-logo__image">
+                  </a>
+                </div>
+              </div>
+              <div class="col col-12 col-sm-6 col-lg-4 mb-5">
+                <div class="partner-logo">
+                  <a href="https://www.hamburg.de/bsb/wir-ueber-uns/" class="partner-logo__link" target="_blank">
+                    <img src="{% static 'img/partners/Logo_BSB.jpg' %}" srcset="{% static 'img/partners/Logo_BSB.jpg' %} 1x, {% static 'img/partners/Logo_BSB__large.jpg' %} 2x" alt="" class="partner-logo__image">
+                  </a>
+                </div>
+              </div>
+              <div class="col col-12 col-sm-6 col-lg-3 mb-5">
+                <div class="partner-logo">
+                  <a href="https://www.joachim-herz-stiftung.de/" class="partner-logo__link" target="_blank">
+                    <img src="{% static 'img/partners/JHS_Logo_RGB.png' %}" alt="" class="partner-logo__image">
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+{% endblock %}

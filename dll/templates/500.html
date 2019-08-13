@@ -1,0 +1,9 @@
+{% extends 'dll/error.html' %}
+
+{% block status_code %}500{% endblock %}
+{% block status_message %}Internal Server Error{% endblock %}
+{% block description %}
+  <p>Gründe dafür könnten sein, dass die Webseite momentan gewartet wird.</p>
+  <p>Bitte versuchen Sie es später noch einmal.</p>
+  <p>Sollte das Problem bestehen bleiben, schreiben Sie uns gerne über das <a href="{% url 'contact-form' %}">Kontaktformular</a>, auf welcher Seite und in welcher Situation das Problem auftritt.</p>
+{% endblock %}
