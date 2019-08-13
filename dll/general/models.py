@@ -24,7 +24,7 @@ class PublisherModelBase(TimeStampedModel):
         related_name='publisher_draft',
         null=True,
         editable=False,
-        on_delete=models.CASCADE)
+        on_delete=models.SET_NULL)
 
     publisher_is_draft = models.BooleanField(
         default=STATE_DRAFT,
@@ -40,7 +40,7 @@ class PublisherModelBase(TimeStampedModel):
         return self.publisher_is_draft == self.STATE_DRAFT
 
     @property
-    def is_published(self):
+    def is_public(self):
         return self.publisher_is_draft == self.STATE_PUBLISHED
 
     def get_draft(self):
@@ -57,7 +57,7 @@ class PublisherModelBase(TimeStampedModel):
         Returns published version of any instance (draft or public)
         :return:
         """
-        if self.is_published:
+        if self.is_public:
             return self
         return self.publisher_linked
 
@@ -84,10 +84,16 @@ class PublisherModel(PublisherModelBase):
             publish_obj = self.__class__.objects.get(pk=self.pk)
             publish_obj.pk = None
             publish_obj.id = None
+            publish_obj.created = None
+            publish_obj.modified = None
             publish_obj.publisher_is_draft = self.STATE_PUBLISHED
             publish_obj.save()
+            self.copy_relations(draft_obj, publish_obj)
             draft_obj.publisher_linked = publish_obj
             draft_obj.save()
+
+    def copy_relations(self, src, dst):
+        pass
 
 
 class DllSlugField(AutoSlugField):

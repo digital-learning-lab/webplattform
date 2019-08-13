@@ -48,7 +48,10 @@ class Content(PublisherModel, PolymorphicModel):
     objects = PolymorphicManager.from_queryset(ContentQuerySet)()
 
     def __str__(self):
-        return f"{self.name} ({self.__class__.__name__})"
+        if self.is_public:
+            return f"{self.name} ({self.__class__.__name__}, public)"
+        else:
+            return f"{self.name} ({self.__class__.__name__})"
 
     @property
     def review(self):
@@ -66,12 +69,49 @@ class Content(PublisherModel, PolymorphicModel):
 
     def submit_for_review(self):
         if self.review:
-            # content was probably declined and now resubmitted
+            # content was declined and now resubmitted
             review = self.review
             review.status = Review.IN_PROGRESS
             review.save()
         else:
             Review.objects.create(content=self, is_active=True)
+
+    def copy_relations(self, src, dst):
+        # image
+        super(Content, self).copy_relations(src, dst)
+        dst_image = src.image
+        dst_image.pk = None
+        dst_image.id = None
+        file_name, extension = os.path.splitext(dst_image.label)
+        file_name += " (public)"
+        dst_image.name = file_name + extension
+        dst_image.save()
+        dst.image = dst_image
+        dst.save()
+
+        # co-authors
+        dst.co_authors.add(*src.co_authors.all())
+
+        # related content
+        dst.related_content.add(*src.related_content.all())
+
+        # competences
+        dst.competences.add(*src.competences.all())
+        dst.sub_competences.add(*src.sub_competences.all())
+
+        # tags
+        dst.tags.add(*src.tags.all())
+
+        # links and files
+        for link in src.contentlink_set.all():
+            link.pk, link.id, link.created, link.modified = None, None, None, None
+            link.content = dst
+            link.save()
+
+        for file in src.contentfile_set.all():
+            file.pk, file.id, file.created, file.modified = None, None, None, None
+            file.content = dst
+            file.save()
 
     def suggest_related_content(self):
         """Suggested related content based on Solr results"""
@@ -120,6 +160,11 @@ class TeachingModule(Content):
     @property
     def type_verbose(self):
         return 'Unterrichtsbaustein'
+
+    def copy_relations(self, src, dst):
+        super(TeachingModule, self).copy_relations(src, dst)
+        dst.subjects.add(*src.subjects.all())
+        dst.school_types.add(*src.school_types.all())
 
 
 class Tool(Content):
@@ -172,6 +217,20 @@ class Tool(Content):
     def type(self):
         return 'tool'
 
+    def copy_relations(self, src, dst):
+        super(Tool, self).copy_relations(src, dst)
+        dst.operating_systems.add(*src.operating_systems.all())
+        dst.applications.add(*src.applications.all())
+
+        url_clone = src.url
+        url_clone.pk = None
+        url_clone.id = None
+        url_clone.created = None
+        url_clone.modified = None
+        url_clone.save()
+        dst.url = url_clone
+        dst.save()
+
 
 class Trend(Content):
     LANGUAGE_CHOICHES = (
@@ -220,6 +279,8 @@ class Trend(Content):
     def type_verbose(self):
         return 'Trend'
 
+    def copy_relations(self, src, dst):
+        super(Trend, self).copy_relations(src, dst)
 
     class Meta:
         permissions = (
@@ -242,6 +303,7 @@ class Review(TimeStampedModel):
 
     def accept(self):
         self.status = self.ACCEPTED
+        self.is_active = False
         self.save()
         self.content.publish()
 
