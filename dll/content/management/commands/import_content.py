@@ -165,7 +165,7 @@ class Command(BaseCommand):
             # Try to update/create the Tool
             try:
                 logger.debug("Update or create Trend from folder {}".format(folder))
-                tool, created = Tool.objects.update_or_create(
+                tool, created = Tool.objects.drafts().update_or_create(
                     name=data['name'],
                     defaults={
                         # 'image': filer_image,
@@ -281,7 +281,7 @@ class Command(BaseCommand):
 
             # Try to publish the new Trend
             try:
-                tool.submit_for_review()
+                tool.publish()
             except Exception as e:
                 logger.exception(e)
                 continue
@@ -321,10 +321,9 @@ class Command(BaseCommand):
             # Try to create the Trend
             try:
                 logger.debug("Update or create Trend from folder {}".format(folder))
-                trend, created = Trend.objects.update_or_create(
-                    base_folder=folder,
+                trend, created = Trend.objects.drafts().update_or_create(
+                    name=data['name'],
                     defaults={
-                        'name': data['name'],
                         'author': author,
                         'target_group': self._parse_semicolon_separated_values(data['zielgruppe']),
                         'category': category,
@@ -411,7 +410,7 @@ class Command(BaseCommand):
 
             # Try to publish the new Trend
             try:
-                trend.submit_for_review()
+                trend.publish()
             except Exception as e:
                 logger.exception(e)
                 continue
@@ -466,10 +465,10 @@ class Command(BaseCommand):
             # Try to create a new TeachingModule with the content
             try:
                 logger.debug("Update or create TeachingModule from folder {}".format(folder))
-                teaching_module, created = TeachingModule.objects.update_or_create(
-                    base_folder=folder,
+                teaching_module, created = TeachingModule.objects.drafts().update_or_create(
+                    name=data['name'].strip(),
                     defaults={
-                        'name': data['name'].strip(),
+                        'base_folder': folder,
                         'author': authors[0],
                         'learning_goals': self._parse_semicolon_separated_values(data['lernziele']),
                         'teaser': data['teaser'],
@@ -580,7 +579,7 @@ class Command(BaseCommand):
 
             # Try to publish the new TeachingModule
             try:
-                teaching_module.submit_for_review()
+                teaching_module.publish()
             except Exception as e:
                 logger.exception(e)
                 continue
@@ -589,37 +588,49 @@ class Command(BaseCommand):
     def _parse_related_content(obj, data):
         for name in filter(None, map(lambda x: x.strip(), data.get('aehnliche_trends', '').split(';'))):
             try:
-                related_trend, created = Trend.objects.get_or_create(name=name, author=get_default_tuhh_user())
-                if created:
-                    related_trend.json_data['from_import'] = True
-                    related_trend.save()
+                related_trend = Trend.objects.published().get(name=name)
                 obj.related_content.add(related_trend)
+            except Trend.DoesNotExist:
+                related_trend = Trend(
+                    name=name,
+                    author=get_default_tuhh_user(),
+                    publisher_is_draft=True
+                )
+                related_trend.json_data['from_import'] = True
+                related_trend.save()
             except Trend.MultipleObjectsReturned:
                 logger.error('Multiple Trends with the name ({name}) for {cls} in folder {folder}'.format(
                     name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
         for name in filter(None, map(lambda x: x.strip(), data.get('uBaustein', '').split(';'))):
             try:
-                related_teaching_module, created = TeachingModule.objects.get_or_create(
-                    name=name,
-                    author=get_default_tuhh_user())
-                if created:
-                    related_teaching_module.json_data['from_import'] = True
-                    related_teaching_module.save()
+                related_teaching_module = TeachingModule.objects.published().get(name=name)
                 obj.related_content.add(related_teaching_module)
+            except TeachingModule.DoesNotExist:
+                related_teaching_module = TeachingModule(
+                    name=name,
+                    author=get_default_tuhh_user(),
+                    publisher_is_draft=True
+                )
+                related_teaching_module.json_data['from_import'] = True
+                related_teaching_module.save()
             except TeachingModule.MultipleObjectsReturned:
                 logger.error('Multiple TeachingModules with the name ({name}) for {cls} in folder {folder}'.format(
                     name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
         for name in filter(None, map(lambda x: x.strip(), data.get('tool', '').split(';'))):
             try:
-                related_tool, created = Tool.objects.get_or_create(name=name, author=get_default_tuhh_user())
-                if created:
-                    related_tool.json_data['from_import'] = True
-                    related_tool.save()
+                related_tool = Tool.objects.published().get(name=name)
                 obj.related_content.add(related_tool)
+            except Tool.DoesNotExist:
+                related_tool = Tool(
+                    name=name,
+                    author=get_default_tuhh_user(),
+                    publisher_is_draft=True
+                )
+                related_tool.json_data['from_import'] = True
+                related_tool.save()
             except Tool.MultipleObjectsReturned:
                 logger.error('Multiple Tools with the name ({name}) for {cls} in folder {folder}'.format(
                     name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
-
 
     @staticmethod
     def _import_image_from_path_to_folder(image_path, image_name, folder):

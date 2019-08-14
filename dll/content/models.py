@@ -267,10 +267,6 @@ class Tool(Content):
     def type(self):
         return 'tool'
 
-    @property
-    def url(self):
-        return self.urls.get()
-
     def get_absolute_url(self):
         return reverse('tool-detail', kwargs={'slug': self.slug})
 
@@ -279,7 +275,7 @@ class Tool(Content):
         dst.operating_systems.add(*src.operating_systems.all())
         dst.applications.add(*src.applications.all())
 
-        url_clone = src.url.get()
+        url_clone = src.url
         url_clone.pk = None
         url_clone.id = None
         url_clone.created = None
@@ -586,10 +582,7 @@ class TrendLink(TimeStampedModel):
 class ToolLink(TimeStampedModel):
     url = models.URLField(max_length=2083)
     name = models.CharField(max_length=300)
-    tool = models.ForeignKey('Tool', on_delete=models.CASCADE, related_name='urls')
-
-    class Meta:
-        unique_together = ['tool', 'id']
+    tool = models.OneToOneField('Tool', on_delete=models.CASCADE, related_name='url')
 
 
 class ContentFile(TimeStampedModel):
