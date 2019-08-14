@@ -115,3 +115,7 @@ class ContentList(ListAPIView):
     # todo q icontains title / teaser
     queryset = Content.objects.all()
     serializer_class = ContentSerializer
+
+
+class CompetenceFilterView(TemplateView):
+    template_name = 'dll/filter/competence.html'
