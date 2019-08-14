@@ -211,3 +211,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # WARNING: Do not use this, because we have separate permissions for the different polymorphic models
 # GUARDIAN_GET_CONTENT_TYPE = 'polymorphic.contrib.guardian.get_polymorphic_base_content_type'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
