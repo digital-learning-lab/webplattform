@@ -214,7 +214,6 @@ class TeachingModule(Content):
         dst.subjects.add(*src.subjects.all())
         dst.school_types.add(*src.school_types.all())
 
-
     def get_absolute_url(self):
         return reverse('teaching-module-detail', kwargs={'slug': self.slug})
 
@@ -413,6 +412,11 @@ class Competence(TimeStampedModel):
         max_length=512,
         populate_from='name'
     )
+
+    @property
+    def icon_class(self):
+        """used for mapping to css icons"""
+        return "icon-competence-id-{}".format(self.cid)
 
     def __str__(self):
         return dict(self.DEFAULT_NAMES)[int(self.cid)]
