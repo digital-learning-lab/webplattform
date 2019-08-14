@@ -21,7 +21,7 @@ from django.urls import path, include
 
 from dll.content.views import HomePageView, ImprintView, DataPrivacyView, StructureView, UsageView, DevelopmentView, \
     NewsletterRegisterView, NewsletterUnregisterView, ContactView, ToolDetailView, TrendDetailView, \
-    TeachingModuleDetailView
+    TeachingModuleDetailView, ContentList
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,8 +38,8 @@ urlpatterns = [
     path('tools/<slug:slug>', ToolDetailView.as_view(), name='tool-detail'),
     path('trends/<slug:slug>', TrendDetailView.as_view(), name='trend-detail'),
     path('unterrichtsbausteine/<slug:slug>', TeachingModuleDetailView.as_view(), name='teaching-module-detail'),
-    # path('', include('django.contrib.flatpages.urls')),
-    path('', include('dll.user.urls', namespace='user'))
+    path('', include('dll.user.urls', namespace='user')),
+    path('api/inhalte/', ContentList.as_view())
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

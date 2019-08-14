@@ -3,8 +3,10 @@ import random
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
+from rest_framework.generics import ListAPIView
 
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence
+from .serializers import ContentSerializer
 
 
 class BreadcrumbMixin(ContextMixin):
@@ -109,3 +111,7 @@ class TeachingModuleDetailView(ContentDetailView):
     template_name = 'dll/content/teaching_module_detail.html'
 
 
+class ContentList(ListAPIView):
+    # todo q icontains title / teaser
+    queryset = Content.objects.all()
+    serializer_class = ContentSerializer

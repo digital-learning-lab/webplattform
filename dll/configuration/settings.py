@@ -59,7 +59,8 @@ INSTALLED_APPS = [
     'ckeditor',
     'dll.user',
     'dll.content',
-    'dll.general'
+    'dll.general',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
