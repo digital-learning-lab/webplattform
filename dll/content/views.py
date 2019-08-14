@@ -1,5 +1,6 @@
 import random
 
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
@@ -112,6 +113,8 @@ class TeachingModuleDetailView(ContentDetailView):
 
 
 class ContentList(ListAPIView):
-    # todo q icontains title / teaser
-    queryset = Content.objects.all()
     serializer_class = ContentSerializer
+
+    def get_queryset(self):
+        query = self.request.GET.get('q', '')
+        return Content.objects.filter(Q(name__icontains=query) | Q(teaser__icontains=query))
