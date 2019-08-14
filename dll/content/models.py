@@ -253,7 +253,6 @@ class Tool(Content):
     privacy = models.IntegerField(_("Datenschutz"), choices=PRIVACY_CHOICES, null=True, blank=True)
     description = models.TextField(_("Beschreibung"), null=True, blank=True)
     usage = models.TextField(_("Nutzung"), null=True, blank=True)
-    url = models.OneToOneField('ContentLink', on_delete=models.CASCADE, null=True)
 
     class Meta:
         permissions = (
@@ -268,6 +267,10 @@ class Tool(Content):
     def type(self):
         return 'tool'
 
+    @property
+    def url(self):
+        return self.urls.get()
+
     def get_absolute_url(self):
         return reverse('tool-detail', kwargs={'slug': self.slug})
 
@@ -276,14 +279,13 @@ class Tool(Content):
         dst.operating_systems.add(*src.operating_systems.all())
         dst.applications.add(*src.applications.all())
 
-        url_clone = src.url
+        url_clone = src.url.get()
         url_clone.pk = None
         url_clone.id = None
         url_clone.created = None
         url_clone.modified = None
+        url_clone.tool = dst
         url_clone.save()
-        dst.url = url_clone
-        dst.save()
 
 
 class Trend(Content):
@@ -579,6 +581,15 @@ class TrendLink(TimeStampedModel):
     url = models.URLField(max_length=2083)
     name = models.CharField(max_length=300)
     trend = models.ForeignKey('Trend', on_delete=models.CASCADE)
+
+
+class ToolLink(TimeStampedModel):
+    url = models.URLField(max_length=2083)
+    name = models.CharField(max_length=300)
+    tool = models.ForeignKey('Tool', on_delete=models.CASCADE, related_name='urls')
+
+    class Meta:
+        unique_together = ['tool', 'id']
 
 
 class ContentFile(TimeStampedModel):

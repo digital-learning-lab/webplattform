@@ -14,7 +14,11 @@ class DllUser(AbstractUser):
     )
 
     email = models.EmailField(_('email address'), blank=True, unique=True)
-
+    username = models.CharField(
+        _('username'),
+        max_length=150,
+        null=True
+    )
     gender = models.CharField(max_length=10, choices=GENDER_OPTIONS)
     doi_confirmed = models.BooleanField(
         _('Double-opt-in confirmed'),

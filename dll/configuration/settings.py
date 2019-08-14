@@ -180,7 +180,7 @@ AUTHENTICATION_BACKENDS = (
 DEFAULT_USER_USERNAME = 'TUHH'
 DEFAULT_USER_EMAIL = 'digital.learning.lab@tuhh.de'
 DEFAULT_USER_PASSWORD = '?&~ pCYqyj2Q4]/a?w#P`'
-SHELL_PLUS = "plain"  # bpython does not work atm
+SHELL_PLUS = "bpython"  # bpython does not work on pycharm terminal. use plain
 
 TAGGIT_CASE_INSENSITIVE = True
 
