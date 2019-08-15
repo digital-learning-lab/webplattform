@@ -6,7 +6,7 @@
           <h2>Filtern nach</h2>
 
           <h3>Sortierung</h3>
-          <select name="sortby" id="sortby-select" v-model="sortBy">
+          <select name="sortby" id="sortby-select" v-model="sortBy" @change="updateContents">
             <option value="az">A-Z</option>
             <option value="za">Z-A</option>
           </select>
@@ -15,15 +15,15 @@
           <h3>Auswahl</h3>
           <ul class="list-unstyled">
             <li>
-              <input type="checkbox" id="teaching-modules-checkbox" v-model="showTeachingModules">
+              <input type="checkbox" id="teaching-modules-checkbox" @change="updateContents" v-model="showTeachingModules">
               <label for="teaching-modules-checkbox">Unterrichtsbausteine</label>
             </li>
             <li>
-              <input type="checkbox" id="tools-checkbox" v-model="showTools">
+              <input type="checkbox" id="tools-checkbox" @change="updateContents" v-model="showTools">
               <label for="tools-checkbox">Tools</label>
             </li>
             <li>
-              <input type="checkbox" id="trends-checkbox" v-model="showTrends">
+              <input type="checkbox" id="trends-checkbox" @change="updateContents" v-model="showTrends">
               <label for="trends-checkbox">Trends</label>
             </li>
           </ul>
@@ -34,7 +34,7 @@
       <h1>{{ competence.name }}</h1>
       <p class="mb-5">{{ competence.description }}</p>
       <div class="row">
-        <div class="col col-12 col-md-6 mb-4" v-for="content in sortedAndFilteredContents">
+        <div class="col col-12 col-md-6 mb-4" v-for="content in contents">
           <app-content-teaser :content="content"></app-content-teaser>
         </div>
       </div>
@@ -43,6 +43,8 @@
 </template>
 
 <script>
+  import { debounce } from 'lodash'
+  import axios from 'axios'
   import ContentTeaser from './components/ContentTeaser.vue'
 
   export default {
@@ -52,22 +54,7 @@
     },
     data () {
       return {
-        contents: [
-          {name: 'edulabs1', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'trend', type_verbose: 'Trend', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']},
-          {name: 'edulabs2', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'teaching-module', type_verbose: 'Unterrichtsbaustein', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']},
-          {name: 'edulabs3', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'tool', type_verbose: 'Tool', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']},
-          {name: 'edulabs4', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'trend', type_verbose: 'Trend', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']},
-          {name: 'edulabs5', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'teaching-module', type_verbose: 'Unterrichtsbaustein', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']},
-          {name: 'edulabs6', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'trend', type_verbose: 'Trend', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']},
-          {name: 'edulabs7', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'tool', type_verbose: 'Tool', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']},
-          {name: 'edulabs8', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'trend', type_verbose: 'Trend', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']},
-          {name: 'edulabs9', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'tool', type_verbose: 'Tool', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']},
-          {name: 'aedulabs', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'teaching-module', type_verbose: 'Unterrichtsbaustein', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']},
-          {name: 'bedulabs', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'trend', type_verbose: 'Trend', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']},
-          {name: 'cedulabs', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'teaching-module', type_verbose: 'Unterrichtsbaustein', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']},
-          {name: 'dedulabs', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'tool', type_verbose: 'Tool', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']},
-          {name: 'eedulabs', image: '/media/filer_public_thumbnails/filer_public/54/f7/54f765bc-c0d0-44bc-8b65-97cf7b838c75/edulabs.jpg__750x500_q85_subsampling-2_upscale.jpg', type: 'trend', type_verbose: 'Trend', teaser: 'Lorem', competences: ['suchen-verarbeiten-aufbewahren', 'kommunizieren-kooperieren']}
-        ],
+        contents: [],
         competence: {
           name: 'Kommunizieren & Kooperieren',
           description: 'Um im digitalen Raum adäquat KOMMUNIZIEREN & KOOPERIEREN zu können, braucht es entsprechende Kompetenzen, digitale Werkzeuge zur angemessenen und effektiven Kommunikation einsetzen und in digitalen Umgebungen zielgerichtet kooperieren zu können. Dabei geht es vor allem darum, entsprechend der jeweiligen Situation und ausgerichtet an den Kommunikations- bzw. Kooperationspartnern die passenden Werkzeuge auszuwählen und entsprechende Umgangsregeln einzuhalten.'
@@ -92,6 +79,24 @@
         }
 
         return this.sortBy === 'az' ? comparison : -comparison;
+      },
+      updateContents () {
+        console.log('called')
+        axios.get('/api/inhalte', {
+          params: {
+            q: this.searchTerm,
+            sorting: this.sortBy,
+            teachingModules: this.showTeachingModules,
+            trends: this.showTrends,
+            tools: this.showTools
+          }
+        })
+          .then(response => {
+            this.contents = response.data.results
+          })
+          .catch(error => {
+            console.log(error)
+          })
       }
     },
     computed: {
@@ -112,6 +117,13 @@
       }
     },
     created () {
+      this.updateContents()
+      this.debouncedUpdate = debounce(this.updateContents, 500)
+    },
+    watch: {
+      searchTerm () {
+        this.debouncedUpdate()
+      }
     }
   }
 </script>

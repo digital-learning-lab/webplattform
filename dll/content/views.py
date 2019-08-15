@@ -117,7 +117,24 @@ class ContentList(ListAPIView):
 
     def get_queryset(self):
         query = self.request.GET.get('q', '')
-        return Content.objects.filter(Q(name__icontains=query) | Q(teaser__icontains=query))
+        sorting = self.request.GET.get('sorting', 'az')
+        teaching_modules = self.request.GET.get('teachingModules', 'true')
+        trends = self.request.GET.get('trends', 'true')
+        tools = self.request.GET.get('tools', 'true')
+
+        qs = Content.objects.published().filter(Q(name__icontains=query) | Q(teaser__icontains=query))
+
+        if teaching_modules != 'true':
+            qs = qs.not_instance_of(TeachingModule)
+        if trends != 'true':
+            qs = qs.not_instance_of(Trend)
+        if tools != 'true':
+            qs = qs.not_instance_of(Tool)
+
+        if sorting == 'az':
+            return qs.order_by('name')
+        else:
+            return qs.order_by('-name')
 
 
 class CompetenceFilterView(TemplateView):

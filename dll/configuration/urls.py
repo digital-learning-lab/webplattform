@@ -39,7 +39,7 @@ urlpatterns = [
     path('trends/<slug:slug>', TrendDetailView.as_view(), name='trend-detail'),
     path('unterrichtsbausteine/<slug:slug>', TeachingModuleDetailView.as_view(), name='teaching-module-detail'),
     path('', include('dll.user.urls', namespace='user')),
-    path('api/inhalte/', ContentList.as_view())
+    path('api/inhalte/', ContentList.as_view()),
     path('kompetenz/<slug:slug>', CompetenceFilterView.as_view(), name='competence-filter'),
     # path('', include('django.contrib.flatpages.urls')),
     path('', include('dll.user.urls', namespace='user'))

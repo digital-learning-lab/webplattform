@@ -11,6 +11,8 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const SentryCliPlugin = require('@sentry/webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
+var LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+
 
 const devMode = process.env.NODE_ENV !== 'production';
 const hotReload = process.env.HOT_RELOAD === '1';
@@ -60,7 +62,11 @@ const plugins = [
   new CleanWebpackPlugin(),
   new CopyWebpackPlugin([
     { from: './static/src/images/**/*', to: path.resolve('./static/dist/images/[name].[ext]'), toType: 'template' }
-  ])
+  ]),
+  new LodashModuleReplacementPlugin({
+    'collections': true,
+    'paths': true
+  })
 ];
 
 if (devMode) {
@@ -102,14 +108,14 @@ module.exports = {
   // externals: { jquery: 'jQuery', Sentry: 'Sentry' },
   plugins,
   optimization: {
-    minimizer: [
-      new UglifyJsPlugin({
-        cache: true,
-        parallel: true,
-        sourceMap: true // set to true if you want JS source maps
-      }),
-      new OptimizeCSSAssetsPlugin({})
-    ],
+    // minimizer: [
+    //   new UglifyJsPlugin({
+    //     cache: true,
+    //     parallel: true,
+    //     sourceMap: true // set to true if you want JS source maps
+    //   }),
+    //   new OptimizeCSSAssetsPlugin({})
+    // ],
     splitChunks: {
       cacheGroups: {
         commons: {
