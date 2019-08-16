@@ -1,0 +1,83 @@
+variables:
+    CONTAINER_REGISTRY: collaborating.tuhh.de:5005
+    CONTAINER_TEST_IMAGE: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:${CI_COMMIT_REF_SLUG}
+    CONTAINER_STAGING_IMAGE: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:latest
+    CONTAINER_RELEASE_IMAGE: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:release
+    BASE_IMAGE: ${CONTAINER_REGISTRY}/itbh/tnt/digital-learning-lab/dll-docker
+    DOCKER_FILE_PATH: .
+
+.before_script_template:
+    before_script:  &before_script_definition
+        - cp ./docker/docker-compose.reviews ./docker/docker-compose.yml
+#        - docker-compose -p ${CI_PROJECT_PATH_SLUG}-${CI_ENVIRONMENT_SLUG} -f ./docker/docker-compose.yml config
+#        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
+#        - docker pull ${BASE_IMAGE}
+        - |
+            ssh-agent bash -c '
+                ssh-add ~/.ssh/id_rsa_dll-inhalte;
+                git clone -b master git@collaborating.tuhh.de:itbh/tnt/digital-learning-lab/inhalte.git ./dll/media;
+                if [ -n "${INHALTE_BRANCH}" ]; then
+                    git -C ./dll/media checkout "${INHALTE_BRANCH}";
+                elif git -C ./dll/media ls-remote --heads --exit-code origin "${CI_COMMIT_REF_NAME}"; then
+                    git -C ./dll/media checkout "${CI_COMMIT_REF_NAME}";
+                fi
+            '
+        - git -C ./dll/media branch | cat
+        - rm -rf ./dll/media/.git
+stages:
+    - tests
+    - review
+
+tests:
+    stage: tests
+    tags:
+        - floki_development
+    #before_script: *before_script_definition
+    script:
+        - exit 0
+
+start_review:
+    stage: review
+    before_script: *before_script_definition
+    script:
+        # Project specific
+        - export SECRET_KEY=$(openssl rand -base64 12)
+        - export HOST_IP=$(gethostip -d $(hostname --fqdn))
+        - docker-compose -p ${CI_PROJECT_PATH_SLUG}-${CI_ENVIRONMENT_SLUG} -f ./docker/docker-compose.yml build --no-cache --force-rm
+        - docker-compose -p ${CI_PROJECT_PATH_SLUG}-${CI_ENVIRONMENT_SLUG} -f ./docker/docker-compose.yml down
+        - docker-compose -p ${CI_PROJECT_PATH_SLUG}-${CI_ENVIRONMENT_SLUG} -f ./docker/docker-compose.yml up -d
+        - mkdir -p ./_linkchecker
+        - echo "https://${CI_PROJECT_ID}-${CI_ENVIRONMENT_SLUG}.dll.rz.tuhh.de/" >./_linkchecker/url
+    artifacts:
+        name: "${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}"
+        expire_in: 1 week
+        paths:
+            - ./_linkchecker
+    environment:
+        name: ${CI_COMMIT_REF_NAME}
+        url: https://${CI_PROJECT_ID}-${CI_ENVIRONMENT_SLUG}.dll.rz.tuhh.de/
+        on_stop: stop_review
+    only:
+        - branches
+    tags:
+        - floki_development
+    except:
+        - master
+
+stop_review:
+    stage: review
+    variables:
+        GIT_STRATEGY: none
+    script:
+        - cp ./docker/docker-compose.reviews ./docker/docker-compose.yml
+        - docker-compose -p ${CI_PROJECT_PATH_SLUG}-${CI_ENVIRONMENT_SLUG} -f ./docker/docker-compose.yml down
+    when: manual
+    environment:
+        name: ${CI_COMMIT_REF_NAME}
+        action: stop
+    only:
+        - branches
+    tags:
+        - floki_development
+    except:
+        - master
