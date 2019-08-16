@@ -25,16 +25,16 @@ variables:
         - git -C ./dll/media branch | cat
         - rm -rf ./dll/media/.git
 stages:
-    - tests
+#    - tests
     - review
-
-tests:
-    stage: tests
-    tags:
-        - floki_development
-    #before_script: *before_script_definition
-    script:
-        - exit 0
+#
+#tests:
+#    stage: tests
+#    tags:
+#        - floki_development
+#    #before_script: *before_script_definition
+#    script:
+#        - exit 0
 
 start_review:
     stage: review
