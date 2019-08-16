@@ -25,7 +25,7 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     TeachingModuleDetailView, ContentViewSet
 
 router = DefaultRouter()
-router.register(r'inhalte', ContentViewSet)
+router.register(r'inhalte', ContentViewSet, base_name='content')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

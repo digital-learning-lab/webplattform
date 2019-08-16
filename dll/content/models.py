@@ -97,14 +97,15 @@ class Content(PublisherModel, PolymorphicModel):
         # image
         super(Content, self).copy_relations(src, dst)
         dst_image = src.image
-        dst_image.pk = None
-        dst_image.id = None
-        file_name, extension = os.path.splitext(dst_image.label)
-        file_name += " (public)"
-        dst_image.name = file_name + extension
-        dst_image.save()
-        dst.image = dst_image
-        dst.save()
+        if dst_image is not None:
+            dst_image.pk = None
+            dst_image.id = None
+            file_name, extension = os.path.splitext(dst_image.label)
+            file_name += " (public)"
+            dst_image.name = file_name + extension
+            dst_image.save()
+            dst.image = dst_image
+            dst.save()
 
         # co-authors
         dst.co_authors.add(*src.co_authors.all())
