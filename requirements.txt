@@ -18,4 +18,5 @@ uwsgi==2.0.18
 easy-thumbnails==2.6.0
 django-ckeditor==5.7.1
 django-crispy-forms==1.7.2
-djangorestframework
+djangorestframework==3.10.2
+django-filter==2.2.0

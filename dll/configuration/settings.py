@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'dll.user',
     'dll.content',
     'dll.general',
-    'rest_framework'
+    'rest_framework',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -214,5 +215,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'SEARCH_PARAM': 'q'
 }
