@@ -36,7 +36,7 @@ class SuccessfulLoginTests(TestCase):
 
     def test_log_in(self):
         data = {
-            'username': 'john',
+            'username': 'test@blueshoe.de',
             'password': '@%$hnsd345'
         }
 

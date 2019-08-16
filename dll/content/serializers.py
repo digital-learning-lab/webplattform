@@ -2,6 +2,7 @@ from easy_thumbnails.files import get_thumbnailer
 from rest_framework import serializers
 from rest_polymorphic.serializers import PolymorphicSerializer
 
+from dll.user.models import DllUser
 from .models import Content, Tool, Trend, TeachingModule
 
 
@@ -39,19 +40,29 @@ class ContentListSerializer(serializers.ModelSerializer):
         return obj.get_absolute_url()
 
 
-class ToolSerializer(serializers.ModelSerializer):
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DllUser
+        fields = ['username']
+
+
+class BaseContentSubclassSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer(read_only=True, allow_null=True, required=False)
+
+
+class ToolSerializer(BaseContentSubclassSerializer):
     class Meta:
         model = Tool
         fields = '__all__'
 
 
-class TrendSerializer(serializers.ModelSerializer):
+class TrendSerializer(BaseContentSubclassSerializer):
     class Meta:
         model = Trend
         fields = '__all__'
 
 
-class TeachingModuleSerializer(serializers.ModelSerializer):
+class TeachingModuleSerializer(BaseContentSubclassSerializer):
     class Meta:
         model = TeachingModule
         fields = '__all__'
@@ -63,3 +74,6 @@ class ContentPolymorphicSerializer(PolymorphicSerializer):
         Trend: TrendSerializer,
         TeachingModule: TeachingModuleSerializer
     }
+
+    def is_valid(self, *args, **kwargs):
+        return super(ContentPolymorphicSerializer, self).is_valid(*args, **kwargs)

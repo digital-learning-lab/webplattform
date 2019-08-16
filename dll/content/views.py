@@ -123,7 +123,10 @@ class ContentViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         name = resolve(self.request.path_info).url_name
-        if name == 'content-list':
+        if name == 'content-list' and self.request.method == 'GET':
             return ContentListSerializer
         else:
             return super(ContentViewSet, self).get_serializer_class()
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)

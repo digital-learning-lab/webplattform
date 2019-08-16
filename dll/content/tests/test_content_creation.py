@@ -25,6 +25,8 @@ class BaseTestCase(TestCase):
         }
 
         self.author = DllUser.objects.create(**author)
+        self.author.set_password('password')
+        self.author.save()
 
         for content in content_list:
             c = content['model'].objects.create(name=content['name'], teaser=content['teaser'], author=self.author)
@@ -55,3 +57,17 @@ class ContentRetrieveTests(BaseTestCase):
         response = self.client.get(detail_view)
         data = response.json()
         pass
+
+    def test_content_create(self):
+        self.client.login(username='test+alice@blueshoe.de', password='password')
+
+        create_view = reverse('content-list')
+        post_data = {
+            'name': "New Trend",
+            'teaser': 'Nunc interdum lacus sit amet orci.',
+            'resourcetype': 'Trend'
+        }
+        response = self.client.post(create_view, data=post_data)
+        self.assertEqual(response.status_code, 201)
+        data = response.json()
+        self.assertTrue(data['author']['username'] == 'alice')

@@ -48,17 +48,19 @@ class Content(PublisherModel, PolymorphicModel):
     name = models.CharField(_("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200)
     slug = DllSlugField(populate_from='name')
     author = models.ForeignKey(DllUser, on_delete=models.SET(get_default_tuhh_user), verbose_name=_("Autor"))
-    co_authors = models.ManyToManyField(DllUser, related_name='collaborative_content', verbose_name=_("Kollaborateure"))
+    co_authors = models.ManyToManyField(DllUser, related_name='collaborative_content',
+                                        verbose_name=_("Kollaborateure"), blank=True)
     image = FilerImageField(on_delete=models.SET_NULL, null=True, verbose_name=_('Anzeigebild'))
     teaser = models.TextField(max_length=140, verbose_name=_("Teaser"), null=True, blank=True)
     learning_goals = ArrayField(models.CharField(max_length=200), verbose_name=_("Lernziele"), default=list)
-    related_content = models.ManyToManyField('self', verbose_name=_("Verwandte Tools/Trends/Unterrichtsbausteine"))
+    related_content = models.ManyToManyField('self', verbose_name=_("Verwandte Tools/Trends/Unterrichtsbausteine"),
+                                             blank=True)
     view_count = models.PositiveIntegerField(default=0)
     base_folder = models.CharField(max_length=100, null=True)
     # additional_info: 'hinweise' for ubausteine, 'anmerkung'  for tools, 'hintergrund' for Trends
     additional_info = models.TextField(_("Hinweise/Anmerkungen/Hintergrund"), max_length=500, blank=True, null=True)
-    competences = models.ManyToManyField('Competence', verbose_name=_("Kompetenzen"))
-    sub_competences = models.ManyToManyField('SubCompetence', verbose_name=_("Subkompetenzen"))
+    competences = models.ManyToManyField('Competence', verbose_name=_("Kompetenzen"), blank=True)
+    sub_competences = models.ManyToManyField('SubCompetence', verbose_name=_("Subkompetenzen"), blank=True)
     json_data = JSONField(default=dict)
 
     tags = TaggableManager()
@@ -193,8 +195,8 @@ class TeachingModule(Content):
     state = models.CharField(_("Bundesland"), max_length=22, choices=GERMAN_STATES, null=True, blank=True)
     differentiating_attribute = models.TextField(_("Differenzierung"), max_length=500)
     expertise = ArrayField(models.CharField(max_length=200), verbose_name=_("Fachkompetenzen"), default=list)
-    subjects = models.ManyToManyField('Subject', verbose_name=_("Unterrichtsfach"))
-    school_types = models.ManyToManyField('SchoolType', verbose_name=_("Schulform"))
+    subjects = models.ManyToManyField('Subject', verbose_name=_("Unterrichtsfach"), blank=True)
+    school_types = models.ManyToManyField('SchoolType', verbose_name=_("Schulform"), blank=True)
     licence = models.IntegerField(_("Lizenz"), choices=LICENCE_CHOICES, blank=True, null=True)
 
     class Meta:
@@ -244,8 +246,8 @@ class Tool(Content):
         (4, _("Personenbezogene Daten werden erhoben. Es greift NICHT die EU-Datenschutz-Grundverordnung."))
     )
 
-    operating_systems = models.ManyToManyField('OperatingSystem', verbose_name=_("Betriebssystem"))
-    applications = models.ManyToManyField('ToolApplication', verbose_name=_("Anwendung"))
+    operating_systems = models.ManyToManyField('OperatingSystem', verbose_name=_("Betriebssystem"), blank=True)
+    applications = models.ManyToManyField('ToolApplication', verbose_name=_("Anwendung"), blank=True)
     status = models.CharField(_("Status"), max_length=7, choices=STATUS_CHOICES, default=None, null=True)
     requires_registration = models.BooleanField(null=True, blank=False)
     usk = models.CharField(_("Altersfreigabe"), max_length=5, choices=USK_CHOICES, null=True, blank=True)
