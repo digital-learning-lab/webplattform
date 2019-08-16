@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_polymorphic.serializers import PolymorphicSerializer
 
 from dll.user.models import DllUser
-from .models import Content, Tool, Trend, TeachingModule
+from .models import Content, Tool, Trend, TeachingModule, ContentLink
 
 
 class ContentListSerializer(serializers.ModelSerializer):
@@ -46,8 +46,28 @@ class AuthorSerializer(serializers.ModelSerializer):
         fields = ['username']
 
 
+class LinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContentLink
+        fields = ['url', 'name', 'type']
+        depth = 1
+
+
 class BaseContentSubclassSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True, allow_null=True, required=False)
+    contentlink_set = LinkSerializer(many=True)
+
+    def validate_related_content(self, data):
+        return (x.is_public for x in data)
+
+    def create(self, validated_data):
+        links_data = validated_data.pop('contentlink_set')
+        content = super(BaseContentSubclassSerializer, self).create(validated_data)
+        for link in links_data:
+            ContentLink.objects.create(content=content, **dict(link))
+        return content
+
+    # TODO: update
 
 
 class ToolSerializer(BaseContentSubclassSerializer):
@@ -74,6 +94,3 @@ class ContentPolymorphicSerializer(PolymorphicSerializer):
         Trend: TrendSerializer,
         TeachingModule: TeachingModuleSerializer
     }
-
-    def is_valid(self, *args, **kwargs):
-        return super(ContentPolymorphicSerializer, self).is_valid(*args, **kwargs)

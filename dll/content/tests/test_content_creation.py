@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from dll.content.models import Tool, TeachingModule, Trend, ToolLink
+from dll.content.models import Tool, TeachingModule, Trend, ToolLink, Competence, SubCompetence
 from dll.user.models import DllUser
 
 
@@ -36,6 +36,10 @@ class BaseTestCase(TestCase):
                 c.save()
             c.publish()
 
+        # Create competence
+        Competence.objects.create(cid=1)
+        SubCompetence.objects.create(cid=11)
+
 
 class ContentListTests(BaseTestCase):
 
@@ -63,11 +67,19 @@ class ContentRetrieveTests(BaseTestCase):
 
         create_view = reverse('content-list')
         post_data = {
-            'name': "New Trend",
-            'teaser': 'Nunc interdum lacus sit amet orci.',
-            'resourcetype': 'Trend'
+            "name": "New Trend",
+            "teaser": "Nunc interdum lacus sit amet orci.",
+            "learning_goals": ["a", "b", "c"],
+            "related_content": [2, 4],
+            "competences": [1],
+            "sub_competences": [1],
+            "resourcetype": "Trend",
+            "contentlink_set": [
+                {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
+                {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
+            ]
         }
-        response = self.client.post(create_view, data=post_data)
-        self.assertEqual(response.status_code, 201)
+        response = self.client.post(create_view, data=post_data, content_type='application/json')
         data = response.json()
+        self.assertEqual(response.status_code, 201)
         self.assertTrue(data['author']['username'] == 'alice')
