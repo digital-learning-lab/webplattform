@@ -17,7 +17,9 @@ services:
     links:
        - db
     command: >
-      bash -c "python manage.py migrate && python manage.py import_content -f /code/dll/media && python manage.py runserver 0:80"
+      bash -c "python manage.py migrate && python manage.py import_content -f /code/dll/media && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "80:8000"
     security_opt:
       - no-new-privileges
     environment:
