@@ -29,10 +29,10 @@ services:
       ADMIN_EMAIL: 'michael.heinemann@tuhh.de'
       ADMIN_PASSWORD: 'cgPPDMTCAVBgJnBUrucji'
 
-      DB_NAME: 'dll_db'
-      DB_HOST: 'db'
-      DB_USER: 'dll_admin'
-      DB_PASSWORD: 'gdUsLuRrDa6gQmEqoK2oP9oHWvcPeq6J3jQpAnF6q5Tw7Rmci5D'
+      DATABASE_NAME: 'dll_db'
+      DATABASE_HOST: 'db'
+      DATABASE_USER: 'dll_admin'
+      DATABASE_PASSWORD: 'gdUsLuRrDa6gQmEqoK2oP9oHWvcPeq6J3jQpAnF6q5Tw7Rmci5D'
 
       EMAIL_HOST: 'floki.rz.tuhh.de'
       EMAIL_PORT: '25'
@@ -45,7 +45,7 @@ services:
     logging:
       driver: journald
   db:
-    image: 'postgres:10'
+    image: postgres:11
     labels:
       ONLINE_JOURNALCTL: 'true'
       ONLINE_JOURNALCTL_TOKEN: '${ONLINE_JOURNALCTL_TOKEN}'
