@@ -1,14 +1,13 @@
 import random
 
-from django.db.models import Q
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters
 
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence
-from .serializers import ContentSerializer
+from .serializers import ContentListSerializer, ContentPolymorphicSerializer
 
 
 class BreadcrumbMixin(ContextMixin):
@@ -114,10 +113,17 @@ class TeachingModuleDetailView(ContentDetailView):
 
 
 class ContentViewSet(viewsets.ModelViewSet):
-    serializer_class = ContentSerializer
+    serializer_class = ContentPolymorphicSerializer
     queryset = Content.objects.published()
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter
     ]
     search_fields = ['name', 'teaser']
+
+    def get_serializer_class(self):
+        name = resolve(self.request.path_info).url_name
+        if name == 'content-list':
+            return ContentListSerializer
+        else:
+            return super(ContentViewSet, self).get_serializer_class()

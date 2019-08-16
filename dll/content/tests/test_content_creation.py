@@ -43,5 +43,15 @@ class ContentListTests(BaseTestCase):
         data = response.json()
         self.assertTrue(len(data['results']) == 6)
         self.assertEqual(set(data['results'][0].keys()), {'name', 'image', 'type', 'type_verbose', 'teaser',
-                                                          'competences', 'url', 'created'})
+                                                          'competences', 'url', 'created', 'id'})
         self.assertTrue(isinstance(data['results'][0]['competences'], list))
+
+
+class ContentRetrieveTests(BaseTestCase):
+
+    def test_content_retrieve(self):
+        public_tool = Tool.objects.published().first()
+        detail_view = reverse('content-detail', kwargs={'pk': public_tool.pk})
+        response = self.client.get(detail_view)
+        data = response.json()
+        pass
