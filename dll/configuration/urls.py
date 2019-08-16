@@ -18,10 +18,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.flatpages import views
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
 from dll.content.views import HomePageView, ImprintView, DataPrivacyView, StructureView, UsageView, DevelopmentView, \
     NewsletterRegisterView, NewsletterUnregisterView, ContactView, ToolDetailView, TrendDetailView, \
-    TeachingModuleDetailView, ContentList
+    TeachingModuleDetailView, ContentViewSet
+
+router = DefaultRouter()
+router.register(r'inhalte', ContentViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -39,7 +43,7 @@ urlpatterns = [
     path('trends/<slug:slug>', TrendDetailView.as_view(), name='trend-detail'),
     path('unterrichtsbausteine/<slug:slug>', TeachingModuleDetailView.as_view(), name='teaching-module-detail'),
     path('', include('dll.user.urls', namespace='user')),
-    path('api/inhalte/', ContentList.as_view())
+    path('api/', include(router.urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

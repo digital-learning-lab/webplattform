@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
-from rest_framework.generics import ListAPIView
+from rest_framework import viewsets
 
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence
 from .serializers import ContentSerializer
@@ -112,9 +112,10 @@ class TeachingModuleDetailView(ContentDetailView):
     template_name = 'dll/content/teaching_module_detail.html'
 
 
-class ContentList(ListAPIView):
+class ContentViewSet(viewsets.ModelViewSet):
     serializer_class = ContentSerializer
+    queryset = Content.objects.published()
 
     def get_queryset(self):
         query = self.request.GET.get('q', '')
-        return Content.objects.filter(Q(name__icontains=query) | Q(teaser__icontains=query))
+        return super().get_queryset().filter(Q(name__icontains=query) | Q(teaser__icontains=query))
