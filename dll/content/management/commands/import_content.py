@@ -283,6 +283,7 @@ class Command(BaseCommand):
             try:
                 tool.publish()
             except Exception as e:
+                logger.warning('Could not publish Tool {}'.format(folder))
                 logger.exception(e)
                 continue
 
@@ -412,6 +413,7 @@ class Command(BaseCommand):
             try:
                 trend.publish()
             except Exception as e:
+                logger.warning('Could not publish Trend {}'.format(folder))
                 logger.exception(e)
                 continue
 
@@ -581,6 +583,7 @@ class Command(BaseCommand):
             try:
                 teaching_module.publish()
             except Exception as e:
+                logger.warning('Could not publish TeachingModule {}'.format(folder))
                 logger.exception(e)
                 continue
 
