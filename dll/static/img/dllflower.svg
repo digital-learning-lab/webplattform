@@ -810,11 +810,11 @@
 	<g>
 		<polygon class="st7" id="trends_trigger" fill="transparent" data-element_type="trends" points="387.1,473.7 477.4,421.5 477.4,317.2 387.1,369.6 		"/>
 	</g>
-	<polygon class="st6" data-element_type="1" fill="transparent" points="376,87.6 260.4,20.9 145,87.6 145,221 260.4,287.7 359.8,230.3 376,221 	"/>
-	<polygon class="st6" data-element_type="2" fill="transparent" points="503.7,287.7 619.2,220.9 619.2,87.6 503.7,21 388.1,87.6 388.1,220.9 410.4,233.9 	"/>
-	<polygon class="st6" data-element_type="3" fill="transparent" points="625.2,498.3 740.8,431.6 740.8,298.3 625.2,231.6 509.9,298.3 509.9,431.6 	"/>
-	<polygon class="st6" data-element_type="4" fill="transparent" points="388.1,642.3 410.4,655.1 503.7,708.9 619.2,642.3 619.2,508.9 503.7,442.2 405.3,499.1 388.1,508.9 	"/>
-	<polygon class="st6" data-element_type="5" fill="transparent" points="152.5,504.5 145,508.9 145,642.3 260.4,708.9 376,642.3 376,508.9 260.4,442.2 	"/>
-	<polygon class="st6" data-element_type="6" fill="transparent" points="138.9,231.6 23.3,298.3 23.3,431.6 132.5,494.7 138.9,498.3 254.4,431.6 254.4,298.3 	"/>
+	<polygon class="st6" data-element_type="suchen-verarbeiten-aufbewahren" fill="transparent" points="376,87.6 260.4,20.9 145,87.6 145,221 260.4,287.7 359.8,230.3 376,221 	"/>
+	<polygon class="st6" data-element_type="kommunizieren-kooperieren" fill="transparent" points="503.7,287.7 619.2,220.9 619.2,87.6 503.7,21 388.1,87.6 388.1,220.9 410.4,233.9 	"/>
+	<polygon class="st6" data-element_type="produzieren-prasentieren" fill="transparent" points="625.2,498.3 740.8,431.6 740.8,298.3 625.2,231.6 509.9,298.3 509.9,431.6 	"/>
+	<polygon class="st6" data-element_type="schutzen-sicher-agieren" fill="transparent" points="388.1,642.3 410.4,655.1 503.7,708.9 619.2,642.3 619.2,508.9 503.7,442.2 405.3,499.1 388.1,508.9 	"/>
+	<polygon class="st6" data-element_type="problemlosen-handeln" fill="transparent" points="152.5,504.5 145,508.9 145,642.3 260.4,708.9 376,642.3 376,508.9 260.4,442.2 	"/>
+	<polygon class="st6" data-element_type="analysieren-reflektieren" fill="transparent" points="138.9,231.6 23.3,298.3 23.3,431.6 132.5,494.7 138.9,498.3 254.4,431.6 254.4,298.3 	"/>
 </g>
 </svg>

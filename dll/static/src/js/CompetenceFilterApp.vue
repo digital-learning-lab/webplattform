@@ -31,14 +31,23 @@
       </div>
     </div>
     <div class="col col-9">
-      <h1>{{ competence.name }}</h1>
-      <p class="mb-5">{{ competence.description }}</p>
+      <h1 v-html="window.competenceName"></h1>
+      <p class="mb-5" v-html="window.competenceText"></p>
       <div class="row">
         <div class="col col-12 col-md-6 mb-4" v-for="content in contents">
           <app-content-teaser :content="content"></app-content-teaser>
         </div>
       </div>
-    </div>
+        <div class="pagination">
+          <button class="pagination__previous" @click="previousPage" :disabled="pagination.prev === null">
+            <span><</span>
+          </button>
+          <button class="pagination__number" v-for="page in pages" @click="jumpTo(page)">{{ page }}</button>
+          <button class="pagination__next" @click="nextPage" :disabled="pagination.next === null">
+            <span>></span>
+          </button>
+        </div>
+      </div>
   </div>
 </template>
 
@@ -63,10 +72,26 @@
         searchTerm: '',
         showTeachingModules: true,
         showTrends: true,
-        showTools: true
+        showTools: true,
+        currentPage: 1,
+        pagination: {
+          count: 0,
+          perPage: 10,
+          next: null,
+          prev: null
+        }
       }
     },
     methods: {
+      jumpTo (page) {
+        this.updateContents(page)
+      },
+      previousPage () {
+        this.updateContents(--this.currentPage)
+      },
+      nextPage () {
+        this.updateContents(++this.currentPage)
+      },
       sortContents (a, b) {
         const nameA = a.name.toUpperCase();
         const nameB = b.name.toUpperCase();
@@ -80,19 +105,27 @@
 
         return this.sortBy === 'az' ? comparison : -comparison;
       },
-      updateContents () {
-        console.log('called')
+      updateContents (page) {
+
         axios.get('/api/inhalte', {
           params: {
             q: this.searchTerm,
             sorting: this.sortBy,
             teachingModules: this.showTeachingModules,
             trends: this.showTrends,
-            tools: this.showTools
+            tools: this.showTools,
+            competence: this.window.competenceSlug,
+            page: Number.isInteger(page) ? page : 1
           }
         })
           .then(response => {
             this.contents = response.data.results
+            this.pagination = {
+              count: response.data.count,
+              perPage: 10,
+              next: response.data.next,
+              prev: response.data.previous
+            }
           })
           .catch(error => {
             console.log(error)
@@ -100,6 +133,9 @@
       }
     },
     computed: {
+      window () {
+        return window
+      },
       sortedAndFilteredContents () {
         let filteredContents = this.contents.filter((content) => {
           if (content.type === 'teaching-module') {
@@ -113,7 +149,18 @@
           }
         })
         return filteredContents.sort(this.sortContents)
-
+      },
+      pages () {
+        if (this.pagination.count) {
+          let counter = this.pagination.count
+          let pages = []
+          let page = 1
+          while (counter > 0) {
+            pages.push(page++)
+            counter -= 10
+          }
+          return pages
+        }
       }
     },
     created () {

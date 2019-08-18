@@ -13,3 +13,11 @@
     </div>
   </div>
 {% endblock %}
+
+{% block extra_scripts %}
+  <script>
+    window.competenceName = '{{ competence.name }}';
+    window.competenceText = '{{ competence.description }}';
+    window.competenceSlug = '{{ competence.slug }}';
+  </script>
+{% endblock %}

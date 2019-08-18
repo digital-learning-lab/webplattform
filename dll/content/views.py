@@ -1,5 +1,6 @@
 import random
 
+from django.db.models import Q
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
@@ -123,6 +124,7 @@ class ContentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         query = self.request.GET.get('q', '')
+        competence = self.request.GET.get('competence', '')
         sorting = self.request.GET.get('sorting', 'az')
         teaching_modules = self.request.GET.get('teachingModules', 'true')
         trends = self.request.GET.get('trends', 'true')
@@ -130,6 +132,8 @@ class ContentViewSet(viewsets.ModelViewSet):
 
         qs = Content.objects.published().filter(Q(name__icontains=query) | Q(teaser__icontains=query))
 
+        if competence:
+            qs = qs.filter(competences__slug=competence)
         if teaching_modules != 'true':
             qs = qs.not_instance_of(TeachingModule)
         if trends != 'true':
@@ -153,6 +157,9 @@ class ContentViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
 
-class CompetenceFilterView(TemplateView):
+class CompetenceFilterView(DetailView):
+    model = Competence
     template_name = 'dll/filter/competence.html'
+
+
 
