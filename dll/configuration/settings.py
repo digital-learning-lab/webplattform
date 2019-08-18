@@ -60,7 +60,8 @@ INSTALLED_APPS = [
     'dll.user',
     'dll.content',
     'dll.general',
-    'rest_framework'
+    'rest_framework',
+    'django_filters'
 ]
 
 MIDDLEWARE = [
@@ -180,7 +181,7 @@ AUTHENTICATION_BACKENDS = (
 DEFAULT_USER_USERNAME = 'TUHH'
 DEFAULT_USER_EMAIL = 'digital.learning.lab@tuhh.de'
 DEFAULT_USER_PASSWORD = '?&~ pCYqyj2Q4]/a?w#P`'
-SHELL_PLUS = "plain"  # bpython does not work atm
+SHELL_PLUS = "bpython"  # bpython does not work on pycharm terminal. use plain
 
 TAGGIT_CASE_INSENSITIVE = True
 
@@ -214,5 +215,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'SEARCH_PARAM': 'q'
 }

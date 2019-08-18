@@ -1,10 +1,12 @@
 from easy_thumbnails.files import get_thumbnailer
 from rest_framework import serializers
+from rest_polymorphic.serializers import PolymorphicSerializer
 
-from .models import Content
+from dll.user.models import DllUser
+from .models import Content, Tool, Trend, TeachingModule, ContentLink
 
 
-class ContentSerializer(serializers.HyperlinkedModelSerializer):
+class ContentListSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()  # WARNING: can conflict with Content.image
     type = serializers.SerializerMethodField()
     type_verbose = serializers.SerializerMethodField()
@@ -14,7 +16,7 @@ class ContentSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Content
-        fields = ['name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created']
+        fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created']
 
     def get_image(self, obj):
         if obj.image is not None:
@@ -36,3 +38,59 @@ class ContentSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_url(self, obj):
         return obj.get_absolute_url()
+
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DllUser
+        fields = ['username']
+
+
+class LinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContentLink
+        fields = ['url', 'name', 'type']
+        depth = 1
+
+
+class BaseContentSubclassSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer(read_only=True, allow_null=True, required=False)
+    contentlink_set = LinkSerializer(many=True)
+
+    def validate_related_content(self, data):
+        return (x.is_public for x in data)
+
+    def create(self, validated_data):
+        links_data = validated_data.pop('contentlink_set')
+        content = super(BaseContentSubclassSerializer, self).create(validated_data)
+        for link in links_data:
+            ContentLink.objects.create(content=content, **dict(link))
+        return content
+
+    # TODO: update
+
+
+class ToolSerializer(BaseContentSubclassSerializer):
+    class Meta:
+        model = Tool
+        fields = '__all__'
+
+
+class TrendSerializer(BaseContentSubclassSerializer):
+    class Meta:
+        model = Trend
+        fields = '__all__'
+
+
+class TeachingModuleSerializer(BaseContentSubclassSerializer):
+    class Meta:
+        model = TeachingModule
+        fields = '__all__'
+
+
+class ContentPolymorphicSerializer(PolymorphicSerializer):
+    model_serializer_mapping = {
+        Tool: ToolSerializer,
+        Trend: TrendSerializer,
+        TeachingModule: TeachingModuleSerializer
+    }

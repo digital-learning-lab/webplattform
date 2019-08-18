@@ -8,6 +8,8 @@ from dll.content.models import TeachingModule, Review, ContentLink, ContentFile
 from dll.user.models import DllUser
 
 
+# TODO write tests for Tool and Trend too
+
 class BaseTestCase(TestCase):
     def setUp(self):
 
