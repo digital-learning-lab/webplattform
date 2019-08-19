@@ -1,3 +1,4 @@
+import json
 import random
 
 from django.db.models import Q
@@ -5,10 +6,12 @@ from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
+from psycopg2._range import NumericRange
 from rest_framework import viewsets, filters
 from rest_framework.generics import ListAPIView
 
-from dll.content.models import Content, TeachingModule, Trend, Tool, Competence
+from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject
+from dll.general.utils import GERMAN_STATES
 from .serializers import ContentListSerializer, ContentPolymorphicSerializer
 
 
@@ -191,9 +194,55 @@ class ContentDataFilterView(ListAPIView):
 class TeachingModuleFilterView(TemplateView):
     template_name = 'dll/filter/teaching_modules.html'
 
+    def get_context_data(self, **kwargs):
+        ctx = super(TeachingModuleFilterView, self).get_context_data(**kwargs)
+        subject_filter = [
+            {'value': subject.pk, 'name': subject.name} for subject in Subject.objects.all()
+        ]
+        states_filter = [
+            {'value': state[0], 'name': state[1]} for state in GERMAN_STATES
+        ]
+        states_filter.insert(0, {'value': '', 'name': '------'})
+        ctx['subject_filter'] = json.dumps(subject_filter)
+        ctx['states_filter'] = json.dumps(states_filter)
+        return ctx
+
 
 class TeachingModuleDataFilterView(ContentDataFilterView):
     model = TeachingModule
+
+    def get_queryset(self):
+        qs = super(TeachingModuleDataFilterView, self).get_queryset()
+
+        subjects = self.request.GET.getlist('subjects[]', [])
+        state = self.request.GET.get('state', [])
+        class_from = self.request.GET.get('schoolClassFrom', [])
+        class_to = self.request.GET.get('schoolClassTo', [])
+
+        try:
+            if class_from:
+                class_from = int(class_from)
+        except ValueError:
+            class_from = None
+        try:
+            if class_to:
+                class_to = int(class_to)
+        except ValueError:
+            class_to = None
+
+
+        if subjects:
+            qs = qs.filter(TeachingModule___subjects__pk__in=subjects)
+
+        if state:
+            qs = qs.filter(TeachingModule___state=state)
+
+        if class_from:
+            qs = qs.filter(TeachingModule___school_class__overlap=NumericRange(int(class_from), None))
+
+        if class_to:
+            qs = qs.filter(TeachingModule___school_class__overlap=NumericRange(None, int(class_to)))
+        return qs
 
 
 class ToolFilterView(TemplateView):

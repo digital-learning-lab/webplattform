@@ -13,6 +13,25 @@
           <h3>Schlagwortsuche</h3>
           <input type="text" v-model="searchTerm" name="searchTerm">
           <app-competence-filter :competences.sync="competences"></app-competence-filter>
+          <div>
+            <h4>Unterrichtsfach</h4>
+            <ul class="list-unstyled">
+              <li v-for="subject in getSubjects()">
+                <input type="checkbox" :value="subject.value" name="subjects" :id="'subject-' + subject.value" v-model="subjects"><label
+                :for="'subject-' + subject.value">{{ subject.name }}</label>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h4>Bundesland</h4>
+            <select class="list-unstyled" v-model="state">
+              <option v-for="state in getStates()" :value="state.value">{{state.name}}</option>
+            </select>
+          </div>
+          <div>
+            <h4>Jahrgangsstufe von / bis:</h4>
+            <input type="text" name="schoolClassFrom" v-model="schoolClassFrom"> - <input type="text" name="schoolClassTo" v-model="schoolClassTo">
+          </div>
         </form>
       </div>
     </div>
@@ -45,7 +64,41 @@
     mixins: [contentFilter],
     data () {
       return {
-        dataUrl: '/api/unterrichtsbausteine'
+        dataUrl: '/api/unterrichtsbausteine',
+        subjects: [],
+        state: null,
+        schoolClassFrom: null,
+        schoolClassTo: null
+      }
+    },
+    methods: {
+      getSubjects ()  {
+        return window.subjectFilter
+      },
+      getStates ()  {
+        return window.statesFilter
+      },
+      getQueryParams () {
+        return {
+          subjects: this.subjects,
+          state: this.state,
+          schoolClassFrom: this.schoolClassFrom,
+          schoolClassTo: this.schoolClassTo
+        }
+      }
+    },
+    watch: {
+      subjects () {
+        this.updateContents()
+      },
+      state () {
+        this.updateContents()
+      },
+      schoolClassFrom () {
+        this.debouncedUpdate()
+      },
+      schoolClassTo () {
+        this.debouncedUpdate()
       }
     }
   }
