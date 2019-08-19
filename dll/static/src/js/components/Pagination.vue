@@ -1,5 +1,5 @@
 <template>
-  <div class="pagination" v-if="pagination">
+  <div class="pagination" v-if="pagination && pagination.count > 0">
     <button class="pagination__button pagination__previous" @click="$emit('prev')" :disabled="pagination.prev === null">
       <span><</span>
     </button>

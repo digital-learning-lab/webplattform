@@ -1,52 +1,58 @@
 <template>
   <div class="row mt-5 mb-5">
-    <div class="col col-3">
+    <div class="col col-12 col-lg-5 col-xl-4 mb-5">
       <div class="section-info">
         <form action="">
           <h2>Filtern nach</h2>
 
-          <h3>Sortierung</h3>
-          <select name="sortby" id="sortby-select" v-model="sortBy" @change="updateContents">
+          <h3 class="form-subhead">Sortierung</h3>
+          <select name="sortby" id="sortby-select" class="form-control" v-model="sortBy" @change="updateContents">
             <option value="latest">Neustes zuerst</option>
             <option value="-latest">Ältestes zuerst</option>
             <option value="az">A-Z</option>
             <option value="za">Z-A</option>
           </select>
-          <h3>Schlagwortsuche</h3>
-          <input type="text" v-model="searchTerm" name="searchTerm">
+          <h3 class="form-subhead">Schlagwortsuche</h3>
+          <input type="text" v-model="searchTerm" name="searchTerm" class="form-control">
           <app-competence-filter :competences.sync="competences"></app-competence-filter>
           <div>
-            <h4>Unterrichtsfach</h4>
+            <h3 class="form-subhead">Unterrichtsfach</h3>
             <ul class="list-unstyled">
-              <li v-for="subject in getSubjects()">
-                <input type="checkbox" :value="subject.value" name="subjects" :id="'subject-' + subject.value" v-model="subjects"><label
-                :for="'subject-' + subject.value">{{ subject.name }}</label>
+              <li v-for="subject in getSubjects()" class="form-check">
+                <input type="checkbox" :value="subject.value" name="subjects" :id="'subject-' + subject.value" v-model="subjects" class="form-check-input">
+                <label :for="'subject-' + subject.value" class="form-check-label">{{ subject.name }}</label>
               </li>
             </ul>
           </div>
           <div>
-            <h4>Bundesland</h4>
-            <select class="list-unstyled" v-model="state">
+            <h3 class="form-subhead">Bundesland</h3>
+            <select v-model="state"  class="form-control">
               <option v-for="state in getStates()" :value="state.value">{{state.name}}</option>
             </select>
           </div>
           <div>
-            <h4>Jahrgangsstufe von / bis:</h4>
-            <input type="text" name="schoolClassFrom" v-model="schoolClassFrom"> - <input type="text" name="schoolClassTo" v-model="schoolClassTo">
+            <h3 class="form-subhead">Jahrgangsstufe von / bis:</h3>
+            <div class="form-inline">
+              <input type="text" name="schoolClassFrom" v-model="schoolClassFrom" class="form-control mr-2"> - <input type="text" name="schoolClassTo" v-model="schoolClassTo" class="form-control ml-2">
+            </div>
           </div>
         </form>
       </div>
     </div>
-    <div class="col col-9">
-      <h1 v-html="window.competenceName"></h1>
-      <p class="mb-5" v-html="window.competenceText"></p>
-      <div class="row">
-        <div class="col col-12 col-md-6 mb-4" v-for="content in contents">
+    <div class="col col-12 col-lg-7 col-xl-8">
+      <div class="row" v-if="contents.length > 0 || loading">
+        <div class="col col-12 col-xl-6 mb-4" v-for="content in contents">
           <app-content-teaser :content="content"></app-content-teaser>
         </div>
-      </div>
         <app-pagination :current-page="currentPage" :pagination="pagination" @prev="previousPage" @next="nextPage" @jump="jumpTo"></app-pagination>
       </div>
+      <div class="row" v-else>
+        <div class="col">
+          <h2>Ihre Suchanfrage ergab keine Treffer.</h2>
+          <p>Bitte versuchen Sie es mit einer anderen Auswahl.</p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

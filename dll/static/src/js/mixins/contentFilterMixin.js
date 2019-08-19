@@ -14,7 +14,8 @@ export const contentFilter = {
     return {
       dataUrl: null,
       contents: [],
-      sortBy: 'az',
+      loading: true,
+      sortBy: 'latest',
       searchTerm: '',
       currentPage: 1,
       competences: [],
@@ -28,8 +29,6 @@ export const contentFilter = {
   },
   methods: {
     jumpTo (event, page) {
-      console.log(event)
-      console.log(page)
       this.currentPage = page
       this.updateContents(page)
     },
@@ -56,7 +55,10 @@ export const contentFilter = {
       return {}
     },
     updateContents (page) {
-
+      this.loading = true
+      if (!page) {
+        this.currentPage = 1
+      }
       axios.get(this.dataUrl, {
         params: {
           q: this.searchTerm,
@@ -75,9 +77,11 @@ export const contentFilter = {
             next: response.data.next,
             prev: response.data.previous
           }
+          this.loading = false
         })
         .catch(error => {
           console.log(error)
+          this.loading = false
         })
     }
   },
@@ -95,7 +99,7 @@ export const contentFilter = {
       this.debouncedUpdate()
     },
     competences () {
-      this.debouncedUpdate()
+      this.updateContents()
     }
   }
 }
