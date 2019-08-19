@@ -1,7 +1,6 @@
 import json
 import random
 
-from django.db.models import Q
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
@@ -192,7 +191,6 @@ class ContentDataFilterView(ListAPIView):
             return qs.order_by('-modified')
         else:
             return qs.order_by('-name')
-
 
 
 class TeachingModuleFilterView(TemplateView):

@@ -52,15 +52,7 @@
           <app-content-teaser :content="content"></app-content-teaser>
         </div>
       </div>
-        <div class="pagination">
-          <button class="pagination__previous" @click="previousPage" :disabled="pagination.prev === null">
-            <span><</span>
-          </button>
-          <button class="pagination__number" v-for="page in pages" @click="jumpTo(page)">{{ page }}</button>
-          <button class="pagination__next" @click="nextPage" :disabled="pagination.next === null">
-            <span>></span>
-          </button>
-        </div>
+        <app-pagination :current-page="currentPage" :pagination="pagination" @prev="previousPage" @next="nextPage" @jump="jumpTo"></app-pagination>
       </div>
   </div>
 </template>

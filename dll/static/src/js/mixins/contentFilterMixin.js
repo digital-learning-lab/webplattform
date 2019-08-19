@@ -2,11 +2,13 @@ import { debounce } from 'lodash'
 import axios from 'axios'
 import ContentTeaser from '../components/ContentTeaser.vue'
 import CompetenceFilter from '../components/CompetenceFilter.vue'
+import Pagination from '../components/Pagination.vue'
 
 export const contentFilter = {
   components: {
     'AppContentTeaser': ContentTeaser,
-    'AppCompetenceFilter': CompetenceFilter
+    'AppCompetenceFilter': CompetenceFilter,
+    'AppPagination': Pagination
   },
   data () {
     return {
@@ -25,7 +27,10 @@ export const contentFilter = {
     }
   },
   methods: {
-    jumpTo (page) {
+    jumpTo (event, page) {
+      console.log(event)
+      console.log(page)
+      this.currentPage = page
       this.updateContents(page)
     },
     previousPage () {
@@ -79,18 +84,6 @@ export const contentFilter = {
   computed: {
     window () {
       return window
-    },
-    pages () {
-      if (this.pagination.count) {
-        let counter = this.pagination.count
-        let pages = []
-        let page = 1
-        while (counter > 0) {
-          pages.push(page++)
-          counter -= 10
-        }
-        return pages
-      }
     }
   },
   created () {
