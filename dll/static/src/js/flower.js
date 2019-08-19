@@ -59,7 +59,7 @@ window.onload = function () {
             kompetenzen[i].addEventListener('click', function() {
                 // relocate to a new page
                 var id_value = this.getAttribute( 'data-element_type' );
-                window.location = "/kompetenz/" + id_value + "?ubausteine=on&tools=on&trends=on";
+                window.location = "/kompetenz/" + id_value;
 
             });
 

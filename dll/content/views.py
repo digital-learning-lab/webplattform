@@ -6,6 +6,7 @@ from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, filters
+from rest_framework.generics import ListAPIView
 
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence
 from .serializers import ContentListSerializer, ContentPolymorphicSerializer
@@ -123,14 +124,12 @@ class ContentViewSet(viewsets.ModelViewSet):
     search_fields = ['name', 'teaser']
 
     def get_queryset(self):
-        query = self.request.GET.get('q', '')
         competence = self.request.GET.get('competence', '')
         sorting = self.request.GET.get('sorting', 'az')
         teaching_modules = self.request.GET.get('teachingModules', 'true')
         trends = self.request.GET.get('trends', 'true')
         tools = self.request.GET.get('tools', 'true')
-
-        qs = Content.objects.published().filter(Q(name__icontains=query) | Q(teaser__icontains=query))
+        qs = super(ContentViewSet, self).get_queryset()
 
         if competence:
             qs = qs.filter(competences__slug=competence)
@@ -162,4 +161,82 @@ class CompetenceFilterView(DetailView):
     template_name = 'dll/filter/competence.html'
 
 
+class ContentDataFilterView(ListAPIView):
+    queryset = Content
+    serializer_class = ContentListSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter
+    ]
+    search_fields = ['name', 'teaser']
+    model = None
 
+    def get_queryset(self):
+        qs = super(ContentDataFilterView, self).get_queryset().objects.instance_of(self.model)
+        qs = qs.published()
+
+        sorting = self.request.GET.get('sorting', 'az')
+        competences = self.request.GET.getlist('competences[]', [])
+        print(competences)
+        if competences:
+            qs = qs.filter(competences__pk__in=competences)
+
+        if sorting == 'az':
+            return qs.order_by('name')
+        else:
+            return qs.order_by('-name')
+
+
+
+class TeachingModuleFilterView(TemplateView):
+    template_name = 'dll/filter/teaching_modules.html'
+
+
+class TeachingModuleDataFilterView(ContentDataFilterView):
+    model = TeachingModule
+
+
+class ToolFilterView(TemplateView):
+    template_name = 'dll/filter/tools.html'
+
+
+class ToolDataFilterView(ContentDataFilterView):
+    model = Tool
+
+    def get_queryset(self):
+        qs = super(ToolDataFilterView, self).get_queryset()
+
+        status = self.request.GET.get('status', None)
+        applications = self.request.GET.getlist('applications[]', [])
+        operating_systems = self.request.GET.getlist('operatingSystems[]', [])
+
+        if status:
+            qs = qs.filter(Tool___status=status)
+
+        if applications:
+            qs = qs.filter(Tool___applications__name__in=applications)
+
+        if operating_systems:
+            qs = qs.filter(Tool___operating_systems__pk__in=operating_systems)
+        return qs
+
+class TrendFilterView(TemplateView):
+    template_name = 'dll/filter/trends.html'
+
+
+class TrendDataFilterView(ContentDataFilterView):
+    model = Trend
+
+    def get_queryset(self):
+        qs = super(TrendDataFilterView, self).get_queryset()
+
+        language = self.request.GET.get('language', None)
+        trend_types = self.request.GET.getlist('trendTypes[]', [])
+
+        if language:
+            qs = qs.filter(Trend___language=language)
+
+        if trend_types:
+            qs = qs.filter(Trend___category__in=trend_types)
+
+        return qs

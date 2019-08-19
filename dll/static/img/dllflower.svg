@@ -802,7 +802,7 @@
 </g>
 <g id="Transparenz">
 	<g>
-		<polygon class="st7" id="ubausteine_trigger" fill="transparent" data-element_type="ubausteine" points="381.8,255.8 291.3,308 381.8,360.4 472.1,308 		"/>
+		<polygon class="st7" id="ubausteine_trigger" fill="transparent" data-element_type="unterrichtsbausteine" points="381.8,255.8 291.3,308 381.8,360.4 472.1,308 		"/>
 	</g>
 	<g>
 		<polygon class="st7" id="tools_trigger" fill="transparent" data-element_type="tools" points="286,421.5 376.3,473.7 376.3,369.6 286,317.2 		"/>

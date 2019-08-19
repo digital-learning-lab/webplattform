@@ -5,4 +5,6 @@ import './flower'
 import './header'
 import './navigation'
 import './filter'
-
+import './teachingModulesFilter'
+import './trendFilter'
+import './toolFilter'
