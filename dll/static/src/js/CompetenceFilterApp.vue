@@ -1,53 +1,51 @@
 <template>
   <div class="row mt-5 mb-5">
-    <div class="col col-3">
+    <div class="col col-12 col-xl-4">
       <div class="section-info">
         <form action="">
           <h2>Filtern nach</h2>
 
-          <h3>Sortierung</h3>
-          <select name="sortby" id="sortby-select" v-model="sortBy" @change="updateContents">
+          <h3 class="form-subhead">Sortierung</h3>
+          <select name="sortby" id="sortby-select" v-model="sortBy" @change="updateContents" class="form-control">
             <option value="az">A-Z</option>
             <option value="za">Z-A</option>
           </select>
-          <h3>Schlagwortsuche</h3>
-          <input type="text" v-model="searchTerm" name="searchTerm">
-          <h3>Auswahl</h3>
+          <h3 class="form-subhead">Schlagwortsuche</h3>
+          <input type="text" v-model="searchTerm" name="searchTerm" class="form-control">
+          <h3 class="form-subhead">Auswahl</h3>
           <ul class="list-unstyled">
-            <li>
-              <input type="checkbox" id="teaching-modules-checkbox" @change="updateContents" v-model="showTeachingModules">
-              <label for="teaching-modules-checkbox">Unterrichtsbausteine</label>
+            <li class="form-check">
+              <input type="checkbox" id="teaching-modules-checkbox" @change="updateContents" v-model="showTeachingModules" class="form-check-input">
+              <label class="form-check-label" for="teaching-modules-checkbox">Unterrichtsbausteine</label>
             </li>
-            <li>
-              <input type="checkbox" id="tools-checkbox" @change="updateContents" v-model="showTools">
-              <label for="tools-checkbox">Tools</label>
+            <li class="form-check">
+              <input type="checkbox" id="tools-checkbox" @change="updateContents" v-model="showTools" class="form-check-input">
+              <label class="form-check-label" for="tools-checkbox">Tools</label>
             </li>
-            <li>
-              <input type="checkbox" id="trends-checkbox" @change="updateContents" v-model="showTrends">
-              <label for="trends-checkbox">Trends</label>
+            <li class="form-check">
+              <input type="checkbox" id="trends-checkbox" @change="updateContents" v-model="showTrends" class="form-check-input">
+              <label class="form-check-label" for="trends-checkbox">Trends</label>
             </li>
           </ul>
         </form>
       </div>
     </div>
-    <div class="col col-9">
+    <div class="col col-12 col-lg-7 col-xl-8">
       <h1 v-html="window.competenceName"></h1>
       <p class="mb-5" v-html="window.competenceText"></p>
-      <div class="row">
-        <div class="col col-12 col-md-6 mb-4" v-for="content in contents">
+      <div class="row" v-if="contents.length > 0 || loading">
+        <div class="col col-12 col-xl-6 mb-4" v-for="content in contents">
           <app-content-teaser :content="content"></app-content-teaser>
         </div>
+        <app-pagination :current-page="currentPage" :pagination="pagination" @prev="previousPage" @next="nextPage" @jump="jumpTo"></app-pagination>
       </div>
-        <div class="pagination">
-          <button class="pagination__previous" @click="previousPage" :disabled="pagination.prev === null">
-            <span><</span>
-          </button>
-          <button class="pagination__number" v-for="page in pages" @click="jumpTo(page)">{{ page }}</button>
-          <button class="pagination__next" @click="nextPage" :disabled="pagination.next === null">
-            <span>></span>
-          </button>
+      <div class="row" v-else>
+        <div class="col">
+          <h2>Ihre Suchanfrage ergab keine Treffer.</h2>
+          <p>Bitte versuchen Sie es mit einer anderen Auswahl.</p>
         </div>
       </div>
+    </div>
   </div>
 </template>
 
@@ -55,11 +53,13 @@
   import { debounce } from 'lodash'
   import axios from 'axios'
   import ContentTeaser from './components/ContentTeaser.vue'
+  import Pagination from './components/Pagination.vue'
 
   export default {
     name: 'CompetenceFilterApp',
     components: {
-      'AppContentTeaser': ContentTeaser
+      'AppContentTeaser': ContentTeaser,
+      'AppPagination': Pagination
     },
     data () {
       return {
@@ -68,6 +68,7 @@
           name: 'Kommunizieren & Kooperieren',
           description: 'Um im digitalen Raum adäquat KOMMUNIZIEREN & KOOPERIEREN zu können, braucht es entsprechende Kompetenzen, digitale Werkzeuge zur angemessenen und effektiven Kommunikation einsetzen und in digitalen Umgebungen zielgerichtet kooperieren zu können. Dabei geht es vor allem darum, entsprechend der jeweiligen Situation und ausgerichtet an den Kommunikations- bzw. Kooperationspartnern die passenden Werkzeuge auszuwählen und entsprechende Umgangsregeln einzuhalten.'
         },
+        loading: true,
         sortBy: 'az',
         searchTerm: '',
         showTeachingModules: true,
@@ -83,7 +84,8 @@
       }
     },
     methods: {
-      jumpTo (page) {
+      jumpTo (event, page) {
+        this.currentPage = page
         this.updateContents(page)
       },
       previousPage () {
@@ -106,7 +108,7 @@
         return this.sortBy === 'az' ? comparison : -comparison;
       },
       updateContents (page) {
-
+        this.loading = true
         axios.get('/api/inhalte', {
           params: {
             q: this.searchTerm,
@@ -119,6 +121,7 @@
           }
         })
           .then(response => {
+            this.loading = false
             this.contents = response.data.results
             this.pagination = {
               count: response.data.count,
@@ -128,6 +131,7 @@
             }
           })
           .catch(error => {
+            this.loading = false
             console.log(error)
           })
       }
