@@ -32,9 +32,15 @@
           </div>
           <div>
             <h3 class="form-subhead">Jahrgangsstufe von / bis:</h3>
-            <div class="form-inline">
-              <input type="text" name="schoolClassFrom" v-model="schoolClassFrom" class="form-control mr-2"> - <input type="text" name="schoolClassTo" v-model="schoolClassTo" class="form-control ml-2">
-            </div>
+              <div class="row">
+                <div class="col">
+                  <input type="text" name="schoolClassFrom" v-model="schoolClassFrom" class="form-control mr-2">
+                </div>
+                <div class="col-1 text-center"> - </div>
+                <div class="col">
+                  <input type="text" name="schoolClassTo" v-model="schoolClassTo" class="form-control ml-2">
+                </div>
+              </div>
           </div>
         </form>
       </div>
@@ -66,7 +72,7 @@
       return {
         dataUrl: '/api/unterrichtsbausteine',
         subjects: [],
-        state: null,
+        state: '',
         schoolClassFrom: null,
         schoolClassTo: null
       }

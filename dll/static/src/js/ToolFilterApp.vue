@@ -71,7 +71,7 @@
           </div>
 
           <div>
-            <h4>Status</h4>
+            <h3 class="form-subhead">Status</h3>
             <select name="status" id="status-dropdown" v-model="status" @change="updateContents" class="form-control">
                 <option id="status-0" value="" name="status" selected>--------</option>
                 <option id="status-1" value="on" name="status">Online</option>
@@ -108,7 +108,7 @@
     data () {
       return {
         dataUrl: '/api/tools',
-        status: null,
+        status: '',
         applications: [],
         operatingSystems: []
       }
