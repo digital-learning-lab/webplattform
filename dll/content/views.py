@@ -186,6 +186,10 @@ class ContentDataFilterView(ListAPIView):
 
         if sorting == 'az':
             return qs.order_by('name')
+        elif sorting == 'latest':
+            return qs.order_by('modified')
+        elif sorting == '-latest':
+            return qs.order_by('-modified')
         else:
             return qs.order_by('-name')
 
