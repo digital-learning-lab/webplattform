@@ -41,13 +41,11 @@
   {% if object.target_group %}
     <li class="sidebar__information-item">
       <span class="sidebar__information-icon icon-search"></span>
-      {{ object.target_group }}
-      {# TODO ARRAYFIELD #}
-{#      <ul class="list-unstyled">#}
-{#        {% for group in object.target_group %}#}
-{#          <li>{{ group }}</li>#}
-{#        {% endfor %}#}
-{#      </ul>#}
+      <ul class="list-unstyled">
+        {% for group in object.target_group %}
+          <li>{{ group }}</li>
+        {% endfor %}
+      </ul>
     </li>
   {% endif %}
 

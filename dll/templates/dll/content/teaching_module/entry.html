@@ -1,26 +1,32 @@
 <h2>Einstieg</h2>
-{# TODO ARRAYFIELD #}
 {% if object.learning_goals %}
-<div class="information-area information-area--{{ object.type }}">
-  <div class="information-area__title information-area__title">
-    Ziele
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Ziele
+    </div>
+    <div class="information-area__body">
+      <ul class="list-unstyled">
+        {% for goal in object.learning_goals %}
+          <li>{{ goal }}</li>
+        {% endfor %}
+      </ul>
+    </div>
   </div>
-  <div class="information-area__body">
-    {{ object.learning_goals|linebreaksbr }}
-  </div>
-</div>
 {% endif %}
 
-{# TODO ARRAYFIELD #}
 {% if object.expertise %}
-<div class="information-area information-area--{{ object.type }}">
-  <div class="information-area__title information-area__title">
-    Fachkompetenzen
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Fachkompetenzen
+    </div>
+    <div class="information-area__body">
+      <ul class="list-unstyled">
+        {% for expertise in object.expertise %}
+          <li>{{ expertise }}</li>
+        {% endfor %}
+      </ul>
+    </div>
   </div>
-  <div class="information-area__body">
-    {{ object.expertise|linebreaksbr }}
-  </div>
-</div>
 {% endif %}
 
 <div class="information-area information-area--{{ object.type }}">
@@ -39,15 +45,18 @@
   </div>
 </div>
 
-{# TODO ARRAYFIELD #}
 {% if object.equipment %}
-<div class="information-area information-area--{{ object.type }}">
-  <div class="information-area__title information-area__title">
-    Medienausstattung
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Medienausstattung
+    </div>
+    <div class="information-area__body">
+      <ul class="list-unstyled">
+        {% for equipment in object.equipment %}
+          <li>{{ equipment }}</li>
+        {% endfor %}
+      </ul>
+    </div>
   </div>
-  <div class="information-area__body">
-    {{ object.equipment|linebreaksbr }}
-  </div>
-</div>
 {% endif %}
 

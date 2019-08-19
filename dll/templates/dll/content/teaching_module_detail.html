@@ -36,11 +36,14 @@
       Stufe {{ object.school_class.lower }} - {{ object.school_class.upper }}
     </li>
   {% endif %}
-  {# TODO ARRAYFIELD #}
   {% if object.estimated_time %}
     <li class="sidebar__information-item">
       <span class="sidebar__information-icon icon-time"></span>
-      {{ object.estimated_time }}
+      <ul class="list-unstyled">k
+        {% for time in object.estimated_time %}
+          <li>{{ time }}</li>
+        {% endfor %}
+      </ul>
     </li>
   {% endif %}
 

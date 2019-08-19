@@ -24,14 +24,17 @@
   </div>
 {% endif %}
 
-{# TODO ARRAYFIELD #}
 {% if object.usage %}
   <div class="information-area information-area--{{ object.type }}">
     <div class="information-area__title information-area__title">
       Nutzung
     </div>
     <div class="information-area__body">
-      {{ object.usage|linebreaksbr }}
+      <ul class="list-unstyled">
+        {% for usage in object.usage %}
+          <li>{{ usage }}</li>
+        {% endfor %}
+      </ul>
     </div>
   </div>
 {% endif %}
