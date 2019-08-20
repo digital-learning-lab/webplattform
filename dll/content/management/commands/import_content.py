@@ -95,9 +95,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         base_dir = options['folder']
-        self.TOOLS_FOLDER = os.path.join(base_dir, 'inhalte', 'Tool')
-        self.TRENDS_FOLDER = os.path.join(base_dir, 'inhalte', 'Trend')
-        self.TEACHING_MODULES_FOLDER = os.path.join(base_dir, 'inhalte', 'UBaustein')
+        self.TOOLS_FOLDER = os.path.join(base_dir, 'Tool')
+        self.TRENDS_FOLDER = os.path.join(base_dir, 'Trend')
+        self.TEACHING_MODULES_FOLDER = os.path.join(base_dir, 'UBaustein')
         self._import_tools()
         self._import_teaching_modules()
         self._import_trends()
