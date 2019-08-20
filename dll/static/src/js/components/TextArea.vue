@@ -1,8 +1,8 @@
 <template>
   <div class="form-group">
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
-    <textarea :type="type" class="form-control" :id="id" :placeholder="placeholder" v-model="inputValue" :readonly="readOnly"></textarea>
-    <small v-if="characterCounter" class="form-text text-muted">{{ charactersLeft }} Zeichen verbleibend</small>
+    <textarea :type="type" class="form-control" :id="id" :placeholder="placeholder" v-model="inputValue" :readonly="readOnly" :maxlength="maximalChars"></textarea>
+    <small v-if="characterCounter" class="form-text text-muted float-right">{{ charactersLeft }} Zeichen verbleibend</small>
   </div>
 </template>
 
