@@ -1,7 +1,7 @@
 <template>
   <div class="form-group">
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
-    <v-select v-model="inputValue" class="form-control"></v-select>
+    <v-select v-model="inputValue" :options="options"></v-select>
     <small v-if="characterCounter" class="form-text text-muted float-right">{{ charactersLeft }} Zeichen verbleibend</small>
   </div>
 </template>
@@ -30,19 +30,9 @@
         default: false,
         required: false
       },
-      placeholder:{
-        type: String,
-        default: '',
-        required: false
-      },
-      characterCounter: {
-        type: Boolean,
-        default: false,
-        required: false
-      },
-      maximalChars: {
-        type: Number,
-        default: 0,
+      options: {
+        type: Array,
+        default: [],
         required: false
       },
       required: {
