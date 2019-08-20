@@ -61,7 +61,7 @@ urlpatterns = [
     path('api/trends', TrendDataFilterView.as_view(), name='trends-data-filter'),
     path('api/authors', AuthorSearchView.as_view(), name='author-search'),
     path('api/schoolTypes', AuthorSearchView.as_view(), name='author-search'),
-    path('api/authors', AuthorSearchView.as_view(), name='author-search'),
+    path('api/states', AuthorSearchView.as_view(), name='author-search'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
