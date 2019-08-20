@@ -220,3 +220,7 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'SEARCH_PARAM': 'q'
 }
+
+import mimetypes
+
+mimetypes.add_type("image/svg+xml", ".svg", True)
