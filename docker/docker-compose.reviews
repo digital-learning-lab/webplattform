@@ -2,7 +2,6 @@ version: "3.5"
 
 services:
   web:
-    image: '${CI_PROJECT_PATH_SLUG}:${CI_COMMIT_REF_SLUG}'
     labels:
       ONLINE_JOURNALCTL: 'true'
       ONLINE_JOURNALCTL_TOKEN: '${ONLINE_JOURNALCTL_TOKEN}'
@@ -51,11 +50,9 @@ services:
       ONLINE_JOURNALCTL_TOKEN: '${ONLINE_JOURNALCTL_TOKEN}'
     restart: 'always'
     environment:
-        POSTGRES_PASSWORD: 'gdUsLuRrDa6gQmEqoK2oP9oHWvcPeq6J3jQpAnF6q5Tw7Rmci5D'
-        POSTGRES_USER: 'dll_admin'
-        POSTGRES_DB: 'dll_db'
-    logging:
-      driver: journald
+        - POSTGRES_PASSWORD=gdUsLuRrDa6gQmEqoK2oP9oHWvcPeq6J3jQpAnF6q5Tw7Rmci5D
+        - POSTGRES_USER=dll_admin
+        - POSTGRES_DB=dll_db
 
 networks:
   default:
