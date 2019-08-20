@@ -124,6 +124,7 @@ class ContentViewSet(viewsets.ModelViewSet):
         filters.SearchFilter
     ]
     search_fields = ['name', 'teaser']
+    permission_classes = []
 
     def get_queryset(self):
         competence = self.request.GET.get('competence', '')
