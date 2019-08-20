@@ -1,13 +1,14 @@
 <template>
   <div class="form-group">
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
-    <v-select v-model="inputValue" :options="options"></v-select>
+    <v-select v-model="inputValue" :options="options" @search="fetchOptions"></v-select>
     <small v-if="characterCounter" class="form-text text-muted float-right">{{ charactersLeft }} Zeichen verbleibend</small>
   </div>
 </template>
 
 <script>
   import vSelect from 'vue-select'
+  import axios from 'axios'
 
   export default {
     name: 'Dropdown',
@@ -28,6 +29,11 @@
       readOnly: {
         type: Boolean,
         default: false,
+        required: false
+      },
+      fetchUrl:  {
+        type: String,
+        default: '',
         required: false
       },
       options: {
@@ -63,6 +69,18 @@
     },
     created () {
       this.inputValue = this.value
+    },
+    methods: {
+      fetchOptions (search, loading) {
+        loading()
+        axios.get(this.fetchUrl, {
+          params: {
+            q: this.inputValue
+          }
+        }).then(function (res) {
+          console.log(res)
+        })
+      }
     },
     watch: {
       inputValue (newValue) {

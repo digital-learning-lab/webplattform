@@ -14,6 +14,8 @@ from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Review, Subject
 from .serializers import ContentListSerializer, ContentPolymorphicSerializer, ReviewSerializer
 from dll.general.utils import GERMAN_STATES
+from dll.user.models import DllUser
+from .serializers import ContentListSerializer, ContentPolymorphicSerializer
 
 
 class BreadcrumbMixin(ContextMixin):
@@ -325,6 +327,15 @@ class TrendDataFilterView(ContentDataFilterView):
             qs = qs.filter(Trend___category__in=trend_types)
 
         return qs
+
+
+class AuthorSearchView(ListAPIView):
+    model = DllUser
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter
+    ]
+    search_fields = ['username']
 
 # todo: profile django template view that lists the authored content, reviewer content and redirects to the content
 # creation page (which uses the contenteditviewset

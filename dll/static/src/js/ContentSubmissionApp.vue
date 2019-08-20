@@ -3,9 +3,9 @@
     <div v-if="mode === 'create'">
       <app-text-input id="author" :read-only="true" label="Autor_in" :value.sync="data.author" :required="true"></app-text-input>
       <app-text-input id="title" label="Titel des Unterrichtsbausteins" :value.sync="data.title" :required="true" :character-counter="true" :maximal-chars="140"></app-text-input>
-      <app-dropdown id="imageRights" label="Bildrechte" :value.sync="data.imageRights" :required="true" :options=""></app-dropdown>
       <app-text-area id="teaser" label="Teaser" :required="true" :value.sync="data.teaser"></app-text-area>
       <app-text-area id="description" label="Detaillierte Beschreibung" :required="true" :value.sync="data.teaser" :character-counter="true" :maximal-chars="1800"></app-text-area>
+      <app-dropdown id="coAuthors" label="Co-Autor_innen" :value.sync="data.coAuthors" fetch-url="/api/authors"></app-dropdown>
       <app-text-area id="estimatedTime" label="Zeitumfang der Durchführung" :value.sync="data.estimatedTime" :character-counter="true" :maximal-chars="250"></app-text-area>
     </div>
   </form>
@@ -31,7 +31,11 @@
           author: 'Robert Stein',
           title: '',
           teaser: ''
-        }
+        },
+        imageOptions: [
+          {label: 'Ja', code: 'y'},
+          {label: 'Nein', code: 'n'},
+        ],
       }
     }
   }
