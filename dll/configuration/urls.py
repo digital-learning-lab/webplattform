@@ -42,6 +42,7 @@ urlpatterns = [
     path('newsletter', NewsletterRegisterView.as_view(), name='newsletter'),
     path('newsletter/abmelden', NewsletterUnregisterView.as_view(), name='newsletter-unregister'),
     path('kontakt', ContactView.as_view(), name='contact'),
+    path('kontakt', ContactView.as_view(), name='contact-form'),  # todo: remove this. just for avoiding immense bug stacktraces from reverse error
     path('faq', views.flatpage, {'url': '/faq/'}, name='faq'),
     path('tools/<slug:slug>', ToolDetailView.as_view(), name='tool-detail'),
     path('trends/<slug:slug>', TrendDetailView.as_view(), name='trend-detail'),

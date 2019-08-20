@@ -55,7 +55,7 @@ class LinkSerializer(serializers.ModelSerializer):
 
 class BaseContentSubclassSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True, allow_null=True, required=False)
-    contentlink_set = LinkSerializer(many=True)
+    contentlink_set = LinkSerializer(many=True, required=False)
 
     def validate_related_content(self, data):
         return (x.is_public for x in data)
@@ -67,7 +67,17 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             ContentLink.objects.create(content=content, **dict(link))
         return content
 
-    # TODO: update
+    def update(self, instance, validated_data):
+        try:
+            links_data = validated_data.pop('contentlink_set')
+        except KeyError:
+            pass
+        else:
+            for link in links_data:
+                ContentLink.objects.create(content=instance, **dict(link))
+        finally:
+            super().update(instance, validated_data)
+        return instance
 
 
 class ToolSerializer(BaseContentSubclassSerializer):
