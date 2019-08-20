@@ -1,7 +1,7 @@
 <template>
   <form class="mb-4">
     <div v-if="mode === 'create'">
-      <app-text-input id="author" :read-only="true" label="Autor_in" :value.sync="author"></app-text-input>
+      <app-text-input id="author" :read-only="true" label="Autor_in" :value.sync="data.author"></app-text-input>
     </div>
   </form>
 </template>
@@ -18,7 +18,9 @@
     data () {
       return {
         mode: 'create',
-        author: 'Robert Stein'
+        data: {
+          author: 'Robert Stein'
+        }
       }
     }
   }
