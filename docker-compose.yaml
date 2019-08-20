@@ -14,7 +14,7 @@ services:
     build:
         context: .
         dockerfile: Dockerfile.dev
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "ls -la && pwd && ls -la dll/media && python manage.py runserver 0.0.0.0:8000"
     environment:
       - DATABASE_USER=postgres
       - DATABASE_NAME=postgres

@@ -30,7 +30,6 @@ variables:
 stages:
 #    - tests
     - review
-#
 #tests:
 #    stage: tests
 #    tags:
