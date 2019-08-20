@@ -125,6 +125,7 @@ class ContentViewSet(viewsets.ModelViewSet):
     ]
     search_fields = ['name', 'teaser']
     permission_classes = []
+    authentication_classes = []
 
     def get_queryset(self):
         competence = self.request.GET.get('competence', '')
@@ -174,6 +175,7 @@ class ContentDataFilterView(ListAPIView):
     search_fields = ['name', 'teaser']
     model = None
     permission_classes = []
+    authentication_classes = []
 
     def get_queryset(self):
         qs = super(ContentDataFilterView, self).get_queryset().objects.instance_of(self.model)
