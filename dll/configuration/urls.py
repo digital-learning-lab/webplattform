@@ -24,7 +24,7 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     NewsletterRegisterView, NewsletterUnregisterView, ContactView, ToolDetailView, TrendDetailView, \
     TeachingModuleDetailView, CompetenceFilterView, ContentViewSet, TeachingModuleFilterView, \
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
-    PublishedContentViewSet, DraftsContentViewSet
+    PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView
 from dll.user.views import MyContentView, AddTeachingModule
 
 router = DefaultRouter()
@@ -59,6 +59,9 @@ urlpatterns = [
     path('api/unterrichtsbausteine', TeachingModuleDataFilterView.as_view(), name='teaching-modules-data-filter'),
     path('api/tools', ToolDataFilterView.as_view(), name='tools-data-filter'),
     path('api/trends', TrendDataFilterView.as_view(), name='trends-data-filter'),
+    path('api/authors', AuthorSearchView.as_view(), name='author-search'),
+    path('api/schoolTypes', AuthorSearchView.as_view(), name='author-search'),
+    path('api/authors', AuthorSearchView.as_view(), name='author-search'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

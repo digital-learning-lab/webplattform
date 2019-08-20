@@ -11,8 +11,9 @@ from rest_framework.permissions import DjangoObjectPermissions
 from rest_framework.generics import ListAPIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
-from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Review, Subject
-from .serializers import ContentListSerializer, ContentPolymorphicSerializer, ReviewSerializer
+from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject
+from dll.content.serializers import AuthorSerializer, ContentListSerializer, ContentPolymorphicSerializer, \
+    ReviewSerializer
 from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
 from .serializers import ContentListSerializer, ContentPolymorphicSerializer
@@ -330,7 +331,8 @@ class TrendDataFilterView(ContentDataFilterView):
 
 
 class AuthorSearchView(ListAPIView):
-    model = DllUser
+    queryset = DllUser.objects.all()
+    serializer_class = AuthorSerializer
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter

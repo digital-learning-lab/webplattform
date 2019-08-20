@@ -43,7 +43,7 @@ class ContentListSerializer(serializers.ModelSerializer):
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = DllUser
-        fields = ['username']
+        fields = ['username', 'pk']
 
 
 class LinkSerializer(serializers.ModelSerializer):

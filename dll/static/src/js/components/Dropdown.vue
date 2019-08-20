@@ -1,8 +1,7 @@
 <template>
   <div class="form-group">
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
-    <v-select v-model="inputValue" :options="options" @search="fetchOptions"></v-select>
-    <small v-if="characterCounter" class="form-text text-muted float-right">{{ charactersLeft }} Zeichen verbleibend</small>
+    <v-select v-model="inputValue" :options="options" @search="fetchOptions" :multiple="multiple"></v-select>
   </div>
 </template>
 
@@ -26,7 +25,7 @@
         default: 'text',
         required: false
       },
-      readOnly: {
+      multiple: {
         type: Boolean,
         default: false,
         required: false
@@ -34,11 +33,6 @@
       fetchUrl:  {
         type: String,
         default: '',
-        required: false
-      },
-      options: {
-        type: Array,
-        default: [],
         required: false
       },
       required: {
@@ -52,8 +46,6 @@
         required: true
       },
       value: {
-        type: String,
-        default: '',
         required: false
       }
     },
@@ -64,7 +56,8 @@
     },
     data () {
       return {
-        inputValue: ''
+        inputValue: '',
+        options: []
       }
     },
     created () {
@@ -72,13 +65,17 @@
     },
     methods: {
       fetchOptions (search, loading) {
-        loading()
+        loading(true)
         axios.get(this.fetchUrl, {
           params: {
-            q: this.inputValue
+            q: search
           }
-        }).then(function (res) {
-          console.log(res)
+        }).then(res => {
+          this.options = res.data.results.map((el) => {return {label: el.username, value: el.pk}})
+          loading(false)
+        }).catch(err => {
+          loading(false)
+          console.log(err)
         })
       }
     },
