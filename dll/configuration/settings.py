@@ -177,7 +177,6 @@ MEDIA_ROOT = os.getenv('MEDIA_ROOT') or os.path.join(BASE_DIR, 'media')
 AUTH_USER_MODEL = 'user.DllUser'
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',  # this is default
-    'guardian.backends.ObjectPermissionBackend',
 )
 
 DEFAULT_USER_USERNAME = 'TUHH'
