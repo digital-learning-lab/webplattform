@@ -1,5 +1,5 @@
 <h2>Einstieg</h2>
-{% if object.learning_goals %}
+{% if object.learning_goals.0 %}
   <div class="information-area information-area--{{ object.type }}">
     <div class="information-area__title information-area__title">
       Ziele
@@ -14,7 +14,7 @@
   </div>
 {% endif %}
 
-{% if object.expertise %}
+{% if object.expertise.0 %}
   <div class="information-area information-area--{{ object.type }}">
     <div class="information-area__title information-area__title">
       Fachkompetenzen
@@ -45,7 +45,7 @@
   </div>
 </div>
 
-{% if object.equipment %}
+{% if object.equipment.0 %}
   <div class="information-area information-area--{{ object.type }}">
     <div class="information-area__title information-area__title">
       Medienausstattung

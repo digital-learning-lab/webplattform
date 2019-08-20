@@ -2,17 +2,20 @@ import { debounce } from 'lodash'
 import axios from 'axios'
 import ContentTeaser from '../components/ContentTeaser.vue'
 import CompetenceFilter from '../components/CompetenceFilter.vue'
+import Pagination from '../components/Pagination.vue'
 
 export const contentFilter = {
   components: {
     'AppContentTeaser': ContentTeaser,
-    'AppCompetenceFilter': CompetenceFilter
+    'AppCompetenceFilter': CompetenceFilter,
+    'AppPagination': Pagination
   },
   data () {
     return {
       dataUrl: null,
       contents: [],
-      sortBy: 'az',
+      loading: true,
+      sortBy: 'latest',
       searchTerm: '',
       currentPage: 1,
       competences: [],
@@ -25,7 +28,8 @@ export const contentFilter = {
     }
   },
   methods: {
-    jumpTo (page) {
+    jumpTo (event, page) {
+      this.currentPage = page
       this.updateContents(page)
     },
     previousPage () {
@@ -51,7 +55,10 @@ export const contentFilter = {
       return {}
     },
     updateContents (page) {
-
+      this.loading = true
+      if (!page) {
+        this.currentPage = 1
+      }
       axios.get(this.dataUrl, {
         params: {
           q: this.searchTerm,
@@ -70,27 +77,17 @@ export const contentFilter = {
             next: response.data.next,
             prev: response.data.previous
           }
+          this.loading = false
         })
         .catch(error => {
           console.log(error)
+          this.loading = false
         })
     }
   },
   computed: {
     window () {
       return window
-    },
-    pages () {
-      if (this.pagination.count) {
-        let counter = this.pagination.count
-        let pages = []
-        let page = 1
-        while (counter > 0) {
-          pages.push(page++)
-          counter -= 10
-        }
-        return pages
-      }
     }
   },
   created () {
@@ -102,7 +99,7 @@ export const contentFilter = {
       this.debouncedUpdate()
     },
     competences () {
-      this.debouncedUpdate()
+      this.updateContents()
     }
   }
 }

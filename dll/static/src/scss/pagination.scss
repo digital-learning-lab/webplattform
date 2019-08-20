@@ -1,0 +1,23 @@
+.pagination {
+  text-align: center;
+  width: 100%;
+  display: block;
+}
+.pagination__button {
+  display: inline-block;
+  background-color: transparent;
+  font-weight: $font-weight-semi-bold;
+  color: $color--daintree;
+  width: 48px;
+  height: 48px;
+  border: 0;
+}
+.pagination__button--active {
+  color: rgba(255, 255, 255, 1);
+  background-color: $color--daintree;
+  line-height: 48px;
+}
+.pagination__button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

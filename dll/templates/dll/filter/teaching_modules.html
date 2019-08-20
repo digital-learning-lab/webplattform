@@ -1,15 +1,14 @@
-{% extends 'dll/base.html' %}
+{% extends 'dll/filter/filter_base.html' %}
 {% load render_bundle from webpack_loader %}
 
-{% block body %}
-  <div class="row justify-content-center">
-    <div class="col col-12 col-xl-10">
-      <div class="row">
-        <div class="col col-12 offset-lg-4 col-lg-8">
-          {% include 'dll/includes/breadcrumbs.html' %}
-        </div>
-      </div>
-      <div id="teaching-modules-app"></div>
-    </div>
-  </div>
+{% block app_content %}
+  <div id="teaching-modules-app"></div>
+{% endblock %}
+
+
+{% block extra_scripts %}
+  <script>
+  window.subjectFilter = {{ subject_filter|safe }};
+  window.statesFilter = {{ states_filter|safe }};
+  </script>
 {% endblock %}
