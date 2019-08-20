@@ -44,7 +44,6 @@ start_review:
     script:
         # Project specific
         - cat ./dll/content/management/commands/import_content.py
-        - exit 0
         - export SECRET_KEY=$(openssl rand -base64 12)
         - export HOST_IP=$(gethostip -d $(hostname --fqdn))
         - docker-compose -p ${CI_PROJECT_PATH_SLUG}-${CI_ENVIRONMENT_SLUG} -f ./docker/docker-compose.yml build --no-cache --force-rm
