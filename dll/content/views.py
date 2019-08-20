@@ -6,7 +6,7 @@ from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from psycopg2._range import NumericRange
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, permissions
 from rest_framework.generics import ListAPIView
 
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject
