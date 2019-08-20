@@ -25,8 +25,8 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     TeachingModuleDetailView, CompetenceFilterView, ContentViewSet, TeachingModuleFilterView, \
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView
 
-router = DefaultRouter()
-router.register(r'inhalte', ContentViewSet, base_name='content')
+# router = DefaultRouter()
+# router.register(r'inhalte', ContentViewSet, base_name='content')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -49,7 +49,7 @@ urlpatterns = [
     path('trends', TrendFilterView.as_view(), name='trends-filter'),
     path('', include('dll.user.urls', namespace='user')),
     # path('', include('django.contrib.flatpages.urls')),
-    path('api/', include(router.urls)),
+    # path('api/', include(router.urls)),
     path('api/unterrichtsbausteine', TeachingModuleDataFilterView.as_view(), name='teaching-modules-data-filter'),
     path('api/tools', ToolDataFilterView.as_view(), name='tools-data-filter'),
     path('api/trends', TrendDataFilterView.as_view(), name='trends-data-filter'),
