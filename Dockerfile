@@ -20,7 +20,7 @@ ENV PYTHONUNBUFFERED 1
 
 COPY requirements.txt /usr/src/
 RUN apt update \
-    && apt install -y libpq-dev gcc python3-dev \
+    && apt install -y libpq-dev gcc python3-dev mime-support \
     && pip install -r /usr/src/requirements.txt \
     && apt purge -y gcc python3-dev \
     && apt autoremove -y --purge
