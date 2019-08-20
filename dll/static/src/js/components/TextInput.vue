@@ -1,7 +1,7 @@
 <template>
   <div class="form-group">
-    <label :for="id">Email address</label>
-    <input type="email" class="form-control" :id="id" :placeholder="placeholder">
+    <label :for="id">{{ label }}<span v-if="required">*</span></label>
+    <input :type="type" class="form-control" :id="id" :placeholder="placeholder" v-model="inputValue" :readonly="readOnly">
     <small v-if="characterCounter" class="form-text text-muted">{{ charactersLeft }} Zeichen verbleibend</small>
   </div>
 </template>
@@ -15,6 +15,16 @@
         default: '',
         required: true
       },
+      type: {
+        type: String,
+        default: 'text',
+        required: false
+      },
+      readOnly: {
+        type: Boolean,
+        default: false,
+        required: false
+      },
       placeholder:{
         type: String,
         default: '',
@@ -24,11 +34,41 @@
         type: Boolean,
         default: false,
         required: false
+      },
+      maximalChars: {
+        type: Number,
+        default: 0,
+        required: false
+      },
+      required: {
+        type: Boolean,
+        default: false,
+        required: false
+      },
+      label: {
+        type: String,
+        default: '',
+        required: true
+      },
+      value: {
+        type: String,
+        default: '',
+        required: false
       }
     },
     computed: {
       charactersLeft () {
-        return 1
+        return this.maximalChars - this.value.length
+      }
+    },
+    data () {
+      return {
+        inputValue: ''
+      }
+    },
+    watch: {
+      inputValue (newValue) {
+        this.$emit('update:value', newValue)
       }
     }
   }
