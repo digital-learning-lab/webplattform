@@ -17,7 +17,7 @@ services:
     links:
        - db
     command: >
-      bash -c "ls -la && pwd && ls -la dll/media && python manage.py migrate && python manage.py import_content -f ./dll/media && python manage.py runserver 0.0.0.0:80"
+      bash -c "ls -la && pwd && ls -la dll/media && python manage.py migrate && python manage.py import_content -f /code/dll/media && python manage.py runserver 0.0.0.0:80"
     security_opt:
       - no-new-privileges
     environment:
