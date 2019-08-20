@@ -1,3 +1,5 @@
+import random
+
 from django.test import TestCase
 from django.urls import reverse
 
@@ -27,6 +29,7 @@ class BaseTestCase(TestCase):
         self.author = DllUser.objects.create(**author)
         self.author.set_password('password')
         self.author.save()
+        self.published_content = []
 
         for content in content_list:
             c = content['model'].objects.create(name=content['name'], teaser=content['teaser'], author=self.author)
@@ -35,6 +38,7 @@ class BaseTestCase(TestCase):
                 c.url = url
                 c.save()
             c.publish()
+            self.published_content.append(c.get_published().pk)
 
         # Create competence
         Competence.objects.create(cid=1)
@@ -69,7 +73,7 @@ class TrendCreationTests(BaseTestCase):
             "name": "New Trend",
             "teaser": "Nunc interdum lacus sit amet orci.",
             "learning_goals": ["a", "b", "c"],
-            "related_content": [2, 4],
+            "related_content": random.choices(self.published_content, k=2),
             "competences": [1],
             "sub_competences": [1],
             "resourcetype": "Trend",
@@ -93,7 +97,7 @@ class ToolCreationTests(BaseTestCase):
             "name": "New Tool",
             "teaser": "Nunc interdum lacus sit amet orci.",
             "learning_goals": ["a", "b", "c"],
-            "related_content": [2, 4],
+            "related_content": random.choices(self.published_content, k=2),
             "competences": [1],
             "sub_competences": [1],
             "resourcetype": "Tool",
@@ -117,7 +121,7 @@ class TeachingModuleCreationTests(BaseTestCase):
             "name": "New TeachingModule",
             "teaser": "Nunc interdum lacus sit amet orci.",
             "learning_goals": ["a", "b", "c"],
-            "related_content": [2, 4],
+            "related_content": random.choices(self.published_content, k=2),
             "competences": [1],
             "sub_competences": [1],
             "resourcetype": "TeachingModule",
