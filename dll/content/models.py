@@ -86,8 +86,8 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
             Review.objects.filter(pk__in=review_pks[1:]).update(is_active=False)
             return active_review
 
-    @property
-    def review_fields(self):
+    @classmethod
+    def review_fields(cls):
         fields = {'name', 'image', 'teaser', 'learning_goals', 'related_content', 'additional_info', 'competences',
                   'sub_competences', 'tags'}
         return fields
@@ -187,6 +187,8 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
 
     class Meta(RulesModelBaseMixin, PublisherModel.Meta):
         ordering = ['slug']
+        verbose_name = _("Inhalt")
+        verbose_name_plural = _("Inhalte")
 
 
 class TeachingModule(Content):
@@ -205,6 +207,10 @@ class TeachingModule(Content):
     school_types = models.ManyToManyField('SchoolType', verbose_name=_("Schulform"), blank=True)
     licence = models.IntegerField(_("Lizenz"), choices=LICENCE_CHOICES, blank=True, null=True)
 
+    class Meta(Content.Meta):
+        verbose_name = _("Unterrichtsbaustein")
+        verbose_name_plural = _("Unterrichtsbausteine")
+
     @property
     def type(self):
         return 'teaching-module'
@@ -213,9 +219,9 @@ class TeachingModule(Content):
     def type_verbose(self):
         return 'Unterrichtsbaustein'
 
-    @property
-    def review_fields(self):
-        fields = super().review_fields
+    @classmethod
+    def review_fields(cls):
+        fields = super().review_fields()
         fields += {'description', 'subject_of_tuition', 'educational_plan_reference', 'school_class', 'estimated_time',
                    'equipment', 'state', 'differentiating_attribute', 'expertise', 'subjects', 'subjects',
                    'school_types', 'licence'}
@@ -266,6 +272,10 @@ class Tool(Content):
     description = models.TextField(_("Beschreibung"), null=True, blank=True)
     usage = models.TextField(_("Nutzung"), null=True, blank=True)
 
+    class Meta(Content.Meta):
+        verbose_name = _("Tool")
+        verbose_name_plural = _("Tools")
+
     @property
     def type_verbose(self):
         return 'Tool'
@@ -274,9 +284,9 @@ class Tool(Content):
     def type(self):
         return 'tool'
 
-    @property
-    def review_fields(self):
-        fields = super().review_fields
+    @classmethod
+    def review_fields(cls):
+        fields = super().review_fields()
         fields += {'operating_systems', 'applications', 'status', 'requires_registration', 'usk', 'pro', 'contra',
                    'privacy', 'description', 'usage'}
         return fields
@@ -323,6 +333,10 @@ class Trend(Content):
     central_contents = models.TextField(_("Zentrale Inhalte"), blank=True, null=True)
     citation_info = models.CharField(_("Zitierhinweis"), max_length=500, blank=True, null=True)
 
+    class Meta(Content.Meta):
+        verbose_name = _("Trend")
+        verbose_name_plural = _("Trends")
+
     @property
     def type(self):
         return 'trend'
@@ -331,9 +345,9 @@ class Trend(Content):
     def type_verbose(self):
         return 'Trend'
 
-    @property
-    def review_fields(self):
-        fields = super().review_fields
+    @classmethod
+    def review_fields(cls):
+        fields = super().review_fields()
         fields += {'language', 'licence', 'category', 'target_group', 'publisher', 'publisher_date', 'central_contents',
                    'citation_info'}
         return fields
@@ -343,6 +357,26 @@ class Trend(Content):
 
     def copy_relations(self, src, dst):
         super(Trend, self).copy_relations(src, dst)
+
+
+class HelpText(TimeStampedModel):
+    content_type = models.OneToOneField(ContentType, on_delete=models.CASCADE, related_name='help_text')
+    json_data = JSONField(default=dict)
+
+    def get_help_text_fields_for_content_type(self):
+        model = self.content_type.model_class()
+        data = {}
+        for field in model._meta.get_fields():
+            data[field.name] = str(getattr(field, 'verbose_name', field.name))
+        return data
+
+    def save(self, **kwargs):
+        if self.pk is None:
+            self.json_data = self.get_help_text_fields_for_content_type()
+        return super(HelpText, self).save(**kwargs)
+
+    def __str__(self):
+        return _("Hilfetext für ") + self.content_type.model_class()._meta.verbose_name_plural.title()
 
 
 class Review(TimeStampedModel):
