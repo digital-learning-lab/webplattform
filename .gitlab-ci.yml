@@ -13,10 +13,6 @@ variables:
 #        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
 #        - docker pull ${BASE_IMAGE}
         - mkdir ./dll/media
-        - ls ./dll -la
-        - ls ./dll/media -la
-        - pwd
-        - exit 1
         - |
             ssh-agent bash -c '
                 ssh-add ~/.ssh/id_rsa_dll-inhalte;
@@ -27,6 +23,7 @@ variables:
                     git -C ./dll/media checkout "${CI_COMMIT_REF_NAME}";
                 fi
             '
+        - ls ./dll/media -la
         - git -C ./dll/media branch | cat
         - rm -rf ./dll/media/.git
 stages:
