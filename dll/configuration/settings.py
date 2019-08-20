@@ -108,6 +108,8 @@ DATABASES = {
         'PORT': env.int('DATABASE_PORT', 5432),
     }
 }
+if env.str('DATABASE_PASSWORD', None):
+    DATABASES['default']['PASSWORD'] = env.str('DATABASE_PASSWORD')
 
 
 # Password validation
