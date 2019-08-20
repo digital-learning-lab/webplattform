@@ -28,6 +28,8 @@ RUN apt update \
 RUN mkdir /code
 WORKDIR /code
 
+EXPOSE 80
+
 COPY dll /code/dll
 COPY manage.py /code
 COPY --from=webpack /node_deps/static/dist /code/dll/static/dist
