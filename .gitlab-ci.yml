@@ -30,13 +30,7 @@ variables:
 stages:
 #    - tests
     - review
-#tests:
-#    stage: tests
-#    tags:
-#        - floki_development
-#    #before_script: *before_script_definition
-#    script:
-#        - exit 0
+
 
 start_review:
     stage: review
