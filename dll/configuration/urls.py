@@ -24,7 +24,8 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     NewsletterRegisterView, NewsletterUnregisterView, ContactView, ToolDetailView, TrendDetailView, \
     TeachingModuleDetailView, CompetenceFilterView, ContentViewSet, TeachingModuleFilterView, \
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
-    PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView
+    PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
+    CompetencesSearchView, SubCompetencesSearchView
 from dll.user.views import MyContentView, AddTeachingModule
 
 router = DefaultRouter()
@@ -60,8 +61,10 @@ urlpatterns = [
     path('api/tools', ToolDataFilterView.as_view(), name='tools-data-filter'),
     path('api/trends', TrendDataFilterView.as_view(), name='trends-data-filter'),
     path('api/authors', AuthorSearchView.as_view(), name='author-search'),
-    path('api/schoolTypes', AuthorSearchView.as_view(), name='author-search'),
-    path('api/states', AuthorSearchView.as_view(), name='author-search'),
+    path('api/schoolTypes', SchoolTypesSearchView.as_view(), name='school-type-search'),
+    path('api/states', StateSearchView.as_view(), name='state-search'),
+    path('api/competences', CompetencesSearchView.as_view(), name='competence-search'),
+    path('api/sub-competences', SubCompetencesSearchView.as_view(), name='sub-competence-search'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

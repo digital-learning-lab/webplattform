@@ -2,6 +2,7 @@ from easy_thumbnails.files import get_thumbnailer
 from rest_framework import serializers
 from rest_polymorphic.serializers import PolymorphicSerializer
 
+from dll.content.models import SchoolType, Competence, SubCompetence
 from dll.user.models import DllUser
 from .models import Content, Tool, Trend, TeachingModule, ContentLink, Review
 
@@ -44,6 +45,24 @@ class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = DllUser
         fields = ['username', 'pk']
+
+
+class SchoolTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SchoolType
+        fields = ['name', 'pk']
+
+
+class CompetenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Competence
+        fields = ['name', 'pk']
+
+
+class SubCompetenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubCompetence
+        fields = ['name', 'pk']
 
 
 class LinkSerializer(serializers.ModelSerializer):

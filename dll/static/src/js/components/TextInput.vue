@@ -37,7 +37,7 @@
       },
       maximalChars: {
         type: Number,
-        default: 0,
+        default: null,
         required: false
       },
       required: {

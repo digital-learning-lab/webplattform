@@ -1,6 +1,7 @@
 import json
 import random
 
+from django.http import JsonResponse
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
@@ -9,10 +10,12 @@ from psycopg2._range import NumericRange
 from rest_framework import viewsets, filters, mixins, permissions
 from rest_framework.permissions import DjangoObjectPermissions
 from rest_framework.generics import ListAPIView
+from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
-from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject
-from dll.content.serializers import AuthorSerializer, ContentListSerializer, ContentPolymorphicSerializer, \
+from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject, SchoolType, SubCompetence
+from dll.content.serializers import AuthorSerializer, SchoolTypeSerializer, CompetenceSerializer, \
+    SubCompetenceSerializer, ContentListSerializer, ContentPolymorphicSerializer, \
     ReviewSerializer
 from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
@@ -338,6 +341,3 @@ class AuthorSearchView(ListAPIView):
         filters.SearchFilter
     ]
     search_fields = ['username']
-
-# todo: profile django template view that lists the authored content, reviewer content and redirects to the content
-# creation page (which uses the contenteditviewset

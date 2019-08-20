@@ -1,7 +1,7 @@
 <template>
   <div class="form-group">
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
-    <v-select v-model="inputValue" :options="options" @search="fetchOptions" :multiple="multiple"></v-select>
+    <v-select v-model="inputValue" :options="options" @search="fetchOptions" :multiple="multiple" :disabled="disabled" :reduce="input => input.value ? input.value : input"></v-select>
   </div>
 </template>
 
@@ -15,6 +15,11 @@
       'v-select': vSelect
     },
     props: {
+      prefetch: {
+        type: Boolean,
+        default: false,
+        required: false
+      },
       id: {
         type: String,
         default: '',
@@ -47,6 +52,18 @@
       },
       value: {
         required: false
+      },
+      params: {
+        type: Object,
+        default: () => {
+          return {}
+        },
+        required: false
+      },
+      disabled: {
+        type: Boolean,
+        default: false,
+        required: false
       }
     },
     computed: {
@@ -62,16 +79,21 @@
     },
     created () {
       this.inputValue = this.value
+      if (this.prefetch) {
+        this.fetchOptions('', function () {})
+      }
     },
     methods: {
       fetchOptions (search, loading) {
+        console.log(this.params)
         loading(true)
         axios.get(this.fetchUrl, {
           params: {
-            q: search
+            q: search,
+            ...this.params
           }
         }).then(res => {
-          this.options = res.data.results.map((el) => {return {label: el.username, value: el.pk}})
+          this.options = res.data.results.map((el) => {return {label: el.username || el.name, value: el.pk || el.value}})
           loading(false)
         }).catch(err => {
           loading(false)
@@ -82,6 +104,11 @@
     watch: {
       inputValue (newValue) {
         this.$emit('update:value', newValue)
+      },
+      disabled (newValue) {
+        if (!newValue && this.prefetch) {
+          this.fetchOptions('', function () {})
+        }
       }
     }
   }
