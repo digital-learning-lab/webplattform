@@ -1,0 +1,64 @@
+version: "3.5"
+
+services:
+  web:
+    image: '${CI_PROJECT_PATH_SLUG}:${CI_COMMIT_REF_SLUG}'
+    labels:
+      ONLINE_JOURNALCTL: 'true'
+      ONLINE_JOURNALCTL_TOKEN: '${ONLINE_JOURNALCTL_TOKEN}'
+    build:
+      context: ../
+      dockerfile: ./Dockerfile
+    volumes:
+      - '/docker_volumes/srv/dll/media/:/code/dll/media'
+    restart: 'always'
+    depends_on:
+        - db
+    links:
+       - db
+    command: >
+      bash -c "python manage.py migrate && python manage.py import_content -f /code/dll/media && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "80:8000"
+    security_opt:
+      - no-new-privileges
+    environment:
+      VIRTUAL_HOST: '${CI_PROJECT_ID}-${CI_ENVIRONMENT_SLUG}'
+      DJANGO_SECRET_KEY: '${SECRET_KEY}'
+      HOST_IP: '${HOST_IP}'
+
+      ADMIN_USER: 'admin'
+      ADMIN_EMAIL: 'michael.heinemann@tuhh.de'
+      ADMIN_PASSWORD: 'cgPPDMTCAVBgJnBUrucji'
+
+      DATABASE_NAME: 'dll_db'
+      DATABASE_HOST: 'db'
+      DATABASE_USER: 'dll_admin'
+      DATABASE_PASSWORD: 'gdUsLuRrDa6gQmEqoK2oP9oHWvcPeq6J3jQpAnF6q5Tw7Rmci5D'
+
+      EMAIL_HOST: 'floki.rz.tuhh.de'
+      EMAIL_PORT: '25'
+      EMAIL_HOST_USER: 'None'
+      EMAIL_HOST_PASSWORD: 'None'
+      EMAIL_USE_TLS: 'False'
+      EMAIL_SENDER: 'digital.learning.lab@tuhh.de'
+      EMAIL_RECEIVER_DLL: 'digital.learning.lab@tuhh.de'
+      EMAIL_RECEIVER_BSB: 'stabsstelle-digitalisierung@bsb.hamburg.de'
+    logging:
+      driver: journald
+  db:
+    image: postgres:11
+    labels:
+      ONLINE_JOURNALCTL: 'true'
+      ONLINE_JOURNALCTL_TOKEN: '${ONLINE_JOURNALCTL_TOKEN}'
+    restart: 'always'
+    environment:
+        POSTGRES_PASSWORD: 'gdUsLuRrDa6gQmEqoK2oP9oHWvcPeq6J3jQpAnF6q5Tw7Rmci5D'
+        POSTGRES_USER: 'dll_admin'
+        POSTGRES_DB: 'dll_db'
+    logging:
+      driver: journald
+
+networks:
+  default:
+    name: '${CI_PROJECT_ID}-${CI_ENVIRONMENT_SLUG}-${CI_PIPELINE_ID}'

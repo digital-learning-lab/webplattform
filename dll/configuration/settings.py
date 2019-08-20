@@ -170,7 +170,7 @@ WEBPACK_LOADER = {
 }
 
 MEDIA_URL = os.getenv('MEDIA_URL') or '/media/'
-MEDIA_ROOT = os.getenv('STATIC_ROOT') or os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.getenv('MEDIA_ROOT') or os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'user.DllUser'
 AUTHENTICATION_BACKENDS = (
