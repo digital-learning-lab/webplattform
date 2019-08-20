@@ -2,7 +2,6 @@ from django.contrib.auth.models import Group
 from django.core.files import File
 from django.test import TestCase
 from filer.models import File as FilerFile
-from guardian.shortcuts import assign_perm
 
 from dll.content.models import TeachingModule, Review, ContentLink, ContentFile
 from dll.user.models import DllUser
@@ -53,15 +52,8 @@ class BaseTestCase(TestCase):
             'email': 'test+daniel@blueshoe.de',
         }
 
-        bsb_reviewer_group = Group.objects.create(name='BSB-Reviewer')
-        tuhh_reviewer_group = Group.objects.create(name='TUHH-Reviewer')
-        assign_perm('content.review_teachingmodule', bsb_reviewer_group)
-        assign_perm('content.review_tool', bsb_reviewer_group)
-        assign_perm('content.review_trend', tuhh_reviewer_group)
-
-        for perm in [f'content.{action}_review' for action in ('change', 'add', 'delete', 'view')]:
-            assign_perm(perm, bsb_reviewer_group)
-            assign_perm(perm, tuhh_reviewer_group)
+        bsb_reviewer_group = Group.objects.get(name='BSB-Reviewer')
+        tuhh_reviewer_group = Group.objects.get(name='TUHH-Reviewer')
 
         self.author = DllUser.objects.create(**author)
         self.co_author = DllUser.objects.create(**co_author)
@@ -94,13 +86,14 @@ class BaseTestCase(TestCase):
 
 
 class ContentCreationTests(BaseTestCase):
+    # todo: move this to test_content_creation
     def setUp(self):
         super().setUp()
 
     def test_user_can_edit_own_content(self):
         self.assertTrue(self.author.has_perm('content.change_teachingmodule', self.content))
 
-    def test_other_user_cannot_edit_own_content(self):
+    def test_other_user_cannot_edit_foreign_content(self):
         self.assertFalse(self.other_author.has_perm('content.change_teachingmodule', self.content))
 
     def test_coauthor_has_edit_permission(self):

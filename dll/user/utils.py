@@ -1,15 +1,22 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 
 
-# TODO: can this be done in a post_migrate signal?
+# TODO: can/should this be done in a post_migrate signal?
 def get_bsb_reviewer_group():
-    return Group.objects.get_or_create(name='BSB-Reviewer')[0]
+    group, created = Group.objects.get_or_create(name='BSB-Reviewer')
+    return group
 
 
 def get_tuhh_reviewer_group():
-    return Group.objects.get_or_create(name='TUHH-Reviewer')[0]
+    group, created = Group.objects.get_or_create(name='TUHH-Reviewer')
+    return group
+
+
+def get_author_group():
+    group, created = Group.objects.get_or_create(name='Author')
+    return group
 
 
 def get_default_tuhh_user():

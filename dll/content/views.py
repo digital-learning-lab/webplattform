@@ -1,14 +1,15 @@
 import random
 
-from django.db.models import Q
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, filters
+from rest_framework import viewsets, filters, mixins
+from rest_framework.permissions import DjangoObjectPermissions
+from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
-from dll.content.models import Content, TeachingModule, Trend, Tool, Competence
-from .serializers import ContentListSerializer, ContentPolymorphicSerializer
+from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Review
+from .serializers import ContentListSerializer, ContentPolymorphicSerializer, ReviewSerializer
 
 
 class BreadcrumbMixin(ContextMixin):
@@ -113,7 +114,7 @@ class TeachingModuleDetailView(ContentDetailView):
     template_name = 'dll/content/teaching_module_detail.html'
 
 
-class ContentViewSet(viewsets.ModelViewSet):
+class PublishedContentViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = ContentPolymorphicSerializer
     queryset = Content.objects.published()
     filter_backends = [
@@ -123,14 +124,13 @@ class ContentViewSet(viewsets.ModelViewSet):
     search_fields = ['name', 'teaser']
 
     def get_queryset(self):
-        query = self.request.GET.get('q', '')
         competence = self.request.GET.get('competence', '')
         sorting = self.request.GET.get('sorting', 'az')
         teaching_modules = self.request.GET.get('teachingModules', 'true')
         trends = self.request.GET.get('trends', 'true')
         tools = self.request.GET.get('tools', 'true')
 
-        qs = Content.objects.published().filter(Q(name__icontains=query) | Q(teaser__icontains=query))
+        qs = super().get_queryset()
 
         if competence:
             qs = qs.filter(competences__slug=competence)
@@ -148,13 +148,40 @@ class ContentViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
         name = resolve(self.request.path_info).url_name
-        if name == 'content-list' and self.request.method == 'GET':
+        if name == 'public-content-list' and self.request.method == 'GET':
             return ContentListSerializer
         else:
-            return super(ContentViewSet, self).get_serializer_class()
+            return super(PublishedContentViewSet, self).get_serializer_class()
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+
+class DraftsContentViewSet(AutoPermissionViewSetMixin,
+                           mixins.CreateModelMixin,
+                           mixins.RetrieveModelMixin,
+                           mixins.UpdateModelMixin,
+                           mixins.DestroyModelMixin,
+                           viewsets.GenericViewSet):
+    """Authors can create, update and retrieve content, reviewers can only retrieve"""
+    # todo: delete public version when draft is deleted
+    serializer_class = ContentPolymorphicSerializer
+    queryset = Content.objects.drafts()
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
+
+class ReviewViewSet(mixins.RetrieveModelMixin,
+                    mixins.UpdateModelMixin,
+                    viewsets.GenericViewSet):
+    """Authors have only view permission, reviewers have view and edit permission"""
+    serializer_class = ReviewSerializer
+    queryset = Review.objects.all()
+    permission_classes = [DjangoObjectPermissions]
+
+    def perform_update(self, serializer):
+        serializer.save()
 
 
 class CompetenceFilterView(DetailView):
@@ -162,4 +189,5 @@ class CompetenceFilterView(DetailView):
     template_name = 'dll/filter/competence.html'
 
 
-
+# todo: profile django template view that lists the authored content, reviewer content and redirects to the content
+# creation page (which uses the contenteditviewset

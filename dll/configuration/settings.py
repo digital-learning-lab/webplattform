@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
     'webpack_loader',
-    'guardian',
     'easy_thumbnails',
     'filer',
     'mptt',
@@ -57,11 +56,12 @@ INSTALLED_APPS = [
     'django_extensions',
     'crispy_forms',
     'ckeditor',
-    'dll.user',
     'dll.content',
+    'dll.user',
     'dll.general',
     'rest_framework',
-    'django_filters'
+    'django_filters',
+    'rules.apps.AutodiscoverRulesConfig'
 ]
 
 MIDDLEWARE = [
@@ -174,8 +174,8 @@ MEDIA_ROOT = os.getenv('STATIC_ROOT') or os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'user.DllUser'
 AUTHENTICATION_BACKENDS = (
+    'rules.permissions.ObjectPermissionBackend',
     'django.contrib.auth.backends.ModelBackend',  # this is default
-    'guardian.backends.ObjectPermissionBackend',
 )
 
 DEFAULT_USER_USERNAME = 'TUHH'
@@ -209,9 +209,6 @@ LOGIN_REDIRECT_URL = 'user:profile'
 LOGOUT_REDIRECT_URL = 'home'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-# WARNING: Do not use this, because we have separate permissions for the different polymorphic models
-# GUARDIAN_GET_CONTENT_TYPE = 'polymorphic.contrib.guardian.get_polymorphic_base_content_type'
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
