@@ -2,7 +2,7 @@
   <form class="mb-4">
     <div v-if="mode === 'create'">
       <app-text-input id="author" :read-only="true" label="Autor_in" :value.sync="data.author" :required="true"></app-text-input>
-      <app-text-input id="title" label="Titel des Unterrichtsbausteins" :value.sync="data.title" :required="true"></app-text-input>
+      <app-text-input id="title" label="Titel des Unterrichtsbausteins" :value.sync="data.title" :required="true" :character-counter="true" :maximal-chars="140"></app-text-input>
       <app-text-area id="teaser" label="Teaser" :required="true" :value.sync="data.teaser"></app-text-area>
       <app-text-area id="description" label="Detaillierte Beschreibung" :required="true" :value.sync="data.teaser"></app-text-area>
       <app-text-area id="estimatedTime" label="Zeitumfang der Durchführung" :value.sync="data.estimatedTime"></app-text-area>
