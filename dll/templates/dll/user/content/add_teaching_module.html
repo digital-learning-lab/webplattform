@@ -1,0 +1,48 @@
+{% extends 'dll/default_page.html' %}
+
+{% block content %}
+
+  <a href="{% url 'user-content-overview' %}" role="button" aria-pressed="true">Zurück</a>
+  <h1 class="headline">
+    Digitalen Unterrichtsbaustein erstellen</h1>
+  <h2>
+    Mit diesem Eingabeformular können Sie Ihren digitalen Unterrichtsbaustein im digital.learning.lab
+    einreichen.
+  </h2>
+  <p>
+    Unter <b>digitalen Unterrichtsbausteinen</b> verstehen wir konkrete Unterrichtskonzepte und –beispiele
+    zur Gestaltung des Schulunterrichts mit und über digitale Medien.
+    <span class="collapsed" style="display: block;">
+              <a href="javascript:void(0)"> weiter lesen &gt;&gt;</a>
+          </span>
+    <span class="expanded" style="display: none;">
+      Diese sollen Lehrerinnen und Lehrern Orientierung und Inspiration bieten, wie Fachunterricht in
+      digitalen Zeiten gestaltet werden kann. So sollen Lehrkräfte unterstützt werden, selbst Kompetenzen
+      für die digitale Welt zu erwerben bzw. auszubauen und auch befähigt werden, ihre Schülerinnen und Schüler
+      in ihrem Kompetenzerwerb zu unterstützen. Vor dem Hintergrund dieses Ansatzes werden im digital.learning.lab
+      keine einzelnen, aus dem Kontext losgelöste Arbeitsblätter, Grafiken, Videos, Bilder, etc., sondern ausschließlich
+      ganzheitliche Unterrichtskonzepte und -beispiele bereitgestellt.
+          <a href="javascript:void(0)" style="display: block;">&lt;&lt; weniger anzeigen</a>
+      </span>
+  </p>
+  <p>
+    In den digitalen Unterrichtsbausteinen muss sich eine <b>fachliche Unterrichtsidee oder
+    Lernsituation</b> ableiten lassen. Zudem müssen Schülerinnen und Schüler die Möglichkeit haben, sowohl
+    Fachkompetenzen als auch Kompetenzen für die digitale Welt (<a href="https://www.kmk.org/themen/bildung-in-der-digitalen-welt/strategie-bildung-in-der-digitalen-welt.html">siehe
+    Strategie der Kultusministerkonferenz, 2017</a>) zu erwerben. Alle digitalen Unterrichtsbausteine werden
+    als offene Bildungsmaterialien (sogenannte Open Educational Resources) veröffentlicht.
+  </p>
+
+  <p>
+    Wenn Sie alle Pflichtfelder ausgefüllt haben, können Sie den Unterrichtsbaustein zur inhaltlichen und
+    urheberrechtlichen Sichtung durch erfahrene Hamburger Lehrerinnen und Lehrer einreichen. <b>Hinweis:</b>
+    In Ferienzeiten kann es zu Verzögerungen in der Rückmeldung zu eingereichten digitalen
+    Unterrichtsbausteinen kommen.
+  </p>
+  <p>
+    Falls Sie Fragen oder Probleme bei der Erstellung digitaler Unterrichtsbausteine im digital.learning.lab haben, zögern Sie
+    nicht uns über das <a href="{% url 'contact' %}" target="_blank">Kontaktformular</a> zu
+    kontaktieren.
+  </p>
+
+{% endblock %}

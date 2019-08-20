@@ -22,9 +22,10 @@ from rest_framework.routers import DefaultRouter
 
 from dll.content.views import HomePageView, ImprintView, DataPrivacyView, StructureView, UsageView, DevelopmentView, \
     NewsletterRegisterView, NewsletterUnregisterView, ContactView, ToolDetailView, TrendDetailView, \
-    TeachingModuleDetailView, CompetenceFilterView, TeachingModuleFilterView, \
+    TeachingModuleDetailView, CompetenceFilterView, ContentViewSet, TeachingModuleFilterView, \
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
     PublishedContentViewSet, DraftsContentViewSet
+from dll.user.views import MyContentView, AddTeachingModule
 
 router = DefaultRouter()
 router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
@@ -50,6 +51,8 @@ urlpatterns = [
     path('unterrichtsbausteine', TeachingModuleFilterView.as_view(), name='teaching-modules-filter'),
     path('tools', ToolFilterView.as_view(), name='tools-filter'),
     path('trends', TrendFilterView.as_view(), name='trends-filter'),
+    path('meine-inhalte', MyContentView.as_view(), name='user-content-overview'),
+    path('meine-inhalte/unterrichtsbausteine/', AddTeachingModule.as_view(), name='add-teaching-module'),
     path('', include('dll.user.urls', namespace='user')),
     # path('', include('django.contrib.flatpages.urls')),
     path('api/', include(router.urls)),

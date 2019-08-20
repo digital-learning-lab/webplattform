@@ -1,1 +1,14 @@
-{% extends 'dll' %}
+{% extends 'dll/default_page.html' %}
+
+{% block content %}
+    <h4>Herzlich Willkommen im Autor_innen-Bereich des digital.learning.lab</h4>
+    <p>In diesem Bereich können Sie verschiedene Inhalte im digital.learning.lab einstellen. Falls Sie bereits eigene Inhalte erstellt haben, werden diese unten in der Übersicht dargestellt.</p>
+    <p>Im digital.learning.lab können Sie digitale Unterrichtsbausteine, Tools und Trends erstellen. Klicken Sie einfach auf den entsprechenden Button weiter unten. Alle eingereichten Inhalte werden vor Veröffentlichung einer Sichtung unterzogen, um so auch weiterhin gewährleisten zu können, dass im digital.learning.lab qualitativ hochwertige Inhalte bereitgestellt werden.</p>
+    <p>Die digitalen Unterrichtsbausteine werden von erfahrenen Lehrerinnen und Lehrern aus Hamburg einer inhaltlichen und urheberrechtlichen Sichtung unterzogen. Die Tool- und Trendbeschreibungen werden vom wissenschaftlichen Personal der Technischen Universität Hamburg gesichtet. Nach erfolgreicher Sichtung der eingereichten Inhalte werden die Inhalte veröffentlicht.</p>
+
+  <div class="text-center">
+    <a class="button button--teaching-module mr-3" href="{% url 'add-teaching-module' %}">Unterrichtsbaustein erstellen</a>
+    <a class="button button--trend mr-3" href="{% url 'add-teaching-module' %}">Tool erstellen</a>
+    <a class="button button--tool mr-3" href="{% url 'add-teaching-module' %}">Trend erstellen</a>
+  </div>
+{% endblock %}

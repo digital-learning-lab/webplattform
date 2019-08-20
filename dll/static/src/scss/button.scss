@@ -1,7 +1,8 @@
 .button {
+  display: inline-block;
   line-height: 1.7;
   padding: 0.5rem 2rem;
-  color: white;
+  color: rgba(255, 255, 255, 1);
   margin: 1rem 0;
   border: 0;
   font-weight: $font-weight-semi-bold;
@@ -10,5 +11,41 @@
   background-color: $color--oracle;
   &:hover {
     background-color: $color--smalt-blue;
+  }
+}
+.button--teaching-module,
+.button--teaching-module:visited,
+.button--teaching-active {
+  color: rgba(255, 255, 255, 1);
+  font-weight: $font-weight-light;
+  background-color: $color--teaching-module;
+  &:hover {
+    color: rgba(255, 255, 255, 1);
+    background-color: $color--teaching-module;
+    text-decoration: underline;
+  }
+}
+.button--trend,
+.button--trend:visited,
+.button--active {
+  color: rgba(255, 255, 255, 1);
+  font-weight: $font-weight-light;
+  background-color: $color--trend;
+  &:hover {
+    color: rgba(255, 255, 255, 1);
+    background-color: $color--trend;
+    text-decoration: underline;
+  }
+}
+.button--tool,
+.button--tool:visited,
+.button--active {
+  color: rgba(255, 255, 255, 1);
+  font-weight: $font-weight-light;
+  background-color: $color--tool;
+  &:hover {
+    color: rgba(255, 255, 255, 1);
+    background-color: $color--tool;
+    text-decoration: underline;
   }
 }

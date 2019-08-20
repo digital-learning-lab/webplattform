@@ -2,11 +2,13 @@ from django.contrib.auth import login, get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
+from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView
 
 from dll.content.models import Content
+from dll.content.views import BreadcrumbMixin
 from dll.user.tokens import account_activation_token
 from .forms import SignUpForm
 
@@ -41,6 +43,18 @@ class ProfileView(TemplateView):
         ctx['own_content'] = self.request.user.qs_of_personal_content()
         ctx['coauthored_content'] = self.request.user.qs_of_coauthored_content()
         return ctx
+
+
+class MyContentView(TemplateView, BreadcrumbMixin):
+    template_name = 'dll/user/content/overview.html'
+    breadcrumb_title = 'Meine Inhalte'
+    breadcrumb_url = reverse_lazy('user-content-overview')
+
+
+class AddTeachingModule(TemplateView, BreadcrumbMixin):
+    template_name = 'dll/user/content/add_teaching_module.html'
+    breadcrumb_title = 'Digitalen Unterrichtsbaustein erstellen'
+    breadcrumb_url = reverse_lazy('add-teaching-module')
 
 
 class SignUpView(FormView):
