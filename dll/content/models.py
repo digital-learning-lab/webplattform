@@ -46,7 +46,7 @@ LICENCE_CHOICES = (
 
 class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
     name = models.CharField(_("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200)
-    slug = DllSlugField(populate_from='name')
+    slug = DllSlugField(populate_from='name', overwrite=True)  # todo check if xxx-2 slugs are created if name does not change
     author = models.ForeignKey(DllUser, on_delete=models.SET(get_default_tuhh_user), verbose_name=_("Autor"))
     co_authors = models.ManyToManyField(DllUser, related_name='collaborative_content',
                                         verbose_name=_("Kollaborateure"), blank=True)
@@ -85,6 +85,12 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
             active_review = Review.objects.get(pk=review_pks[0])
             Review.objects.filter(pk__in=review_pks[1:]).update(is_active=False)
             return active_review
+
+    @property
+    def review_fields(self):
+        fields = {'name', 'image', 'teaser', 'learning_goals', 'related_content', 'additional_info', 'competences',
+                  'sub_competences', 'tags'}
+        return fields
 
     def submit_for_review(self):
         if self.review:
@@ -207,6 +213,14 @@ class TeachingModule(Content):
     def type_verbose(self):
         return 'Unterrichtsbaustein'
 
+    @property
+    def review_fields(self):
+        fields = super().review_fields
+        fields += {'description', 'subject_of_tuition', 'educational_plan_reference', 'school_class', 'estimated_time',
+                   'equipment', 'state', 'differentiating_attribute', 'expertise', 'subjects', 'subjects',
+                   'school_types', 'licence'}
+        return fields
+
     def copy_relations(self, src, dst):
         super(TeachingModule, self).copy_relations(src, dst)
         dst.subjects.add(*src.subjects.all())
@@ -260,6 +274,13 @@ class Tool(Content):
     def type(self):
         return 'tool'
 
+    @property
+    def review_fields(self):
+        fields = super().review_fields
+        fields += {'operating_systems', 'applications', 'status', 'requires_registration', 'usk', 'pro', 'contra',
+                   'privacy', 'description', 'usage'}
+        return fields
+
     def get_absolute_url(self):
         return reverse('tool-detail', kwargs={'slug': self.slug})
 
@@ -310,6 +331,13 @@ class Trend(Content):
     def type_verbose(self):
         return 'Trend'
 
+    @property
+    def review_fields(self):
+        fields = super().review_fields
+        fields += {'language', 'licence', 'category', 'target_group', 'publisher', 'publisher_date', 'central_contents',
+                   'citation_info'}
+        return fields
+
     def get_absolute_url(self):
         return reverse('trend-detail', kwargs={'slug': self.slug})
 
@@ -330,25 +358,42 @@ class Review(TimeStampedModel):
     is_active = models.BooleanField(default=False)
     status = models.IntegerField(choices=STATUS_CHOICES, default=NEW)
     count = models.PositiveSmallIntegerField(default=0)
-    # todo: accepted_by = models.OneToOneField(DllUser, on_delete=models.SET(get_default_tuhh_user))
-    # todo: declined_by = models.OneToOneField(DllUser, on_delete=models.SET(get_default_tuhh_user))
+    accepted_by = models.ForeignKey(
+        DllUser, on_delete=models.SET(get_default_tuhh_user),
+        related_name='accepted_reviews',
+        null=True
+    )
+    declined_by = models.ForeignKey(
+        DllUser,
+        on_delete=models.SET(get_default_tuhh_user),
+        related_name='declined_reviews',
+        null=True
+    )
+
+    def get_review_fields_for_content(self):
+        return self.content.review_fields
 
     def save(self, **kwargs):
         if not self.pk:
             self.count = self.content.reviews.count() + 1
         return super().save(**kwargs)
 
-    def accept(self):
-        # todo: user permission check
-        self.status = self.ACCEPTED
-        self.is_active = False
-        self.save()
-        self.content.publish()
+    def accept(self, by_user: DllUser):
+        """
+        Accept the content and publish it.
+        """
+        if by_user.has_perm('content.change_review', self):
+            self.status = self.ACCEPTED
+            self.is_active = False
+            self.accepted_by = by_user
+            self.save()
+            self.content.publish()
 
-    def decline(self):
-        # todo: user permission check
-        self.status = self.DECLINED
-        self.save()
+    def decline(self, by_user: DllUser):
+        if by_user.has_perm('content.change_review', self):
+            self.declined_by = by_user
+            self.status = self.DECLINED
+            self.save()
 
 
 class OperatingSystem(models.Model):
