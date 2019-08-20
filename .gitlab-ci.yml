@@ -25,8 +25,8 @@ variables:
                 fi
             '
         - ls -la ./dll/media/inhalte
-        - git -C ./dll/media branch | cat
-        - rm -rf ./dll/media/.git
+        - git -C ./dll/media/inhalte branch | cat
+        - rm -rf ./dll/media/inhalte/.git
 stages:
 #    - tests
     - review
