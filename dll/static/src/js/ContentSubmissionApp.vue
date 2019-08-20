@@ -1,7 +1,7 @@
 <template>
-  <div class="row mt-5 mb-5">
-    <div class="col-12"></div>
-  </div>
+  <form class="mb-4">
+
+  </form>
 </template>
 
 <script>
