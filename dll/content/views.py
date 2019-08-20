@@ -173,6 +173,7 @@ class ContentDataFilterView(ListAPIView):
     ]
     search_fields = ['name', 'teaser']
     model = None
+    permission_classes = []
 
     def get_queryset(self):
         qs = super(ContentDataFilterView, self).get_queryset().objects.instance_of(self.model)
