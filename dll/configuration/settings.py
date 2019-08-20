@@ -221,7 +221,3 @@ REST_FRAMEWORK = {
     'SEARCH_PARAM': 'q',
     'DEFAULT_PERMISSION_CLASSES': []
 }
-
-import mimetypes
-
-mimetypes.add_type("image/svg+xml", ".svg", True)
