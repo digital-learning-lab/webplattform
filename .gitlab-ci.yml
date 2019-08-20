@@ -12,6 +12,9 @@ variables:
 #        - docker-compose -p ${CI_PROJECT_PATH_SLUG}-${CI_ENVIRONMENT_SLUG} -f ./docker/docker-compose.yml config
 #        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
 #        - docker pull ${BASE_IMAGE}
+        - ls -la
+        - pwd
+        - exit 1
         - |
             ssh-agent bash -c '
                 ssh-add ~/.ssh/id_rsa_dll-inhalte;
