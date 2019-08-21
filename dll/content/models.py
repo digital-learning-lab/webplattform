@@ -15,9 +15,9 @@ from django_extensions.db.models import TimeStampedModel
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
 from filer.models import Folder, Image
-from guardian.shortcuts import assign_perm, remove_perm
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
+from rules.contrib.models import RulesModelMixin, RulesModelBaseMixin
 from taggit.managers import TaggableManager
 
 from .managers import ContentQuerySet
@@ -44,7 +44,7 @@ LICENCE_CHOICES = (
 )
 
 
-class Content(PublisherModel, PolymorphicModel):
+class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
     name = models.CharField(_("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200)
     slug = DllSlugField(populate_from='name')
     author = models.ForeignKey(DllUser, on_delete=models.SET(get_default_tuhh_user), verbose_name=_("Autor"))
@@ -179,7 +179,7 @@ class Content(PublisherModel, PolymorphicModel):
     def related_trends(self):
         return Trend.objects.filter(related_content__in=[self.pk])
 
-    class Meta:
+    class Meta(RulesModelBaseMixin, PublisherModel.Meta):
         ordering = ['slug']
 
 
@@ -193,16 +193,11 @@ class TeachingModule(Content):
     estimated_time = ArrayField(models.CharField(max_length=200), verbose_name=_("Zeitumfang"), default=list)
     equipment = ArrayField(models.CharField(max_length=200), verbose_name=_("Ausstattung"), default=list)
     state = models.CharField(_("Bundesland"), max_length=22, choices=GERMAN_STATES, null=True, blank=True)
-    differentiating_attribute = models.TextField(_("Differenzierung"), max_length=500)
+    differentiating_attribute = models.TextField(_("Differenzierung"), max_length=500, null=True, blank=True)
     expertise = ArrayField(models.CharField(max_length=200), verbose_name=_("Fachkompetenzen"), default=list)
     subjects = models.ManyToManyField('Subject', verbose_name=_("Unterrichtsfach"), blank=True)
     school_types = models.ManyToManyField('SchoolType', verbose_name=_("Schulform"), blank=True)
     licence = models.IntegerField(_("Lizenz"), choices=LICENCE_CHOICES, blank=True, null=True)
-
-    class Meta:
-        permissions = (
-            ('review_teachingmodule', _("Can review Teaching Module")),
-        )
 
     @property
     def type(self):
@@ -256,11 +251,6 @@ class Tool(Content):
     privacy = models.IntegerField(_("Datenschutz"), choices=PRIVACY_CHOICES, null=True, blank=True)
     description = models.TextField(_("Beschreibung"), null=True, blank=True)
     usage = models.TextField(_("Nutzung"), null=True, blank=True)
-
-    class Meta:
-        permissions = (
-            ('review_tool', _("Can review Tool")),
-        )
 
     @property
     def type_verbose(self):
@@ -326,11 +316,6 @@ class Trend(Content):
     def copy_relations(self, src, dst):
         super(Trend, self).copy_relations(src, dst)
 
-    class Meta:
-        permissions = (
-            ('review_trend', _("Can review Trend")),
-        )
-
 
 class Review(TimeStampedModel):
     NEW, IN_PROGRESS, ACCEPTED, DECLINED = 0, 1, 2, 3
@@ -344,14 +329,24 @@ class Review(TimeStampedModel):
     json_data = JSONField(default=dict)
     is_active = models.BooleanField(default=False)
     status = models.IntegerField(choices=STATUS_CHOICES, default=NEW)
+    count = models.PositiveSmallIntegerField(default=0)
+    # todo: accepted_by = models.OneToOneField(DllUser, on_delete=models.SET(get_default_tuhh_user))
+    # todo: declined_by = models.OneToOneField(DllUser, on_delete=models.SET(get_default_tuhh_user))
+
+    def save(self, **kwargs):
+        if not self.pk:
+            self.count = self.content.reviews.count() + 1
+        return super().save(**kwargs)
 
     def accept(self):
+        # todo: user permission check
         self.status = self.ACCEPTED
         self.is_active = False
         self.save()
         self.content.publish()
 
     def decline(self):
+        # todo: user permission check
         self.status = self.DECLINED
         self.save()
 
@@ -642,75 +637,3 @@ def auto_delete_filer_image_on_delete(sender, instance, **kwargs):
     # for reasons unknown, this works without specifying the concrete sender model
     if instance.image:
         instance.image.delete()
-
-
-def assign_author_permissions(sender, instance, created, **kwargs):
-    if created:
-        content_type = ContentType.objects.get_for_model(instance)
-        codenames = [x + content_type.model for x in ('add_', 'view_', 'change_', 'delete_')]
-        for codename in codenames:
-            permission = Permission.objects.get(
-                content_type=content_type,
-                codename=codename
-            )
-            assign_perm(permission, instance.author, instance)
-
-
-for subclass in Content.__subclasses__():
-    models.signals.post_save.connect(assign_author_permissions, sender=subclass)
-
-
-@receiver(models.signals.m2m_changed, sender=Content.co_authors.through)
-def update_co_authors_permissions(sender, instance, **kwargs):
-    action = kwargs['action']
-    content_type = ContentType.objects.get_for_model(instance)
-    codename = 'change_' + content_type.model
-    permission = Permission.objects.get(
-        content_type=content_type,
-        codename=codename
-    )
-    if kwargs['pk_set']:
-        if action == 'post_add':
-            users = DllUser.objects.filter(pk__in=kwargs['pk_set'])
-            for user in users:
-                assign_perm(permission, user, instance)
-        elif action == 'post_remove':
-            users = DllUser.objects.filter(pk__in=kwargs['pk_set'])
-            for user in users:
-                remove_perm(permission, user, instance)
-
-
-@receiver(models.signals.post_save, sender=Review)
-def toggle_permissions_based_on_review_status(sender, instance: Review, **kwargs):
-    content_type = ContentType.objects.get_for_model(instance.content)
-    codename = 'change_' + content_type.model
-    change_permission = Permission.objects.get(
-        content_type=content_type,
-        codename=codename
-    )
-    change_review_permission = Permission.objects.get(
-        content_type=ContentType.objects.get_for_model(instance),
-        codename='change_review'
-    )
-
-    if instance.status in [Review.NEW, Review.IN_PROGRESS]:
-        remove_perm(change_permission, instance.content.author, instance.content)
-        for co_author in instance.content.co_authors.all():
-            remove_perm(change_permission, co_author, instance.content)
-        if isinstance(instance.content, TeachingModule):
-            group = get_bsb_reviewer_group()
-            assign_perm(change_review_permission, group, instance)
-        elif isinstance(instance.content, Tool) or isinstance(instance.content, Trend):
-            group = get_tuhh_reviewer_group()
-            assign_perm(change_review_permission, group, instance)
-
-    elif instance.status in [Review.ACCEPTED, Review.DECLINED]:
-        assign_perm(change_permission, instance.content.author, instance.content)
-        for co_author in instance.content.co_authors.all():
-            assign_perm(change_permission, co_author, instance.content)
-        if isinstance(instance.content, TeachingModule):
-            group = get_bsb_reviewer_group()
-            remove_perm(change_review_permission, group, instance)
-        elif isinstance(instance.content, Tool) or isinstance(instance.content, Trend):
-            group = get_tuhh_reviewer_group()
-            remove_perm(change_review_permission, group, instance)

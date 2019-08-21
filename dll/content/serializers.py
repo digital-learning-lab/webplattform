@@ -3,7 +3,7 @@ from rest_framework import serializers
 from rest_polymorphic.serializers import PolymorphicSerializer
 
 from dll.user.models import DllUser
-from .models import Content, Tool, Trend, TeachingModule, ContentLink
+from .models import Content, Tool, Trend, TeachingModule, ContentLink, Review
 
 
 class ContentListSerializer(serializers.ModelSerializer):
@@ -94,3 +94,9 @@ class ContentPolymorphicSerializer(PolymorphicSerializer):
         Trend: TrendSerializer,
         TeachingModule: TeachingModuleSerializer
     }
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['status', 'json_data']

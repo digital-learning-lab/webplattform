@@ -22,11 +22,14 @@ from rest_framework.routers import DefaultRouter
 
 from dll.content.views import HomePageView, ImprintView, DataPrivacyView, StructureView, UsageView, DevelopmentView, \
     NewsletterRegisterView, NewsletterUnregisterView, ContactView, ToolDetailView, TrendDetailView, \
-    TeachingModuleDetailView, CompetenceFilterView, ContentViewSet, TeachingModuleFilterView, \
-    TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView
+    TeachingModuleDetailView, CompetenceFilterView, TeachingModuleFilterView, \
+    TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView,
+    PublishedContentViewSet, DraftsContentViewSet
 
-# router = DefaultRouter()
-# router.register(r'inhalte', ContentViewSet, base_name='content')
+router = DefaultRouter()
+router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
+router.register(r'inhalt-bearbeiten', DraftsContentViewSet, base_name='draft-content')
+router.register(r'review', DraftsContentViewSet, base_name='review')
 
 urlpatterns = [
     path('admin/', admin.site.urls),

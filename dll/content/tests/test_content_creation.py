@@ -43,8 +43,14 @@ class BaseTestCase(TestCase):
 
 class ContentListTests(BaseTestCase):
 
+    def test_content_retrieve(self):
+        public_tool = Tool.objects.published().first()
+        detail_view = reverse('public-content-detail', kwargs={'pk': public_tool.pk})
+        response = self.client.get(detail_view)
+        self.assertEqual(response.status_code, 200)
+
     def test_content_list(self):
-        list_view = reverse('content-list')
+        list_view = reverse('public-content-list')
         response = self.client.get(list_view)
         data = response.json()
         self.assertTrue(len(data['results']) == 6)
@@ -53,19 +59,12 @@ class ContentListTests(BaseTestCase):
         self.assertTrue(isinstance(data['results'][0]['competences'], list))
 
 
-class ContentRetrieveTests(BaseTestCase):
-
-    def test_content_retrieve(self):
-        public_tool = Tool.objects.published().first()
-        detail_view = reverse('content-detail', kwargs={'pk': public_tool.pk})
-        response = self.client.get(detail_view)
-        data = response.json()
-        pass
+class TrendCreationTests(BaseTestCase):
 
     def test_content_create(self):
         self.client.login(username='test+alice@blueshoe.de', password='password')
 
-        create_view = reverse('content-list')
+        create_view = reverse('draft-content-list')
         post_data = {
             "name": "New Trend",
             "teaser": "Nunc interdum lacus sit amet orci.",
@@ -83,3 +82,52 @@ class ContentRetrieveTests(BaseTestCase):
         data = response.json()
         self.assertEqual(response.status_code, 201)
         self.assertTrue(data['author']['username'] == 'alice')
+
+
+class ToolCreationTests(BaseTestCase):
+    def test_content_create(self):
+        self.client.login(username='test+alice@blueshoe.de', password='password')
+
+        create_view = reverse('draft-content-list')
+        post_data = {
+            "name": "New Tool",
+            "teaser": "Nunc interdum lacus sit amet orci.",
+            "learning_goals": ["a", "b", "c"],
+            "related_content": [2, 4],
+            "competences": [1],
+            "sub_competences": [1],
+            "resourcetype": "Tool",
+            "contentlink_set": [
+                {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
+                {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
+            ]
+        }
+        response = self.client.post(create_view, data=post_data, content_type='application/json')
+        data = response.json()
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(data['author']['username'] == 'alice')
+
+
+class TeachingModuleCreationTests(BaseTestCase):
+    def test_content_create(self):
+        self.client.login(username='test+alice@blueshoe.de', password='password')
+
+        create_view = reverse('draft-content-list')
+        post_data = {
+            "name": "New TeachingModule",
+            "teaser": "Nunc interdum lacus sit amet orci.",
+            "learning_goals": ["a", "b", "c"],
+            "related_content": [2, 4],
+            "competences": [1],
+            "sub_competences": [1],
+            "resourcetype": "TeachingModule",
+            "contentlink_set": [
+                {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
+                {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
+            ]
+        }
+        response = self.client.post(create_view, data=post_data, content_type='application/json')
+        data = response.json()
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(data['author']['username'] == 'alice')
+
