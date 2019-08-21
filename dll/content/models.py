@@ -55,8 +55,8 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
     learning_goals = ArrayField(models.CharField(max_length=200), verbose_name=_("Lernziele"), default=list)
     related_content = models.ManyToManyField('self', verbose_name=_("Verwandte Tools/Trends/Unterrichtsbausteine"),
                                              blank=True)
-    view_count = models.PositiveIntegerField(default=0)
-    base_folder = models.CharField(max_length=100, null=True)
+    view_count = models.PositiveIntegerField(default=0, editable=False)
+    base_folder = models.CharField(max_length=100, null=True, editable=False)
     # additional_info: 'hinweise' for ubausteine, 'anmerkung'  for tools, 'hintergrund' for Trends
     additional_info = models.TextField(_("Hinweise/Anmerkungen/Hintergrund"), max_length=500, blank=True, null=True)
     competences = models.ManyToManyField('Competence', verbose_name=_("Kompetenzen"), blank=True)
@@ -93,6 +93,7 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
         return fields
 
     def submit_for_review(self):
+        # todo: do not allow resubmission if review is already submitted
         if self.review:
             # content was declined and now resubmitted
             review = self.review

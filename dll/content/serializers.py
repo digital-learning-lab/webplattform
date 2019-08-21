@@ -53,9 +53,16 @@ class LinkSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['status', 'json_data']
+
+
 class BaseContentSubclassSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True, allow_null=True, required=False)
     contentlink_set = LinkSerializer(many=True, required=False)
+    review = ReviewSerializer(read_only=True)
 
     def validate_related_content(self, data):
         return (x.is_public for x in data)
@@ -104,9 +111,3 @@ class ContentPolymorphicSerializer(PolymorphicSerializer):
         Trend: TrendSerializer,
         TeachingModule: TeachingModuleSerializer
     }
-
-
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = ['status', 'json_data']

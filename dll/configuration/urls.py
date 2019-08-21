@@ -24,12 +24,12 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     NewsletterRegisterView, NewsletterUnregisterView, ContactView, ToolDetailView, TrendDetailView, \
     TeachingModuleDetailView, CompetenceFilterView, TeachingModuleFilterView, \
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
-    PublishedContentViewSet, DraftsContentViewSet
+    PublishedContentViewSet, DraftsContentViewSet, ReviewViewSet
 
 router = DefaultRouter()
 router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
 router.register(r'inhalt-bearbeiten', DraftsContentViewSet, base_name='draft-content')
-router.register(r'review', DraftsContentViewSet, base_name='review')
+router.register(r'review', ReviewViewSet, base_name='review')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
