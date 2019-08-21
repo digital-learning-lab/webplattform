@@ -92,6 +92,13 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
                   'sub_competences', 'tags'}
         return fields
 
+    @property
+    def help_text(self):
+        content_type = ContentType.objects.get_for_model(self)
+        if not hasattr(content_type, 'help_text'):
+            HelpText.objects.create(content_type=content_type)
+        return content_type.help_text.data()
+
     def submit_for_review(self):
         # todo: do not allow resubmission if review is already submitted
         if self.review:
@@ -368,10 +375,10 @@ class HelpText(TimeStampedModel):
         data = {}
         for field in fields:
             try:
-                help_text = self.help_text_fields.get(name=str(field))
+                help_text = self.help_text_fields.get(name=str(field.name)).text
             except HelpTextField.DoesNotExist:
                 help_text = getattr(field, 'help_text', None)
-            data[str(field)] = help_text
+            data[str(field.name)] = help_text
         return data
 
     def get_help_text_fields_for_content_type(self):
@@ -402,6 +409,9 @@ class HelpTextField(TimeStampedModel):
 
     class Meta:
         unique_together = ['name', 'help_text']
+
+    def __str__(self):
+        return _("Hilfetext für") + self.name
 
 
 class Review(TimeStampedModel):
