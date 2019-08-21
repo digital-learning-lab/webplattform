@@ -136,7 +136,7 @@ class PublishedContentViewSet(viewsets.ReadOnlyModelViewSet):
         trends = self.request.GET.get('trends', 'true')
         tools = self.request.GET.get('tools', 'true')
 
-        qs = super(ContentViewSet, self).get_queryset()
+        qs = super(PublishedContentViewSet, self).get_queryset()
 
         if competence:
             qs = qs.filter(competences__slug=competence)
