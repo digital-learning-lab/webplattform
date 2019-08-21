@@ -362,11 +362,30 @@ class Trend(Content):
 class HelpText(TimeStampedModel):
     content_type = models.OneToOneField(ContentType, on_delete=models.CASCADE, related_name='help_text')
 
+    def data(self):
+        fields = self.get_fields()
+        data = {}
+        for field in fields:
+            try:
+                help_text = self.help_text_fields.get(name=str(field))
+            except HelpTextField.DoesNotExist:
+                help_text = getattr(field, 'help_text', None)
+            data[str(field)] = help_text
+        return data
+
     def get_help_text_fields_for_content_type(self):
-        model = self.content_type.model_class()
-        fields = model._meta.get_fields()
+        """
+        returns the available choices for the inline admin
+        :return: (('teaser', 'Teaser'), )
+        """
+        fields = self.get_fields()
         choices = ((str(field), str(getattr(field, 'verbose_name', field.name))) for field in fields)
         return choices
+
+    def get_fields(self):
+        model = self.content_type.model_class()
+        fields = model._meta.get_fields()
+        return fields
 
     def save(self, **kwargs):
         return super(HelpText, self).save(**kwargs)
@@ -377,7 +396,7 @@ class HelpText(TimeStampedModel):
 
 class HelpTextField(TimeStampedModel):
     name = models.CharField(max_length=100)
-    help_text = models.ForeignKey(HelpText, on_delete=models.CASCADE, related_name='fields')
+    help_text = models.ForeignKey(HelpText, on_delete=models.CASCADE, related_name='help_text_fields')
     text = models.TextField()
 
     class Meta:
