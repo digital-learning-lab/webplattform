@@ -1,7 +1,7 @@
 <template>
   <div class="form-group">
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
-    <v-select v-model="inputValue" :options="options" @search="fetchOptions" :multiple="multiple" :disabled="disabled" :reduce="input => input.value ? input.value : input"></v-select>
+    <v-select v-model="inputValue" :options="options" @search="fetchOptions" :multiple="multiple" :disabled="disabled"></v-select>
   </div>
 </template>
 
@@ -78,14 +78,16 @@
       }
     },
     created () {
-      this.inputValue = this.value
+      if (this.value) {
+        console.log(this.value)
+        this.inputValue = this.value
+      }
       if (this.prefetch) {
         this.fetchOptions('', function () {})
       }
     },
     methods: {
       fetchOptions (search, loading) {
-        console.log(this.params)
         loading(true)
         axios.get(this.fetchUrl, {
           params: {
@@ -93,7 +95,7 @@
             ...this.params
           }
         }).then(res => {
-          this.options = res.data.results.map((el) => {return {label: el.username || el.name, value: el.pk || el.value}})
+          this.options = res.data.results.map((el) => {return {label: el.username || el.name, value: el.pk || el.value, pk: el.pk || el.id}})
           loading(false)
         }).catch(err => {
           loading(false)
@@ -103,6 +105,7 @@
     },
     watch: {
       inputValue (newValue) {
+        console.log(newValue)
         this.$emit('update:value', newValue)
       },
       disabled (newValue) {

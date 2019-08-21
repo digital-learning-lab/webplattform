@@ -1,5 +1,7 @@
 from easy_thumbnails.files import get_thumbnailer
 from rest_framework import serializers
+from rest_framework.relations import RelatedField
+from rest_framework.utils import model_meta
 from rest_polymorphic.serializers import PolymorphicSerializer
 
 from dll.content.models import SchoolType, Competence, SubCompetence
@@ -72,21 +74,61 @@ class LinkSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class DllM2MField(RelatedField):
+
+    def to_representation(self, value):
+        try:
+            label = getattr(value, 'username')
+        except AttributeError:
+            label = getattr(value, 'name')
+        return {'pk': value.pk, 'label': label}
+
+    def to_internal_value(self, data):
+        return data['pk']
+
+
 class BaseContentSubclassSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True, allow_null=True, required=False)
-    contentlink_set = LinkSerializer(many=True)
+    contentlink_set = LinkSerializer(many=True, allow_null=True, required=False)
+    co_authors = DllM2MField(allow_null=True, many=True, queryset=DllUser.objects.all())
+    competences = DllM2MField(allow_null=True, many=True, queryset=Competence.objects.all())
+    sub_competences = DllM2MField(allow_null=True, many=True, queryset=SubCompetence.objects.all())
+    related_content = DllM2MField(allow_null=True, many=True, queryset=Content.objects.all())
 
     def validate_related_content(self, data):
-        return (x.is_public for x in data)
+        res = []
+        for x in data:
+            obj = Content.objects.get(pk=x)
+            if obj.is_public:
+                res.append(x)
+        return res
+
+    def get_m2m_fields(self):
+        return [
+            'co_authors',
+            'competences',
+            'sub_competences',
+            'related_content'
+        ]
 
     def create(self, validated_data):
-        links_data = validated_data.pop('contentlink_set')
+        links_data = validated_data.pop('contentlink_set', [])
         content = super(BaseContentSubclassSerializer, self).create(validated_data)
         for link in links_data:
             ContentLink.objects.create(content=content, **dict(link))
         return content
 
-    # TODO: update
+    def update(self, instance, validated_data):
+
+        for field in self.get_m2m_fields():
+            values = validated_data.pop(field)
+            for pk in values:
+                getattr(instance, field).add(pk)
+            for pk in getattr(instance, field).values_list('pk', flat=True):
+                if pk not in values:
+                    getattr(instance, field).remove(pk)
+        instance.save()
+        return instance
 
 
 class ToolSerializer(BaseContentSubclassSerializer):
@@ -102,6 +144,7 @@ class TrendSerializer(BaseContentSubclassSerializer):
 
 
 class TeachingModuleSerializer(BaseContentSubclassSerializer):
+    
     class Meta:
         model = TeachingModule
         fields = '__all__'

@@ -22,11 +22,11 @@ from rest_framework.routers import DefaultRouter
 
 from dll.content.views import HomePageView, ImprintView, DataPrivacyView, StructureView, UsageView, DevelopmentView, \
     NewsletterRegisterView, NewsletterUnregisterView, ContactView, ToolDetailView, TrendDetailView, \
-    TeachingModuleDetailView, CompetenceFilterView, ContentViewSet, TeachingModuleFilterView, \
+    TeachingModuleDetailView, CompetenceFilterView, TeachingModuleFilterView, \
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
     CompetencesSearchView, SubCompetencesSearchView
-from dll.user.views import MyContentView, AddTeachingModule
+from dll.user.views import MyContentView, CreateEditTeachingModule
 
 router = DefaultRouter()
 router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
@@ -53,7 +53,9 @@ urlpatterns = [
     path('tools', ToolFilterView.as_view(), name='tools-filter'),
     path('trends', TrendFilterView.as_view(), name='trends-filter'),
     path('meine-inhalte', MyContentView.as_view(), name='user-content-overview'),
-    path('meine-inhalte/unterrichtsbausteine/', AddTeachingModule.as_view(), name='add-teaching-module'),
+    path('meine-inhalte/unterrichtsbausteine/', CreateEditTeachingModule.as_view(), name='add-teaching-module'),
+    path('meine-inhalte/unterrichtsbausteine/<slug:slug>', CreateEditTeachingModule.as_view(),
+         name='edit-teaching-module'),
     path('', include('dll.user.urls', namespace='user')),
     # path('', include('django.contrib.flatpages.urls')),
     path('api/', include(router.urls)),

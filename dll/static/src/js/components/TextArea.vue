@@ -51,7 +51,7 @@
         required: true
       },
       value: {
-        type: String,
+        // type: String,
         default: '',
         required: false
       },
@@ -63,7 +63,9 @@
     },
     computed: {
       charactersLeft () {
-        return this.maximalChars - this.value.length
+        if (this.value) {
+          return this.maximalChars - this.value.length
+        }
       }
     },
     data () {

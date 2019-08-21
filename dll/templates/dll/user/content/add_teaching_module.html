@@ -48,5 +48,17 @@
     nicht uns über das <a href="{% url 'contact' %}" target="_blank">Kontaktformular</a> zu
     kontaktieren.
   </p>
+{% endblock %}
 
+{% block extra_scripts %}
+  <script>
+    window.dllData = {
+      authorName: '{{ request.user.username }}',
+    {% if obj %}
+      module: {{ obj|safe }},
+      mode: 'edit',
+    {% endif %}
+      csrfToken: '{{ csrf_token }}'
+    }
+  </script>
 {% endblock %}

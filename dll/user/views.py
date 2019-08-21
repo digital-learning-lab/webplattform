@@ -1,13 +1,16 @@
+import json
+
 from django.contrib.auth import login, get_user_model
 from django.contrib.sites.shortcuts import get_current_site
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView
 
-from dll.content.models import Content
+from dll.content.models import Content, TeachingModule
+from dll.content.serializers import TeachingModuleSerializer
 from dll.content.views import BreadcrumbMixin
 from dll.user.tokens import account_activation_token
 from .forms import SignUpForm
@@ -51,10 +54,18 @@ class MyContentView(TemplateView, BreadcrumbMixin):
     breadcrumb_url = reverse_lazy('user-content-overview')
 
 
-class AddTeachingModule(TemplateView, BreadcrumbMixin):
+class CreateEditTeachingModule(TemplateView, BreadcrumbMixin):
     template_name = 'dll/user/content/add_teaching_module.html'
     breadcrumb_title = 'Digitalen Unterrichtsbaustein erstellen'
     breadcrumb_url = reverse_lazy('add-teaching-module')
+
+    def get_context_data(self, **kwargs):
+        ctx = super(CreateEditTeachingModule, self).get_context_data(**kwargs)
+        slug = self.kwargs.get('slug', None)
+        if slug:
+            obj = get_object_or_404(TeachingModule, slug=slug)
+            ctx['obj'] = json.dumps(TeachingModuleSerializer(obj).data)
+        return ctx
 
 
 class SignUpView(FormView):
@@ -90,6 +101,6 @@ def activate_user(request, uidb64, token, backend='django.contrib.auth.backends.
         user.doi_confirmed = True
         user.save()
         login(request, user, backend=backend)
-        return redirect('user:profile')
+        return redirect('user-content-overview')
     else:
         return render(request, 'dll/user/account_activation_invalid.html')

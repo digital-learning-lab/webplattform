@@ -7,16 +7,16 @@ from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from psycopg2._range import NumericRange
-from rest_framework import viewsets, filters, mixins, permissions
-from rest_framework.permissions import DjangoObjectPermissions
+from rest_framework import viewsets, filters, mixins
 from rest_framework.generics import ListAPIView
+from rest_framework.permissions import DjangoObjectPermissions
 from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
-from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject, SchoolType, SubCompetence
-from dll.content.serializers import AuthorSerializer, SchoolTypeSerializer, CompetenceSerializer, \
-    SubCompetenceSerializer, ContentListSerializer, ContentPolymorphicSerializer, \
-    ReviewSerializer
+from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject, SubCompetence, SchoolType, \
+    Review
+from dll.content.serializers import AuthorSerializer, CompetenceSerializer, SubCompetenceSerializer, \
+    SchoolTypeSerializer, ReviewSerializer
 from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
 from .serializers import ContentListSerializer, ContentPolymorphicSerializer
@@ -179,6 +179,7 @@ class DraftsContentViewSet(AutoPermissionViewSetMixin,
     # todo: delete public version when draft is deleted
     serializer_class = ContentPolymorphicSerializer
     queryset = Content.objects.drafts()
+    lookup_field = 'slug'
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -196,6 +197,8 @@ class ReviewViewSet(mixins.RetrieveModelMixin,
         serializer.save()
 
 
+
+
 class CompetenceFilterView(DetailView):
     model = Competence
     template_name = 'dll/filter/competence.html'
@@ -210,8 +213,6 @@ class ContentDataFilterView(ListAPIView):
     ]
     search_fields = ['name', 'teaser']
     model = None
-    permission_classes = []
-    authentication_classes = []
 
     def get_queryset(self):
         qs = super(ContentDataFilterView, self).get_queryset().objects.instance_of(self.model)
@@ -341,3 +342,52 @@ class AuthorSearchView(ListAPIView):
         filters.SearchFilter
     ]
     search_fields = ['username']
+
+
+
+class CompetencesSearchView(ListAPIView):
+    queryset = Competence.objects.all()
+    serializer_class = CompetenceSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter
+    ]
+    search_fields = ['name']
+
+
+class SubCompetencesSearchView(ListAPIView):
+    queryset = SubCompetence.objects.all()
+    serializer_class = SubCompetenceSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter
+    ]
+    search_fields = ['name']
+
+    def get_queryset(self):
+        qs = super(SubCompetencesSearchView, self).get_queryset()
+        competences = self.request.GET.getlist('competences[]', [])
+
+
+        if competences:
+            competences_ids = [json.loads(competence)['pk'] for competence in competences]
+            return qs.filter(competence__pk__in=competences_ids)
+        return qs.none()
+
+
+class SchoolTypesSearchView(ListAPIView):
+    queryset = SchoolType.objects.all()
+    serializer_class = SchoolTypeSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter
+    ]
+    search_fields = ['name']
+
+
+class StateSearchView(APIView):
+
+    def get(self, request, *args, **kwargs):
+        return JsonResponse({
+            'results': [{'name': state[1], 'value': state[0]} for state in GERMAN_STATES]
+        })
