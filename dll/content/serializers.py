@@ -1,10 +1,16 @@
+from django.utils.translation import ugettext_lazy as _
+
 from easy_thumbnails.files import get_thumbnailer
+from psycopg2._range import NumericRange
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
+from rest_framework.fields import SerializerMethodField, IntegerField, CharField
 from rest_framework.relations import RelatedField
-from rest_framework.utils import model_meta
+from rest_framework.validators import UniqueValidator
 from rest_polymorphic.serializers import PolymorphicSerializer
 
-from dll.content.models import SchoolType, Competence, SubCompetence
+from dll.content.fields import RangeField
+from dll.content.models import SchoolType, Competence, SubCompetence, Subject
 from dll.user.models import DllUser
 from .models import Content, Tool, Trend, TeachingModule, ContentLink, Review
 
@@ -55,6 +61,12 @@ class SchoolTypeSerializer(serializers.ModelSerializer):
         fields = ['name', 'pk']
 
 
+class SubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subject
+        fields = ['name', 'pk']
+
+
 class CompetenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Competence
@@ -88,12 +100,21 @@ class DllM2MField(RelatedField):
 
 
 class BaseContentSubclassSerializer(serializers.ModelSerializer):
+    name = CharField(required=True, validators=[
+        UniqueValidator(
+            queryset=Content.objects.all(),
+            message=_('A content with this name already exists.')
+        )
+    ])
     author = AuthorSerializer(read_only=True, allow_null=True, required=False)
     contentlink_set = LinkSerializer(many=True, allow_null=True, required=False)
     co_authors = DllM2MField(allow_null=True, many=True, queryset=DllUser.objects.all())
     competences = DllM2MField(allow_null=True, many=True, queryset=Competence.objects.all())
     sub_competences = DllM2MField(allow_null=True, many=True, queryset=SubCompetence.objects.all())
     related_content = DllM2MField(allow_null=True, many=True, queryset=Content.objects.all())
+    tools = SerializerMethodField(allow_null=True)
+    trends = SerializerMethodField(allow_null=True)
+    teaching_modules = SerializerMethodField(allow_null=True)
 
     def validate_related_content(self, data):
         res = []
@@ -103,12 +124,26 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
                 res.append(x)
         return res
 
+    def get_tools(self, obj):
+        return [{'pk': content.pk, 'label': content.name} for content in obj.related_content.instance_of(Tool)]
+
+    def get_trends(self, obj):
+        return [{'pk': content.pk, 'label': content.name} for content in obj.related_content.instance_of(Trend)]
+
+    def get_teaching_modules(self, obj):
+        return [{'pk': content.pk, 'label': content.name} for content in obj.related_content.instance_of(TeachingModule)]
+
     def get_m2m_fields(self):
         return [
             'co_authors',
             'competences',
             'sub_competences',
             'related_content'
+        ]
+
+    def get_array_fields(self):
+        return [
+            'learning_goals',
         ]
 
     def create(self, validated_data):
@@ -119,6 +154,9 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         return content
 
     def update(self, instance, validated_data):
+        instance.name = validated_data['name']
+        instance.teaser = validated_data['teaser']
+        instance.additional_info = validated_data['additional_info']
 
         for field in self.get_m2m_fields():
             values = validated_data.pop(field)
@@ -127,6 +165,13 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             for pk in getattr(instance, field).values_list('pk', flat=True):
                 if pk not in values:
                     getattr(instance, field).remove(pk)
+
+        for field in self.get_array_fields():
+            values = validated_data.pop(field)
+            if values:
+                setattr(instance, field, values)
+            else:
+                setattr(instance, field, [])
         instance.save()
         return instance
 
@@ -144,10 +189,45 @@ class TrendSerializer(BaseContentSubclassSerializer):
 
 
 class TeachingModuleSerializer(BaseContentSubclassSerializer):
+    subjects = DllM2MField(allow_null=True, many=True, queryset=Subject.objects.all())
+    school_types = DllM2MField(allow_null=True, many=True, queryset=Subject.objects.all())
+    school_class = RangeField(NumericRange, child=IntegerField(), required=False, allow_null=True)
+
+    def get_array_fields(self):
+        fields = super(TeachingModuleSerializer, self).get_array_fields()
+        fields.extend([
+            'expertise',
+            'equipment',
+            'estimated_time',
+            'subject_of_tuition',
+        ])
+        return fields
     
     class Meta:
         model = TeachingModule
         fields = '__all__'
+
+    def get_m2m_fields(self):
+        fields = super(TeachingModuleSerializer, self).get_m2m_fields()
+        fields.extend([
+            'subjects',
+            'school_types',
+        ])
+        return fields
+
+    def update(self, instance, validated_data):
+        instance = super(TeachingModuleSerializer, self).update(instance, validated_data)
+
+        instance.description = validated_data.get('description', None)
+        instance.educational_plan_reference = validated_data.get('educational_plan_reference', None)
+        instance.state = validated_data.get('state', None)
+        instance.differentiating_attribute = validated_data.get('differentiating_attribute', None)
+        instance.licence = validated_data.get('licence', None)
+        instance.school_class = validated_data.get('school_class', None)
+
+        instance.save()
+
+        return instance
 
 
 class ContentPolymorphicSerializer(PolymorphicSerializer):

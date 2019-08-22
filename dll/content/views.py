@@ -16,7 +16,7 @@ from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject, SubCompetence, SchoolType, \
     Review
 from dll.content.serializers import AuthorSerializer, CompetenceSerializer, SubCompetenceSerializer, \
-    SchoolTypeSerializer, ReviewSerializer
+    SchoolTypeSerializer, ReviewSerializer, SubjectSerializer
 from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
 from .serializers import ContentListSerializer, ContentPolymorphicSerializer
@@ -378,6 +378,16 @@ class SubCompetencesSearchView(ListAPIView):
 class SchoolTypesSearchView(ListAPIView):
     queryset = SchoolType.objects.all()
     serializer_class = SchoolTypeSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter
+    ]
+    search_fields = ['name']
+
+
+class SubjectSearchView(ListAPIView):
+    queryset = Subject.objects.all()
+    serializer_class = SubjectSerializer
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter

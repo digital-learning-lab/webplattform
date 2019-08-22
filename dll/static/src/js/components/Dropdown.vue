@@ -79,7 +79,6 @@
     },
     created () {
       if (this.value) {
-        console.log(this.value)
         this.inputValue = this.value
       }
       if (this.prefetch) {
@@ -105,7 +104,6 @@
     },
     watch: {
       inputValue (newValue) {
-        console.log(newValue)
         this.$emit('update:value', newValue)
       },
       disabled (newValue) {

@@ -63,9 +63,7 @@
     },
     computed: {
       charactersLeft () {
-        if (this.value) {
-          return this.maximalChars - this.value.length
-        }
+        return this.maximalChars - this.value ? this.value.length : 0
       }
     },
     data () {

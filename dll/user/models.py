@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, Group
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.db.models import Q
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 
@@ -47,3 +48,6 @@ class DllUser(AbstractUser):
 
     def qs_of_coauthored_content(self):
         return self.collaborative_content.filter(co_authors=self)
+
+    def qs_any_content(self):
+        return list(self.qs_of_personal_content()) + list(self.qs_of_coauthored_content())

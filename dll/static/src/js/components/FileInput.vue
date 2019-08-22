@@ -61,7 +61,6 @@
     },
     watch: {
       inputValue (newValue) {
-        console.log(this.inputValue)
         this.$emit('update:value', newValue)
       }
     }

@@ -219,6 +219,9 @@ class TeachingModule(Content):
     def get_absolute_url(self):
         return reverse('teaching-module-detail', kwargs={'slug': self.slug})
 
+    def get_edit_url(self):
+        return reverse('edit-teaching-module', kwargs={'slug': self.slug})
+
 
 class Tool(Content):
     STATUS_CHOICES = (

@@ -4,11 +4,11 @@
     <div class="row">
       <div class="col d-flex align-items-baseline">
         <label class="mr-3" :for="id + 'from'">{{ labelFrom }}:</label>
-        <input :type="type" class="form-control" :id="id + '-from'" v-model="inputFrom" :min="min" :max="max">
+        <input :type="type" class="form-control" :id="id + '-from'" v-model="from" :min="min" :max="max">
       </div>
       <div class="col d-flex align-items-baseline">
         <label class="mr-3" :for="id + 'to'">{{ labelTo }}:</label>
-        <input :type="type" class="form-control" :id="id + '-to'" v-model="inputTo" :min="min" :max="max">
+        <input :type="type" class="form-control" :id="id + '-to'" v-model="to" :min="min" :max="max">
       </div>
     </div>
   </div>
@@ -48,8 +48,7 @@
         default: '',
         required: true
       },
-      value: {
-        type: String,
+      range: {
         default: '',
         required: false
       },
@@ -66,16 +65,22 @@
     },
     data () {
       return {
-        inputFrom: null,
-        inputTo: null
+        from: null,
+        to: null
+      }
+    },
+    created () {
+      if (this.range) {
+        this.from = this.range['lower']
+        this.to = this.range['upper']
       }
     },
     watch: {
-      inputFrom (newValue) {
-        this.$emit('update:from', newValue)
+      from (newValue) {
+        this.$emit('update:range', {'lower': parseInt(this.from), 'upper': parseInt(this.to)})
       },
-      inputTo (newValue) {
-        this.$emit('update:to', newValue)
+      to (newValue) {
+        this.$emit('update:range', {'lower': parseInt(this.from), 'upper': parseInt(this.to)})
       }
     }
   }

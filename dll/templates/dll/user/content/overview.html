@@ -11,4 +11,18 @@
     <a class="button button--trend mr-3" href="{% url 'add-teaching-module' %}">Tool erstellen</a>
     <a class="button button--tool mr-3" href="{% url 'add-teaching-module' %}">Trend erstellen</a>
   </div>
+
+  <div>
+  <ul>
+    {% for content in contents %}
+        <li><a href="{{ content.get_edit_url }}">{{ content.name }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <ul>
+    {% for content in coauthored_content %}
+        <li><a href="{{ content.get_edit_url }}">{{ content.name }}</a></li>
+    {% endfor %}
+  </ul>
+  </div>
 {% endblock %}

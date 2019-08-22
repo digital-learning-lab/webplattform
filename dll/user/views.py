@@ -1,5 +1,6 @@
 import json
 
+from django.conf import settings
 from django.contrib.auth import login, get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect, get_object_or_404
@@ -12,6 +13,7 @@ from django.views.generic import TemplateView, FormView
 from dll.content.models import Content, TeachingModule
 from dll.content.serializers import TeachingModuleSerializer
 from dll.content.views import BreadcrumbMixin
+from dll.general.utils import GERMAN_STATES
 from dll.user.tokens import account_activation_token
 from .forms import SignUpForm
 
@@ -38,14 +40,6 @@ class TestView(TemplateView):
         return ctx
 
 
-class ProfileView(TemplateView):
-    template_name = 'dll/user/profile.html'
-
-    def get_context_data(self, **kwargs):
-        ctx = super(ProfileView, self).get_context_data(**kwargs)
-        ctx['own_content'] = self.request.user.qs_of_personal_content()
-        ctx['coauthored_content'] = self.request.user.qs_of_coauthored_content()
-        return ctx
 
 
 class MyContentView(TemplateView, BreadcrumbMixin):
@@ -53,19 +47,46 @@ class MyContentView(TemplateView, BreadcrumbMixin):
     breadcrumb_title = 'Meine Inhalte'
     breadcrumb_url = reverse_lazy('user-content-overview')
 
+    def get_context_data(self, **kwargs):
+        ctx = super(MyContentView, self).get_context_data(**kwargs)
+        ctx['contents'] = self.request.user.qs_any_content()
+        return ctx
+
 
 class CreateEditTeachingModule(TemplateView, BreadcrumbMixin):
     template_name = 'dll/user/content/add_teaching_module.html'
-    breadcrumb_title = 'Digitalen Unterrichtsbaustein erstellen'
+    breadcrumb_title = 'Digitalen Unterrichtsbaustein {}'
     breadcrumb_url = reverse_lazy('add-teaching-module')
 
     def get_context_data(self, **kwargs):
         ctx = super(CreateEditTeachingModule, self).get_context_data(**kwargs)
         slug = self.kwargs.get('slug', None)
         if slug:
-            obj = get_object_or_404(TeachingModule, slug=slug)
+            obj = self.get_object()
             ctx['obj'] = json.dumps(TeachingModuleSerializer(obj).data)
         return ctx
+
+    def get_object(self):
+        if not getattr(self, 'object', None):
+            slug = self.kwargs.get('slug', None)
+            if slug:
+                self.object = get_object_or_404(TeachingModule, slug=slug)
+        return getattr(self, 'object', None)
+
+
+    def get_breadcrumbs(self):
+        bcs = super(CreateEditTeachingModule, self).get_breadcrumbs()
+        temp_bc = bcs[1]
+        del bcs[1]
+        if self.get_object():
+            temp_bc['title'] = temp_bc['title'].format('bearbeiten')
+        else:
+            temp_bc['title'] = temp_bc['title'].format('erstellen')
+        bcs.extend([
+            {'title': 'Meine Inhalte', 'url': reverse_lazy('user-content-overview')},
+            temp_bc
+        ])
+        return bcs
 
 
 class SignUpView(FormView):

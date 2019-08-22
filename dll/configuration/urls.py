@@ -25,7 +25,7 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     TeachingModuleDetailView, CompetenceFilterView, TeachingModuleFilterView, \
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
-    CompetencesSearchView, SubCompetencesSearchView
+    CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView
 from dll.user.views import MyContentView, CreateEditTeachingModule
 
 router = DefaultRouter()
@@ -65,6 +65,7 @@ urlpatterns = [
     path('api/authors', AuthorSearchView.as_view(), name='author-search'),
     path('api/schoolTypes', SchoolTypesSearchView.as_view(), name='school-type-search'),
     path('api/states', StateSearchView.as_view(), name='state-search'),
+    path('api/subjects', SubjectSearchView.as_view(), name='subject-search'),
     path('api/competences', CompetencesSearchView.as_view(), name='competence-search'),
     path('api/sub-competences', SubCompetencesSearchView.as_view(), name='sub-competence-search'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

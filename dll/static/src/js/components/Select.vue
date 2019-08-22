@@ -32,7 +32,6 @@
         required: true
       },
       defaultVal: {
-        type: String,
         default: '',
         required: false
       }
