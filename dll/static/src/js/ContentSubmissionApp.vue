@@ -41,7 +41,7 @@
       <app-text-area id="differentiatingAttributes" label="Möglichkeiten der Differenzierung/Individualisierung" :value.sync="data.differentiating_attribute" :character-counter="true" :maximal-chars="700"></app-text-area>
       <app-text-area id="hints" label="Hinweise" :value.sync="data.additional_info" :character-counter="true" :maximal-chars="1000"></app-text-area>
       <app-select id="license" label="Lizenz" :options="licenseOptions" :default-val="data.licence" :value.sync="data.licence"></app-select>
-      <app-links-input id="mediaLinks" :links.sync="data.mediaLinks" label="Links zu Audio- und Videomedien"></app-links-input>
+      <app-links-input id="mediaLinks" :links.sync="data.mediaLinks" label="Links zu Audio- und Videomedien" :type="'video'"></app-links-input>
       <app-links-input id="literatureLinks" :links.sync="data.literatureLinks" label="Weiterführende Literatur und Links"></app-links-input>
     </div>
     <button class="button button--primary" @click="createContent" type="button" v-if="mode === 'create'">Speichern</button>
@@ -81,6 +81,7 @@
         data: {
           author: '',
           name: '',
+          contentlink_set: [],
           teaser: '',
           image: null,
           imageRights: null,
@@ -105,6 +106,8 @@
           equipment: [],
           hints: '',
           related_content: [],
+          mediaLinks: [],
+          literatureLinks: [],
           license: null
         },
         imageOptions: [
@@ -184,6 +187,13 @@
         if (this.errors.length) {
           return
         }
+        if (this.data.literatureLinks && this.data.mediaLinks) {
+          this.data.contentlink_set = this.data.mediaLinks.concat(this.data.literatureLinks)
+        } else if (this.data.mediaLinks) {
+          this.data.contentlink_set = this.data.mediaLinks
+        } else if(this.data.literatureLinks) {
+          this.data.contentlink_set = this.data.literatureLinks
+        }
         this.data.related_content = this.data.tools.concat(this.data.trends.concat(this.data.teaching_modules))
         const axiosInstance = this.getAxiosInstance()
         this.loading = true
@@ -220,6 +230,8 @@
         this.mode = window.dllData.mode || 'create'
         if (this.mode === 'edit') {
           this.data = window.dllData.module
+          this.data.mediaLinks = this.data.contentlink_set.filter(link => link.type === 'video' || link.type === 'audio')
+          this.data.literatureLinks = this.data.contentlink_set.filter(link => link.type === 'href' || link.type === 'literature')
         }
         this.data.author = window.dllData.authorName
       }

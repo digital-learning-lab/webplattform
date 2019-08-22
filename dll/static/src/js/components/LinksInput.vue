@@ -1,14 +1,18 @@
 <template>
   <div class="form-group">
-    <label :for="id">{{ label }}:<span v-if="required">*</span></label>
-    <div class="d-flex align-items-baseline" v-for="link in links">
-        <input type="text" class="form-control mr-3" :id="id" placeholder="Linktext" v-model="link.text">
+    <label :for="id" class="mb-2">{{ label }}:<span v-if="required">*</span></label>
+    <div class="d-flex align-items-baseline mb-2" v-for="link in internalLinks">
+        <input type="text" class="form-control mr-3" :id="id" placeholder="Linktext" v-model="link.name">
         <input type="text" class="form-control mr-3" :id="id" placeholder="https://example.org" v-model="link.url">
-        <button class="button button--teaching-module" @click="removeLink(link)" type="button">
-          x
+        <button class="button--danger button--smallSquare" @click="removeLink(link)" type="button">
+          <span class="fas fa-times"></span>
         </button>
     </div>
-    <button class="button--neutral" @click="addLink" type="button">+</button>
+    <div>
+      <button class="button--neutral button--smallSquare" @click="addLink" type="button">
+        <span class="fas fa-plus"></span>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -30,23 +34,40 @@
         type: String,
         default: '',
         required: true
+      },
+      type: {
+        type: String,
+        default: 'href',
+        required: false
+      },
+      links: {
+        type: Array,
+        default: () => {
+          return []
+        },
+        required: false
       }
     },
     data () {
       return {
-        links: []
+        internalLinks: []
       }
     },
     methods: {
       addLink () {
-        this.links.push({text: '', url: ''})
+        this.internalLinks.push({name: '', url: '', type: this.type})
       },
       removeLink (link) {
-        this.links.splice(this.links.indexOf(link), 1)
+        this.internalLinks.splice(this.internalLinks.indexOf(link), 1)
+      }
+    },
+    created () {
+      if (this.links) {
+        this.internalLinks = this.links
       }
     },
     watch: {
-      links (newValue) {
+      internalLinks (newValue) {
         this.$emit('update:links', newValue)
       }
     }
@@ -54,5 +75,4 @@
 </script>
 
 <style scoped>
-
 </style>

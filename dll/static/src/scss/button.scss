@@ -14,8 +14,7 @@
   }
 }
 .button--teaching-module,
-.button--teaching-module:visited,
-.button--teaching-active {
+.button--teaching-module:visited {
   color: rgba(255, 255, 255, 1);
   font-weight: $font-weight-light;
   background-color: $color--teaching-module;
@@ -26,8 +25,7 @@
   }
 }
 .button--trend,
-.button--trend:visited,
-.button--active {
+.button--trend:visited {
   color: rgba(255, 255, 255, 1);
   font-weight: $font-weight-light;
   background-color: $color--trend;
@@ -38,8 +36,7 @@
   }
 }
 .button--tool,
-.button--tool:visited,
-.button--active {
+.button--tool:visited {
   color: rgba(255, 255, 255, 1);
   font-weight: $font-weight-light;
   background-color: $color--tool;
@@ -48,4 +45,33 @@
     background-color: $color--tool;
     text-decoration: underline;
   }
+}
+.button--neutral,
+.button--neutral:visited {
+  color: rgba(255, 255, 255, 1);
+  font-weight: $font-weight-light;
+  background-color: $color--pale;
+  &:hover {
+    color: rgba(255, 255, 255, 1);
+    background-color: $color--pale;
+    text-decoration: none;
+  }
+}
+.button--danger,
+.button--danger:visited {
+  color: rgba(255, 255, 255, 1);
+  font-weight: $font-weight-light;
+  background-color: $color--punch;
+  &:hover {
+    color: rgba(255, 255, 255, 1);
+    background-color: $color--punch;
+    text-decoration: none;
+  }
+}
+.button--smallSquare {
+  height: 40px;
+  width: 40px;
+  min-width: 40px;
+  line-height: 40px;
+  text-align: center;
 }

@@ -158,6 +158,10 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         instance.teaser = validated_data['teaser']
         instance.additional_info = validated_data['additional_info']
 
+        links_data = validated_data.pop('contentlink_set', [])
+        for link in links_data:
+            ContentLink.objects.create(content=instance, **dict(link))
+
         for field in self.get_m2m_fields():
             values = validated_data.pop(field)
             for pk in values:

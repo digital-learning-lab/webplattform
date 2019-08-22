@@ -1,13 +1,17 @@
 <template>
   <div class="form-group">
-    <label :for="id">{{ label }}:<span v-if="required">*</span></label>
-    <div class="d-flex align-items-baseline" v-for="item in list">
+    <label :for="id" class="mb-2">{{ label }}:<span v-if="required">*</span></label>
+    <div class="d-flex align-items-baseline mb-2" v-for="item in list">
       <input type="text" class="form-control mr-3" :id="id" :placeholder="placeholder" v-model="item.text" @input="emitUpdate">
-      <button class="button button--teaching-module" @click="removeItem(item)" type="button">
-        x
+      <button class="button--danger button--smallSquare" @click="removeItem(item)" type="button">
+        <span class="fas fa-times"></span>
       </button>
     </div>
-    <button class="button--neutral" @click="addItem" type="button">+</button>
+    <div>
+      <button class="button--neutral button--smallSquare" @click="addItem" type="button">
+        <span class="fas fa-plus"></span>
+      </button>
+    </div>
   </div>
 </template>
 

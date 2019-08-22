@@ -63,7 +63,7 @@
     },
     computed: {
       charactersLeft () {
-        return this.maximalChars - this.value ? this.value.length : 0
+        return this.maximalChars - (this.value ? this.value.length : 0)
       }
     },
     data () {
