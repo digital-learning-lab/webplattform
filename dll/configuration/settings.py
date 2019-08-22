@@ -221,5 +221,5 @@ REST_FRAMEWORK = {
 }
 
 CONTACT_EMAIL_BSB = "stabsstelle-digitalisierung@bsb.hamburg.de"
-CONTACT_EMAIL_TUHH = "digital.learning.lab@tuhh.de"
+CONTACT_EMAIL_DLL = "digital.learning.lab@tuhh.de"
 VALIDATE_RECAPTCHA = False

@@ -15,16 +15,7 @@ def send_mail(event_type_code, ctx={}, recipient_id=None, sender_id=None, email=
 
     dispatcher = Dispatcher()
 
-    try:
-        event_type = CommunicationEventType.objects.get(code=event_type_code)
-    except CommunicationEventType.DoesNotExist:
-        messages = CommunicationEventType.objects.get_and_render(code=event_type_code, context=ctx)
-        dispatcher.send_email_messages(
-            email_address=email,
-            messages=messages,
-            cc=None
-        )
-        return
+    event_type = CommunicationEventType.objects.get(code=event_type_code)
 
     sender = DllUser.objects.get(pk=sender_id) if sender_id else None
 
