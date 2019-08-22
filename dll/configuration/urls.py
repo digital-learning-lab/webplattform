@@ -20,8 +20,9 @@ from django.contrib.flatpages import views
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
+from dll.communication.views import ContactView
 from dll.content.views import HomePageView, ImprintView, DataPrivacyView, StructureView, UsageView, DevelopmentView, \
-    NewsletterRegisterView, NewsletterUnregisterView, ContactView, ToolDetailView, TrendDetailView, \
+    NewsletterRegisterView, NewsletterUnregisterView, ToolDetailView, TrendDetailView, \
     TeachingModuleDetailView, CompetenceFilterView, TeachingModuleFilterView, \
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
     PublishedContentViewSet, DraftsContentViewSet, ReviewViewSet

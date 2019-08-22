@@ -32,8 +32,8 @@ class HelpTextFieldInline(admin.TabularInline):
             return False
 
     def get_formset(self, request, obj=None, **kwargs):
-        self.parent_obj = obj
-        return super(HelpTextFieldInline, self).get_formset(request, obj, **kwargs)
+        formset = super(HelpTextFieldInline, self).get_formset(request, obj, **kwargs)
+        return formset
 
 
 @admin.register(HelpText)

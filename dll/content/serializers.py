@@ -111,3 +111,6 @@ class ContentPolymorphicSerializer(PolymorphicSerializer):
         Trend: TrendSerializer,
         TeachingModule: TeachingModuleSerializer
     }
+
+
+# todo: file serializer

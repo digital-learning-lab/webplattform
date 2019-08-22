@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'dll.content',
     'dll.user',
     'dll.general',
+    'dll.communication',
     'rest_framework',
     'django_filters',
     'rules.apps.AutodiscoverRulesConfig'
@@ -218,3 +219,7 @@ REST_FRAMEWORK = {
     'SEARCH_PARAM': 'q',
     'DEFAULT_PERMISSION_CLASSES': []
 }
+
+CONTACT_EMAIL_BSB = "stabsstelle-digitalisierung@bsb.hamburg.de"
+CONTACT_EMAIL_TUHH = "digital.learning.lab@tuhh.de"
+VALIDATE_RECAPTCHA = False
