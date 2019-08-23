@@ -69,6 +69,7 @@ class NewsletterUnregisterView(FormView, BreadcrumbMixin):
     breadcrumb_title = 'Newsletterabmeldung'
     breadcrumb_url = reverse_lazy('communication:newsletter-unregister')
     form_class = NewsletterForm
+    success_url = reverse_lazy('home')
 
     def post(self, request, *args, **kwargs):
         if settings.VALIDATE_RECAPTCHA:
@@ -77,7 +78,13 @@ class NewsletterUnregisterView(FormView, BreadcrumbMixin):
             return super(NewsletterUnregisterView, self).post(request, *args, **kwargs)
 
     def form_valid(self, form):
-        form.send_unregister_email()
+        try:
+            sub = NewsletterSubscrption.objects.get(email=form.cleaned_data['email_address'])
+            sub.deactivate()
+            form.send_unregister_email()
+        except NewsletterSubscrption.DoesNotExist:
+            # todo: add messages
+            pass
         return super(NewsletterUnregisterView, self).form_valid(form)
 
 

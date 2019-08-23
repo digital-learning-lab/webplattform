@@ -56,4 +56,7 @@ class NewsletterForm(forms.Form):
         )
 
     def send_unregister_email(self):
-        pass
+        send_mail(
+            event_type_code='NEWSLETTER_UNREGISTER_CONFIRM',
+            email=self.cleaned_data['email_address']
+        )

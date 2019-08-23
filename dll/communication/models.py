@@ -130,6 +130,9 @@ class NewsletterSubscrption(TimeStampedModel):
         self.doi_confirmed_date = timezone.now()
         self.save()
 
+    def deactivate(self):
+        self.delete()
+
 
 def get_template(template_name, using=None):
     """

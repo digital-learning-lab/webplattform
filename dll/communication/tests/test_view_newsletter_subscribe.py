@@ -36,7 +36,9 @@ class NewsletterUnsubscrbeTests(TestCase):
         sub = NewsletterSubscrption.objects.create(email=self.email)
         sub.activate()
         self.unsubscribe_url = reverse('communication:newsletter-unregister')
+        CommunicationEventType.objects.create(code='NEWSLETTER_UNREGISTER_CONFIRM', name="Newsletter subscription link")
 
     def test_newsletter_unsubscribe(self):
-        self.client.post(self.unsubscribe_url, data={'email': self.email})
-        pass
+        response = self.client.post(self.unsubscribe_url, data={'email_address': self.email})
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertFalse(NewsletterSubscrption.objects.exists())
