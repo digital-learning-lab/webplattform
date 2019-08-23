@@ -17,7 +17,7 @@
       <app-text-input id="author" :read-only="true" label="Autor_in" :value.sync="data.author" :required="true"></app-text-input>
       <app-text-input id="title" label="Titel des Unterrichtbausteins" :value.sync="data.name" :required="true" :character-counter="true" :maximal-chars="140"></app-text-input>
     <div v-if="mode === 'edit'">
-      <app-file-input id="image" label="Anzeigebild" file-label="Bild wählen"></app-file-input>
+      <app-file-input id="image" label="Anzeigebild" file-label="Bild wählen" :value.sync="previewImage" :image="data.image"></app-file-input>
       <app-select id="imageRights" label="Bildrechte" :options="imageOptions" default-val="n" :value.sync="data.imageRights"></app-select>
       <app-text-area id="teaser" label="Teaser" :required="true" :value.sync="data.teaser" :rows="3"></app-text-area>
       <app-text-area id="description" label="Detaillierte Beschreibung" :required="true" :value.sync="data.description" :character-counter="true" :maximal-chars="1800" :rows="10"></app-text-area>
@@ -110,6 +110,7 @@
           literatureLinks: [],
           license: null
         },
+        previewImage: null,
         imageOptions: [
           {label: 'Ja', value: 'y'},
           {label: 'Nein', value: 'n'},
@@ -197,6 +198,25 @@
         this.data.related_content = this.data.tools.concat(this.data.trends.concat(this.data.teaching_modules))
         const axiosInstance = this.getAxiosInstance()
         this.loading = true
+        if (this.previewImage) {
+          let formData = new FormData()
+
+          formData.append('image', this.previewImage, this.previewImage.name)
+          axiosInstance.put('/api/inhalt-bearbeiten/' + this.data.slug + '/vorschau-bild', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          }).then(res => {
+
+          }).catch(err => {
+            if (err.response.status === 400) {
+              for (let i = 0; i < err.response.data.length; i++) {
+                this.errors.push(err.response.data[i])
+              }
+            }
+          })
+        }
+
         axiosInstance.put('/api/inhalt-bearbeiten/' + this.data.slug + '/', {
           ...this.data,
           resourcetype: 'TeachingModule'

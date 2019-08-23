@@ -25,11 +25,12 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     TeachingModuleDetailView, CompetenceFilterView, TeachingModuleFilterView, \
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
-    CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView
+    CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView
 from dll.user.views import MyContentView, CreateEditTeachingModule
 
 router = DefaultRouter()
 router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
+router.register(r'inhalt-bearbeiten', DraftsContentViewSet, base_name='draft-content')
 router.register(r'inhalt-bearbeiten', DraftsContentViewSet, base_name='draft-content')
 router.register(r'review', DraftsContentViewSet, base_name='review')
 
@@ -68,6 +69,8 @@ urlpatterns = [
     path('api/subjects', SubjectSearchView.as_view(), name='subject-search'),
     path('api/competences', CompetencesSearchView.as_view(), name='competence-search'),
     path('api/sub-competences', SubCompetencesSearchView.as_view(), name='sub-competence-search'),
+    path('api/inhalt-bearbeiten/<slug:slug>/vorschau-bild', FileUploadView.as_view(),
+         name='add-preview-image'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

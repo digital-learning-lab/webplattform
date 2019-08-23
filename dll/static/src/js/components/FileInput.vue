@@ -4,7 +4,7 @@
 
     <div class="custom-file">
       <input type="file" class="custom-file-input" :id="id" @change="processInput" :accept="accept">
-      <label class="custom-file-label" :for="id"><span v-if="inputValue">{{ inputValue.name }}</span><span v-else>{{ fileLabel }}</span></label>
+      <label class="custom-file-label" :for="id"><span v-if="fileName">{{ fileName }}</span><span v-else>{{ fileLabel }}</span></label>
     </div>
     <img v-if="imageUrl" :src="imageUrl" alt="Vorschaubild" class="img-thumbnail">
   </div>
@@ -34,6 +34,13 @@
         default: '',
         required: true
       },
+      image: {
+        type: Object,
+        default: () => {
+          return {}
+        },
+        required: false
+      },
       accept: {
         type: String,
         default: 'image/gif, image/jpeg, image/png',
@@ -56,7 +63,24 @@
         if (this.inputValue) {
           return URL.createObjectURL(this.inputValue)
         }
+        if (this.image) {
+          return this.image.url
+        }
         return null
+      },
+      fileName () {
+        if (this.inputValue) {
+          return this.inputValue.name
+        }
+        if (this.image) {
+          return this.image.name
+        }
+        return ''
+      }
+    },
+    created () {
+      if (this.image) {
+
       }
     },
     watch: {

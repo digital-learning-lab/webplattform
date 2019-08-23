@@ -106,6 +106,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             message=_('A content with this name already exists.')
         )
     ])
+    image = SerializerMethodField()
     author = AuthorSerializer(read_only=True, allow_null=True, required=False)
     contentlink_set = LinkSerializer(many=True, allow_null=True, required=False)
     co_authors = DllM2MField(allow_null=True, many=True, queryset=DllUser.objects.all())
@@ -123,6 +124,9 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             if obj.is_public:
                 res.append(x)
         return res
+
+    def get_image(self, obj):
+        return {'name': str(obj.image), 'url': obj.image.url}
 
     def get_tools(self, obj):
         return [{'pk': content.pk, 'label': content.name} for content in obj.related_content.instance_of(Tool)]
@@ -159,8 +163,12 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         instance.additional_info = validated_data['additional_info']
 
         links_data = validated_data.pop('contentlink_set', [])
-        for link in links_data:
-            ContentLink.objects.create(content=instance, **dict(link))
+        if links_data:
+            instance.contentlink_set.all().delete()
+            for link in links_data:
+                if not instance.contentlink_set.filter(url=link['url'], name=link['name'], type=link['type']).exists():
+                    ContentLink.objects.create(content=instance, **dict(link))
+
 
         for field in self.get_m2m_fields():
             values = validated_data.pop(field)
@@ -246,3 +254,7 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['status', 'json_data']
+
+
+class FileSerializer(serializers.Serializer):
+    image = serializers.FileField()

@@ -1,22 +1,25 @@
 import json
 import random
 
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
+from filer.models import Image, Folder
 from psycopg2._range import NumericRange
-from rest_framework import viewsets, filters, mixins
+from rest_framework import viewsets, filters, mixins, status
 from rest_framework.generics import ListAPIView
+from rest_framework.parsers import FileUploadParser
 from rest_framework.permissions import DjangoObjectPermissions
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject, SubCompetence, SchoolType, \
     Review
 from dll.content.serializers import AuthorSerializer, CompetenceSerializer, SubCompetenceSerializer, \
-    SchoolTypeSerializer, ReviewSerializer, SubjectSerializer
+    SchoolTypeSerializer, ReviewSerializer, SubjectSerializer, FileSerializer
 from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
 from .serializers import ContentListSerializer, ContentPolymorphicSerializer
@@ -401,3 +404,34 @@ class StateSearchView(APIView):
         return JsonResponse({
             'results': [{'name': state[1], 'value': state[0]} for state in GERMAN_STATES]
         })
+
+
+class FileUploadView(APIView):
+    parser_class = (FileUploadParser,)
+
+    def put(self, request, *args, **kwargs):
+
+        slug = kwargs.get('slug', None)
+
+        if not slug:
+            raise Http404
+
+        obj = Content.objects.drafts().get(slug=slug)
+
+        file_serializer = FileSerializer(data=request.data)
+
+        if file_serializer.is_valid():
+            image = file_serializer.validated_data['image']
+
+            filer_folder = Folder.objects.get(name=obj.__class__.__name__)
+
+            filer_image = Image.objects.create(original_filename=image.name,
+                                               file=image,
+                                               folder=filer_folder,
+                                               owner=self.request.user)
+
+            obj.image = filer_image
+            obj.save()
+            return Response(file_serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
