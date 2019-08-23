@@ -10,6 +10,8 @@ from django_extensions.db.models import TimeStampedModel
 from django.utils.encoding import smart_text as u
 
 from dll.communication.managers import CommunicationEventTypeManager
+from dll.content.models import Content
+from dll.user.models import DllUser
 
 logger = logging.getLogger('dll.communication.models')
 
@@ -132,3 +134,13 @@ class NewsletterSubscrption(TimeStampedModel):
 
     def deactivate(self):
         self.delete()
+
+
+class CoAuthorshipInvitation(TimeStampedModel):
+    by = models.ForeignKey(DllUser, on_delete=models.CASCADE, verbose_name=_("Einladung von"))
+    to = models.ForeignKey(DllUser, on_delete=models.CASCADE, verbose_name=_("Einladung an"))
+    content = models.ForeignKey(Content, on_delete=models.CASCADE)
+    accepted = models.BooleanField(null=True, verbose_name=_("Status"))
+
+    def __str__(self):
+        return _("Einladung von {by} an {to}".format(by=self.by.full_name, to=self.to.full_name ))
