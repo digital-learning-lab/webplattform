@@ -224,3 +224,7 @@ REST_FRAMEWORK = {
 CONTACT_EMAIL_BSB = "stabsstelle-digitalisierung@bsb.hamburg.de"
 CONTACT_EMAIL_DLL = "digital.learning.lab@tuhh.de"
 VALIDATE_RECAPTCHA = False
+
+CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://{hostname}:6379/0'.format(
+    hostname=env.str('REDIS_HOSTNAME'),
+))
