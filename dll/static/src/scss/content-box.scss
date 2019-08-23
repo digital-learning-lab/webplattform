@@ -1,0 +1,41 @@
+.content-box {
+  border: 1px solid;
+  margin-bottom: 1rem;
+  padding: 15px;
+}
+.content-box--teaching-module {
+  border-color: $color--teaching-module;
+  .content-box__type {
+    color: $color--teaching-module;
+  }
+}
+.content-box--trend {
+  border-color: $color--trend;
+  .content-box__type {
+    color: $color--trend;
+  }
+}
+.content-box--tool {
+  border-color: $color--tool;
+  .content-box__type {
+    color: $color--tool;
+  }
+}
+.content-box__author {
+  margin-top: 10px;
+}
+.content-box__actions {
+  float: right;
+  list-style: none;
+}
+.content-box__action {
+  display: inline-block;
+  margin-left: 10px;
+}
+.content-box__type {
+  font-size: 13px;
+}
+.content-box__title {
+  font-size: 18px;
+  font-weight: $font-weight-regular;
+}

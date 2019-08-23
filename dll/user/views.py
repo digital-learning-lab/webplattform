@@ -1,19 +1,20 @@
 import json
 
-from django.conf import settings
 from django.contrib.auth import login, get_user_model
 from django.contrib.sites.shortcuts import get_current_site
+from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView
+from rest_framework.generics import ListAPIView
 
 from dll.content.models import Content, TeachingModule, Tool, Trend
-from dll.content.serializers import TeachingModuleSerializer, ToolSerializer, TrendSerializer
+from dll.content.serializers import TeachingModuleSerializer, ToolSerializer, TrendSerializer, \
+    ContentListInternalSerializer
 from dll.content.views import BreadcrumbMixin
-from dll.general.utils import GERMAN_STATES
 from dll.user.tokens import account_activation_token
 from .forms import SignUpForm
 
@@ -131,6 +132,38 @@ class SignUpView(FormView):
         user.email_user(subject, message)
         return redirect('home')
 
+
+class UserContentView(ListAPIView):
+    serializer_class = ContentListInternalSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        qs = Content.objects.filter(Q(author=user) | Q(co_authors__in=[user]))
+
+        qs = qs.drafts()
+
+        type = self.request.GET.get('type', None)
+        search_term = self.request.GET.get('q', None)
+        status = self.request.GET.get('status', None)
+
+        if type == 'trend':
+            qs = qs.instance_of(Trend)
+        if type == 'tool':
+            qs = qs.instance_of(Tool)
+        if type == 'teaching-module':
+            qs = qs.instance_of(TeachingModule)
+
+        if status == 'draft':
+            qs = qs.filter(publisher_linked__isnull=True)
+        if status == 'submitted':
+            qs = qs.filter(reviews__isnull=False)
+        if status == 'approved':
+            qs = qs.filter(publisher_linked__isnull=False)
+
+        if search_term:
+            qs = qs.filter(Q(name__icontains=search_term) | Q(teaser__icontains=search_term))
+
+        return qs
 
 def activate_user(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'):
     try:

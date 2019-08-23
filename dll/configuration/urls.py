@@ -27,7 +27,8 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
     CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView, ToolApplicationSearchView, \
     OperatingSystemSearchView
-from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView
+from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
+    UserContentView
 
 router = DefaultRouter()
 router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
@@ -77,6 +78,7 @@ urlpatterns = [
     path('api/sub-competences', SubCompetencesSearchView.as_view(), name='sub-competence-search'),
     path('api/applications', ToolApplicationSearchView.as_view(), name='application-search'),
     path('api/operatingSystems', OperatingSystemSearchView.as_view(), name='operating-system-search'),
+    path('api/meine-inhalte', UserContentView.as_view(), name='user-contents'),
     path('api/inhalt-bearbeiten/<slug:slug>/vorschau-bild', FileUploadView.as_view(),
          name='add-preview-image'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

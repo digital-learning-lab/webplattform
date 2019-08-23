@@ -22,10 +22,12 @@ class ContentListSerializer(serializers.ModelSerializer):
     competences = serializers.SerializerMethodField()
     url = serializers.SerializerMethodField()
     created = serializers.DateTimeField(format="%d.%m.%Y")
+    co_authors = serializers.SerializerMethodField()
 
     class Meta:
         model = Content
-        fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created']
+        fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created',
+                  'co_authors']
 
     def get_image(self, obj):
         if obj.image is not None:
@@ -34,6 +36,9 @@ class ContentListSerializer(serializers.ModelSerializer):
             return str(thumb)
         else:
             return None
+
+    def get_co_authors(self, obj):
+        return [f'{author.username}' for author in obj.co_authors.all()]
 
     def get_type(self, obj):
         return obj.type
@@ -47,6 +52,37 @@ class ContentListSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj):
         return obj.get_absolute_url()
+
+
+class ContentListInternalSerializer(ContentListSerializer):
+    author = serializers.SerializerMethodField()
+    preview_url = serializers.SerializerMethodField()
+    edit_url = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+
+    def get_author(self, obj):
+        return str(obj.author.username)
+
+    def get_preview_url(self, obj):
+        return obj.get_absolute_url()
+
+    def get_edit_url(self, obj):
+        return obj.get_edit_url()
+
+    def get_status(self, obj):
+        status = _('Draft')
+        if not obj.publisher_is_draft:
+            status = _('Approved')
+
+        if obj.publisher_is_draft and obj.reviews.all().count():
+            status = _('Submitted')
+
+        return status
+
+
+    class Meta(ContentListSerializer.Meta):
+        fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created',
+                  'co_authors', 'preview_url', 'edit_url', 'author', 'status']
 
 
 class AuthorSerializer(serializers.ModelSerializer):
