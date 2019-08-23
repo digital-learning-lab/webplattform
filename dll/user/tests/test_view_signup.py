@@ -61,7 +61,7 @@ class SuccessfulSignupTests(TestCase):
         self.assertRedirects(self.response, self.home_url)
 
     def test_user_creation(self):
-        self.assertTrue(USER_MODEL.objects.count() > 1)  # the anonymous user
+        self.assertTrue(USER_MODEL.objects.count() > 0)
 
     def test_user_authentication(self):
         response = self.client.get(self.profile_url)
@@ -82,4 +82,4 @@ class InvalidSignUpTests(TestCase):
         self.assertTrue(form.errors)
 
     def test_dont_create_user(self):
-        self.assertTrue(USER_MODEL.objects.count() == 1)  # the anonymous user
+        self.assertEqual(USER_MODEL.objects.count(), 0)

@@ -43,3 +43,7 @@ def send_mail(event_type_code, ctx={}, recipient_id=None, sender_id=None, email=
     except Exception as e:
         logger.warning('Sending email failed. Event type code: {}'.format(event_type_code))
         logger.exception(e)
+
+
+# todo: remove too old unconfirmed subscriptions periodically.
+# But emails will still be saved because CommunicationEvents were created... What to do about that?

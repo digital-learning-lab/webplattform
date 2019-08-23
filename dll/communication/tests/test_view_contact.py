@@ -9,7 +9,7 @@ from dll.communication.models import CommunicationEventType
 class ContactTests(TestCase):
     def setUp(self):
         settings.VALIDATE_RECAPTCHA = False
-        self.contact_url = reverse('contact')
+        self.contact_url = reverse('communication:contact')
         self.test_data = {
             'from_email': "test@blueshoe.de",
             'message': "Very Important Message Content"

@@ -40,3 +40,20 @@ class ContactForm(forms.Form):
             event_type_code='USER_CONTACT_SUCCESSFUL',
             email=self.cleaned_data['from_email']
         )
+
+
+class NewsletterForm(forms.Form):
+    email_address = forms.EmailField()
+
+    def send_registration_email(self, token):
+        context = {
+            'token': token,
+        }
+        send_mail(
+            event_type_code='NEWSLETTER_CONFIRM',
+            ctx=context,
+            email=self.cleaned_data['email_address']
+        )
+
+    def send_unregister_email(self):
+        pass

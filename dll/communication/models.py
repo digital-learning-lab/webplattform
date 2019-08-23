@@ -3,6 +3,7 @@ import logging
 from django.conf import settings
 from django.db import models
 from django.template import Template, TemplateDoesNotExist, Context, engines
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 from django.utils.encoding import smart_text as u
@@ -106,6 +107,8 @@ class CommunicationEventType(TimeStampedModel):
         for name, template in templates.items():
             messages[name] = template.render(ctx) if template else ''
 
+        # fixme: subject passed in context is ignored
+
         # Ensure the email subject doesn't contain any newlines
         messages['subject'] = messages['subject'].replace("\n", "")
         messages['subject'] = messages['subject'].replace("\r", "")
@@ -114,6 +117,18 @@ class CommunicationEventType(TimeStampedModel):
 
     def __str__(self):
         return self.name
+
+
+class NewsletterSubscrption(TimeStampedModel):
+    email = models.EmailField()
+    doi_confirmed = models.BooleanField(default=False)
+    doi_confirmed_date = models.DateTimeField(null=True, editable=False)
+    checked_text = models.CharField(max_length=300, null=True, blank=True)
+
+    def activate(self):
+        self.doi_confirmed = True
+        self.doi_confirmed_date = timezone.now()
+        self.save()
 
 
 def get_template(template_name, using=None):

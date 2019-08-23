@@ -20,9 +20,8 @@ from django.contrib.flatpages import views
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from dll.communication.views import ContactView
 from dll.content.views import HomePageView, ImprintView, DataPrivacyView, StructureView, UsageView, DevelopmentView, \
-    NewsletterRegisterView, NewsletterUnregisterView, ToolDetailView, TrendDetailView, \
+    ToolDetailView, TrendDetailView, \
     TeachingModuleDetailView, CompetenceFilterView, TeachingModuleFilterView, \
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
     PublishedContentViewSet, DraftsContentViewSet, ReviewViewSet
@@ -40,10 +39,6 @@ urlpatterns = [
     path('struktur', StructureView.as_view(), name='structure'),
     path('nutzung', UsageView.as_view(), name='usage'),
     path('entwicklung', DevelopmentView.as_view(), name='development'),
-    path('newsletter', NewsletterRegisterView.as_view(), name='newsletter'),
-    path('newsletter/abmelden', NewsletterUnregisterView.as_view(), name='newsletter-unregister'),
-    path('kontakt', ContactView.as_view(), name='contact'),
-    path('kontakt', ContactView.as_view(), name='contact-form'),  # todo: remove this. just for avoiding immense bug stacktraces from reverse error
     path('faq', views.flatpage, {'url': '/faq/'}, name='faq'),
     path('tools/<slug:slug>', ToolDetailView.as_view(), name='tool-detail'),
     path('trends/<slug:slug>', TrendDetailView.as_view(), name='trend-detail'),
@@ -53,6 +48,7 @@ urlpatterns = [
     path('tools', ToolFilterView.as_view(), name='tools-filter'),
     path('trends', TrendFilterView.as_view(), name='trends-filter'),
     path('', include('dll.user.urls', namespace='user')),
+    path('', include('dll.communication.urls', namespace='communication')),
     # path('', include('django.contrib.flatpages.urls')),
     path('api/', include(router.urls)),
     path('api/unterrichtsbausteine', TeachingModuleDataFilterView.as_view(), name='teaching-modules-data-filter'),
