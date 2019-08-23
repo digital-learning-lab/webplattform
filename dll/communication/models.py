@@ -2,14 +2,14 @@ import logging
 
 from django.conf import settings
 from django.db import models
-from django.template import Template, TemplateDoesNotExist, Context, engines
+from django.template import Template, TemplateDoesNotExist
+from django.template.loader import get_template
 from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 from django.utils.encoding import smart_text as u
 
 from dll.communication.managers import CommunicationEventTypeManager
-
 
 logger = logging.getLogger('dll.communication.models')
 
@@ -132,24 +132,3 @@ class NewsletterSubscrption(TimeStampedModel):
 
     def deactivate(self):
         self.delete()
-
-
-def get_template(template_name, using=None):
-    """
-    Loads and returns a template for the given name.
-
-    Raises TemplateDoesNotExist if no such template exists.
-    """
-    chain = []
-    engines = _engine_list(using)
-    for engine in engines:
-        try:
-            return engine.get_template(template_name)
-        except TemplateDoesNotExist as e:
-            chain.append(e)
-
-    raise TemplateDoesNotExist(template_name, chain=chain)
-
-
-def _engine_list(using=None):
-    return engines.all() if using is None else [engines[using]]

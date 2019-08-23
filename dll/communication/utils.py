@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 import logging
 
-from django.conf import settings
 from django.utils.encoding import smart_text as u
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 
-from .models import CommunicationEvent, CommunicationEventType
+from .models import CommunicationEvent
 
 
 class Dispatcher(object):
