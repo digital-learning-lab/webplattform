@@ -137,9 +137,11 @@ class NewsletterSubscrption(TimeStampedModel):
 
 
 class CoAuthorshipInvitation(TimeStampedModel):
-    by = models.ForeignKey(DllUser, on_delete=models.CASCADE, verbose_name=_("Einladung von"))
-    to = models.ForeignKey(DllUser, on_delete=models.CASCADE, verbose_name=_("Einladung an"))
-    content = models.ForeignKey(Content, on_delete=models.CASCADE)
+    by = models.ForeignKey(DllUser, on_delete=models.CASCADE, verbose_name=_("Einladung von"),
+                           related_name='sent_invitations')
+    to = models.ForeignKey(DllUser, on_delete=models.CASCADE, verbose_name=_("Einladung an"),
+                           related_name='received_invitations')
+    content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='invitations')
     accepted = models.BooleanField(null=True, verbose_name=_("Status"))
 
     def __str__(self):
