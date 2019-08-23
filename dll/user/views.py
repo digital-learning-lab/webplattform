@@ -10,8 +10,8 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView
 
-from dll.content.models import Content, TeachingModule, Tool
-from dll.content.serializers import TeachingModuleSerializer, ToolSerializer
+from dll.content.models import Content, TeachingModule, Tool, Trend
+from dll.content.serializers import TeachingModuleSerializer, ToolSerializer, TrendSerializer
 from dll.content.views import BreadcrumbMixin
 from dll.general.utils import GERMAN_STATES
 from dll.user.tokens import account_activation_token
@@ -102,6 +102,13 @@ class CreateEditToolView(CreateEditContentView):
     model = Tool
     serializer = ToolSerializer
 
+
+class CreateEditTrendView(CreateEditContentView):
+    template_name = 'dll/user/content/add_trend.html'
+    breadcrumb_title = 'Trend {}'
+    breadcrumb_url = reverse_lazy('add-trend')
+    model = Trend
+    serializer = TrendSerializer
 
 
 class SignUpView(FormView):

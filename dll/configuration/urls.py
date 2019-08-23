@@ -27,7 +27,7 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
     CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView, ToolApplicationSearchView, \
     OperatingSystemSearchView
-from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView
+from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView
 
 router = DefaultRouter()
 router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
@@ -60,6 +60,9 @@ urlpatterns = [
     path('meine-inhalte/tools/', CreateEditToolView.as_view(), name='add-tool'),
     path('meine-inhalte/tools/<slug:slug>', CreateEditToolView.as_view(),
          name='edit-tool'),
+    path('meine-inhalte/trends/', CreateEditTrendView.as_view(), name='add-trend'),
+    path('meine-inhalte/trends/<slug:slug>', CreateEditTrendView.as_view(),
+         name='edit-trend'),
     path('', include('dll.user.urls', namespace='user')),
     # path('', include('django.contrib.flatpages.urls')),
     path('api/', include(router.urls)),

@@ -221,9 +221,7 @@ class ToolSerializer(BaseContentSubclassSerializer):
         instance.usage = validated_data.get('usage', None)
 
         instance.save()
-
         return instance
-
 
     class Meta:
         model = Tool
@@ -231,6 +229,29 @@ class ToolSerializer(BaseContentSubclassSerializer):
 
 
 class TrendSerializer(BaseContentSubclassSerializer):
+
+    def get_array_fields(self):
+        fields = super(TrendSerializer, self).get_array_fields()
+        fields.extend([
+            'target_group',
+            'publisher'
+        ])
+        return fields
+
+    def update(self, instance, validated_data):
+        instance = super(TrendSerializer, self).update(instance, validated_data)
+
+        instance.language = validated_data.get('language', None)
+        instance.licence = validated_data.get('licence', None)
+        instance.category = validated_data.get('category', None)
+        instance.publisher_date = validated_data.get('publisher_date', None)
+        instance.central_contents = validated_data.get('central_contents', None)
+        instance.citation_info = validated_data.get('citation_info', None)
+
+        instance.save()
+
+        return instance
+
     class Meta:
         model = Trend
         fields = '__all__'

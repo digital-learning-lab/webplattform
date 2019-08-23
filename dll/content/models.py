@@ -253,8 +253,8 @@ class Tool(Content):
     status = models.CharField(_("Status"), max_length=7, choices=STATUS_CHOICES, default=None, null=True)
     requires_registration = models.BooleanField(null=True, blank=False)
     usk = models.CharField(_("Altersfreigabe"), max_length=5, choices=USK_CHOICES, null=True, blank=True)
-    pro = ArrayField(models.CharField(max_length=200), verbose_name=_("Pro"), default=list)
-    contra = ArrayField(models.CharField(max_length=200), verbose_name=_("Kontra"), default=list)
+    pro = ArrayField(models.CharField(max_length=200), verbose_name=_("Pro"), default=list, null=True, blank=True)
+    contra = ArrayField(models.CharField(max_length=200), verbose_name=_("Kontra"), default=list, null=True, blank=True)
     privacy = models.IntegerField(_("Datenschutz"), choices=PRIVACY_CHOICES, null=True, blank=True)
     description = models.TextField(_("Beschreibung"), null=True, blank=True)
     usage = models.TextField(_("Nutzung"), null=True, blank=True)
@@ -306,8 +306,10 @@ class Trend(Content):
     language = models.CharField(_("Sprache"), max_length=10, choices=LANGUAGE_CHOICHES, blank=True, null=True)
     licence = models.IntegerField(_("Lizenz"), choices=LICENCE_CHOICES, blank=True, null=True)
     category = models.IntegerField(_("Kategorie"), choices=CATEGORY_CHOICES, blank=True, null=True)
-    target_group = ArrayField(models.CharField(max_length=200), verbose_name=_("Zielgruppe"), default=list)
-    publisher = ArrayField(models.CharField(max_length=200), verbose_name=_("Herausgeber"), default=list)
+    target_group = ArrayField(models.CharField(max_length=200), verbose_name=_("Zielgruppe"), default=list, null=True,
+                              blank=True)
+    publisher = ArrayField(models.CharField(max_length=200), verbose_name=_("Herausgeber"), default=list, null=True,
+                           blank=True)
     publisher_date = models.DateField(_("Datum der Veröffentlichung"), blank=True, null=True)
     central_contents = models.TextField(_("Zentrale Inhalte"), blank=True, null=True)
     citation_info = models.CharField(_("Zitierhinweis"), max_length=500, blank=True, null=True)
@@ -322,6 +324,9 @@ class Trend(Content):
 
     def get_absolute_url(self):
         return reverse('trend-detail', kwargs={'slug': self.slug})
+
+    def get_edit_url(self):
+        return reverse('edit-trend', kwargs={'slug': self.slug})
 
     def copy_relations(self, src, dst):
         super(Trend, self).copy_relations(src, dst)
