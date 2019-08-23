@@ -1,6 +1,7 @@
 import logging
 
 from django.conf import settings
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.template import Template, TemplateDoesNotExist
 from django.template.loader import get_template
@@ -17,11 +18,12 @@ logger = logging.getLogger('dll.communication.models')
 
 
 class CommunicationEvent(TimeStampedModel):
-    recipient = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
-                                  related_name="communication_events_received", verbose_name=_("Empfänger"), null=True)
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
-                               related_name="communication_events_sent", verbose_name=_("Absender"), null=True)
-    email = models.CharField(_('Email'), max_length=127, blank=True)
+                               related_name="communication_events", verbose_name=_("Auslösender User"), null=True)
+    from_email = models.CharField(max_length=128)
+    to = ArrayField(models.EmailField())
+    cc = ArrayField(models.EmailField(), null=True)
+    bcc = ArrayField(models.EmailField(), null=True)
     event_type = models.ForeignKey('CommunicationEventType', on_delete=models.CASCADE, verbose_name=_("Event Type"))
 
     class Meta:
@@ -30,7 +32,7 @@ class CommunicationEvent(TimeStampedModel):
         ordering = ['-created']
 
     def __str__(self):
-        recip = self.recipient.id if self.recipient else ''
+        recip = self.sender.id if self.sender else ''
         return _("'{type:s}' event for user #{number:s}").format(
             type=u(self.event_type.name),
             number=u(recip)
@@ -48,7 +50,7 @@ class CommunicationEventType(TimeStampedModel):
     name = models.CharField(
         _('Name'), max_length=255,
         help_text=_("Dies dient nur zu organisatorischen Zwecken."))
-
+    from_email = models.EmailField(max_length=128, default=settings.DEFAULT_FROM_EMAIL)
     # Template content for emails
     # NOTE: There's an intentional distinction between None and ''. None
     # instructs Oscar to look for a file-based template, '' is just an empty
@@ -143,6 +145,25 @@ class CoAuthorshipInvitation(TimeStampedModel):
                            related_name='received_invitations')
     content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='invitations')
     accepted = models.BooleanField(null=True, verbose_name=_("Status"))
+    message = models.TextField(max_length=500, verbose_name=_("Nachricht"), null=True)
 
     def __str__(self):
         return _("Einladung von {by} an {to}".format(by=self.by.full_name, to=self.to.full_name ))
+
+    def save(self, **kwargs):
+        if self.pk is None:
+            self.send_invitation_mail()
+        return super(CoAuthorshipInvitation, self).save(**kwargs)
+
+    def send_invitation_mail(self, message=None):
+        from dll.communication.tasks import send_mail
+        context = {
+            'content_title': self.content.name,
+            'message': self.message
+        }
+        send_mail(
+            event_type_code='COAUTHOR_INVITATION',
+            ctx=context,
+            sender_id=self.by.pk,
+            recipient_ids=[self.to.pk]
+        )

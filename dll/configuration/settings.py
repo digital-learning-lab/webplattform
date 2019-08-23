@@ -207,6 +207,7 @@ LOGGING = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'default_from_email@tuhh.de'  # todo: default from email address
 
 LOGIN_REDIRECT_URL = 'user:profile'
 LOGOUT_REDIRECT_URL = 'home'

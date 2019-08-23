@@ -1,9 +1,15 @@
+import logging
+
 from easy_thumbnails.files import get_thumbnailer
 from rest_framework import serializers
 from rest_polymorphic.serializers import PolymorphicSerializer
 
+from dll.communication.models import CoAuthorshipInvitation
 from dll.user.models import DllUser
 from .models import Content, Tool, Trend, TeachingModule, ContentLink, Review
+
+
+logger = logging.getLogger('dll.communication.serializers')
 
 
 class ContentListSerializer(serializers.ModelSerializer):
@@ -69,22 +75,57 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         links_data = validated_data.pop('contentlink_set')
+        co_authors = validated_data.pop('co_authors')
         content = super(BaseContentSubclassSerializer, self).create(validated_data)
-        for link in links_data:
-            ContentLink.objects.create(content=content, **dict(link))
+        self._update_content_links(content, links_data)
+        self._update_co_authors(content, co_authors)
         return content
 
     def update(self, instance, validated_data):
-        try:
-            links_data = validated_data.pop('contentlink_set')
-        except KeyError:
-            pass
-        else:
-            for link in links_data:
-                ContentLink.objects.create(content=instance, **dict(link))
-        finally:
-            super().update(instance, validated_data)
+        """
+        `update_methods` provides a mapping of keys present in the serialized data that need further processing, and
+        maps it to the corresponding processing method
+        """
+        update_methods = {
+            'contentlink_set': '_update_content_links',
+            'co_authors': '_update_co_authors'
+        }
+        for update_key, update_method in update_methods.items():
+            try:
+                data = validated_data.pop(update_key)
+                method = getattr(self, update_method)
+            except AttributeError:
+                logger.warning("No update method for {}".format(update_key))
+                pass
+            except KeyError:
+                # this key was not present in the serialized data, so it doesn't have to be updated
+                pass
+            else:
+                method(instance, data)
+        instance = super().update(instance, validated_data)
         return instance
+
+    def _update_content_links(self, content, data):
+        """
+        delete all previous links first, because we can't distinguish whether it is a new link, or an old one with
+        updated href AND name AND ...
+        """
+        content.contentlink_set.all().delete()
+        for link in data:
+            ContentLink.objects.create(content=content, **dict(link))
+
+    def _update_co_authors(self, content, co_authors):
+        current_co_authors = set(content.co_authors.all())
+        updated_list = set(co_authors)
+        new_co_authors = updated_list - current_co_authors
+        removed_co_authors = current_co_authors - updated_list
+        content.co_authors.remove(*removed_co_authors)
+        for user in new_co_authors:
+            CoAuthorshipInvitation.objects.create(
+                by=self.context['request'].user,
+                to=user,
+                content=content
+            )
 
 
 class ToolSerializer(BaseContentSubclassSerializer):
