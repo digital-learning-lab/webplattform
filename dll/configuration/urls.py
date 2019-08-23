@@ -25,12 +25,12 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     TeachingModuleDetailView, CompetenceFilterView, TeachingModuleFilterView, \
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
-    CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView
-from dll.user.views import MyContentView, CreateEditTeachingModule
+    CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView, ToolApplicationSearchView, \
+    OperatingSystemSearchView
+from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView
 
 router = DefaultRouter()
 router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
-router.register(r'inhalt-bearbeiten', DraftsContentViewSet, base_name='draft-content')
 router.register(r'inhalt-bearbeiten', DraftsContentViewSet, base_name='draft-content')
 router.register(r'review', DraftsContentViewSet, base_name='review')
 
@@ -54,9 +54,12 @@ urlpatterns = [
     path('tools', ToolFilterView.as_view(), name='tools-filter'),
     path('trends', TrendFilterView.as_view(), name='trends-filter'),
     path('meine-inhalte', MyContentView.as_view(), name='user-content-overview'),
-    path('meine-inhalte/unterrichtsbausteine/', CreateEditTeachingModule.as_view(), name='add-teaching-module'),
-    path('meine-inhalte/unterrichtsbausteine/<slug:slug>', CreateEditTeachingModule.as_view(),
+    path('meine-inhalte/unterrichtsbausteine/', CreateEditTeachingModuleView.as_view(), name='add-teaching-module'),
+    path('meine-inhalte/unterrichtsbausteine/<slug:slug>', CreateEditTeachingModuleView.as_view(),
          name='edit-teaching-module'),
+    path('meine-inhalte/tools/', CreateEditToolView.as_view(), name='add-tool'),
+    path('meine-inhalte/tools/<slug:slug>', CreateEditToolView.as_view(),
+         name='edit-tool'),
     path('', include('dll.user.urls', namespace='user')),
     # path('', include('django.contrib.flatpages.urls')),
     path('api/', include(router.urls)),
@@ -69,6 +72,8 @@ urlpatterns = [
     path('api/subjects', SubjectSearchView.as_view(), name='subject-search'),
     path('api/competences', CompetencesSearchView.as_view(), name='competence-search'),
     path('api/sub-competences', SubCompetencesSearchView.as_view(), name='sub-competence-search'),
+    path('api/applications', ToolApplicationSearchView.as_view(), name='application-search'),
+    path('api/operatingSystems', OperatingSystemSearchView.as_view(), name='operating-system-search'),
     path('api/inhalt-bearbeiten/<slug:slug>/vorschau-bild', FileUploadView.as_view(),
          name='add-preview-image'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

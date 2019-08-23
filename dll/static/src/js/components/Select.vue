@@ -42,7 +42,7 @@
       }
     },
     created () {
-      if (this.defaultVal) {
+      if (this.defaultVal !== undefined) {
         this.inputValue = this.defaultVal
       }
     },

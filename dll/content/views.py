@@ -17,7 +17,7 @@ from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject, SubCompetence, SchoolType, \
-    Review
+    Review, OperatingSystem, ToolApplication
 from dll.content.serializers import AuthorSerializer, CompetenceSerializer, SubCompetenceSerializer, \
     SchoolTypeSerializer, ReviewSerializer, SubjectSerializer, FileSerializer
 from dll.general.utils import GERMAN_STATES
@@ -398,6 +398,36 @@ class SubjectSearchView(ListAPIView):
     search_fields = ['name']
 
 
+class OperatingSystemSearchView(ListAPIView):
+    queryset = OperatingSystem.objects.all()
+    serializer_class = SubjectSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter
+    ]
+    search_fields = ['name']
+
+
+class ToolApplicationSearchView(ListAPIView):
+    queryset = ToolApplication.objects.all()
+    serializer_class = SubjectSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter
+    ]
+    search_fields = ['name']
+
+
+class SearchView(ListAPIView):
+    queryset = OperatingSystem.objects.all()
+    serializer_class = SubjectSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter
+    ]
+    search_fields = ['name']
+
+
 class StateSearchView(APIView):
 
     def get(self, request, *args, **kwargs):
@@ -410,25 +440,22 @@ class FileUploadView(APIView):
     parser_class = (FileUploadParser,)
 
     def put(self, request, *args, **kwargs):
-
         slug = kwargs.get('slug', None)
-
         if not slug:
             raise Http404
 
         obj = Content.objects.drafts().get(slug=slug)
-
         file_serializer = FileSerializer(data=request.data)
 
         if file_serializer.is_valid():
             image = file_serializer.validated_data['image']
-
             filer_folder = Folder.objects.get(name=obj.__class__.__name__)
-
-            filer_image = Image.objects.create(original_filename=image.name,
-                                               file=image,
-                                               folder=filer_folder,
-                                               owner=self.request.user)
+            filer_image = Image.objects.create(
+                original_filename=image.name,
+                file=image,
+                folder=filer_folder,
+                owner=self.request.user
+            )
 
             obj.image = filer_image
             obj.save()

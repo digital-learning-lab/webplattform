@@ -10,8 +10,8 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView
 
-from dll.content.models import Content, TeachingModule
-from dll.content.serializers import TeachingModuleSerializer
+from dll.content.models import Content, TeachingModule, Tool
+from dll.content.serializers import TeachingModuleSerializer, ToolSerializer
 from dll.content.views import BreadcrumbMixin
 from dll.general.utils import GERMAN_STATES
 from dll.user.tokens import account_activation_token
@@ -53,29 +53,27 @@ class MyContentView(TemplateView, BreadcrumbMixin):
         return ctx
 
 
-class CreateEditTeachingModule(TemplateView, BreadcrumbMixin):
-    template_name = 'dll/user/content/add_teaching_module.html'
-    breadcrumb_title = 'Digitalen Unterrichtsbaustein {}'
-    breadcrumb_url = reverse_lazy('add-teaching-module')
+class CreateEditContentView(TemplateView, BreadcrumbMixin):
+    model = None
+    serializer = None
 
     def get_context_data(self, **kwargs):
-        ctx = super(CreateEditTeachingModule, self).get_context_data(**kwargs)
+        ctx = super(CreateEditContentView, self).get_context_data(**kwargs)
         slug = self.kwargs.get('slug', None)
         if slug:
             obj = self.get_object()
-            ctx['obj'] = json.dumps(TeachingModuleSerializer(obj).data)
+            ctx['obj'] = json.dumps(self.serializer(obj).data)
         return ctx
 
     def get_object(self):
         if not getattr(self, 'object', None):
             slug = self.kwargs.get('slug', None)
             if slug:
-                self.object = get_object_or_404(TeachingModule, slug=slug)
+                self.object = get_object_or_404(self.model, slug=slug)
         return getattr(self, 'object', None)
 
-
     def get_breadcrumbs(self):
-        bcs = super(CreateEditTeachingModule, self).get_breadcrumbs()
+        bcs = super(CreateEditContentView, self).get_breadcrumbs()
         temp_bc = bcs[1]
         del bcs[1]
         if self.get_object():
@@ -87,6 +85,23 @@ class CreateEditTeachingModule(TemplateView, BreadcrumbMixin):
             temp_bc
         ])
         return bcs
+
+
+class CreateEditTeachingModuleView(CreateEditContentView):
+    template_name = 'dll/user/content/add_teaching_module.html'
+    breadcrumb_title = 'Digitalen Unterrichtsbaustein {}'
+    breadcrumb_url = reverse_lazy('add-teaching-module')
+    model = TeachingModule
+    serializer = TeachingModuleSerializer
+
+
+class CreateEditToolView(CreateEditContentView):
+    template_name = 'dll/user/content/add_tool.html'
+    breadcrumb_title = 'Tool {}'
+    breadcrumb_url = reverse_lazy('add-tool')
+    model = Tool
+    serializer = ToolSerializer
+
 
 
 class SignUpView(FormView):

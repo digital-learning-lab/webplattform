@@ -10,7 +10,7 @@ from rest_framework.validators import UniqueValidator
 from rest_polymorphic.serializers import PolymorphicSerializer
 
 from dll.content.fields import RangeField
-from dll.content.models import SchoolType, Competence, SubCompetence, Subject
+from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication
 from dll.user.models import DllUser
 from .models import Content, Tool, Trend, TeachingModule, ContentLink, Review
 
@@ -126,7 +126,9 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         return res
 
     def get_image(self, obj):
-        return {'name': str(obj.image), 'url': obj.image.url}
+        if obj.image:
+            return {'name': str(obj.image), 'url': obj.image.url}
+        return None
 
     def get_tools(self, obj):
         return [{'pk': content.pk, 'label': content.name} for content in obj.related_content.instance_of(Tool)]
@@ -189,6 +191,40 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
 
 
 class ToolSerializer(BaseContentSubclassSerializer):
+    operating_systems = DllM2MField(allow_null=True, many=True, queryset=OperatingSystem.objects.all(), required=False)
+    applications = DllM2MField(allow_null=True, many=True, queryset=ToolApplication.objects.all(), required=False)
+
+    def get_array_fields(self):
+        fields = super(ToolSerializer, self).get_array_fields()
+        fields.extend([
+            'pro',
+            'contra'
+        ])
+        return fields
+
+    def get_m2m_fields(self):
+        fields = super(ToolSerializer, self).get_m2m_fields()
+        fields.extend([
+            'operating_systems',
+            'applications'
+        ])
+        return fields
+
+    def update(self, instance, validated_data):
+        instance = super(ToolSerializer, self).update(instance, validated_data)
+
+        instance.status = validated_data.get('status', None)
+        instance.requires_registration = validated_data.get('requires_registration', None)
+        instance.usk = validated_data.get('usk', None)
+        instance.privacy = validated_data.get('privacy', None)
+        instance.description = validated_data.get('description', None)
+        instance.usage = validated_data.get('usage', None)
+
+        instance.save()
+
+        return instance
+
+
     class Meta:
         model = Tool
         fields = '__all__'

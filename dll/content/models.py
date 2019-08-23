@@ -270,6 +270,9 @@ class Tool(Content):
     def get_absolute_url(self):
         return reverse('tool-detail', kwargs={'slug': self.slug})
 
+    def get_edit_url(self):
+        return reverse('edit-tool', kwargs={'slug': self.slug})
+
     def copy_relations(self, src, dst):
         super(Tool, self).copy_relations(src, dst)
         dst.operating_systems.add(*src.operating_systems.all())

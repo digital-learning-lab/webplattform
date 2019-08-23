@@ -1,0 +1,57 @@
+{% extends 'dll/default_page.html' %}
+
+{% block content %}
+
+  <a href="{% url 'user-content-overview' %}" role="button" aria-pressed="true">Zurück</a>
+  <h1 class="headline">Tool erstellen</h1>
+  <h2>
+    Mit diesem Eingabeformular können Sie eine Toolbeschreibung im digital.learning.lab einreichen.
+  </h2>
+  <p>
+
+    Unter <b>Tools</b> verstehen wir digitale Werkzeuge für den direkten Einsatz im Unterricht. Mithilfe der
+    Toolbeschreibungen können neue Unterrichtskonzepte von Lehrkräften schnell und einfach umgesetzt werden.
+    <span class="collapsed" style="display: block;">
+          <a href="javascript:void(0)"> weiter lesen &gt;&gt;</a>
+      </span>
+    <span class="expanded" style="display: none;">
+      Aus diesem Grund sind auch die Tools den verschiedenen Kompetenzbereichen für die digitale Welt (<a href="https://www.kmk.org/themen/bildung-in-der-digitalen-welt/strategie-bildung-in-der-digitalen-welt.html">siehe
+      Strategie der Kultusministerkonferenz, 2017</a>) zugeordnet, enthalten genaue Beschreibungen zu
+      Funktionalität und Nutzungsbedingungen und sind darüber hinaus mit konkreten Unterrichtsbausteinen
+      verknüpft.
+      <a href="javascript:void(0)" style="display: block;">&lt;&lt; weniger anzeigen</a>
+      </span>
+  </p>
+  <p>
+    Damit Lehrkräfte schnell und selbstständig entscheiden können, welches Tool für ihre jeweilige
+    Unterrichtsidee am besten geeignet ist, sollen die Toolbeschreibungen eine objektive Beschreibung
+    darstellen und keine subjektiven Erfahrungen widerspiegeln.
+  </p>
+
+  <div id="tool-submission"></div>
+
+  <p>
+    Wenn Sie alle Pflichtfelder ausgefüllt haben, können Sie den Unterrichtsbaustein zur inhaltlichen und
+    urheberrechtlichen Sichtung durch erfahrene Hamburger Lehrerinnen und Lehrer einreichen. <b>Hinweis:</b>
+    In Ferienzeiten kann es zu Verzögerungen in der Rückmeldung zu eingereichten digitalen
+    Unterrichtsbausteinen kommen.
+  </p>
+  <p>
+    Falls Sie Fragen oder Probleme bei der Erstellung digitaler Unterrichtsbausteine im digital.learning.lab haben, zögern Sie
+    nicht uns über das <a href="{% url 'contact' %}" target="_blank">Kontaktformular</a> zu
+    kontaktieren.
+  </p>
+{% endblock %}
+
+{% block extra_scripts %}
+  <script>
+    window.dllData = {
+      authorName: '{{ request.user.username }}',
+      {% if obj %}
+        module: {{ obj|safe }},
+        mode: 'edit',
+      {% endif %}
+      csrfToken: '{{ csrf_token }}'
+    }
+  </script>
+{% endblock %}
