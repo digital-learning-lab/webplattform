@@ -1,10 +1,15 @@
 import logging
 
+from django.conf import settings
+from django.urls import reverse
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from easy_thumbnails.files import get_thumbnailer
 from rest_framework import serializers
 from rest_polymorphic.serializers import PolymorphicSerializer
 
 from dll.communication.models import CoAuthorshipInvitation
+from dll.communication.tokens import co_author_invitation_token
 from dll.user.models import DllUser
 from .models import Content, Tool, Trend, TeachingModule, ContentLink, Review
 
@@ -121,11 +126,13 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         removed_co_authors = current_co_authors - updated_list
         content.co_authors.remove(*removed_co_authors)
         for user in new_co_authors:
-            CoAuthorshipInvitation.objects.create(
+            invitation = CoAuthorshipInvitation.objects.create(
                 by=self.context['request'].user,
                 to=user,
-                content=content
+                content=content,
+                site_id=settings.SITE_ID
             )
+            invitation.send_invitation_mail()
 
 
 class ToolSerializer(BaseContentSubclassSerializer):

@@ -1,0 +1,2 @@
+COAUTHOR_INVITATION body
+Follow this link: {{ token }} to view invitation.

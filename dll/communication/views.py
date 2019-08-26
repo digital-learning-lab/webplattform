@@ -1,14 +1,16 @@
 from django.conf import settings
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.http import Http404
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy, reverse
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.views import View
 from django.views.generic import FormView
 
 from dll.communication.forms import ContactForm, NewsletterForm
-from dll.communication.models import NewsletterSubscrption
-from dll.communication.tokens import newsletter_confirm_token
+from dll.communication.models import NewsletterSubscrption, CoAuthorshipInvitation
+from dll.communication.tokens import newsletter_confirm_token, co_author_invitation_token
 from dll.content.views import BreadcrumbMixin
 from django.utils.translation import ugettext_lazy as _
 
@@ -102,3 +104,38 @@ def newsletter_registration_confirm(request, nl_id_b64, token):
         messages.error(request, _("Newsletter Anmeldung nicht erfolgreich. Versuchen Sie es erneut."))
 
     return redirect('home')
+
+
+class CoAuthorInvitationConfirmView(View):
+    http_method_names = ['get', 'post']
+
+    def get(self, request, *args, **kwargs):
+        return render(request, 'dll/communication/invitation.html')
+
+    def post(self, request, *args, **kwargs):
+        user_response = request.POST.get('user_response', None)
+        try:
+            invitation_id = force_text(urlsafe_base64_decode(kwargs['inv_id_b64']))
+            invitation = CoAuthorshipInvitation.objects.get(pk=invitation_id)
+        except (TypeError, ValueError, OverflowError, CoAuthorshipInvitation.DoesNotExist):
+            invitation = None
+
+        if invitation.to != request.user:
+            messages.error(request, _("Sie sind nicht berechtigt die Anfrage zu akzeptieren"))
+            return redirect('home')
+
+        if invitation is not None and co_author_invitation_token.check_token(invitation, kwargs['token']):
+            if user_response == "Yes":
+                invitation.accept()
+                return redirect('home')
+            elif user_response == "No":
+                invitation.decline()
+                return redirect('home')
+            else:
+                messages.error(request, _("Bestätigen Sie mit Ja oder Nein"))
+                return render(request, 'dll/communication/invitation.html')
+        elif invitation is None:
+            raise Http404
+        else:
+            messages.warning(request, _("Die Einladung ist verfallen"))
+            return redirect('home')

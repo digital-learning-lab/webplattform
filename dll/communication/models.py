@@ -2,15 +2,19 @@ import logging
 
 from django.conf import settings
 from django.contrib.postgres.fields import ArrayField
+from django.contrib.sites.models import Site
 from django.db import models
 from django.template import Template, TemplateDoesNotExist
 from django.template.loader import get_template
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.http import urlsafe_base64_encode
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
-from django.utils.encoding import smart_text as u
+from django.utils.encoding import smart_text as u, force_bytes
 
 from dll.communication.managers import CommunicationEventTypeManager
+from dll.communication.tokens import co_author_invitation_token
 from dll.content.models import Content
 from dll.user.models import DllUser
 
@@ -146,20 +150,30 @@ class CoAuthorshipInvitation(TimeStampedModel):
     content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='invitations')
     accepted = models.BooleanField(null=True, verbose_name=_("Status"))
     message = models.TextField(max_length=500, verbose_name=_("Nachricht"), null=True)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return _("Einladung von {by} an {to}".format(by=self.by.full_name, to=self.to.full_name ))
+    def accept(self):
+        self.accepted = True
+        self.content.co_authors.add(self.to)
+        self.send_invitation_accepted_mail()
+        self.save()
 
-    def save(self, **kwargs):
-        if self.pk is None:
-            self.send_invitation_mail()
-        return super(CoAuthorshipInvitation, self).save(**kwargs)
+    def decline(self):
+        self.accepted = False
+        self.send_invitation_declined_mail()
+        self.save()
 
-    def send_invitation_mail(self, message=None):
+    def send_invitation_mail(self):
         from dll.communication.tasks import send_mail
+        token = reverse('communication:coauthor-invitation', kwargs={
+            'inv_id_b64': urlsafe_base64_encode(force_bytes(self.pk)),
+            'token': co_author_invitation_token.make_token(self)
+        })
+        token = 'https://%s%s' % (Site.objects.get_current().domain, token)
         context = {
             'content_title': self.content.name,
-            'message': self.message
+            'message': self.message,
+            'token': token
         }
         send_mail.delay(
             event_type_code='COAUTHOR_INVITATION',
@@ -167,3 +181,34 @@ class CoAuthorshipInvitation(TimeStampedModel):
             sender_id=self.by.pk,
             recipient_ids=[self.to.pk]
         )
+
+    def send_invitation_accepted_mail(self):
+        from dll.communication.tasks import send_mail
+        context = {
+            'content_title': self.content.name,
+            'message': self.message,
+            'invited_user_name': self.to.full_name
+        }
+        send_mail.delay(
+            event_type_code='COAUTHOR_INVITATION_ACCEPTED',
+            ctx=context,
+            sender_id=self.to.pk,
+            recipient_ids=[self.by.pk]
+        )
+
+    def send_invitation_declined_mail(self):
+        from dll.communication.tasks import send_mail
+        context = {
+            'content_title': self.content.name,
+            'message': self.message,
+            'invited_user_name': self.to.full_name
+        }
+        send_mail.delay(
+            event_type_code='COAUTHOR_INVITATION_DECLINED',
+            ctx=context,
+            sender_id=self.to.pk,
+            recipient_ids=[self.by.pk]
+        )
+
+    def __str__(self):
+        return "Invitation by {by} to {to}".format(by=self.by.full_name, to=self.to.full_name )
