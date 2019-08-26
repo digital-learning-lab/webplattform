@@ -7,7 +7,7 @@ $sidebar-preview-button-color: darken($sidebar-preview-color, 8%);
   color: rgba(255, 255, 255, 1);
   font-weight: $font-weight-semi-bold;
   height: 100%;
-  padding: 0 0 1rem 0;
+  padding: 1rem 0;
   font-size: 0.9rem;
 }
 .sidebar--teaching-module {
@@ -23,7 +23,6 @@ $sidebar-preview-button-color: darken($sidebar-preview-color, 8%);
   margin: 0;
   padding: 0 $sidebar-side-padding--mobile;
   text-transform: uppercase;
-  margin-top: 1rem;
   margin-bottom: 2rem;
 }
 .sidebar__information {
@@ -79,6 +78,8 @@ $sidebar-preview-button-color: darken($sidebar-preview-color, 8%);
   font-size: 16px;
   line-height: 55px;
   padding-left: $sidebar-side-padding--mobile;
+  margin-top: -1rem;
+  margin-bottom: 1rem;
 }
 .sidebar--backlink {
   background-color: $sidebar-preview-button-color;
