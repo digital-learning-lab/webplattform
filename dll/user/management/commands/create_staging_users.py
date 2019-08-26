@@ -8,17 +8,26 @@ USERS = [
     {
         'username': 'Robert Stein',
         'email': 'robert@blueshoe.de',
-        'password': 'test1234!'
+        'password': 'test1234!',
+        'is_staff': True,
+        'is_superuser': True,
+        'is_active': True
     },
     {
         'username': 'Michael Heinemann',
         'email': 'michael.heinemann@tuhh.de',
-        'password': 'test1234!'
+        'password': 'test1234!',
+        'is_staff': True,
+        'is_superuser': True,
+        'is_active': True
     },
     {
         'username': 'Ronny Röwert',
         'email': 'ronny.roewert@tuhh.de',
-        'password': 'test1234!'
+        'password': 'test1234!',
+        'is_staff': True,
+        'is_superuser': True,
+        'is_active': True
     },
 ]
 
