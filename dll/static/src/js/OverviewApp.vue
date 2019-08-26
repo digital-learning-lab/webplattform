@@ -40,7 +40,7 @@
             <span class="fas fa-user"></span> {{ content.author }}
           </div>
         </div>
-        <div class="col" v-if="content.co_authors">
+        <div class="col" v-if="content.co_authors.length">
           <div class="content-box__coauthors">
             <span class="fas fa-users align-top"></span>
             <ul class="list-unstyled d-inline-block ml-1">

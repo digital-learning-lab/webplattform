@@ -41,8 +41,6 @@ class TestView(TemplateView):
         return ctx
 
 
-
-
 class MyContentView(TemplateView, BreadcrumbMixin):
     template_name = 'dll/user/content/overview.html'
     breadcrumb_title = 'Meine Inhalte'

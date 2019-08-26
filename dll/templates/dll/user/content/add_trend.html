@@ -3,7 +3,7 @@
 {% block content %}
 
   <a href="{% url 'user-content-overview' %}" role="button" aria-pressed="true">Zurück</a>
-  <h1 class="headline">Trend erstellen</h1>
+  <h1 class="headline">Trend {% if obj %}bearbeiten{% else %}erstellen{% endif %}</h1>
   <h2>
     Mit diesem Eingabeformular können Sie einen Trendbaustein im digital.learning.lab einreichen.
   </h2>

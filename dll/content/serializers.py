@@ -245,7 +245,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
                     ContentLink.objects.create(content=instance, **dict(link))
 
         co_authors = validated_data['co_authors']
-        self._update_co_authors(instance, co_authors)
+        # self._update_co_authors(instance, co_authors)
 
         for field in self.get_m2m_fields():
             values = validated_data.pop(field)
