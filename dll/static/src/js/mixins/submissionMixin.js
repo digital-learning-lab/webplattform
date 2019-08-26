@@ -148,6 +148,9 @@ export const submissionMixin = {
           this.errors.push('Bitte füllen Sie das Pflichtfeld \'' + this.requiredFields[i].title + '\' aus.')
         }
       }
+    },
+    goToPreview () {
+      document.location = this.data.preview_url
     }
   },
   created () {

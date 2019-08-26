@@ -1,11 +1,13 @@
 $sidebar-side-padding--mobile: 1.5rem;
 $sidebar-side-padding--desktop: 2rem;
+$sidebar-preview-color: $color--orange;
+$sidebar-preview-button-color: darken($sidebar-preview-color, 8%);
 
 .sidebar {
   color: rgba(255, 255, 255, 1);
   font-weight: $font-weight-semi-bold;
   height: 100%;
-  padding: 1rem 0;
+  padding: 0 0 1rem 0;
   font-size: 0.9rem;
 }
 .sidebar--teaching-module {
@@ -21,6 +23,7 @@ $sidebar-side-padding--desktop: 2rem;
   margin: 0;
   padding: 0 $sidebar-side-padding--mobile;
   text-transform: uppercase;
+  margin-top: 1rem;
   margin-bottom: 2rem;
 }
 .sidebar__information {
@@ -70,6 +73,24 @@ $sidebar-side-padding--desktop: 2rem;
   margin-top: -4px;
 }
 
+.sidebar--preview {
+  background-color: $sidebar-preview-color;
+  font-weight: $font-weight-bold;
+  font-size: 16px;
+  line-height: 55px;
+  padding-left: $sidebar-side-padding--mobile;
+}
+.sidebar--backlink {
+  background-color: $sidebar-preview-button-color;
+  float: right;
+  line-height: 55px;
+  padding: 0 20px;
+  color: rgba(255, 255, 255, 1);
+  &:hover {
+    color: rgba(255, 255, 255, 1);
+  }
+}
+
 @media (min-width: 768px) {
   .sidebar__headline {
     padding: 0 $sidebar-side-padding--desktop;
@@ -78,6 +99,9 @@ $sidebar-side-padding--desktop: 2rem;
     padding: 0 $sidebar-side-padding--desktop;
   }
   .sidebar__nav-link {
+    padding-left: $sidebar-side-padding--desktop;
+  }
+  .sidebar--preview {
     padding-left: $sidebar-side-padding--desktop;
   }
 }

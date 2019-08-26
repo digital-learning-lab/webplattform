@@ -26,7 +26,8 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
     CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView, ToolApplicationSearchView, \
-    OperatingSystemSearchView, ReviewViewSet
+    OperatingSystemSearchView, ReviewViewSet, ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
+    TrendDetailPreviewView
 from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
     UserContentView
 
@@ -45,8 +46,12 @@ urlpatterns = [
     path('entwicklung', DevelopmentView.as_view(), name='development'),
     path('faq', views.flatpage, {'url': '/faq/'}, name='faq'),
     path('tools/<slug:slug>', ToolDetailView.as_view(), name='tool-detail'),
+    path('tools/<slug:slug>/vorschau', ToolDetailPreviewView.as_view(), name='tool-detail-preview'),
     path('trends/<slug:slug>', TrendDetailView.as_view(), name='trend-detail'),
+    path('trends/<slug:slug>/vorschau', TrendDetailPreviewView.as_view(), name='trend-detail-preview'),
     path('unterrichtsbausteine/<slug:slug>', TeachingModuleDetailView.as_view(), name='teaching-module-detail'),
+    path('unterrichtsbausteine/<slug:slug>/vorschau', TeachingModuleDetailPreviewView.as_view(),
+         name='teaching-module-detail-preview'),
     path('kompetenz/<slug:slug>', CompetenceFilterView.as_view(), name='competence-filter'),
     path('unterrichtsbausteine', TeachingModuleFilterView.as_view(), name='teaching-modules-filter'),
     path('tools', ToolFilterView.as_view(), name='tools-filter'),

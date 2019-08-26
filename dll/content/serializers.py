@@ -72,7 +72,7 @@ class ContentListInternalSerializer(ContentListSerializer):
         return str(obj.author.username)
 
     def get_preview_url(self, obj):
-        return obj.get_absolute_url()
+        return obj.get_preview_url()
 
     def get_edit_url(self, obj):
         return obj.get_edit_url()
@@ -167,6 +167,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     trends = SerializerMethodField(allow_null=True)
     teaching_modules = SerializerMethodField(allow_null=True)
     help_texts = SerializerMethodField(allow_null=True)
+    preview_url = SerializerMethodField(allow_null=True)
 
     review = ReviewSerializer(read_only=True)
 
@@ -184,6 +185,9 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         for field in help_text.help_text_fields.all():
             result[field.name.split('.')[-1]] = field.text
         return result
+
+    def get_preview_url(self, obj):
+        return obj.get_preview_url()
 
     def get_image(self, obj):
         if obj.image:

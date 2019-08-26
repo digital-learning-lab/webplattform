@@ -87,11 +87,35 @@ class DevelopmentView(TemplateView, BreadcrumbMixin):
     breadcrumb_url = reverse_lazy('development')
 
 
-class ContentDetailView(DetailView):
+class ContentDetailBase(DetailView):
     def get_context_data(self, **kwargs):
-        ctx = super(ContentDetailView, self).get_context_data(**kwargs)
+        ctx = super(ContentDetailBase, self).get_context_data(**kwargs)
         ctx['competences'] = Competence.objects.all()
         return ctx
+
+
+class ContentDetailView(ContentDetailBase):
+    def get_queryset(self):
+        qs = super(ContentDetailView, self).get_queryset()
+        return qs.published()
+
+
+class ContentPreviewView(ContentDetailBase):
+    def get_context_data(self, **kwargs):
+        ctx = super(ContentPreviewView, self).get_context_data(**kwargs)
+        ctx['preview'] = True
+        return ctx
+    
+    def get_object(self, queryset=None):
+        obj = super(ContentPreviewView, self).get_object(queryset=queryset)
+        user = self.request.user
+        if not user.has_perm('content.view_content', obj):
+            raise Http404
+        return obj
+
+    def get_queryset(self):
+        qs = super(ContentPreviewView, self).get_queryset()
+        return qs.drafts()
 
 
 class ToolDetailView(ContentDetailView):
@@ -105,6 +129,21 @@ class TrendDetailView(ContentDetailView):
 
 
 class TeachingModuleDetailView(ContentDetailView):
+    model = TeachingModule
+    template_name = 'dll/content/teaching_module_detail.html'
+
+
+class ToolDetailPreviewView(ContentPreviewView):
+    model = Tool
+    template_name = 'dll/content/tool_detail.html'
+
+
+class TrendDetailPreviewView(ContentPreviewView):
+    model = Trend
+    template_name = 'dll/content/trend_detail.html'
+
+
+class TeachingModuleDetailPreviewView(ContentPreviewView):
     model = TeachingModule
     template_name = 'dll/content/teaching_module_detail.html'
 

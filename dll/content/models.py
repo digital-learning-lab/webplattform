@@ -46,7 +46,8 @@ LICENCE_CHOICES = (
 
 class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
     name = models.CharField(_("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200)
-    slug = DllSlugField(populate_from='name', overwrite=True)  # todo check if xxx-2 slugs are created if name does not change
+    slug = DllSlugField(populate_from='name', overwrite=True, allow_duplicates=True)
+    # todo check if xxx-2 slugs are created if name does not change
     author = models.ForeignKey(DllUser, on_delete=models.SET(get_default_tuhh_user), verbose_name=_("Autor"))
     co_authors = models.ManyToManyField(DllUser, related_name='collaborative_content',
                                         verbose_name=_("Kollaborateure"), blank=True)
@@ -247,6 +248,9 @@ class TeachingModule(Content):
     def get_absolute_url(self):
         return reverse('teaching-module-detail', kwargs={'slug': self.slug})
 
+    def get_preview_url(self):
+        return reverse('teaching-module-detail-preview', kwargs={'slug': self.slug})
+
     def get_edit_url(self):
         return reverse('edit-teaching-module', kwargs={'slug': self.slug})
 
@@ -308,6 +312,9 @@ class Tool(Content):
 
     def get_absolute_url(self):
         return reverse('tool-detail', kwargs={'slug': self.slug})
+
+    def get_preview_url(self):
+        return reverse('tool-detail-preview', kwargs={'slug': self.slug})
 
     def get_edit_url(self):
         return reverse('edit-tool', kwargs={'slug': self.slug})
@@ -374,6 +381,9 @@ class Trend(Content):
 
     def get_absolute_url(self):
         return reverse('trend-detail', kwargs={'slug': self.slug})
+
+    def get_preview_url(self):
+        return reverse('trend-detail-preview', kwargs={'slug': self.slug})
 
     def get_edit_url(self):
         return reverse('edit-trend', kwargs={'slug': self.slug})

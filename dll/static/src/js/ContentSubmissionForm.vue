@@ -10,11 +10,17 @@
     </div>
     <div v-if="mode === 'edit'">
       <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading">Speichern</button>
-      <button class="button button--primary" type="button" :disabled="loading">Vorschau</button>
-      <button class="button button--primary" type="button" :disabled="loading">Einreichen</button>
-      <button class="button button--primary" type="button" :disabled="loading">Löschen</button>
+      <button class="button button--preview" type="button" :disabled="loading" @click="$emit('preview')">Vorschau</button>
+      <button class="button button--submit" type="button" :disabled="loading">Einreichen</button>
+      <button class="button button--danger" type="button" :disabled="loading">Löschen</button>
     </div>
     <slot></slot>
+    <div v-if="mode === 'edit'">
+      <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading">Speichern</button>
+      <button class="button button--preview" type="button" :disabled="loading" @click="$emit('preview')">Vorschau</button>
+      <button class="button button--submit" type="button" :disabled="loading">Einreichen</button>
+      <button class="button button--danger" type="button" :disabled="loading">Löschen</button>
+    </div>
     <button class="button button--primary" @click="$emit('create')" type="button" v-if="mode === 'create'">Speichern</button>
   </form>
 </template>
