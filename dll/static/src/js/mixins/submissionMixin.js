@@ -51,6 +51,16 @@ export const submissionMixin = {
     }
   },
   methods: {
+    showDeleteWarning () {
+      this.mode = 'delete'
+    },
+    deleteContent () {
+      const axios = this.getAxiosInstance()
+      axios.delete('/api/inhalt-bearbeiten/' + this.data.slug)
+        .then(res => {
+          document.location = '/meine-inhalte'
+        })
+    },
     getHelpText (fieldName) {
       if (fieldName && this.data.help_texts) {
         return this.data.help_texts[fieldName]

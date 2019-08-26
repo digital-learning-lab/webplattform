@@ -12,14 +12,21 @@
       <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading">Speichern</button>
       <button class="button button--preview" type="button" :disabled="loading" @click="$emit('preview')">Vorschau</button>
       <button class="button button--submit" type="button" :disabled="loading">Einreichen</button>
-      <button class="button button--danger" type="button" :disabled="loading">Löschen</button>
+      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')">Löschen</button>
     </div>
-    <slot></slot>
+    <slot v-if="mode === 'edit' || mode === 'create'"></slot>
+    <div v-if="mode === 'delete'">
+      <h3>Wollen Sie den folgenden Inhalt wirklich löschen?</h3>
+      <p><b>{{ data.name }}</b></p>
+
+      <button type="button" class="button button--danger" @click="$emit('delete')">Ja, Inhalt löschen</button>
+      <button type="button" class="button button--primary" @click="mode = 'edit'">Nein, abbrechen.</button>
+    </div>
     <div v-if="mode === 'edit'">
       <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading">Speichern</button>
       <button class="button button--preview" type="button" :disabled="loading" @click="$emit('preview')">Vorschau</button>
       <button class="button button--submit" type="button" :disabled="loading">Einreichen</button>
-      <button class="button button--danger" type="button" :disabled="loading">Löschen</button>
+      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')" >Löschen</button>
     </div>
     <button class="button button--primary" @click="$emit('create')" type="button" v-if="mode === 'create'">Speichern</button>
   </form>
@@ -50,6 +57,13 @@
         type: Boolean,
         default: false,
         required: true
+      },
+      data: {
+        type: Object,
+        default: () => {
+          return {}
+        },
+        required: false
       }
     }
   }
