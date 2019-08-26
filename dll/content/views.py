@@ -87,24 +87,6 @@ class DevelopmentView(TemplateView, BreadcrumbMixin):
     breadcrumb_url = reverse_lazy('development')
 
 
-class NewsletterRegisterView(TemplateView, BreadcrumbMixin):
-    template_name = 'dll/newsletter/register.html'
-    breadcrumb_title = 'Newsletteranmeldung'
-    breadcrumb_url = reverse_lazy('newsletter')
-
-
-class NewsletterUnregisterView(TemplateView, BreadcrumbMixin):
-    template_name = 'dll/newsletter/unregister.html'
-    breadcrumb_title = 'Newsletterabmeldung'
-    breadcrumb_url = reverse_lazy('newsletter-unregister')
-
-
-class ContactView(TemplateView, BreadcrumbMixin):
-    template_name = 'dll/contact.html'
-    breadcrumb_title = 'Kontakt'
-    breadcrumb_url = reverse_lazy('contact')
-
-
 class ContentDetailView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(ContentDetailView, self).get_context_data(**kwargs)

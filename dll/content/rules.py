@@ -44,6 +44,11 @@ def can_review(user, obj: Review):
         return False
 
 
+rules.add_perm('content.view_content', is_author | is_co_author | (can_review & content_review_in_progress))
+rules.add_perm('content.view_tool', is_author | is_co_author | (can_review & content_review_in_progress))
+rules.add_perm('content.view_trend', is_author | is_co_author | (can_review & content_review_in_progress))
+rules.add_perm('content.view_teachingmodule', is_author | is_co_author | (can_review & content_review_in_progress))
+
 rules.add_perm('content.add_content', is_authenticated)
 rules.add_perm('content.add_tool', is_authenticated)
 rules.add_perm('content.add_trend', is_authenticated)

@@ -1,3 +1,5 @@
+import logging
+
 from django.utils.translation import ugettext_lazy as _
 
 from easy_thumbnails.files import get_thumbnailer
@@ -9,10 +11,14 @@ from rest_framework.relations import RelatedField
 from rest_framework.validators import UniqueValidator
 from rest_polymorphic.serializers import PolymorphicSerializer
 
+from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
 from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication
 from dll.user.models import DllUser
 from .models import Content, Tool, Trend, TeachingModule, ContentLink, Review
+
+
+logger = logging.getLogger('dll.communication.serializers')
 
 
 class ContentListSerializer(serializers.ModelSerializer):
@@ -122,6 +128,12 @@ class LinkSerializer(serializers.ModelSerializer):
         depth = 1
 
 
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['status', 'json_data']
+
+
 class DllM2MField(RelatedField):
 
     def to_representation(self, value):
@@ -152,6 +164,8 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     tools = SerializerMethodField(allow_null=True)
     trends = SerializerMethodField(allow_null=True)
     teaching_modules = SerializerMethodField(allow_null=True)
+
+    review = ReviewSerializer(read_only=True)
 
     def validate_related_content(self, data):
         res = []
@@ -191,9 +205,18 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         links_data = validated_data.pop('contentlink_set', [])
         content = super(BaseContentSubclassSerializer, self).create(validated_data)
-        for link in links_data:
-            ContentLink.objects.create(content=content, **dict(link))
+        self._update_content_links(content, links_data)
+        self._update_co_authors(content, co_authors)
         return content
+
+    def _update_content_links(self, content, data):
+        """
+        delete all previous links first, because we can't distinguish whether it is a new link, or an old one with
+        updated href AND name AND ...
+        """
+        content.contentlink_set.all().delete()
+        for link in data:
+            ContentLink.objects.create(content=content, **dict(link))
 
     def update(self, instance, validated_data):
         instance.name = validated_data['name']
@@ -207,6 +230,8 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
                 if not instance.contentlink_set.filter(url=link['url'], name=link['name'], type=link['type']).exists():
                     ContentLink.objects.create(content=instance, **dict(link))
 
+        co_authors = validated_data['co_authors']
+        self._update_co_authors(instance, co_authors)
 
         for field in self.get_m2m_fields():
             values = validated_data.pop(field)
@@ -224,6 +249,19 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
                 setattr(instance, field, [])
         instance.save()
         return instance
+
+    def _update_co_authors(self, content, co_authors):
+        current_co_authors = set(content.co_authors.all())
+        updated_list = set(co_authors)
+        new_co_authors = updated_list - current_co_authors
+        removed_co_authors = current_co_authors - updated_list
+        content.co_authors.remove(*removed_co_authors)
+        for user in new_co_authors:
+            CoAuthorshipInvitation.objects.create(
+                by=self.context['request'].user,
+                to=user,
+                content=content
+            )
 
 
 class ToolSerializer(BaseContentSubclassSerializer):
@@ -307,7 +345,7 @@ class TeachingModuleSerializer(BaseContentSubclassSerializer):
             'subject_of_tuition',
         ])
         return fields
-    
+
     class Meta:
         model = TeachingModule
         fields = '__all__'
@@ -343,10 +381,7 @@ class ContentPolymorphicSerializer(PolymorphicSerializer):
     }
 
 
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = ['status', 'json_data']
+# todo: file serializer
 
 
 class FileSerializer(serializers.Serializer):

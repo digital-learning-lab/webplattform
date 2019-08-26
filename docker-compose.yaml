@@ -20,6 +20,7 @@ services:
       - DATABASE_NAME=postgres
       - DATABASE_HOST=db
       - DJANGO_DEBUG=True
+      - REDIS_HOSTNAME=redis
     volumes:
       - .:/code
     user: "1000:1000"
@@ -27,3 +28,16 @@ services:
       - "8000:8000"
     depends_on:
       - db
+  redis:
+    image: "redis:alpine"
+    hostname: redis
+  celery:
+    image: web
+    command: [celery, worker, --app=configuration.celery.app, --concurrency=1, --loglevel=DEBUG]
+    environment:
+    - REDIS_HOSTNAME=redis
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis

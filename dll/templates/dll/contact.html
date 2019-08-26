@@ -19,13 +19,9 @@
         <label for="id_subject">Der Grund für Ihre Kontaktaufnahme*:</label>
         <select class="form-control" name="subject" required="" id="id_subject">
           <option value="" selected="">Bitte wählen Sie</option>
-
-          <option value="stabsstelle-digitalisierung@bsb.hamburg.de">Anregungen zu den Unterrichtsbausteinen | E-Mail an die BSB</option>
-
-          <option value="digital.learning.lab@tuhh.de">Anregungen zu Tools, Trends und zum dll allgemein | E-Mail an die TUHH</option>
-
-          <option value="stabsstelle-digitalisierung@bsb.hamburg.de">Einreichung eigener Unterrichtsbausteine | E-Mail an die BSB</option>
-
+            {% for id, verbose in form.fields.subject.choices %}
+                <option value={{ id }}>{{ verbose }}</option>
+            {% endfor %}
         </select>
       </div>
       <div class="form-group">

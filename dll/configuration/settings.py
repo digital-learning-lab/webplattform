@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'dll.content',
     'dll.user',
     'dll.general',
+    'dll.communication',
     'rest_framework',
     'django_filters',
     'rules.apps.AutodiscoverRulesConfig'
@@ -206,6 +207,7 @@ LOGGING = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'default_from_email@tuhh.de'  # todo: default from email address
 
 LOGIN_REDIRECT_URL = 'user-content-overview'
 LOGOUT_REDIRECT_URL = 'home'
@@ -218,3 +220,11 @@ REST_FRAMEWORK = {
     'SEARCH_PARAM': 'q',
     'DEFAULT_PERMISSION_CLASSES': []
 }
+
+CONTACT_EMAIL_BSB = "stabsstelle-digitalisierung@bsb.hamburg.de"
+CONTACT_EMAIL_DLL = "digital.learning.lab@tuhh.de"
+VALIDATE_RECAPTCHA = False
+
+CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://{hostname}:6379/0'.format(
+    hostname=env.str('REDIS_HOSTNAME'),
+))

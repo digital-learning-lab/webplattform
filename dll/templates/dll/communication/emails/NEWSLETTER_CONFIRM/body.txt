@@ -1,0 +1,2 @@
+Contact NEWSLETTER_CONFIRM body
+{{ token }}

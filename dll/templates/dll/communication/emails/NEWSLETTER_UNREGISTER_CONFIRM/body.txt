@@ -1,0 +1,2 @@
+Contact NEWSLETTER_UNREGISTER_CONFIRM body
+{{ message }}
