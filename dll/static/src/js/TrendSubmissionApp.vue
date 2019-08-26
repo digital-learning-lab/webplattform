@@ -22,8 +22,8 @@
       <app-select id="license" label="Lizenz" :options="licenseOptions" :default-val="data.licence" :value.sync="data.licence" :help-text="getHelpText('licence')"></app-select>
       <app-text-area id="citation-info" label="Zitierhinweis" :value.sync="data.citation_info" :character-counter="true" :maximal-chars="200" :help-text="getHelpText('citation_info')"></app-text-area>
 
-      <app-links-input id="websites" :links.sync="data.mediaLinks" label="Website" type="href" :help-text="getHelpText('contentlink')"></app-links-input>
-      <app-links-input id="additionalLinks" :links.sync="data.literatureLinks" label="Weitere Links" type="href" :help-text="getHelpText('contentlink')"></app-links-input>
+      <app-links-input id="websites" :links.sync="data.mediaLinks" label="Website" type="href" :help-text="getHelpText('contentlink>')"></app-links-input>
+      <app-links-input id="additionalLinks" :links.sync="data.literatureLinks" label="Weitere Links" type="href" :help-text="getHelpText('contentlink>')"></app-links-input>
 
     </div>
   </app-content-submission-form>

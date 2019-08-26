@@ -27,8 +27,8 @@
       <app-text-area id="differentiatingAttributes" label="Möglichkeiten der Differenzierung/Individualisierung" :value.sync="data.differentiating_attribute" :character-counter="true" :maximal-chars="700" :help-text="getHelpText('differentiating_attribute')"></app-text-area>
       <app-text-area id="hints" label="Hinweise" :value.sync="data.additional_info" :character-counter="true" :maximal-chars="1000" :help-text="getHelpText('additional_info')"></app-text-area>
       <app-select id="license" label="Lizenz" :options="licenseOptions" :default-val="data.licence" :value.sync="data.licence" :help-text="getHelpText('licence')"></app-select>
-      <app-links-input id="mediaLinks" :links.sync="data.mediaLinks" label="Links zu Audio- und Videomedien" :type="'video'" :help-text="getHelpText('contentlink')"></app-links-input>
-      <app-links-input id="literatureLinks" :links.sync="data.literatureLinks" label="Weiterführende Literatur und Links" :help-text="getHelpText('contentlink')"></app-links-input>
+      <app-links-input id="mediaLinks" :links.sync="data.mediaLinks" label="Links zu Audio- und Videomedien" :type="'video'" :help-text="getHelpText('contentlink>')"></app-links-input>
+      <app-links-input id="literatureLinks" :links.sync="data.literatureLinks" label="Weiterführende Literatur und Links" :help-text="getHelpText('contentlink>')"></app-links-input>
     </div>
   </app-content-submission-form>
 </template>

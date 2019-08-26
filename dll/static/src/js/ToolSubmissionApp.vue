@@ -17,8 +17,8 @@
       <app-select id="data-privacy" label="Datenschutz" :options="dataPrivacyOptions" default-val="" :value.sync="data.privacy" :default-val="data.privacy" :help-text="getHelpText('privacy')"></app-select>
       <app-text-area id="usage" label="Nutzung" :value.sync="data.usage" :character-counter="true" :maximal-chars="300" :help-text="getHelpText('usage')"></app-text-area>
       <app-dropdown id="applications" label="Anwendung" :value.sync="data.applications" fetch-url="/api/applications" :multiple="true" :prefetch="true" :help-text="getHelpText('applications')"></app-dropdown>
-      <app-links-input id="mediaLinks" :links.sync="data.mediaLinks" label="Links zu Audio- und Videomedien" :type="'video'" :help-text="getHelpText('contentlink')"></app-links-input>
-      <app-links-input id="literatureLinks" :links.sync="data.literatureLinks" label="Text-Anleitung" :help-text="getHelpText('contentlink')"></app-links-input>
+      <app-links-input id="mediaLinks" :links.sync="data.mediaLinks" label="Links zu Audio- und Videomedien" :type="'video'" :help-text="getHelpText('contentlink>')"></app-links-input>
+      <app-links-input id="literatureLinks" :links.sync="data.literatureLinks" label="Text-Anleitung" :help-text="getHelpText('contentlink>')"></app-links-input>
       <app-select id="requires_registration" label="Registrierung erforderlich" :options="registrationOptions" :value.sync="data.requires_registration" :default-val="data.requires_registration" :help-text="getHelpText('requires_registration')"></app-select>
       <app-select id="usk" label="Altersfreigabe" :options="uskOptions" :value.sync="data.usk" :default-val="data.usk" :help-text="getHelpText('usk')"></app-select>
       <app-select id="status" label="Status" :options="statusOptions" :value.sync="data.status" :default-val="data.status" :help-text="getHelpText('status')"></app-select>
