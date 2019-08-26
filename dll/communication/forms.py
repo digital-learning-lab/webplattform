@@ -31,12 +31,12 @@ class ContactForm(forms.Form):
             'message': self.cleaned_data['message'],
         }
         event_type_official = CONTACT_OPTIONS[self.cleaned_data['subject']]['event_type_code']
-        send_mail(
+        send_mail.delay(
             event_type_code=event_type_official,
             ctx=context,
             email=CONTACT_OPTIONS[self.cleaned_data['subject']]['email']
         )
-        send_mail(
+        send_mail.delay(
             event_type_code='USER_CONTACT_SUCCESSFUL',
             email=self.cleaned_data['from_email']
         )
@@ -49,14 +49,14 @@ class NewsletterForm(forms.Form):
         context = {
             'token': token,
         }
-        send_mail(
+        send_mail.delay(
             event_type_code='NEWSLETTER_CONFIRM',
             ctx=context,
             email=self.cleaned_data['email_address']
         )
 
     def send_unregister_email(self):
-        send_mail(
+        send_mail.delay(
             event_type_code='NEWSLETTER_UNREGISTER_CONFIRM',
             email=self.cleaned_data['email_address']
         )

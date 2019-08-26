@@ -9,12 +9,13 @@ logger = logging.getLogger('dll.communication.tasks')
 
 
 @app.task(bind=True, default_retry_delay=30*60, max_retries=3)
-def send_mail(self, event_type_code, ctx={}, recipient_ids=None, sender_id=None, email=None, cc=None, bcc=None):
+def send_mail(self, event_type_code, ctx=None, recipient_ids=None, sender_id=None, email=None, cc=None, bcc=None):
     logger.debug('Email sending initiated - attempt nr. {}'.format(self.request.retries))
     if not (recipient_ids or email):
         raise ValueError('You must provide either a recipient or an email')
 
     dispatcher = Dispatcher()
+    ctx = ctx or {}
 
     event_type = CommunicationEventType.objects.get(code=event_type_code)
 

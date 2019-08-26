@@ -17,11 +17,12 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     image: dll_web
     environment:
+      - REDIS_HOSTNAME=redis
       - DATABASE_USER=postgres
       - DATABASE_NAME=postgres
       - DATABASE_HOST=db
       - DJANGO_DEBUG=True
-      - REDIS_HOSTNAME=redis
+      - CELERY_TASK_ALWAYS_EAGER=True
     volumes:
       - .:/code
     user: "1000:1000"
@@ -41,6 +42,7 @@ services:
     - DATABASE_NAME=postgres
     - DATABASE_HOST=db
     - DJANGO_DEBUG=True
+    - CELERY_TASK_ALWAYS_EAGER=True
     user: "1000:1000"
     volumes:
       - .:/code

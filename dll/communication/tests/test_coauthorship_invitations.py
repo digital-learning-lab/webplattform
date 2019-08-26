@@ -11,7 +11,7 @@ class CoAuthorshipInvitationTests(TestCase):
     def setUp(self):
         author = {
             'username': 'alice',
-            'gender': 'male',
+            'gender': 'female',
             'first_name': 'Alice',
             'last_name': 'Doe',
             'email': 'alice@blueshoe.de',
@@ -19,7 +19,7 @@ class CoAuthorshipInvitationTests(TestCase):
 
         co_author = {
             'username': 'bob',
-            'gender': 'female',
+            'gender': 'male',
             'first_name': 'Bob',
             'last_name': 'Doe',
             'email': 'bob@blueshoe.de',

@@ -161,7 +161,7 @@ class CoAuthorshipInvitation(TimeStampedModel):
             'content_title': self.content.name,
             'message': self.message
         }
-        send_mail(
+        send_mail.delay(
             event_type_code='COAUTHOR_INVITATION',
             ctx=context,
             sender_id=self.by.pk,

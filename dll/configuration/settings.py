@@ -228,3 +228,4 @@ VALIDATE_RECAPTCHA = False
 CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://{hostname}:6379/0'.format(
     hostname=env.str('REDIS_HOSTNAME'),
 ))
+CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_TASK_ALWAYS_EAGER')
