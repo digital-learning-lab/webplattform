@@ -25,9 +25,16 @@
           <a href="/">Home</a>
         </li>
       {% endif %}
+      {% if not request.user.is_authenticated %}
       <li class="navigation__item js-navigation__item">
         <a href="{% url 'user:login' %}">Login</a>
       </li>
+      {% endif %}
+      {% if request.user.is_authenticated %}
+        <li class="navigation__item js-navigation__item">
+          <a href="{% url 'user-content-overview' %}">Meine Inhalte</a>
+        </li>
+      {% endif %}
       <li class="navigation__item js-navigation__item">
         <a href="/#dll-aufbau">Was ist das dll?</a>
       </li>
