@@ -17,12 +17,20 @@
         <span class="fas fa-plus"></span>
       </button>
     </div>
+    <app-review-input v-if="review" :id="'id'+-review" :name="label" :reviewValue.sync="reviewValue"></app-review-input>
   </div>
 </template>
 
 <script>
+  import ReviewInput from './ReviewInput.vue'
+  import { reviewMixin } from '../mixins/reviewMixin'
+
   export default {
     name: 'ListInput',
+    components: {
+      'AppReviewInput': ReviewInput
+    },
+    mixins: [reviewMixin],
     props: {
       id: {
         type: String,

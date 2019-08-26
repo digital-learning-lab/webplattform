@@ -1,0 +1,21 @@
+{% extends 'dll/default_page.html' %}
+
+{% block content %}
+
+  <a href="{% url 'user-content-review' %}" role="button" aria-pressed="true">Zurück</a>
+
+  <div id="teaching-module-submission"></div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+  <script>
+    window.dllData = {
+    {% if obj %}
+      module: {{ obj|safe }},
+      mode: 'review',
+    {% endif %}
+      csrfToken: '{{ csrf_token }}'
+    }
+  </script>
+{% endblock %}

@@ -8,12 +8,20 @@
       </button>
     </div>
     <small v-if="characterCounter" class="form-text text-muted float-right">{{ charactersLeft }} Zeichen verbleibend</small>
+    <app-review-input v-if="review" :id="'id'+-review" :name="label" :reviewValue.sync="reviewValue"></app-review-input>
   </div>
 </template>
 
 <script>
+  import ReviewInput from './ReviewInput.vue'
+  import { reviewMixin } from '../mixins/reviewMixin'
+
   export default {
     name: 'TextInput',
+    components: {
+      'AppReviewInput': ReviewInput
+    },
+    mixins: [reviewMixin],
     props: {
       id: {
         type: String,

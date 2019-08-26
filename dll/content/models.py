@@ -254,6 +254,9 @@ class TeachingModule(Content):
     def get_edit_url(self):
         return reverse('edit-teaching-module', kwargs={'slug': self.slug})
 
+    def get_review_url(self):
+        return reverse('review-teaching-module', kwargs={'slug': self.slug})
+
 
 class Tool(Content):
     STATUS_CHOICES = (

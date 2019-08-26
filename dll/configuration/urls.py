@@ -29,7 +29,7 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     OperatingSystemSearchView, ReviewViewSet, ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
     TrendDetailPreviewView, SubmitContentView
 from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
-    UserContentView
+    UserContentView, MyReviewsView, ReviewTeachingModuleView
 
 router = DefaultRouter()
 router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
@@ -57,9 +57,12 @@ urlpatterns = [
     path('tools', ToolFilterView.as_view(), name='tools-filter'),
     path('trends', TrendFilterView.as_view(), name='trends-filter'),
     path('meine-inhalte', MyContentView.as_view(), name='user-content-overview'),
+    path('review-inhalte', MyReviewsView.as_view(), name='user-content-review'),
     path('meine-inhalte/unterrichtsbausteine/', CreateEditTeachingModuleView.as_view(), name='add-teaching-module'),
     path('meine-inhalte/unterrichtsbausteine/<slug:slug>', CreateEditTeachingModuleView.as_view(),
          name='edit-teaching-module'),
+    path('meine-inhalte/unterrichtsbausteine/<slug:slug>/review', ReviewTeachingModuleView.as_view(),
+         name='review-teaching-module'),
     path('meine-inhalte/tools/', CreateEditToolView.as_view(), name='add-tool'),
     path('meine-inhalte/tools/<slug:slug>', CreateEditToolView.as_view(),
          name='edit-tool'),

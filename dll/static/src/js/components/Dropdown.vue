@@ -7,18 +7,23 @@
         <span class="far fa-question-circle"></span>
       </button>
     </div>
+    <app-review-input v-if="review" :id="'id'+-review" :name="label" :reviewValue.sync="reviewValue"></app-review-input>
   </div>
 </template>
 
 <script>
   import vSelect from 'vue-select'
   import axios from 'axios'
+  import ReviewInput from './ReviewInput.vue'
+  import { reviewMixin } from '../mixins/reviewMixin'
 
   export default {
     name: 'Dropdown',
     components: {
-      'v-select': vSelect
+      'v-select': vSelect,
+      'AppReviewInput': ReviewInput
     },
+    mixins: [reviewMixin],
     props: {
       prefetch: {
         type: Boolean,

@@ -9,12 +9,20 @@
         <span class="far fa-question-circle"></span>
       </button>
     </div>
+    <app-review-input v-if="review" :id="'id'+-review" :name="label" :reviewValue.sync="reviewValue"></app-review-input>
   </div>
 </template>
 
 <script>
+  import { reviewMixin } from '../mixins/reviewMixin'
+  import ReviewInput from './ReviewInput.vue'
+
   export default {
     name: 'Select',
+    components: {
+      'AppReviewInput': ReviewInput
+    },
+    mixins: [reviewMixin],
     props: {
       id: {
         type: String,

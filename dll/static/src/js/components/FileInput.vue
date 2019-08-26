@@ -13,12 +13,20 @@
     </div>
     <small v-if="hintText" class="form-text text-muted">{{ hintText }}</small>
     <img v-if="imageUrl" :src="imageUrl" alt="Vorschaubild" class="img-thumbnail">
+    <app-review-input v-if="review" :id="'id'+-review" :name="label" :reviewValue.sync="reviewValue"></app-review-input>
   </div>
 </template>
 
 <script>
+  import ReviewInput from './ReviewInput.vue'
+  import { reviewMixin } from '../mixins/reviewMixin'
+
   export default {
     name: 'FileInput',
+    components: {
+      'AppReviewInput': ReviewInput
+    },
+    mixins: [reviewMixin],
     props: {
       id: {
         type: String,

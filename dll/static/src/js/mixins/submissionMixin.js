@@ -26,6 +26,7 @@ export const submissionMixin = {
       errors: [],
       saved: false,
       data: {},
+      reviewValue: {},
       loading: false,
       previewImage: null,
       imageHintText: 'Mit dem Upload bestätigen Sie, dass Sie der Inhaber des vollumfänglichen Nutzungsrechts sind und Ihnen beliebige Veröffentlichungen, Bearbeitungen und Unterlizenzierungen dieses Werkes gestattet sind.',
@@ -175,10 +176,18 @@ export const submissionMixin = {
       document.location = this.data.preview_url
     }
   },
+  computed: {
+    readonly () {
+      return this.data.submitted || this.mode === 'review'
+    },
+    review () {
+      return this.mode === 'review'
+    }
+  },
   created () {
     if (window.dllData) {
       this.mode = window.dllData.mode || 'create'
-      if (this.mode === 'edit') {
+      if (this.mode === 'edit' || this.mode === 'review') {
         this.data = window.dllData.module
         this.data.mediaLinks = this.data.contentlink_set.filter(link => link.type === 'video' || link.type === 'audio')
         this.data.literatureLinks = this.data.contentlink_set.filter(link => link.type === 'href' || link.type === 'literature')

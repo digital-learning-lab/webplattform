@@ -21,6 +21,7 @@
           <option value="draft">Entwurf</option>
           <option value="submitted">Eingereicht</option>
           <option value="approved">Freigegeben</option>
+          <option value="declined">Abgelehnt</option>
         </select>
       </div>
       <div class="col">

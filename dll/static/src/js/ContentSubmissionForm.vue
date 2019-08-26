@@ -17,13 +17,23 @@
       <button class="button button--submit" type="button" :disabled="loading" @click="$emit('submit')" v-if="!data.submitted">Einreichen</button>
       <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')">Löschen</button>
     </div>
-    <slot v-if="mode === 'edit' || mode === 'create'"></slot>
+    <div v-if="mode === 'review'">
+      <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading">Speichern</button>
+      <button class="button button--submit" type="button" :disabled="loading" @click="$emit('submit')">Freigeben</button>
+      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')">Ablehnen</button>
+    </div>
+    <slot v-if="mode === 'edit' || mode === 'create' || mode === 'review'"></slot>
     <div v-if="mode === 'delete'">
       <h3>Wollen Sie den folgenden Inhalt wirklich löschen?</h3>
       <p><b>{{ data.name }}</b></p>
 
       <button type="button" class="button button--danger" @click="$emit('delete')">Ja, Inhalt löschen</button>
       <button type="button" class="button button--primary" @click="mode = 'edit'">Nein, abbrechen.</button>
+    </div>
+    <div v-if="mode === 'review'">
+      <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading">Speichern</button>
+      <button class="button button--submit" type="button" :disabled="loading" @click="$emit('submit')">Freigeben</button>
+      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')">Ablehnen</button>
     </div>
     <div v-if="mode === 'edit'">
       <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading" v-if="!data.submitted">Speichern</button>
