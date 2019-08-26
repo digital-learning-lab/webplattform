@@ -20,7 +20,6 @@ class DllUser(AbstractUser):
         max_length=150,
         null=True
     )
-    gender = models.CharField(max_length=10, choices=GENDER_OPTIONS)
     doi_confirmed = models.BooleanField(
         _('Double-opt-in confirmed'),
         default=False,
@@ -31,7 +30,7 @@ class DllUser(AbstractUser):
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'gender']
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def __str__(self):
         return f'{self.username} - {self.full_name} - ({self.email})'
