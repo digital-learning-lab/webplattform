@@ -28,6 +28,7 @@ export const submissionMixin = {
       data: {},
       loading: false,
       previewImage: null,
+      imageHintText: 'Mit dem Upload bestätigen Sie, dass Sie der Inhaber des vollumfänglichen Nutzungsrechts sind und Ihnen beliebige Veröffentlichungen, Bearbeitungen und Unterlizenzierungen dieses Werkes gestattet sind.',
       imageOptions: [
         {label: 'Ja', value: 'y'},
         {label: 'Nein', value: 'n'},

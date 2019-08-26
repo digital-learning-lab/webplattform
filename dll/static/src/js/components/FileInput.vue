@@ -4,13 +4,14 @@
 
     <div class="custom-file">
       <div class="d-flex">
-      <input type="file" class="custom-file-input" :id="id" @change="processInput" :accept="accept">
-      <label class="custom-file-label" :for="id"><span v-if="fileName">{{ fileName }}</span><span v-else>{{ fileLabel }}</span></label>
-      <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
-        <span class="far fa-question-circle"></span>
-      </button>
+        <input type="file" class="custom-file-input" :id="id" @change="processInput" :accept="accept">
+        <label class="custom-file-label" :for="id"><span v-if="fileName">{{ fileName }}</span><span v-else>{{ fileLabel }}</span></label>
+        <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
+          <span class="far fa-question-circle"></span>
+        </button>
+      </div>
     </div>
-    </div>
+    <small v-if="hintText" class="form-text text-muted">{{ hintText }}</small>
     <img v-if="imageUrl" :src="imageUrl" alt="Vorschaubild" class="img-thumbnail">
   </div>
 </template>
@@ -54,6 +55,11 @@
       helpText: {
         type: String,
         default: '',
+        required: false
+      },
+      hintText: {
+        type: String,
+        default: null,
         required: false
       }
     },
