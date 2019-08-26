@@ -7,13 +7,13 @@
       </button>
     </div>
     <div class="d-flex align-items-baseline mb-2" v-for="link in internalLinks">
-        <input type="text" class="form-control mr-3" :id="id" placeholder="Linktext" v-model="link.name">
-        <input type="text" class="form-control mr-3" :id="id" placeholder="https://example.org" v-model="link.url">
-        <button class="button--danger button--smallSquare" @click="removeLink(link)" type="button">
+        <input type="text" class="form-control mr-3" :id="id" placeholder="Linktext" v-model="link.name" :readonly="readonly">
+        <input type="text" class="form-control mr-3" :id="id" placeholder="https://example.org" v-model="link.url" :readonly="readonly">
+        <button class="button--danger button--smallSquare" @click="removeLink(link)" type="button" v-if="!readonly">
           <span class="fas fa-times"></span>
         </button>
     </div>
-    <div>
+    <div v-if="!readonly">
       <button class="button--neutral button--smallSquare" @click="addLink" type="button">
         <span class="fas fa-plus"></span>
       </button>
@@ -55,6 +55,11 @@
       helpText: {
         type: String,
         default: '',
+        required: false
+      },
+      readonly: {
+        type: Boolean,
+        default: false,
         required: false
       }
     },

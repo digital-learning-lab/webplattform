@@ -15,7 +15,7 @@ from rest_polymorphic.serializers import PolymorphicSerializer
 from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
 from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication, \
-    HelpText
+    HelpText, Review
 from dll.user.models import DllUser
 from .models import Content, Tool, Trend, TeachingModule, ContentLink, Review
 
@@ -168,6 +168,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     teaching_modules = SerializerMethodField(allow_null=True)
     help_texts = SerializerMethodField(allow_null=True)
     preview_url = SerializerMethodField(allow_null=True)
+    submitted = SerializerMethodField(allow_null=True)
 
     review = ReviewSerializer(read_only=True)
 
@@ -178,6 +179,9 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             if obj.is_public:
                 res.append(x)
         return res
+
+    def get_submitted(self, obj):
+        return obj.review and (obj.review.status == Review.IN_PROGRESS or obj.review.status == Review.NEW)
 
     def get_help_texts(self, obj):
         result = {}

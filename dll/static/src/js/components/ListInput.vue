@@ -7,13 +7,13 @@
       </button>
     </div>
     <div class="d-flex align-items-baseline mb-2" v-for="item in list">
-      <input type="text" class="form-control mr-3" :id="id" :placeholder="placeholder" v-model="item.text" @input="emitUpdate">
-      <button class="button--danger button--smallSquare" @click="removeItem(item)" type="button">
+      <input type="text" class="form-control mr-3" :id="id" :placeholder="placeholder" v-model="item.text" @input="emitUpdate" :readonly="readonly">
+      <button class="button--danger button--smallSquare" @click="removeItem(item)" type="button" v-if="!readonly">
         <span class="fas fa-times"></span>
       </button>
     </div>
     <div>
-      <button class="button--neutral button--smallSquare" @click="addItem" type="button">
+      <button class="button--neutral button--smallSquare" @click="addItem" type="button" v-if="!readonly">
         <span class="fas fa-plus"></span>
       </button>
     </div>
@@ -54,6 +54,11 @@
       helpText: {
         type: String,
         default: '',
+        required: false
+      },
+      readonly: {
+        type: Boolean,
+        default: false,
         required: false
       }
     },

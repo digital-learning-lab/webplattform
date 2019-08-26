@@ -52,13 +52,24 @@ export const submissionMixin = {
     }
   },
   methods: {
+    submitContent () {
+      this.loading = true
+      const axios = this.getAxiosInstance()
+      axios.post('/api/inhalt-einreichen/' + this.data.slug)
+        .then(res => {
+          this.data.submitted = true
+          this.loading = false
+        })
+    },
     showDeleteWarning () {
       this.mode = 'delete'
     },
     deleteContent () {
+      this.loading
       const axios = this.getAxiosInstance()
       axios.delete('/api/inhalt-bearbeiten/' + this.data.slug)
         .then(res => {
+          this.loading = false
           document.location = '/meine-inhalte'
         })
     },

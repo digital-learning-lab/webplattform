@@ -11,7 +11,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView
 from rest_framework.generics import ListAPIView
 
-from dll.content.models import Content, TeachingModule, Tool, Trend
+from dll.content.models import Content, TeachingModule, Tool, Trend, Review
 from dll.content.serializers import TeachingModuleSerializer, ToolSerializer, TrendSerializer, \
     ContentListInternalSerializer
 from dll.content.views import BreadcrumbMixin
@@ -152,9 +152,9 @@ class UserContentView(ListAPIView):
             qs = qs.instance_of(TeachingModule)
 
         if status == 'draft':
-            qs = qs.filter(publisher_linked__isnull=True)
+            qs = qs.filter(publisher_linked__isnull=True, reviews__isnull=True)
         if status == 'submitted':
-            qs = qs.filter(reviews__isnull=False)
+            qs = qs.filter(Q(reviews__status=Review.NEW) | Q(reviews__status=Review.IN_PROGRESS))
         if status == 'approved':
             qs = qs.filter(publisher_linked__isnull=False)
 

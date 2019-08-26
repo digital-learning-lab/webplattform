@@ -27,7 +27,7 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
     CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView, ToolApplicationSearchView, \
     OperatingSystemSearchView, ReviewViewSet, ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
-    TrendDetailPreviewView
+    TrendDetailPreviewView, SubmitContentView
 from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
     UserContentView
 
@@ -84,6 +84,8 @@ urlpatterns = [
     path('api/meine-inhalte', UserContentView.as_view(), name='user-contents'),
     path('api/inhalt-bearbeiten/<slug:slug>/vorschau-bild', FileUploadView.as_view(),
          name='add-preview-image'),
+    path('api/inhalt-einreichen/<slug:slug>', SubmitContentView.as_view(),
+         name='submit#-content'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
