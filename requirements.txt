@@ -22,3 +22,4 @@ django-filter==2.2.0
 django-rest-polymorphic
 rules
 celery
+redis

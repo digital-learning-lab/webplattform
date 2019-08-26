@@ -15,6 +15,7 @@ services:
         context: .
         dockerfile: Dockerfile.dev
     command: python manage.py runserver 0.0.0.0:8000
+    image: dll_web
     environment:
       - DATABASE_USER=postgres
       - DATABASE_NAME=postgres
@@ -32,10 +33,15 @@ services:
     image: "redis:alpine"
     hostname: redis
   celery:
-    image: web
-    command: [celery, worker, --app=configuration.celery.app, --concurrency=1, --loglevel=DEBUG]
+    image: dll_web
+    command: [celery, worker, --app=dll.configuration.celery.app, --concurrency=1, --loglevel=DEBUG]
     environment:
     - REDIS_HOSTNAME=redis
+    - DATABASE_USER=postgres
+    - DATABASE_NAME=postgres
+    - DATABASE_HOST=db
+    - DJANGO_DEBUG=True
+    user: "1000:1000"
     volumes:
       - .:/code
     depends_on:
