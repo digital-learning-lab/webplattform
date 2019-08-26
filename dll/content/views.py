@@ -48,9 +48,9 @@ class HomePageView(TemplateView):
         ctx = super(HomePageView, self).get_context_data(**kwargs)
         content_pks = []
         try:
-            content_pks += random.choices(TeachingModule.objects.drafts().values_list('pk', flat=True), k=2)
-            content_pks += random.choices(Trend.objects.drafts().values_list('pk', flat=True), k=2)
-            content_pks += random.choices(Tool.objects.drafts().values_list('pk', flat=True), k=2)
+            content_pks += random.choices(TeachingModule.objects.published().values_list('pk', flat=True), k=2)
+            content_pks += random.choices(Trend.objects.published().values_list('pk', flat=True), k=2)
+            content_pks += random.choices(Tool.objects.published().values_list('pk', flat=True), k=2)
         except IndexError:
             pass  # no content yet
         ctx['contents'] = Content.objects.filter(pk__in=content_pks)
