@@ -28,16 +28,16 @@ services:
       - "8000:8000"
     depends_on:
       - db
-  redis:
-    image: "redis:alpine"
-    hostname: redis
-  celery:
-    image: web
-    command: [celery, worker, --app=configuration.celery.app, --concurrency=1, --loglevel=DEBUG]
-    environment:
-    - REDIS_HOSTNAME=redis
-    volumes:
-      - .:/code
-    depends_on:
-      - db
-      - redis
+#  redis:
+#    image: "redis:alpine"
+#    hostname: redis
+#  celery:
+#    image: web
+#    command: [celery, worker, --app=configuration.celery.app, --concurrency=1, --loglevel=DEBUG]
+#    environment:
+#    - REDIS_HOSTNAME=redis
+#    volumes:
+#      - .:/code
+#    depends_on:
+#      - db
+#      - redis

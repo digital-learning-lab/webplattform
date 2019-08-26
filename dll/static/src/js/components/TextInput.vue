@@ -1,7 +1,12 @@
 <template>
   <div class="form-group">
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
+    <div class="d-flex">
     <input :type="type" class="form-control" :id="id" :placeholder="placeholder" v-model="inputValue" :readonly="readOnly" :maxlength="maximalChars">
+      <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
+        <span class="far fa-question-circle"></span>
+      </button>
+    </div>
     <small v-if="characterCounter" class="form-text text-muted float-right">{{ charactersLeft }} Zeichen verbleibend</small>
   </div>
 </template>
@@ -51,6 +56,11 @@
         required: true
       },
       value: {
+        type: String,
+        default: '',
+        required: false
+      },
+      helpText: {
         type: String,
         default: '',
         required: false

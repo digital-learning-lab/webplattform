@@ -1,6 +1,11 @@
 <template>
   <div class="form-group">
-    <label :for="id" class="mb-2">{{ label }}:<span v-if="required">*</span></label>
+    <div class="d-flex">
+      <label  :for="id" class="mb-2 w-100">{{ label }}:<span v-if="required">*</span></label>
+      <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
+        <span class="far fa-question-circle"></span>
+      </button>
+    </div>
     <div class="d-flex align-items-baseline mb-2" v-for="link in internalLinks">
         <input type="text" class="form-control mr-3" :id="id" placeholder="Linktext" v-model="link.name">
         <input type="text" class="form-control mr-3" :id="id" placeholder="https://example.org" v-model="link.url">
@@ -45,6 +50,11 @@
         default: () => {
           return []
         },
+        required: false
+      },
+      helpText: {
+        type: String,
+        default: '',
         required: false
       }
     },

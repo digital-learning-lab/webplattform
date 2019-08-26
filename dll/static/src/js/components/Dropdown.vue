@@ -1,7 +1,12 @@
 <template>
   <div class="form-group">
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
+    <div class="d-flex">
     <v-select v-model="inputValue" :options="options" @search="fetchOptions" :multiple="multiple" :disabled="disabled"></v-select>
+      <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
+        <span class="far fa-question-circle"></span>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -64,6 +69,11 @@
         type: Boolean,
         default: false,
         required: false
+      },
+      helpText: {
+        type: String,
+        default: '',
+        required: false
       }
     },
     computed: {
@@ -116,5 +126,7 @@
 </script>
 
 <style scoped>
-
+  .v-select {
+    width: 100%;
+  }
 </style>

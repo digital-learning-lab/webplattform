@@ -10,3 +10,6 @@
 .form-check-label {
   font-weight: $font-weight-regular;
 }
+.custom-file-label {
+  width: calc(100% - 45px);
+}

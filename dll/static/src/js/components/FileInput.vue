@@ -3,8 +3,13 @@
     <label :for="id">{{ label }}</label>
 
     <div class="custom-file">
+      <div class="d-flex">
       <input type="file" class="custom-file-input" :id="id" @change="processInput" :accept="accept">
       <label class="custom-file-label" :for="id"><span v-if="fileName">{{ fileName }}</span><span v-else>{{ fileLabel }}</span></label>
+      <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
+        <span class="far fa-question-circle"></span>
+      </button>
+    </div>
     </div>
     <img v-if="imageUrl" :src="imageUrl" alt="Vorschaubild" class="img-thumbnail">
   </div>
@@ -44,6 +49,11 @@
       accept: {
         type: String,
         default: 'image/gif, image/jpeg, image/png',
+        required: false
+      },
+      helpText: {
+        type: String,
+        default: '',
         required: false
       }
     },

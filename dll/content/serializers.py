@@ -1,5 +1,6 @@
 import logging
 
+from django.contrib.contenttypes.models import ContentType
 from django.utils.translation import ugettext_lazy as _
 
 from easy_thumbnails.files import get_thumbnailer
@@ -13,7 +14,8 @@ from rest_polymorphic.serializers import PolymorphicSerializer
 
 from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
-from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication
+from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication, \
+    HelpText
 from dll.user.models import DllUser
 from .models import Content, Tool, Trend, TeachingModule, ContentLink, Review
 
@@ -164,6 +166,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     tools = SerializerMethodField(allow_null=True)
     trends = SerializerMethodField(allow_null=True)
     teaching_modules = SerializerMethodField(allow_null=True)
+    help_texts = SerializerMethodField(allow_null=True)
 
     review = ReviewSerializer(read_only=True)
 
@@ -174,6 +177,13 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             if obj.is_public:
                 res.append(x)
         return res
+
+    def get_help_texts(self, obj):
+        result = {}
+        help_text = HelpText.objects.get(content_type=ContentType.objects.get_for_model(obj))
+        for field in help_text.help_text_fields.all():
+            result[field.name.split('.')[-1]] = field.text
+        return result
 
     def get_image(self, obj):
         if obj.image:
@@ -205,8 +215,8 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         links_data = validated_data.pop('contentlink_set', [])
         content = super(BaseContentSubclassSerializer, self).create(validated_data)
-        self._update_content_links(content, links_data)
-        self._update_co_authors(content, co_authors)
+        # self._update_content_links(content, links_data)
+        # self._update_co_authors(content, co_authors)
         return content
 
     def _update_content_links(self, content, data):
@@ -259,7 +269,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         for user in new_co_authors:
             CoAuthorshipInvitation.objects.create(
                 by=self.context['request'].user,
-                to=user,
+                to=DllUser.objects.get(pk=user),
                 content=content
             )
 

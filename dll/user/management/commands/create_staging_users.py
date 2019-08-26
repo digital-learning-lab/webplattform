@@ -27,4 +27,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for user in USERS:
-            DllUser.objects.create(**user)
+            DllUser.objects.create_superuser(**user)

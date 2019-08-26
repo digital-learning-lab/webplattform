@@ -51,6 +51,12 @@ export const submissionMixin = {
     }
   },
   methods: {
+    getHelpText (fieldName) {
+      if (fieldName && this.data.help_texts) {
+        return this.data.help_texts[fieldName]
+      }
+      return null
+    },
     getAxiosInstance () {
       const axiosInstance = axios.create({
         headers: {
