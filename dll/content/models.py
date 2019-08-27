@@ -1,7 +1,6 @@
 import logging
 import os
 
-from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import IntegerRangeField, JSONField, ArrayField
 from django.core.files import File
@@ -22,7 +21,7 @@ from taggit.managers import TaggableManager
 
 from .managers import ContentQuerySet
 from dll.general.models import DllSlugField, PublisherModel
-from dll.user.utils import get_default_tuhh_user, get_bsb_reviewer_group, get_tuhh_reviewer_group
+from dll.user.utils import get_default_tuhh_user
 from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
 
@@ -42,7 +41,6 @@ LICENCE_CHOICES = (
     (8, _("CC BY-SA 4.0")),
     (9, _("urheberrechtlich geschützt")),
 )
-
 
 class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
     name = models.CharField(_("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200)

@@ -7,7 +7,7 @@ from easy_thumbnails.files import get_thumbnailer
 from psycopg2._range import NumericRange
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import SerializerMethodField, IntegerField, CharField
+from rest_framework.fields import SerializerMethodField, IntegerField, CharField, SlugField
 from rest_framework.relations import RelatedField
 from rest_framework.validators import UniqueValidator
 from rest_polymorphic.serializers import PolymorphicSerializer
@@ -16,6 +16,7 @@ from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
 from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication, \
     HelpText, Review
+from dll.general.utils import custom_slugify
 from dll.user.models import DllUser
 from .models import Content, Tool, Trend, TeachingModule, ContentLink, Review
 
@@ -164,12 +165,6 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             message=_('A content with this name already exists.')
         )
     ])
-    slug = CharField(required=False, validators=[
-        UniqueValidator(
-            queryset=Content.objects.all(),
-            message=_('A content with this name already exists.')
-        )
-    ])
     image = SerializerMethodField()
     author = AuthorSerializer(read_only=True, allow_null=True, required=False)
     contentlink_set = LinkSerializer(many=True, allow_null=True, required=False)
@@ -185,6 +180,14 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     submitted = SerializerMethodField(allow_null=True)
 
     review = ReviewSerializer(read_only=True)
+
+    def validate_name(self, data):
+        """Make sure the slug of this name will be unique too."""
+        expected_slug = custom_slugify(data)
+        if Content.objects.drafts().filter(slug=expected_slug).count() > 1 or \
+                Content.objects.published().filter(slug=expected_slug).count():
+            raise ValidationError(_('A content with this name already exists.'))
+        return data
 
     def validate_related_content(self, data):
         res = []
