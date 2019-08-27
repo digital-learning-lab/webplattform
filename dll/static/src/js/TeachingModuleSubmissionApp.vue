@@ -45,6 +45,15 @@
     data () {
       return {
         resourceType: 'TeachingModule',
+        requiredFields: [
+          {field: 'name', title: 'Titel'},
+          {field: 'teaser', title: 'Teaser'},
+          {field: 'image', title: 'Anzeigebild'},
+          {field: 'competences', title: 'Kompetenzen in der digitalen Welt'},
+          {field: 'description', title: 'Detaillierte Beschreibung'},
+          {field: 'school_type', title: 'Schulform'},
+          {field: 'subject', title: 'Unterrichtsfach'}
+        ],
         data: {
           author: '',
           name: '',

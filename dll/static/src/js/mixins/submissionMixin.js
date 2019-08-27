@@ -37,8 +37,8 @@ export const submissionMixin = {
       requiredFields: [
         {field: 'name', title: 'Titel'},
         {field: 'teaser', title: 'Teaser'},
-        {field: 'description', title: 'Detaillierte Beschreibung'},
-        {field: 'competences', title: 'Kompetenzen in der digitalen Welt'}
+        {field: 'image', title: 'Anzeigebild'},
+        {field: 'competences', title: 'Kompetenzen in der digitalen Welt'},
       ],
       licenseOptions: [
         {value: null, label:'----------'},

@@ -88,5 +88,5 @@ class DllUser(AbstractUser):
 
     @property
     def is_reviewer(self):
-        return self.is_superuser or rules.is_group_member('BSB-Reviewer', self) or \
-               rules.is_group_member('TUHH-Reviewer', self)
+        return self.is_superuser or rules.is_group_member('BSB-Reviewer')(self) or \
+               rules.is_group_member('TUHH-Reviewer')(self)

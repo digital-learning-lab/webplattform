@@ -1,9 +1,9 @@
 <template>
   <app-content-submission-form :errors="errors" :mode="mode" :loading="loading" :saved="saved" @update="updateContent" @create="createContent" @preview="goToPreview" @delete-warning="showDeleteWarning" :data="data" @delete="deleteContent" @submit="submitContent" @update-review="updateReview" @approve-review="approveContent" @decline-review="declineContent">
       <app-text-input id="author" :readonly="true" label="Autor_in" :value.sync="data.author" :required="true"></app-text-input>
-      <app-text-input id="title" :readonly="readonly" :review="review" label="Titel des Tools" :value.sync="data.name" :required="true" :character-counter="true" :maximal-chars="140" :help-text="getHelpText('name')"></app-text-input>
+      <app-text-input id="title" :readonly="readonly" :review="review" label="Titel des Tools" :value.sync="data.name" :review-value.sync="reviewValue.name" :required="true" :character-counter="true" :maximal-chars="140" :help-text="getHelpText('name')"></app-text-input>
     <div v-if="mode === 'edit' || mode === 'review'">
-      <app-file-input id="image" :readonly="readonly" :review="review" label="Anzeigebild" file-label="Bild wählen" :value.sync="previewImage" :review-value.sync="reviewValue.previewImage" :image="data.image" :help-text="getHelpText('image')" :hintText="imageHintText"></app-file-input>
+      <app-file-input id="image" :readonly="readonly" :review="review" :required="true" label="Anzeigebild" file-label="Bild wählen" :value.sync="previewImage" :review-value.sync="reviewValue.previewImage" :image="data.image" :help-text="getHelpText('image')" :hintText="imageHintText"></app-file-input>
       <app-text-area id="teaser" :readonly="readonly" :review="review" label="Kurzzusammenfassung" :required="true" :value.sync="data.teaser" :review-value.sync="reviewValue.teaser" :rows="3" :help-text="getHelpText('teaser')"></app-text-area>
       <app-dropdown id="co_authors" :readonly="readonly" :review="review" label="Co-Autor_innen" :value.sync="data.co_authors" :review-value.sync="reviewValue.co_authors" fetch-url="/api/authors" :multiple="true" :help-text="getHelpText('co_authors')"></app-dropdown>
       <app-dropdown id="teaching-modules" :readonly="readonly" :review=review label="Passende Unterrichtsbausteine" :value.sync="data.teaching_modules" :review-value.sync="reviewValue.teaching_modules" fetch-url="/api/unterrichtsbausteine" :multiple="true" :help-text="getHelpText('teaching_modules')"></app-dropdown>
@@ -21,8 +21,8 @@
       <app-select id="requires_registration" :readonly="readonly" :review="review" label="Registrierung erforderlich" :options="registrationOptions" :value.sync="data.requires_registration" :review-value.sync="reviewValue.requires_registration" :default-val="data.requires_registration" :help-text="getHelpText('requires_registration')"></app-select>
       <app-select id="usk" :readonly="readonly" :review="review" label="Altersfreigabe" :options="uskOptions" :value.sync="data.usk" :review-value.sync="reviewValue.usk" :default-val="data.usk" :help-text="getHelpText('usk')"></app-select>
       <app-select id="status" :readonly="readonly" :review="review" label="Status" :options="statusOptions" :value.sync="data.status" :review-value.sync="reviewValue.status" :default-val="data.status" :help-text="getHelpText('status')"></app-select>
-      <app-text-area id="additional-info" :readonly="readonly" :review="review" label="Anmerkungen" :required="true" :value.sync="data.additional_info" :review-value.sync="reviewValue.additional_info" :character-counter="true" :maximal-chars="700" :rows="10" :help-text="getHelpText('additional_info')"></app-text-area>
-      <app-text-area id="description" :readonly="readonly" :review="review" label="Detaillierte Beschreibung" :required="true" :value.sync="data.description" :review-value.sync="reviewValue.description" :character-counter="true" :maximal-chars="500" :rows="10" :help-text="getHelpText('description')"></app-text-area>
+      <app-text-area id="additional-info" :readonly="readonly" :review="review" label="Anmerkungen" :value.sync="data.additional_info" :review-value.sync="reviewValue.additional_info" :character-counter="true" :maximal-chars="700" :rows="10" :help-text="getHelpText('additional_info')"></app-text-area>
+      <app-text-area id="description" :readonly="readonly" :review="review" label="Detaillierte Beschreibung" :value.sync="data.description" :review-value.sync="reviewValue.description" :character-counter="true" :maximal-chars="500" :rows="10" :help-text="getHelpText('description')"></app-text-area>
       <app-dropdown id="operating_systems" :readonly="readonly" :review="review" label="Betriebssystem" :value.sync="data.operating_systems" :review-value.sync="reviewValue.operating_systems" fetch-url="/api/operatingSystems" :multiple="true" :prefetch="true" :help-text="getHelpText('operating_systems')"></app-dropdown>
     </div>
   </app-content-submission-form>
@@ -41,6 +41,12 @@
     data () {
       return {
         resourceType: 'Tool',
+        requiredFields: [
+          {field: 'name', title: 'Titel'},
+          {field: 'teaser', title: 'Teaser'},
+          {field: 'image', title: 'Anzeigebild'},
+          {field: 'competences', title: 'Kompetenzen in der digitalen Welt'},
+        ],
         data: {
           author: '',
           name: '',

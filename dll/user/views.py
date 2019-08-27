@@ -78,7 +78,10 @@ class CreateEditContentView(TemplateView, BreadcrumbMixin):
         slug = self.kwargs.get('slug', None)
         if slug:
             obj = self.get_object()
-            ctx['obj'] = json.dumps(self.serializer(obj).data)
+            data = self.serializer(obj).data
+            if obj and obj.review and obj.review.status != Review.DECLINED and not self.request.user.is_reviewer:
+                data['review'] = None
+            ctx['obj'] = json.dumps(data)
         return ctx
 
     def get_object(self):
