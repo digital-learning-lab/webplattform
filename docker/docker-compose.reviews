@@ -25,7 +25,7 @@ services:
       - DJANGO_SECRET_KEY=${SECRET_KEY}
       - HOST_IP=${HOST_IP}
       - DJANGO_DEBUG=True
-      - DJANGO_LOG_LEVEL=debug
+      - DJANGO_LOG_LEVEL=DEBUG
 
       - ADMIN_USER=admin
       - ADMIN_EMAIL=michael.heinemann@tuhh.de
