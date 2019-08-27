@@ -8,7 +8,7 @@ from dll.user.models import DllUser
 
 
 # TODO write tests for Tool and Trend too
-from dll.user.utils import get_default_tuhh_user
+from dll.user.utils import get_default_tuhh_user, get_bsb_reviewer_group, get_tuhh_reviewer_group
 
 
 class BaseTestCase(TestCase):
@@ -54,8 +54,8 @@ class BaseTestCase(TestCase):
             'email': 'test+daniel@blueshoe.de',
         }
 
-        bsb_reviewer_group = Group.objects.get(name='BSB-Reviewer')
-        tuhh_reviewer_group = Group.objects.get(name='TUHH-Reviewer')
+        bsb_reviewer_group = get_bsb_reviewer_group()
+        tuhh_reviewer_group = get_tuhh_reviewer_group()
 
         self.author = DllUser.objects.create(**author)
         self.co_author = DllUser.objects.create(**co_author)
@@ -87,8 +87,7 @@ class BaseTestCase(TestCase):
         ContentFile.objects.create(file=filer_file, title='BarFile', content=self.content)
 
 
-class ContentCreationTests(BaseTestCase):
-    # todo: move this to test_content_creation
+class ContentEditTests(BaseTestCase):
     def setUp(self):
         super().setUp()
 

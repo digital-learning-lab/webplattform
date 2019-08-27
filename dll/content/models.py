@@ -1,9 +1,11 @@
 import logging
 import os
 
+from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import IntegerRangeField, JSONField, ArrayField
+from django.contrib.sites.models import Site
 from django.core.files import File
 from django.db import models
 from django.db.models import Q
@@ -62,6 +64,7 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
     competences = models.ManyToManyField('Competence', verbose_name=_("Kompetenzen"), blank=True)
     sub_competences = models.ManyToManyField('SubCompetence', verbose_name=_("Subkompetenzen"), blank=True)
     json_data = JSONField(default=dict)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE, default=settings.SITE_ID)
 
     tags = TaggableManager()
     objects = PolymorphicManager.from_queryset(ContentQuerySet)()
@@ -99,15 +102,17 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
             HelpText.objects.create(content_type=content_type)
         return content_type.help_text.data()
 
-    def submit_for_review(self):
+    def submit_for_review(self, by_user: DllUser=None):
         # todo: do not allow resubmission if review is already submitted
         if self.review:
             # content was declined and now resubmitted
             review = self.review
             review.status = Review.IN_PROGRESS
+            review.submitted_by = by_user
             review.save()
         else:
-            Review.objects.create(content=self, is_active=True)
+            Review.objects.create(content=self, is_active=True, submitted_by=by_user)
+        self.send_content_submitted_mail(by_user=by_user)
 
     def copy_relations(self, src, dst):
         # image
@@ -164,6 +169,32 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
                                            owner=get_default_tuhh_user())
         self.image = filer_image
         self.save()
+
+    def send_content_submitted_mail(self, by_user=None):
+        from dll.communication.tasks import send_mail
+        relative_url = self.get_absolute_url()
+        url = 'https://%s%s' % (Site.objects.get_current().domain, relative_url)
+        context = {
+            'link_to_content': url
+        }
+        if isinstance(self, TeachingModule):
+            group = get_bsb_reviewer_group()
+            bsb_reviewers = DllUser.objects.filter(groups__pk=group.pk)
+            send_mail.delay(
+                event_type_code='CONTENT_SUBMITTED_FOR_REVIEW',
+                ctx=context,
+                sender_id=getattr(by_user, 'pk', None),
+                recipient_ids=list(bsb_reviewers.values_list('pk', flat=True))
+            )
+        elif isinstance(self, Trend) or isinstance(self, Tool):
+            group = get_tuhh_reviewer_group()
+            tuhh_reviewers = DllUser.objects.filter(groups__pk=group.pk)
+            send_mail.delay(
+                event_type_code='CONTENT_SUBMITTED_FOR_REVIEW',
+                ctx=context,
+                sender_id=getattr(by_user, 'pk', None),
+                recipient_ids=list(tuhh_reviewers.values_list('pk', flat=True))
+            )
 
     @cached_property
     def content_files(self):
@@ -427,6 +458,11 @@ class Review(TimeStampedModel):
     is_active = models.BooleanField(default=False)
     status = models.IntegerField(choices=STATUS_CHOICES, default=NEW)
     count = models.PositiveSmallIntegerField(default=0)
+    submitted_by = models.ForeignKey(
+        DllUser, on_delete=models.SET(get_default_tuhh_user),
+        related_name='submitted_reviews',
+        null=True
+    )
     accepted_by = models.ForeignKey(
         DllUser, on_delete=models.SET(get_default_tuhh_user),
         related_name='accepted_reviews',

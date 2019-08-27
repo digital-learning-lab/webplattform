@@ -1,0 +1,2 @@
+CONTENT_SUBMITTED_FOR_REVIEW body text
+{{ link_to_content }}

@@ -20,7 +20,7 @@ class Dispatcher(object):
         Dispatch one-off messages to explicitly specified recipient.
         """
         if messages['subject'] and messages['body']:
-            email = self.send_email_messages(email_address, messages, event_type, cc, bcc)
+            email = self.send_email_messages([email_address], messages, event_type, cc, bcc)
             if email and event_type:
                 self.create_communicaton_event(event_type, email_address_list=[email_address], sender=sender)
 
@@ -40,7 +40,7 @@ class Dispatcher(object):
         if email and event_type:
             self.create_communicaton_event(event_type, email_address_list=recipients, cc=cc, bcc=bcc, sender=sender)
 
-    def send_email_messages(self, email_address, messages, event_type, cc=None, bcc=None):
+    def send_email_messages(self, recipients, messages, event_type, cc=None, bcc=None):
         """
         Plain email sending to the specified recipient
         """
@@ -50,16 +50,16 @@ class Dispatcher(object):
             email = EmailMultiAlternatives(messages['subject'],
                                            messages['body'],
                                            from_email=from_email,
-                                           to=[email_address],
+                                           to=recipients,
                                            cc=cc)
             email.attach_alternative(messages['html'], "text/html")
         else:
             email = EmailMessage(messages['subject'],
                                  messages['body'],
                                  from_email=from_email,
-                                 to=[email_address],
+                                 to=recipients,
                                  cc=cc)
-        self.logger.info("Sending email to {}".format(u(email_address)))
+        self.logger.info("Sending email to {}".format(', '.join(recipients)))
         email.send()
 
         return email
