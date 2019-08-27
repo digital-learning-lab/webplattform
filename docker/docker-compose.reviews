@@ -9,8 +9,8 @@ services:
     build:
       context: ../
       dockerfile: ./Dockerfile
-    volumes:
-      - '/docker_volumes/srv/dll/media/:/code/dll/media'
+    #volumes:
+    #  - '/docker_volumes/srv/dll/media/:/code/dll/media'
     restart: 'always'
     depends_on:
         - db
