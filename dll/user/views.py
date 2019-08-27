@@ -2,10 +2,12 @@ from django.contrib.auth import login, get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView
 
+from dll.communication.tasks import send_mail
 from dll.content.models import Content
 from dll.user.tokens import account_activation_token
 from .forms import SignUpForm
@@ -52,15 +54,23 @@ class SignUpView(FormView):
         user = form.save(commit=False)
         user.is_active = False
         user.save()
-        current_site = get_current_site(self.request)
-        subject = 'Activate Your MySite Account'
-        message = render_to_string(self.email_template, {
-            'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+
+        confirmation_url = reverse('user:activate', kwargs={
+            'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
             'token': account_activation_token.make_token(user),
         })
-        user.email_user(subject, message)
+        confirmation_url = self.request.build_absolute_uri(confirmation_url)
+
+        context = {
+            'username': user.username,
+            'confirmation_url': confirmation_url
+        }
+        send_mail.delay(
+            event_type_code='USER_SIGNUP',
+            email=user.email,
+            ctx=context
+        )
+
         return redirect('home')
 
 
