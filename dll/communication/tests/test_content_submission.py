@@ -87,4 +87,22 @@ class ContentSubmissionTests(BaseTestCase):
 
 
 class ContentDeclineTests(BaseTestCase):
-    pass
+    def setUp(self):
+        super().setUp()
+        self.teaching_module.submit_for_review(by_user=self.author)
+        self.teaching_module.review.decline(by_user=self.bsb_reviewer_1)
+        CommunicationEventType.objects.create(code='REVIEW_DECLINED', name="Review declined")
+
+    def test_email_sent(self):
+        self.assertEqual(len(mail.outbox), 1)
+
+
+class ContentAcceptTests(BaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.teaching_module.submit_for_review(by_user=self.author)
+        self.teaching_module.review.accept(by_user=self.bsb_reviewer_1)
+        CommunicationEventType.objects.create(code='REVIEW_ACCEPTED', name="Review accepted")
+
+    def test_email_sent(self):
+        self.assertEqual(len(mail.outbox), 1)
