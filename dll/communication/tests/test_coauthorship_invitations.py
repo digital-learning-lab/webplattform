@@ -1,4 +1,5 @@
 import re
+from urllib.parse import urlparse
 
 from django.core import mail
 from django.test import TestCase
@@ -52,6 +53,8 @@ class BaseTestCase(TestCase):
         self.new_co_author.set_password('password')
         self.new_co_author.save()
         self.removed_co_author = DllUser.objects.create(**removed_co_author)
+        self.removed_co_author.set_password('password')
+        self.removed_co_author.save()
 
         self.content = TeachingModule.objects.create(
             name='Foo',
@@ -62,7 +65,18 @@ class BaseTestCase(TestCase):
 
 
 class CoAuthorshipInvitationTests(BaseTestCase):
-    def test_author_invites_coauthor(self):
+    def setUp(self):
+        super().setUp()
+        CommunicationEventType.objects.create(code='COAUTHOR_INVITATION_ACCEPTED', name="Coauthor invitation accepted")
+        self.login_url = reverse('user:login')
+
+    def TestA(self):
+        """
+        author invites coauthor, and removes another one. this should have following effects:
+        - removed author is directly removed
+        - invited author receives mail
+        - mail contains valid link
+        """
         self.client.login(username='alice@blueshoe.de', password='password')
         update_url = reverse('draft-content-detail', kwargs={'pk': self.content.pk})
         post_data = {
@@ -79,31 +93,45 @@ class CoAuthorshipInvitationTests(BaseTestCase):
         self.assertEqual(len(mail.outbox), 1)
         # author is removed if not present anymore in the coauthor list
         self.assertFalse(self.removed_co_author in self.content.co_authors.all())
-
-
-class InvitationAcceptTests(BaseTestCase):
-    def setUp(self):
-        super().setUp()
-        self.client.login(username='alice@blueshoe.de', password='password')
-        update_url = reverse('draft-content-detail', kwargs={'pk': self.content.pk})
-        post_data = {
-            "co_authors": [self.co_author.pk, self.new_co_author.pk],
-            "resourcetype": "TeachingModule"
-        }
-        self.client.patch(update_url, data=post_data, content_type='application/json')
         self.client.logout()
-        CommunicationEventType.objects.create(code='COAUTHOR_INVITATION_ACCEPTED', name="Coauthor invitation accepted")
 
-    def test_accept_invitation_link(self):
-        self.client.login(username='carmen@blueshoe.de', password='password')
+    def TestB(self):
+        """
+        test that login is required to view invitation
+        """
         email = mail.outbox[0]
         link = re.search(
             r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.[a-z]{2,4})?\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
             email.body)
-        invitation_link = link.group(0)
-        self.client.post(invitation_link, data={'user_response': "Yes"})
+        self.invitation_link = link.group(0)
+        response = self.client.get(self.invitation_link)
+        rel_path = urlparse(self.invitation_link).path
+        self.assertRedirects(response, self.login_url + '?next=' + rel_path)
+
+    def TestC(self):
+        """
+        other users cannot accept invitation link
+        """
+        self.client.login(username='daniel@blueshoe.de', password='password')
+        response = self.client.post(self.invitation_link, data={'user_response': "Yes"})
+        self.assertFalse(self.new_co_author in self.content.co_authors.all())
+        self.client.logout()
+
+    def TestD(self):
+        """
+        invited user can accept invitation
+        """
+        self.client.login(username='carmen@blueshoe.de', password='password')
+        self.client.post(self.invitation_link, data={'user_response': "Yes"})
         self.assertTrue(self.new_co_author in self.content.co_authors.all())
         self.assertEqual(len(mail.outbox), 2)
+        self.client.logout()
+
+    def test_A_then_B_then_C_then_D(self):
+        self.TestA()
+        self.TestB()
+        self.TestC()
+        self.TestD()
 
 
 class InvitationDeclineTests(BaseTestCase):
