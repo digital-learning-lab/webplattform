@@ -18,11 +18,6 @@ variables:
             ssh-agent bash -c '
                 ssh-add ~/.ssh/id_rsa_dll-inhalte;
                 git clone -b master git@collaborating.tuhh.de:itbh/tnt/digital-learning-lab/inhalte.git ./dll/media/inhalte;
-                if [ -n "${INHALTE_BRANCH}" ]; then
-                    git -C ./dll/media checkout "${INHALTE_BRANCH}";
-                elif git -C ./dll/media ls-remote --heads --exit-code origin "${CI_COMMIT_REF_NAME}"; then
-                    git -C ./dll/media checkout "${CI_COMMIT_REF_NAME}";
-                fi
             '
         - ls -la ./dll/media/inhalte
         - git -C ./dll/media/inhalte branch | cat
