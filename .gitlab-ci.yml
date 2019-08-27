@@ -19,7 +19,7 @@ variables:
                 ssh-add ~/.ssh/id_rsa_dll-inhalte;
                 git clone -b master git@collaborating.tuhh.de:itbh/tnt/digital-learning-lab/inhalte.git ./dll/media/inhalte;
             '
-        - ls -la ./dll/media/inhalte
+        - ls -la ./dll/media/inhalte/UBaustein
         - git -C ./dll/media/inhalte branch | cat
         - rm -rf ./dll/media/inhalte/.git
 stages:
