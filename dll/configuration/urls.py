@@ -27,9 +27,9 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
     CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView, ToolApplicationSearchView, \
     OperatingSystemSearchView, ReviewViewSet, ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
-    TrendDetailPreviewView, SubmitContentView
+    TrendDetailPreviewView, SubmitContentView, ApproveContentView, DeclineContentView
 from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
-    UserContentView, MyReviewsView, ReviewTeachingModuleView
+    UserContentView, MyReviewsView, ReviewTeachingModuleView, ReviewToolView, ReviewTrendView
 
 router = DefaultRouter()
 router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
@@ -61,8 +61,12 @@ urlpatterns = [
     path('meine-inhalte/unterrichtsbausteine/', CreateEditTeachingModuleView.as_view(), name='add-teaching-module'),
     path('meine-inhalte/unterrichtsbausteine/<slug:slug>', CreateEditTeachingModuleView.as_view(),
          name='edit-teaching-module'),
-    path('meine-inhalte/unterrichtsbausteine/<slug:slug>/review', ReviewTeachingModuleView.as_view(),
+    path('review-inhalte/unterrichtsbausteine/<slug:slug>/review', ReviewTeachingModuleView.as_view(),
          name='review-teaching-module'),
+    path('review-inhalte/tools/<slug:slug>/review', ReviewToolView.as_view(),
+         name='review-tool'),
+    path('review-inhalte/trends/<slug:slug>/review', ReviewTrendView.as_view(),
+         name='review-trend'),
     path('meine-inhalte/tools/', CreateEditToolView.as_view(), name='add-tool'),
     path('meine-inhalte/tools/<slug:slug>', CreateEditToolView.as_view(),
          name='edit-tool'),
@@ -88,7 +92,11 @@ urlpatterns = [
     path('api/inhalt-bearbeiten/<slug:slug>/vorschau-bild', FileUploadView.as_view(),
          name='add-preview-image'),
     path('api/inhalt-einreichen/<slug:slug>', SubmitContentView.as_view(),
-         name='submit#-content'),
+         name='submit-content'),
+    path('api/review/<slug:slug>/approve', ApproveContentView.as_view(),
+         name='approve-content'),
+    path('api/review/<slug:slug>/decline', DeclineContentView.as_view(),
+         name='decline-content'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

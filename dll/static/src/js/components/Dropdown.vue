@@ -7,7 +7,7 @@
         <span class="far fa-question-circle"></span>
       </button>
     </div>
-    <app-review-input v-if="review" :id="'id'+-review" :name="label" :reviewValue.sync="reviewValue"></app-review-input>
+    <app-review-input :mode="review ? 'review' : 'edit'" :id="'id'+-review" :name="label" :reviewValue.sync="ownReviewValue"></app-review-input>
   </div>
 </template>
 

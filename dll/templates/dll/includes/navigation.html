@@ -34,9 +34,11 @@
         <li class="navigation__item js-navigation__item">
           <a href="{% url 'user-content-overview' %}">Meine Inhalte</a>
         </li>
-        <li class="navigation__item js-navigation__item">
-          <a href="{% url 'user-content-review' %}">Review Inhalte</a>
-        </li>
+        {% if request.user.is_reviewer %}
+          <li class="navigation__item js-navigation__item">
+            <a href="{% url 'user-content-review' %}">Review Inhalte</a>
+          </li>
+        {% endif %}
       {% endif %}
       <li class="navigation__item js-navigation__item">
         <a href="/#dll-aufbau">Was ist das dll?</a>

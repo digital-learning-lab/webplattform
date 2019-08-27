@@ -79,11 +79,19 @@ class ContentListInternalSerializer(ContentListSerializer):
 
     def get_status(self, obj):
         status = _('Draft')
-        if not obj.publisher_is_draft:
-            status = _('Approved')
+        if obj.publisher_linked:
+            if obj.review:
+                if obj.review.status == Review.DECLINED:
+                    return _('Approved - Resubmission declined.')
+                else:
+                    return _('Approved - Resubmission pending.')
+            return _('Approved')
 
-        if obj.publisher_is_draft and obj.reviews.all().count():
-            status = _('Submitted')
+        if obj.publisher_is_draft and obj.review and obj.review.status == Review.DECLINED:
+            return _('Declined')
+
+        if obj.publisher_is_draft and obj.reviews.count():
+            return _('Submitted')
 
         return status
 
@@ -156,6 +164,12 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             message=_('A content with this name already exists.')
         )
     ])
+    slug = CharField(required=False, validators=[
+        UniqueValidator(
+            queryset=Content.objects.all(),
+            message=_('A content with this name already exists.')
+        )
+    ])
     image = SerializerMethodField()
     author = AuthorSerializer(read_only=True, allow_null=True, required=False)
     contentlink_set = LinkSerializer(many=True, allow_null=True, required=False)
@@ -185,9 +199,12 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
 
     def get_help_texts(self, obj):
         result = {}
-        help_text = HelpText.objects.get(content_type=ContentType.objects.get_for_model(obj))
-        for field in help_text.help_text_fields.all():
-            result[field.name.split('.')[-1]] = field.text
+        try:
+            help_text = HelpText.objects.get(content_type=ContentType.objects.get_for_model(obj))
+            for field in help_text.help_text_fields.all():
+                result[field.name.split('.')[-1]] = field.text
+        except HelpText.DoesNotExist:
+            pass
         return result
 
     def get_preview_url(self, obj):

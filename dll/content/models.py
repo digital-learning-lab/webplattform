@@ -322,6 +322,9 @@ class Tool(Content):
     def get_edit_url(self):
         return reverse('edit-tool', kwargs={'slug': self.slug})
 
+    def get_review_url(self):
+        return reverse('review-tool', kwargs={'slug': self.slug})
+
     def copy_relations(self, src, dst):
         super(Tool, self).copy_relations(src, dst)
         dst.operating_systems.add(*src.operating_systems.all())
@@ -390,6 +393,9 @@ class Trend(Content):
 
     def get_edit_url(self):
         return reverse('edit-trend', kwargs={'slug': self.slug})
+
+    def get_review_url(self):
+        return reverse('review-trend', kwargs={'slug': self.slug})
 
     def copy_relations(self, src, dst):
         super(Trend, self).copy_relations(src, dst)

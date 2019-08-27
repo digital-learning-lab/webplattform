@@ -58,12 +58,14 @@ class MyReviewsView(TemplateView, BreadcrumbMixin):
     def get_context_data(self, **kwargs):
         ctx = super(MyReviewsView, self).get_context_data(**kwargs)
         user = self.request.user
-        base_qs = Content.objects.filter(Q(reviews__status=Review.NEW) | Q(reviews__status=Review.IN_PROGRESS))
+        base_qs = Content.objects.drafts().filter(Q(reviews__status=Review.NEW) | Q(reviews__status=Review.IN_PROGRESS))
         if is_bsb_reviewer(user):
             ctx['contents'] = base_qs.instance_of(TeachingModule)
-        if is_tuhh_reviewer(user):
+        elif is_tuhh_reviewer(user):
             ctx['contents'] = base_qs.not_instance_of(TeachingModule)
-        ctx['contents'] = self.request.user.qs_any_content()
+        elif user.is_superuser:
+            ctx['contents'] = base_qs
+        # ctx['contents'] = self.request.user.qs_any_content()
         return ctx
 
 
@@ -134,12 +136,39 @@ class CreateEditToolView(CreateEditContentView):
     serializer = ToolSerializer
 
 
+class ReviewToolView(CreateEditToolView):
+    template_name = 'dll/user/content/review_tool.html'
+    def get_breadcrumbs(self):
+        bcs = super(CreateEditToolView, self).get_breadcrumbs()
+        result = []
+        result.append(bcs[0])
+        result.extend([
+            {'title': 'Review Inhalte', 'url': reverse_lazy('user-content-review')},
+            {'title': 'Tool reviewen', 'url': reverse_lazy('user-content-review')},
+        ])
+        return result
+
+
 class CreateEditTrendView(CreateEditContentView):
     template_name = 'dll/user/content/add_trend.html'
     breadcrumb_title = 'Trend {}'
     breadcrumb_url = reverse_lazy('add-trend')
     model = Trend
     serializer = TrendSerializer
+
+
+class ReviewTrendView(CreateEditTrendView):
+    template_name = 'dll/user/content/review_trend.html'
+
+    def get_breadcrumbs(self):
+        bcs = super(CreateEditTrendView, self).get_breadcrumbs()
+        result = []
+        result.append(bcs[0])
+        result.extend([
+            {'title': 'Review Inhalte', 'url': reverse_lazy('user-content-review')},
+            {'title': 'Trend reviewen', 'url': reverse_lazy('user-content-review')},
+        ])
+        return result
 
 
 class SignUpView(FormView):

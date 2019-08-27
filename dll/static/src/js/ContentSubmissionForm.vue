@@ -1,6 +1,6 @@
 <template>
   <form class="mb-4">
-    <div class="alert alert-success" v-if="data.submitted">
+    <div class="alert alert-success" v-if="data.submitted && mode !== 'review'">
       Der Inhalt wurde eingereicht und wird in nun von einem Mitarbeiter geprüft.
     </div>
     <div class="alert alert-primary" v-if="saved">
@@ -18,9 +18,9 @@
       <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')">Löschen</button>
     </div>
     <div v-if="mode === 'review'">
-      <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading">Speichern</button>
-      <button class="button button--submit" type="button" :disabled="loading" @click="$emit('submit')">Freigeben</button>
-      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')">Ablehnen</button>
+      <button class="button button--primary" type="button" @click="$emit('update-review')" :disabled="loading">Speichern</button>
+      <button class="button button--submit" type="button" :disabled="loading" @click="$emit('approve-review')">Freigeben</button>
+      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('decline-review')">Ablehnen</button>
     </div>
     <slot v-if="mode === 'edit' || mode === 'create' || mode === 'review'"></slot>
     <div v-if="mode === 'delete'">
@@ -31,9 +31,9 @@
       <button type="button" class="button button--primary" @click="mode = 'edit'">Nein, abbrechen.</button>
     </div>
     <div v-if="mode === 'review'">
-      <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading">Speichern</button>
-      <button class="button button--submit" type="button" :disabled="loading" @click="$emit('submit')">Freigeben</button>
-      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')">Ablehnen</button>
+      <button class="button button--primary" type="button" @click="$emit('update-review')" :disabled="loading">Speichern</button>
+      <button class="button button--submit" type="button" :disabled="loading" @click="$emit('approve-review')">Freigeben</button>
+      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('decline-review')">Ablehnen</button>
     </div>
     <div v-if="mode === 'edit'">
       <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading" v-if="!data.submitted">Speichern</button>

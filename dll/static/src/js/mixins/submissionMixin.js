@@ -53,14 +53,66 @@ export const submissionMixin = {
     }
   },
   methods: {
-    submitContent () {
-      this.loading = true
+    updateReview () {
       const axios = this.getAxiosInstance()
-      axios.post('/api/inhalt-einreichen/' + this.data.slug)
+      this.loading = true
+      return axios.put('/api/review/' + this.data.slug + '/', {
+        json_data: this.reviewValue
+      })
         .then(res => {
-          this.data.submitted = true
+          this.loading = false
+          this.saved = true
+          setTimeout(() => {
+            this.saved = false
+          }, 5000)
+        })
+        .catch(err => {
           this.loading = false
         })
+    },
+    approveContent () {
+      this.updateReview()
+        .then(res => {
+          const axios = this.getAxiosInstance()
+          this.loading = true
+          axios.post('/api/review/' + this.data.slug + '/approve')
+            .then(res => {
+              this.loading = false
+              document.location = '/review-inhalte'
+            })
+            .catch(err => {
+              this.loading = false
+            })
+        })
+    },
+    declineContent () {
+      this.updateReview()
+        .then(res => {
+          const axios = this.getAxiosInstance()
+          this.loading = true
+          axios.post('/api/review/' + this.data.slug + '/decline')
+            .then(res => {
+              document.location = '/review-inhalte'
+              this.loading = false
+            })
+            .catch(err => {
+              this.loading = false
+            })
+        })
+    },
+    submitContent () {
+      this.updateContent().then(res => {
+        this.loading = true
+        const axios = this.getAxiosInstance()
+        axios.post('/api/inhalt-einreichen/' + this.data.slug)
+          .then(res => {
+            this.data.submitted = true
+            this.loading = false
+          })
+          .catch(err => {
+            this.loading = false
+          })
+      })
     },
     showDeleteWarning () {
       this.mode = 'delete'
@@ -135,7 +187,6 @@ export const submissionMixin = {
             'Content-Type': 'multipart/form-data'
           }
         }).then(res => {
-
         }).catch(err => {
           if (err.response.status === 400) {
             for (let i = 0; i < err.response.data.length; i++) {
@@ -145,13 +196,14 @@ export const submissionMixin = {
         })
       }
 
-      axiosInstance.put('/api/inhalt-bearbeiten/' + this.data.slug + '/', {
+      return axiosInstance.put('/api/inhalt-bearbeiten/' + this.data.slug + '/', {
         ...this.data,
         resourcetype: this.resourceType
       }).then(res => {
         this.loading = false
         this.saved = true
         this.mode = 'edit'
+        this.setContent(res.data)
         setTimeout(() => {
           this.saved = false
         }, 5000)
@@ -174,10 +226,16 @@ export const submissionMixin = {
     },
     goToPreview () {
       document.location = this.data.preview_url
+    },
+    setContent (content) {
+      this.data = content
+      this.data.mediaLinks = this.data.contentlink_set.filter(link => link.type === 'video' || link.type === 'audio')
+      this.data.literatureLinks = this.data.contentlink_set.filter(link => link.type === 'href' || link.type === 'literature')
+      this.data.author = this.data.author.username
     }
   },
   computed: {
-    readonly () {
+     readonly () {
       return this.data.submitted || this.mode === 'review'
     },
     review () {
@@ -188,9 +246,10 @@ export const submissionMixin = {
     if (window.dllData) {
       this.mode = window.dllData.mode || 'create'
       if (this.mode === 'edit' || this.mode === 'review') {
-        this.data = window.dllData.module
-        this.data.mediaLinks = this.data.contentlink_set.filter(link => link.type === 'video' || link.type === 'audio')
-        this.data.literatureLinks = this.data.contentlink_set.filter(link => link.type === 'href' || link.type === 'literature')
+        this.setContent(window.dllData.module)
+        if (window.dllData.module.review) {
+          this.reviewValue = window.dllData.module.review.json_data
+        }
       }
       this.data.author = window.dllData.authorName
     }

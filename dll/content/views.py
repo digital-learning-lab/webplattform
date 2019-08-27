@@ -227,11 +227,36 @@ class ReviewViewSet(mixins.RetrieveModelMixin,
                     viewsets.GenericViewSet):
     """Authors have only view permission, reviewers have view and edit permission"""
     serializer_class = ReviewSerializer
-    queryset = Review.objects.all()
+    queryset = Review.objects.filter(content__publisher_is_draft=True, is_active=True)
     permission_classes = [DjangoObjectPermissions]
+    lookup_field = 'content__slug'
+    lookup_url_kwarg = 'slug'
 
     def perform_update(self, serializer):
         serializer.save()
+
+
+class BaseActionReviewView(GenericAPIView):
+    queryset = Review.objects.filter(content__publisher_is_draft=True, is_active=True)
+    lookup_field = 'content__slug'
+    lookup_url_kwarg = 'slug'
+    serializer_class = ReviewSerializer
+
+
+class ApproveContentView(BaseActionReviewView):
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.accept(self.request.user)
+        return JsonResponse(self.get_serializer(instance=obj).data)
+
+
+class DeclineContentView(BaseActionReviewView):
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.decline(self.request.user)
+        return JsonResponse(self.get_serializer(instance=obj).data)
 
 
 class CompetenceFilterView(DetailView):
