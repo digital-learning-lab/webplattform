@@ -217,7 +217,7 @@ class SubmitContentView(GenericAPIView):
         obj = self.get_object()
         user = self.request.user
         if user.has_perm('content.change_content', obj):
-            obj.submit_for_review()
+            obj.submit_for_review(user)
             return HttpResponse(status=200)
         return HttpResponse(status=403)
 

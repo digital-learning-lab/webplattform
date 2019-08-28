@@ -106,6 +106,17 @@ class ContentListInternalSerializer(ContentListSerializer):
                   'co_authors', 'preview_url', 'edit_url', 'author', 'status']
 
 
+class ContentListInternalReviewSerializer(ContentListInternalSerializer):
+    review_url = SerializerMethodField(allow_null=True)
+
+    def get_review_url(self, obj):
+        return obj.get_review_url()
+
+    class Meta(ContentListInternalSerializer.Meta):
+        fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created',
+                  'co_authors', 'preview_url', 'edit_url', 'author', 'status', 'review_url']
+
+
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = DllUser

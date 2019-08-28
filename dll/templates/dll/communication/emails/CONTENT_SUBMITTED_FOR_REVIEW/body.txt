@@ -1,2 +1,10 @@
-CONTENT_SUBMITTED_FOR_REVIEW body text
-{{ link_to_content }}
+Sehr geehrte Damen und Herren,
+
+{{ author }} hat den folgenden Inhalt zur Überprüfung eingereicht:
+
+{{ content_type }} - {{ content_title }}
+
+Zur Überprüfung: {{ link_to_content }}
+
+Viele Grüße,
+Ihr digital.learning.lab Team

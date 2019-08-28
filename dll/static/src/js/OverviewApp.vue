@@ -56,8 +56,13 @@
                 <span class="far fa-eye"></span>
               </a>
             </li>
-            <li class="content-box__action">
+            <li class="content-box__action" v-if="mode === 'overview'">
               <a :href="content.edit_url">
+                <span class="far fa-edit"></span>
+              </a>
+            </li>
+            <li class="content-box__action" v-if="mode === 'review'">
+              <a :href="content.review_url">
                 <span class="far fa-edit"></span>
               </a>
             </li>

@@ -1,2 +1,4 @@
-Contact NEWSLETTER_UNREGISTER_CONFIRM body
-{{ message }}
+Sie wurden erfolgreich vom digital.learning.lab Newsletter abgemeldet.
+
+Viele Grüße,
+Ihr digital.learning.lab Team

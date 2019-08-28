@@ -1,2 +1,6 @@
-Contact NEWSLETTER_CONFIRM body
+
+Bitte bestätigen Sie Ihre Anmeldung an unserem Newsletter:
 {{ token }}
+
+Viele Grüße,
+Ihr digital.learning.lab Team

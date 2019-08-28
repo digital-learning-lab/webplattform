@@ -1,1 +1,8 @@
-REVIEW_ACCEPTED body body
+Sehr geehrte(r) {{ author }},
+
+ihr eingereichter Inhalt - {{ content_type }} - {{ content_title }} wurde freigegeben und veröffentlicht.
+
+Sie können diesen unter {{ link_to_content }} erreichen.
+
+Viele Grüße,
+Ihr digital.learning.lab Team

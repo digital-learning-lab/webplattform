@@ -1,7 +1,11 @@
 {% autoescape off %}
-Hi {{ username }},
+Sehr geehrte(r) {{ username }},
 
-Please click on the link below to confirm your registration:
+bitte nutzen Sie den folgenden Link um Ihre Registrierung zu bestätigen:
 
 {{ confirmation_url }}
+
+Viele Grüße,
+Ihr digital.learning.lab Team
+
 {% endautoescape %}

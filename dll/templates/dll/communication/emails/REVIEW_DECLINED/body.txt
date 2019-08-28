@@ -1,1 +1,7 @@
-REVIEW_DECLINED body body
+Sehr geehrte(r) {{ author }},
+
+ihr eingereichter Inhalt - {{ content_type }} - {{ content_title }} wurde überprüft. Bitte verbessern Sie die im Formular
+angegebenen Punkte: {{ link_to_content }}
+
+Viele Grüße,
+Ihr digital.learning.lab Team

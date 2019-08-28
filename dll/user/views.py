@@ -1,26 +1,22 @@
 import json
 
 from django.contrib.auth import login, get_user_model
-from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import Http404
-from django.shortcuts import render, redirect, get_object_or_404
-from django.template.loader import render_to_string
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
 from rest_framework.generics import ListAPIView
 
 from dll.communication.tasks import send_mail
 from dll.content.models import Content, TeachingModule, Tool, Trend, Review
 from dll.content.rules import is_bsb_reviewer, is_tuhh_reviewer
 from dll.content.serializers import TeachingModuleSerializer, ToolSerializer, TrendSerializer, \
-    ContentListInternalSerializer
+    ContentListInternalSerializer, ContentListInternalReviewSerializer
 from dll.content.views import BreadcrumbMixin
 from dll.user.tokens import account_activation_token
 from .forms import SignUpForm
@@ -262,6 +258,7 @@ def activate_user(request, uidb64, token, backend='django.contrib.auth.backends.
 
 
 class PendingReviewContentView(UserContentView):
+    serializer_class = ContentListInternalReviewSerializer
 
     def get_queryset(self):
         qs = Content.objects.drafts().filter(reviews__is_active=True)

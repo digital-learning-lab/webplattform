@@ -154,6 +154,7 @@ export const submissionMixin = {
         this.mode = 'edit'
         this.data = res.data
         this.data.author = window.dllData.authorName
+        window.history.pushState('Content created', '', document.location.pathname + this.data.slug)
       }).catch(err => {
         this.loading = false
         if (err.response.status === 400) {
@@ -227,7 +228,8 @@ export const submissionMixin = {
           }
           continue
         }
-        if (!this.data[this.requiredFields[i].field]) {
+        if (!this.data[this.requiredFields[i].field] ||
+          (Array.isArray(this.data[this.requiredFields[i].field]) && !this.data[this.requiredFields[i].field].length)) {
           this.errors.push('Bitte füllen Sie das Pflichtfeld \'' + this.requiredFields[i].title + '\' aus.')
         }
       }

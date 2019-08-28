@@ -173,28 +173,35 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
 
     def send_content_submitted_mail(self, by_user=None):
         from dll.communication.tasks import send_mail
-        relative_url = self.get_absolute_url()  # todo: set correct url to content review
+        instance = self.get_real_instance()
+        relative_url = instance.get_review_url()
         url = 'https://%s%s' % (Site.objects.get_current().domain, relative_url)
         context = {
-            'link_to_content': url
+            'link_to_content': url,
+            'author': self.author.username,
+            'content_type': instance.type_verbose,
+            'content_title': instance.name
         }
+        # TODO check if review mail is suited for these causes
         if isinstance(self, TeachingModule):
             group = get_bsb_reviewer_group()
-            bsb_reviewers = DllUser.objects.filter(groups__pk=group.pk)
+            # bsb_reviewers = DllUser.objects.filter(groups__pk=group.pk)
             send_mail.delay(
                 event_type_code='CONTENT_SUBMITTED_FOR_REVIEW',
                 ctx=context,
+                email=settings.BSB_REVIEW_MAIL,
                 sender_id=getattr(by_user, 'pk', None),
-                recipient_ids=list(bsb_reviewers.values_list('pk', flat=True))
+                # recipient_ids=list(bsb_reviewers.values_list('pk', flat=True))
             )
         elif isinstance(self, Trend) or isinstance(self, Tool):
             group = get_tuhh_reviewer_group()
-            tuhh_reviewers = DllUser.objects.filter(groups__pk=group.pk)
+            # tuhh_reviewers = DllUser.objects.filter(groups__pk=group.pk)
             send_mail.delay(
                 event_type_code='CONTENT_SUBMITTED_FOR_REVIEW',
                 ctx=context,
+                email=settings.TUHH_REVIEW_MAIL,
                 sender_id=getattr(by_user, 'pk', None),
-                recipient_ids=list(tuhh_reviewers.values_list('pk', flat=True))
+                # recipient_ids=list(tuhh_reviewers.values_list('pk', flat=True))
             )
 
     @cached_property
@@ -537,10 +544,14 @@ class Review(TimeStampedModel):
 
     def send_review_accepted_mail(self):
         from dll.communication.tasks import send_mail
-        relative_url = self.content.get_absolute_url()  # todo: set correct url to content review
+        instance = self.content.get_real_instance()
+        relative_url = instance.get_absolute_url()
         url = 'https://%s%s' % (Site.objects.get_current().domain, relative_url)
         context = {
-            'link_to_content': url
+            'link_to_content': url,
+            'content_title': self.content.name,
+            'author': instance.author.username,
+            'content_type': instance.type_verbose
         }
         cc_ids = (self.content.author.pk,) + tuple(self.content.co_authors.all().values_list('pk', flat=True))
         cc_ids = set(cc_ids) - {self.submitted_by.pk}
@@ -555,10 +566,14 @@ class Review(TimeStampedModel):
 
     def send_review_declined_mail(self):
         from dll.communication.tasks import send_mail
-        relative_url = self.content.get_absolute_url()  # todo: set correct url to content review
+        instance = self.content.get_real_instance()
+        relative_url = instance.get_edit_url()
         url = 'https://%s%s' % (Site.objects.get_current().domain, relative_url)
         context = {
-            'link_to_content': url
+            'link_to_content': url,
+            'content_title': self.content.name,
+            'author': instance.author.username,
+            'content_type': instance.type_verbose
         }
         cc_ids = (self.content.author.pk,) + tuple(self.content.co_authors.all().values_list('pk', flat=True))
         cc_ids = set(cc_ids) - {self.submitted_by.pk}

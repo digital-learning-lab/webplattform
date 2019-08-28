@@ -17,7 +17,7 @@ services:
     links:
        - db
     command: >
-      bash -c "ls -la /code/dll/media/inhalte && python manage.py migrate && python manage.py import_content -f /code/dll/media/inhalte && python manage.py collectstatic --noinput && python manage.py create_staging_users && uwsgi --http :80 --wsgi-file /code/dll/configuration/wsgi.py --static-map /static=/code/static/ --static-map /media=/code/dll/media"
+      bash -c "python manage.py migrate && python manage.py import_content -f /code/dll/media/inhalte && python manage.py collectstatic --noinput && python manage.py create_staging_users && python manage.py create_communication_event_types && python manage.py loaddata /code/dll/fixtures/sites.json && uwsgi --http :80 --wsgi-file /code/dll/configuration/wsgi.py --static-map /static=/code/static/ --static-map /media=/code/dll/media"
     security_opt:
       - no-new-privileges
     environment:

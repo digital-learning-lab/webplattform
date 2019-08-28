@@ -171,9 +171,10 @@ class CoAuthorshipInvitation(TimeStampedModel):
             'token': co_author_invitation_token.make_token(self)
         })
         token = 'https://%s%s' % (Site.objects.get_current().domain, token)
+        instance = self.content.get_real_instance()
         context = {
-            'content_title': self.content.name,
-            'content_type': self.content.type_verbose,
+            'content_title': instance.name,
+            'content_type': instance.type_verbose,
             'author': self.by.username,
             'invitee': self.to.username,
             'message': self.message,
@@ -188,10 +189,13 @@ class CoAuthorshipInvitation(TimeStampedModel):
 
     def send_invitation_accepted_mail(self):
         from dll.communication.tasks import send_mail
+        instance = self.content.get_real_instance()
         context = {
-            'content_title': self.content.name,
+            'content_title': instance.name,
+            'content_type': instance.type_verbose,
             'message': self.message,
-            'invited_user_name': self.to.full_name
+            'invited_user_name': self.to.full_name,
+            'author': self.by.username,
         }
         send_mail.delay(
             event_type_code='COAUTHOR_INVITATION_ACCEPTED',
@@ -202,10 +206,13 @@ class CoAuthorshipInvitation(TimeStampedModel):
 
     def send_invitation_declined_mail(self):
         from dll.communication.tasks import send_mail
+        instance = self.content.get_real_instance()
         context = {
-            'content_title': self.content.name,
+            'content_title': instance.name,
+            'content_type': instance.type_verbose,
             'message': self.message,
-            'invited_user_name': self.to.full_name
+            'invited_user_name': self.to.full_name,
+            'author': self.by.username,
         }
         send_mail.delay(
             event_type_code='COAUTHOR_INVITATION_DECLINED',

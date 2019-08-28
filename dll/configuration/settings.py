@@ -239,3 +239,6 @@ HAYSTACK_CONNECTIONS = {
         'ADMIN_URL': 'http://{}:8983/solr/admin/cores'.format(env.str('SOLR_HOSTNAME'))
     },
 }
+
+BSB_REVIEW_MAIL = os.getenv('EMAIL_RECEIVER_DLL', 'dll@blueshoe.de')
+TUHH_REVIEW_MAIL = os.getenv('EMAIL_RECEIVER_BSB', 'dll@blueshoe.de')
