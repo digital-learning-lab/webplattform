@@ -59,9 +59,11 @@ INSTALLED_APPS = [
     'dll.content',
     'dll.user',
     'dll.general',
+    'dll.communication',
     'rest_framework',
     'django_filters',
-    'rules.apps.AutodiscoverRulesConfig'
+    'rules.apps.AutodiscoverRulesConfig',
+    'haystack'
 ]
 
 MIDDLEWARE = [
@@ -200,13 +202,15 @@ LOGGING = {
     'loggers': {
         'dll': {
             'handlers': ['console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
         },
     },
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'default_from_email@tuhh.de'  # todo: default from email address
 
+LOGIN_URL = 'user:login'
 LOGIN_REDIRECT_URL = 'user-content-overview'
 LOGOUT_REDIRECT_URL = 'home'
 
@@ -217,4 +221,21 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     'SEARCH_PARAM': 'q',
     'DEFAULT_PERMISSION_CLASSES': []
+}
+
+CONTACT_EMAIL_BSB = "stabsstelle-digitalisierung@bsb.hamburg.de"
+CONTACT_EMAIL_DLL = "digital.learning.lab@tuhh.de"
+VALIDATE_RECAPTCHA = False
+
+CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://{hostname}:6379/0'.format(
+    hostname=env.str('REDIS_HOSTNAME'),
+))
+CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_TASK_ALWAYS_EAGER')
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://{}:8983/solr/mycore'.format(env.str('SOLR_HOSTNAME')),
+        'ADMIN_URL': 'http://{}:8983/solr/admin/cores'.format(env.str('SOLR_HOSTNAME'))
+    },
 }

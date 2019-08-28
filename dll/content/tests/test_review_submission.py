@@ -8,6 +8,8 @@ from dll.user.models import DllUser
 
 
 # TODO write tests for Tool and Trend too
+from dll.user.utils import get_default_tuhh_user, get_bsb_reviewer_group, get_tuhh_reviewer_group
+
 
 class BaseTestCase(TestCase):
     def setUp(self):
@@ -52,8 +54,8 @@ class BaseTestCase(TestCase):
             'email': 'test+daniel@blueshoe.de',
         }
 
-        bsb_reviewer_group = Group.objects.get(name='BSB-Reviewer')
-        tuhh_reviewer_group = Group.objects.get(name='TUHH-Reviewer')
+        bsb_reviewer_group = get_bsb_reviewer_group()
+        tuhh_reviewer_group = get_tuhh_reviewer_group()
 
         self.author = DllUser.objects.create(**author)
         self.co_author = DllUser.objects.create(**co_author)
@@ -85,8 +87,7 @@ class BaseTestCase(TestCase):
         ContentFile.objects.create(file=filer_file, title='BarFile', content=self.content)
 
 
-class ContentCreationTests(BaseTestCase):
-    # todo: move this to test_content_creation
+class ContentEditTests(BaseTestCase):
     def setUp(self):
         super().setUp()
 
@@ -124,7 +125,7 @@ class ReviewDeclineTests(BaseTestCase):
     def setUp(self):
         super().setUp()
         self.content.submit_for_review()
-        self.content.review.decline()
+        self.content.review.decline(by_user=self.bsb_reviewer)
 
     def test_review_status(self):
         self.assertEqual(self.content.review.status, Review.DECLINED)
@@ -146,7 +147,7 @@ class ReviewAcceptTests(BaseTestCase):
     def setUp(self):
         super().setUp()
         self.content.submit_for_review()
-        self.content.review.accept()
+        self.content.review.accept(by_user=self.bsb_reviewer)
 
         self.draft = self.content.get_draft()
         self.public = self.content.get_published()
@@ -191,7 +192,7 @@ class ContentEditAfterPublishingTests(BaseTestCase):
         super().setUp()
         # accept first version
         self.content.submit_for_review()
-        self.content.review.accept()
+        self.content.review.accept(by_user=self.bsb_reviewer)
 
         self.draft = self.content.get_draft()
         self.public1 = self.content.get_published()
@@ -202,7 +203,7 @@ class ContentEditAfterPublishingTests(BaseTestCase):
 
         # submit modified draft for review
         self.draft.submit_for_review()
-        self.draft.review.accept()
+        self.draft.review.accept(by_user=self.bsb_reviewer)
         self.public2 = self.content.get_published()
 
     def test_draft_edit_does_not_affect_public(self):

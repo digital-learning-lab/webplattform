@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+{% autoescape off %}
+Hi {{ username }},
+
+Please click on the link below to confirm your registration:
+
+{{ confirmation_url }}
+{% endautoescape %}
+
+</body>
+</html>

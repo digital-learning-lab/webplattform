@@ -1,0 +1,10 @@
+{% extends 'dll/default_page.html' %}
+
+
+{% block content %}
+    <form action="." method="post">
+    {% csrf_token %}
+        <input type="submit" name="user_response" value="Yes">
+        <input type="submit" name="user_response" value="No">
+    </form>
+{% endblock %}

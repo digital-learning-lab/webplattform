@@ -1,9 +1,11 @@
 import logging
 import os
 
+from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import IntegerRangeField, JSONField, ArrayField
+from django.contrib.sites.models import Site
 from django.core.files import File
 from django.db import models
 from django.db.models import Q
@@ -46,7 +48,7 @@ LICENCE_CHOICES = (
 
 class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
     name = models.CharField(_("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200)
-    slug = DllSlugField(populate_from='name')
+    slug = DllSlugField(populate_from='name', overwrite=True)  # todo check if xxx-2 slugs are created if name does not change
     author = models.ForeignKey(DllUser, on_delete=models.SET(get_default_tuhh_user), verbose_name=_("Autor"))
     co_authors = models.ManyToManyField(DllUser, related_name='collaborative_content',
                                         verbose_name=_("Kollaborateure"), blank=True)
@@ -56,13 +58,14 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
                                 blank=True)
     related_content = models.ManyToManyField('self', verbose_name=_("Verwandte Tools/Trends/Unterrichtsbausteine"),
                                              blank=True)
-    view_count = models.PositiveIntegerField(default=0)
-    base_folder = models.CharField(max_length=100, null=True)
+    view_count = models.PositiveIntegerField(default=0, editable=False)
+    base_folder = models.CharField(max_length=100, null=True, editable=False)
     # additional_info: 'hinweise' for ubausteine, 'anmerkung'  for tools, 'hintergrund' for Trends
     additional_info = models.TextField(_("Hinweise/Anmerkungen/Hintergrund"), max_length=500, blank=True, null=True)
     competences = models.ManyToManyField('Competence', verbose_name=_("Kompetenzen"), blank=True)
     sub_competences = models.ManyToManyField('SubCompetence', verbose_name=_("Subkompetenzen"), blank=True)
     json_data = JSONField(default=dict)
+    site = models.ForeignKey(Site, on_delete=models.CASCADE, default=settings.SITE_ID)
 
     tags = TaggableManager()
     objects = PolymorphicManager.from_queryset(ContentQuerySet)()
@@ -87,14 +90,30 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
             Review.objects.filter(pk__in=review_pks[1:]).update(is_active=False)
             return active_review
 
-    def submit_for_review(self):
+    @classmethod
+    def review_fields(cls):
+        fields = {'name', 'image', 'teaser', 'learning_goals', 'related_content', 'additional_info', 'competences',
+                  'sub_competences', 'tags'}
+        return fields
+
+    @property
+    def help_text(self):
+        content_type = ContentType.objects.get_for_model(self)
+        if not hasattr(content_type, 'help_text'):
+            HelpText.objects.create(content_type=content_type)
+        return content_type.help_text.data()
+
+    def submit_for_review(self, by_user: DllUser=None):
+        # todo: do not allow resubmission if review is already submitted
         if self.review:
             # content was declined and now resubmitted
             review = self.review
             review.status = Review.IN_PROGRESS
+            review.submitted_by = by_user
             review.save()
         else:
-            Review.objects.create(content=self, is_active=True)
+            Review.objects.create(content=self, is_active=True, submitted_by=by_user)
+        self.send_content_submitted_mail(by_user=by_user)
 
     def copy_relations(self, src, dst):
         # image
@@ -152,6 +171,32 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
         self.image = filer_image
         self.save()
 
+    def send_content_submitted_mail(self, by_user=None):
+        from dll.communication.tasks import send_mail
+        relative_url = self.get_absolute_url()  # todo: set correct url to content review
+        url = 'https://%s%s' % (Site.objects.get_current().domain, relative_url)
+        context = {
+            'link_to_content': url
+        }
+        if isinstance(self, TeachingModule):
+            group = get_bsb_reviewer_group()
+            bsb_reviewers = DllUser.objects.filter(groups__pk=group.pk)
+            send_mail.delay(
+                event_type_code='CONTENT_SUBMITTED_FOR_REVIEW',
+                ctx=context,
+                sender_id=getattr(by_user, 'pk', None),
+                recipient_ids=list(bsb_reviewers.values_list('pk', flat=True))
+            )
+        elif isinstance(self, Trend) or isinstance(self, Tool):
+            group = get_tuhh_reviewer_group()
+            tuhh_reviewers = DllUser.objects.filter(groups__pk=group.pk)
+            send_mail.delay(
+                event_type_code='CONTENT_SUBMITTED_FOR_REVIEW',
+                ctx=context,
+                sender_id=getattr(by_user, 'pk', None),
+                recipient_ids=list(tuhh_reviewers.values_list('pk', flat=True))
+            )
+
     @cached_property
     def content_files(self):
         return self.contentfile_set.all()
@@ -182,6 +227,8 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
 
     class Meta(RulesModelBaseMixin, PublisherModel.Meta):
         ordering = ['slug']
+        verbose_name = _("Inhalt")
+        verbose_name_plural = _("Inhalte")
 
 
 class TeachingModule(Content):
@@ -203,6 +250,10 @@ class TeachingModule(Content):
     school_types = models.ManyToManyField('SchoolType', verbose_name=_("Schulform"), blank=True)
     licence = models.IntegerField(_("Lizenz"), choices=LICENCE_CHOICES, blank=True, null=True)
 
+    class Meta(Content.Meta):
+        verbose_name = _("Unterrichtsbaustein")
+        verbose_name_plural = _("Unterrichtsbausteine")
+
     @property
     def type(self):
         return 'teaching-module'
@@ -210,6 +261,14 @@ class TeachingModule(Content):
     @property
     def type_verbose(self):
         return 'Unterrichtsbaustein'
+
+    @classmethod
+    def review_fields(cls):
+        fields = super().review_fields()
+        fields += {'description', 'subject_of_tuition', 'educational_plan_reference', 'school_class', 'estimated_time',
+                   'equipment', 'state', 'differentiating_attribute', 'expertise', 'subjects', 'subjects',
+                   'school_types', 'licence'}
+        return fields
 
     def copy_relations(self, src, dst):
         super(TeachingModule, self).copy_relations(src, dst)
@@ -259,6 +318,10 @@ class Tool(Content):
     description = models.TextField(_("Beschreibung"), null=True, blank=True)
     usage = models.TextField(_("Nutzung"), null=True, blank=True)
 
+    class Meta(Content.Meta):
+        verbose_name = _("Tool")
+        verbose_name_plural = _("Tools")
+
     @property
     def type_verbose(self):
         return 'Tool'
@@ -266,6 +329,13 @@ class Tool(Content):
     @property
     def type(self):
         return 'tool'
+
+    @classmethod
+    def review_fields(cls):
+        fields = super().review_fields()
+        fields += {'operating_systems', 'applications', 'status', 'requires_registration', 'usk', 'pro', 'contra',
+                   'privacy', 'description', 'usage'}
+        return fields
 
     def get_absolute_url(self):
         return reverse('tool-detail', kwargs={'slug': self.slug})
@@ -314,6 +384,10 @@ class Trend(Content):
     central_contents = models.TextField(_("Zentrale Inhalte"), blank=True, null=True)
     citation_info = models.CharField(_("Zitierhinweis"), max_length=500, blank=True, null=True)
 
+    class Meta(Content.Meta):
+        verbose_name = _("Trend")
+        verbose_name_plural = _("Trends")
+
     @property
     def type(self):
         return 'trend'
@@ -321,6 +395,13 @@ class Trend(Content):
     @property
     def type_verbose(self):
         return 'Trend'
+
+    @classmethod
+    def review_fields(cls):
+        fields = super().review_fields()
+        fields += {'language', 'licence', 'category', 'target_group', 'publisher', 'publisher_date', 'central_contents',
+                   'citation_info'}
+        return fields
 
     def get_absolute_url(self):
         return reverse('trend-detail', kwargs={'slug': self.slug})
@@ -330,6 +411,53 @@ class Trend(Content):
 
     def copy_relations(self, src, dst):
         super(Trend, self).copy_relations(src, dst)
+
+
+class HelpText(TimeStampedModel):
+    content_type = models.OneToOneField(ContentType, on_delete=models.CASCADE, related_name='help_text')
+
+    def data(self):
+        fields = self.get_fields()
+        data = {}
+        for field in fields:
+            try:
+                help_text = self.help_text_fields.get(name=str(field.name)).text
+            except HelpTextField.DoesNotExist:
+                help_text = getattr(field, 'help_text', None)
+            data[str(field.name)] = help_text
+        return data
+
+    def get_help_text_fields_for_content_type(self):
+        """
+        returns the available choices for the inline admin
+        :return: (('teaser', 'Teaser'), )
+        """
+        fields = self.get_fields()
+        choices = ((str(field), str(getattr(field, 'verbose_name', field.name))) for field in fields)
+        return choices
+
+    def get_fields(self):
+        model = self.content_type.model_class()
+        fields = model._meta.get_fields()
+        return fields
+
+    def save(self, **kwargs):
+        return super(HelpText, self).save(**kwargs)
+
+    def __str__(self):
+        return _("Hilfetext für ") + self.content_type.model_class()._meta.verbose_name_plural.title()
+
+
+class HelpTextField(TimeStampedModel):
+    name = models.CharField(max_length=100)
+    help_text = models.ForeignKey(HelpText, on_delete=models.CASCADE, related_name='help_text_fields')
+    text = models.TextField()
+
+    class Meta:
+        unique_together = ['name', 'help_text']
+
+    def __str__(self):
+        return _("Hilfetext für") + self.name
 
 
 class Review(TimeStampedModel):
@@ -345,25 +473,85 @@ class Review(TimeStampedModel):
     is_active = models.BooleanField(default=False)
     status = models.IntegerField(choices=STATUS_CHOICES, default=NEW)
     count = models.PositiveSmallIntegerField(default=0)
-    # todo: accepted_by = models.OneToOneField(DllUser, on_delete=models.SET(get_default_tuhh_user))
-    # todo: declined_by = models.OneToOneField(DllUser, on_delete=models.SET(get_default_tuhh_user))
+    submitted_by = models.ForeignKey(
+        DllUser, on_delete=models.SET(get_default_tuhh_user),
+        related_name='submitted_reviews',
+        null=True
+    )
+    accepted_by = models.ForeignKey(
+        DllUser, on_delete=models.SET(get_default_tuhh_user),
+        related_name='accepted_reviews',
+        null=True
+    )
+    declined_by = models.ForeignKey(
+        DllUser,
+        on_delete=models.SET(get_default_tuhh_user),
+        related_name='declined_reviews',
+        null=True
+    )
+
+    def get_review_fields_for_content(self):
+        return self.content.review_fields
 
     def save(self, **kwargs):
         if not self.pk:
             self.count = self.content.reviews.count() + 1
         return super().save(**kwargs)
 
-    def accept(self):
-        # todo: user permission check
-        self.status = self.ACCEPTED
-        self.is_active = False
-        self.save()
-        self.content.publish()
+    def accept(self, by_user: DllUser):
+        """
+        Accept the content and publish it.
+        """
+        if by_user.has_perm('content.change_review', self):
+            self.status = self.ACCEPTED
+            self.is_active = False
+            self.accepted_by = by_user
+            self.save()
+            self.content.publish()
+            self.send_review_accepted_mail()
 
-    def decline(self):
-        # todo: user permission check
-        self.status = self.DECLINED
-        self.save()
+    def decline(self, by_user: DllUser):
+        if by_user.has_perm('content.change_review', self):
+            self.declined_by = by_user
+            self.status = self.DECLINED
+            self.save()
+            self.send_review_declined_mail()
+
+    def send_review_accepted_mail(self):
+        from dll.communication.tasks import send_mail
+        relative_url = self.content.get_absolute_url()  # todo: set correct url to content review
+        url = 'https://%s%s' % (Site.objects.get_current().domain, relative_url)
+        context = {
+            'link_to_content': url
+        }
+        cc_ids = (self.content.author.pk,) + tuple(self.content.co_authors.all().values_list('pk', flat=True))
+        cc_ids = set(cc_ids) - {self.submitted_by.pk}
+
+        send_mail.delay(
+            event_type_code='REVIEW_ACCEPTED',
+            ctx=context,
+            sender_id=getattr(self.accepted_by, 'pk', None),
+            recipient_ids=[self.submitted_by.pk],
+            cc=list(cc_ids)
+        )
+
+    def send_review_declined_mail(self):
+        from dll.communication.tasks import send_mail
+        relative_url = self.content.get_absolute_url()  # todo: set correct url to content review
+        url = 'https://%s%s' % (Site.objects.get_current().domain, relative_url)
+        context = {
+            'link_to_content': url
+        }
+        cc_ids = (self.content.author.pk,) + tuple(self.content.co_authors.all().values_list('pk', flat=True))
+        cc_ids = set(cc_ids) - {self.submitted_by.pk}
+
+        send_mail.delay(
+            event_type_code='REVIEW_DECLINED',
+            ctx=context,
+            sender_id=getattr(self.declined_by, 'pk', None),
+            recipient_ids=[self.submitted_by.pk],
+            cc=list(cc_ids)
+        )
 
 
 class OperatingSystem(models.Model):

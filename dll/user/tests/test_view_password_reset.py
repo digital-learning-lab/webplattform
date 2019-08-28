@@ -20,7 +20,7 @@ class PasswordResetTests(TestCase):
         self.assertEquals(self.response.status_code, 200)
 
     def test_view_function(self):
-        view = resolve('/user/reset/')
+        view = resolve('/reset/')
         self.assertEquals(view.func.view_class, auth_views.PasswordResetView)
 
     def test_csrf(self):
@@ -82,7 +82,7 @@ class PasswordResetDoneTests(TestCase):
         self.assertEquals(self.response.status_code, 200)
 
     def test_view_function(self):
-        view = resolve('/user/reset/done/')
+        view = resolve('/reset/done/')
         self.assertEquals(view.func.view_class, auth_views.PasswordResetDoneView)
 
 
@@ -105,7 +105,7 @@ class PasswordResetConfirmTests(TestCase):
         self.assertEquals(self.response.status_code, 200)
 
     def test_view_function(self):
-        view = resolve('/user/reset/{uidb64}/{token}/'.format(uidb64=self.uid, token=self.token))
+        view = resolve('/reset/{uidb64}/{token}/'.format(uidb64=self.uid, token=self.token))
         self.assertEquals(view.func.view_class, auth_views.PasswordResetConfirmView)
 
     def test_csrf(self):
@@ -156,5 +156,5 @@ class PasswordResetCompleteTests(TestCase):
         self.assertEquals(self.response.status_code, 200)
 
     def test_view_function(self):
-        view = resolve('/user/reset/complete/')
+        view = resolve('/reset/complete/')
         self.assertEquals(view.func.view_class, auth_views.PasswordResetCompleteView)

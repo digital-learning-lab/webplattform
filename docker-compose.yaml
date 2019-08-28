@@ -15,11 +15,15 @@ services:
         context: .
         dockerfile: Dockerfile.dev
     command: python manage.py runserver 0.0.0.0:8000
+    image: dll_web
     environment:
+      - REDIS_HOSTNAME=redis
       - DATABASE_USER=postgres
       - DATABASE_NAME=postgres
       - DATABASE_HOST=db
       - DJANGO_DEBUG=True
+      - CELERY_TASK_ALWAYS_EAGER=True
+      - SOLR_HOSTNAME=solr
     volumes:
       - .:/code
     user: "1000:1000"
@@ -27,3 +31,33 @@ services:
       - "8000:8000"
     depends_on:
       - db
+  redis:
+    image: "redis:alpine"
+    hostname: redis
+  celery:
+    image: dll_web
+    command: [celery, worker, --app=dll.configuration.celery.app, --concurrency=1, --loglevel=DEBUG]
+    environment:
+    - REDIS_HOSTNAME=redis
+    - DATABASE_USER=postgres
+    - DATABASE_NAME=postgres
+    - DATABASE_HOST=db
+    - DJANGO_DEBUG=True
+    - CELERY_TASK_ALWAYS_EAGER=True
+    - SOLR_HOSTNAME=solr
+    user: "1000:1000"
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+  solr:
+    image: solr
+    ports:
+      - "8983:8983"
+    volumes:
+      - ./solr:/opt/solr/server/solr/core
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - mycore

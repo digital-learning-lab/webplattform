@@ -1,5 +1,10 @@
-from django.utils.translation import ugettext_lazy as _
+import logging
 
+from django.conf import settings
+from django.urls import reverse
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
+from django.utils.translation import ugettext_lazy as _
 from easy_thumbnails.files import get_thumbnailer
 from psycopg2._range import NumericRange
 from rest_framework import serializers
@@ -9,10 +14,15 @@ from rest_framework.relations import RelatedField
 from rest_framework.validators import UniqueValidator
 from rest_polymorphic.serializers import PolymorphicSerializer
 
+from dll.communication.models import CoAuthorshipInvitation
+from dll.communication.tokens import co_author_invitation_token
 from dll.content.fields import RangeField
 from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication
 from dll.user.models import DllUser
 from .models import Content, Tool, Trend, TeachingModule, ContentLink, Review
+
+
+logger = logging.getLogger('dll.communication.serializers')
 
 
 class ContentListSerializer(serializers.ModelSerializer):
@@ -135,6 +145,12 @@ class DllM2MField(RelatedField):
         return data['pk']
 
 
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['status', 'json_data']
+
+
 class BaseContentSubclassSerializer(serializers.ModelSerializer):
     name = CharField(required=True, validators=[
         UniqueValidator(
@@ -152,6 +168,8 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     tools = SerializerMethodField(allow_null=True)
     trends = SerializerMethodField(allow_null=True)
     teaching_modules = SerializerMethodField(allow_null=True)
+    contentlink_set = LinkSerializer(many=True, allow_null=True, required=False)
+    review = ReviewSerializer(read_only=True)
 
     def validate_related_content(self, data):
         res = []
@@ -190,22 +208,63 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         links_data = validated_data.pop('contentlink_set', [])
+        co_authors = validated_data.pop('co_authors', [])
         content = super(BaseContentSubclassSerializer, self).create(validated_data)
-        for link in links_data:
-            ContentLink.objects.create(content=content, **dict(link))
+        self._update_content_links(content, links_data)
+        self._update_co_authors(content, co_authors)
         return content
 
+    def _update_content_links(self, content, data):
+        """
+        delete all previous links first, because we can't distinguish whether it is a new link, or an old one with
+        updated href AND name AND ...
+        """
+        content.contentlink_set.all().delete()
+        for link in data:
+            ContentLink.objects.create(content=content, **dict(link))
+
+    def _update_co_authors(self, content, co_authors):
+        current_co_authors = set(content.co_authors.all())
+        updated_list = set(co_authors)
+        new_co_authors = updated_list - current_co_authors
+        removed_co_authors = current_co_authors - updated_list
+        content.co_authors.remove(*removed_co_authors)
+        for user in new_co_authors:
+            invitation = CoAuthorshipInvitation.objects.create(
+                by=self.context['request'].user,
+                to=user,
+                content=content,
+                site_id=settings.SITE_ID
+            )
+            invitation.send_invitation_mail()
+
     def update(self, instance, validated_data):
+        """
+        `update_methods` provides a mapping of keys present in the serialized data that need further
+        processing, and
+        maps it to the corresponding processing method
+        """
         instance.name = validated_data['name']
         instance.teaser = validated_data['teaser']
         instance.additional_info = validated_data['additional_info']
 
-        links_data = validated_data.pop('contentlink_set', [])
-        if links_data:
-            instance.contentlink_set.all().delete()
-            for link in links_data:
-                if not instance.contentlink_set.filter(url=link['url'], name=link['name'], type=link['type']).exists():
-                    ContentLink.objects.create(content=instance, **dict(link))
+        update_methods = {
+            'contentlink_set': '_update_content_links',
+            'co_authors': '_update_co_authors'
+        }
+        for update_key, update_method in update_methods.items():
+            try:
+                data = validated_data.pop(update_key)
+                method = getattr(self, update_method)
+            except AttributeError:
+                logger.warning("No update method for {}".format(update_key))
+                pass
+            except KeyError:
+                # this key was not present in the serialized data, so it doesn't have to be updated
+                pass
+            else:
+                method(instance, data)
+        instance = super().update(instance, validated_data)
 
 
         for field in self.get_m2m_fields():
@@ -307,7 +366,7 @@ class TeachingModuleSerializer(BaseContentSubclassSerializer):
             'subject_of_tuition',
         ])
         return fields
-    
+
     class Meta:
         model = TeachingModule
         fields = '__all__'
@@ -343,10 +402,7 @@ class ContentPolymorphicSerializer(PolymorphicSerializer):
     }
 
 
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = ['status', 'json_data']
+# todo: file serializer
 
 
 class FileSerializer(serializers.Serializer):

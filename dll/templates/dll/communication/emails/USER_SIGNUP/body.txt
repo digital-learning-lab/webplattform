@@ -1,0 +1,7 @@
+{% autoescape off %}
+Hi {{ username }},
+
+Please click on the link below to confirm your registration:
+
+{{ confirmation_url }}
+{% endautoescape %}

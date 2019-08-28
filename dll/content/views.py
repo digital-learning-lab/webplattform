@@ -8,7 +8,8 @@ from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from filer.models import Image, Folder
 from psycopg2._range import NumericRange
-from rest_framework import viewsets, filters, mixins, status
+from rest_framework import viewsets, filters, mixins, status,
+from rest_framework.permissions import DjangoObjectPermissions
 from rest_framework.generics import ListAPIView
 from rest_framework.parsers import FileUploadParser
 from rest_framework.permissions import DjangoObjectPermissions
@@ -85,24 +86,6 @@ class DevelopmentView(TemplateView, BreadcrumbMixin):
     template_name = 'dll/development.html'
     breadcrumb_title = 'Entwicklung'
     breadcrumb_url = reverse_lazy('development')
-
-
-class NewsletterRegisterView(TemplateView, BreadcrumbMixin):
-    template_name = 'dll/newsletter/register.html'
-    breadcrumb_title = 'Newsletteranmeldung'
-    breadcrumb_url = reverse_lazy('newsletter')
-
-
-class NewsletterUnregisterView(TemplateView, BreadcrumbMixin):
-    template_name = 'dll/newsletter/unregister.html'
-    breadcrumb_title = 'Newsletterabmeldung'
-    breadcrumb_url = reverse_lazy('newsletter-unregister')
-
-
-class ContactView(TemplateView, BreadcrumbMixin):
-    template_name = 'dll/contact.html'
-    breadcrumb_title = 'Kontakt'
-    breadcrumb_url = reverse_lazy('contact')
 
 
 class ContentDetailView(DetailView):

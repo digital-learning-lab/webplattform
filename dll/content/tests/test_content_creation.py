@@ -1,7 +1,9 @@
+import random
+
 from django.test import TestCase
 from django.urls import reverse
 
-from dll.content.models import Tool, TeachingModule, Trend, ToolLink, Competence, SubCompetence
+from dll.content.models import Tool, TeachingModule, Trend, ToolLink, Competence, SubCompetence, Content
 from dll.user.models import DllUser
 
 
@@ -27,6 +29,7 @@ class BaseTestCase(TestCase):
         self.author = DllUser.objects.create(**author)
         self.author.set_password('password')
         self.author.save()
+        self.published_content = []
 
         for content in content_list:
             c = content['model'].objects.create(name=content['name'], teaser=content['teaser'], author=self.author)
@@ -35,10 +38,13 @@ class BaseTestCase(TestCase):
                 c.url = url
                 c.save()
             c.publish()
+            self.published_content.append(c.get_published().pk)
 
         # Create competence
         Competence.objects.create(cid=1)
         SubCompetence.objects.create(cid=11)
+
+        self.create_view = reverse('draft-content-list')
 
 
 class ContentListTests(BaseTestCase):
@@ -61,15 +67,12 @@ class ContentListTests(BaseTestCase):
 
 class TrendCreationTests(BaseTestCase):
 
-    def test_content_create(self):
-        self.client.login(username='test+alice@blueshoe.de', password='password')
-
-        create_view = reverse('draft-content-list')
+    def test_anonymous_user_cannot_create_content(self):
         post_data = {
             "name": "New Trend",
             "teaser": "Nunc interdum lacus sit amet orci.",
             "learning_goals": ["a", "b", "c"],
-            "related_content": [2, 4],
+            "related_content": random.choices(self.published_content, k=2),
             "competences": [1],
             "sub_competences": [1],
             "resourcetype": "Trend",
@@ -78,10 +81,126 @@ class TrendCreationTests(BaseTestCase):
                 {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
             ]
         }
-        response = self.client.post(create_view, data=post_data, content_type='application/json')
+        response = self.client.post(self.create_view, data=post_data, content_type='application/json')
+        self.assertEqual(response.status_code, 403)
+
+    def test_content_create(self):
+        self.client.login(username='test+alice@blueshoe.de', password='password')
+
+        post_data = {
+            "name": "New Trend",
+            "teaser": "Nunc interdum lacus sit amet orci.",
+            "learning_goals": ["a", "b", "c"],
+            "related_content": random.choices(self.published_content, k=2),
+            "competences": [1],
+            "sub_competences": [1],
+            "resourcetype": "Trend",
+            "contentlink_set": [
+                {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
+                {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
+            ]
+        }
+        response = self.client.post(self.create_view, data=post_data, content_type='application/json')
         data = response.json()
         self.assertEqual(response.status_code, 201)
         self.assertTrue(data['author']['username'] == 'alice')
+
+
+class ContentUpdateTests(BaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.client.login(username='test+alice@blueshoe.de', password='password')
+
+        post_data = {
+            "name": "New Trend",
+            "teaser": "Nunc interdum lacus sit amet orci.",
+            "learning_goals": ["a", "b", "c"],
+            "related_content": random.choices(self.published_content, k=2),
+            "competences": [1],
+            "sub_competences": [1],
+            "resourcetype": "Trend",
+            "contentlink_set": [
+                {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
+                {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
+            ]
+        }
+        self.client.post(self.create_view, data=post_data, content_type='application/json')
+        self.content = Content.objects.get(name="New Trend")
+
+    def test_content_update(self):
+        self.client.login(username='test+alice@blueshoe.de', password='password')
+
+        update_url = reverse('draft-content-detail', kwargs={'pk': self.content.pk})
+        post_data = {
+            # "name": "New Trend",
+            "teaser": "Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus.",
+            "resourcetype": "Trend"
+        }
+        response = self.client.patch(update_url, data=post_data, content_type='application/json')
+        data = response.json()
+        self.assertEqual(data['teaser'], post_data['teaser'])
+        pass
+
+    def test_anonymous_user_cannot_update_content(self):
+        self.client.logout()
+        update_url = reverse('draft-content-detail', kwargs={'pk': self.content.pk})
+        post_data = {
+            # "name": "New Trend",
+            "teaser": "Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus.",
+            "resourcetype": "Trend"
+        }
+        response = self.client.patch(update_url, data=post_data, content_type='application/json')
+        self.assertEqual(response.status_code, 403)
+
+    def test_co_author_can_update_content(self):
+        # todo
+        pass
+
+    def test_random_author_cannot_update_content(self):
+        # todo
+        pass
+
+
+class ContentDeleteTests(BaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.client.login(username='test+alice@blueshoe.de', password='password')
+
+        post_data = {
+            "name": "New Trend",
+            "teaser": "Nunc interdum lacus sit amet orci.",
+            "learning_goals": ["a", "b", "c"],
+            "related_content": random.choices(self.published_content, k=2),
+            "competences": [1],
+            "sub_competences": [1],
+            "resourcetype": "Trend",
+            "contentlink_set": [
+                {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
+                {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
+            ]
+        }
+        self.client.post(self.create_view, data=post_data, content_type='application/json')
+        self.content = Content.objects.get(name="New Trend")
+
+    def test_author_can_delete_content(self):
+        self.client.login(username='test+alice@blueshoe.de', password='password')
+        delete_view = reverse('draft-content-detail', kwargs={'pk': self.content.pk})
+        response = self.client.delete(delete_view, content_type='application/json')
+        self.assertEqual(response.status_code, 204)
+
+    def test_co_author_cannot_delete_content(self):
+        # todo
+        pass
+
+    def test_anonymous_user_cannot_delete_content(self):
+        self.client.logout()
+        delete_view = reverse('draft-content-detail', kwargs={'pk': self.content.pk})
+        response = self.client.delete(delete_view, content_type='application/json')
+        self.assertEqual(response.status_code, 403)
+
+    def test_other_author_cannot_delete_content(self):
+        # todo
+        pass
 
 
 class ToolCreationTests(BaseTestCase):
@@ -93,7 +212,7 @@ class ToolCreationTests(BaseTestCase):
             "name": "New Tool",
             "teaser": "Nunc interdum lacus sit amet orci.",
             "learning_goals": ["a", "b", "c"],
-            "related_content": [2, 4],
+            "related_content": random.choices(self.published_content, k=2),
             "competences": [1],
             "sub_competences": [1],
             "resourcetype": "Tool",
@@ -117,7 +236,7 @@ class TeachingModuleCreationTests(BaseTestCase):
             "name": "New TeachingModule",
             "teaser": "Nunc interdum lacus sit amet orci.",
             "learning_goals": ["a", "b", "c"],
-            "related_content": [2, 4],
+            "related_content": random.choices(self.published_content, k=2),
             "competences": [1],
             "sub_competences": [1],
             "resourcetype": "TeachingModule",

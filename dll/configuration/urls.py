@@ -21,19 +21,19 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from dll.content.views import HomePageView, ImprintView, DataPrivacyView, StructureView, UsageView, DevelopmentView, \
-    NewsletterRegisterView, NewsletterUnregisterView, ContactView, ToolDetailView, TrendDetailView, \
+    ToolDetailView, TrendDetailView, \
     TeachingModuleDetailView, CompetenceFilterView, TeachingModuleFilterView, \
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
     CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView, ToolApplicationSearchView, \
-    OperatingSystemSearchView
+    OperatingSystemSearchView, ReviewViewSet
 from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
     UserContentView
 
 router = DefaultRouter()
 router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
 router.register(r'inhalt-bearbeiten', DraftsContentViewSet, base_name='draft-content')
-router.register(r'review', DraftsContentViewSet, base_name='review')
+router.register(r'review', ReviewViewSet, base_name='review')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -43,9 +43,6 @@ urlpatterns = [
     path('struktur', StructureView.as_view(), name='structure'),
     path('nutzung', UsageView.as_view(), name='usage'),
     path('entwicklung', DevelopmentView.as_view(), name='development'),
-    path('newsletter', NewsletterRegisterView.as_view(), name='newsletter'),
-    path('newsletter/abmelden', NewsletterUnregisterView.as_view(), name='newsletter-unregister'),
-    path('kontakt', ContactView.as_view(), name='contact'),
     path('faq', views.flatpage, {'url': '/faq/'}, name='faq'),
     path('tools/<slug:slug>', ToolDetailView.as_view(), name='tool-detail'),
     path('trends/<slug:slug>', TrendDetailView.as_view(), name='trend-detail'),
@@ -65,6 +62,7 @@ urlpatterns = [
     path('meine-inhalte/trends/<slug:slug>', CreateEditTrendView.as_view(),
          name='edit-trend'),
     path('', include('dll.user.urls', namespace='user')),
+    path('', include('dll.communication.urls', namespace='communication')),
     # path('', include('django.contrib.flatpages.urls')),
     path('api/', include(router.urls)),
     path('api/unterrichtsbausteine', TeachingModuleDataFilterView.as_view(), name='teaching-modules-data-filter'),
