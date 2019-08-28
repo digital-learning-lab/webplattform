@@ -8,6 +8,8 @@ variables:
 
 .before_script_template:
     before_script:  &before_script_definition
+        - cat /opt/app/dll/email.cfg
+        - exit 1
         - cp ./docker/docker-compose.reviews ./docker/docker-compose.yml
 #        - docker-compose -p ${CI_PROJECT_PATH_SLUG}-${CI_ENVIRONMENT_SLUG} -f ./docker/docker-compose.yml config
 #        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
