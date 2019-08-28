@@ -11,35 +11,30 @@ class BaseTestCase(TestCase):
     def setUp(self):
         author = {
             'username': 'alice',
-            'gender': 'female',
             'first_name': 'Alice',
             'last_name': 'Doe',
             'email': 'alice@blueshoe.de',
         }
         bsb_reviewer_1 = {
             'username': 'bob',
-            'gender': 'male',
             'first_name': 'Bob',
             'last_name': 'Doe',
             'email': 'bob@blueshoe.de',
         }
         bsb_reviewer_2 = {
             'username': 'carmen',
-            'gender': 'female',
             'first_name': 'Carmen',
             'last_name': 'Doe',
             'email': 'carmen@blueshoe.de',
         }
         tuhh_reviewer_1 = {
             'username': 'daniel',
-            'gender': 'male',
             'first_name': 'Daniel',
             'last_name': 'Doe',
             'email': 'daniel@blueshoe.de',
         }
         tuhh_reviewer_2 = {
             'username': 'emilia',
-            'gender': 'female',
             'first_name': 'Emilia',
             'last_name': 'Doe',
             'email': 'emilia@blueshoe.de',

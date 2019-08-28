@@ -2,21 +2,17 @@ import logging
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.urls import reverse
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
 from django.utils.translation import ugettext_lazy as _
 from easy_thumbnails.files import get_thumbnailer
 from psycopg2._range import NumericRange
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import SerializerMethodField, IntegerField, CharField, SlugField
+from rest_framework.fields import SerializerMethodField, IntegerField, CharField
 from rest_framework.relations import RelatedField
 from rest_framework.validators import UniqueValidator
 from rest_polymorphic.serializers import PolymorphicSerializer
 
 from dll.communication.models import CoAuthorshipInvitation
-from dll.communication.tokens import co_author_invitation_token
 from dll.content.fields import RangeField
 from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication, \
     HelpText, Review
@@ -100,7 +96,6 @@ class ContentListInternalSerializer(ContentListSerializer):
 
         return status
 
-
     class Meta(ContentListSerializer.Meta):
         fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created',
                   'co_authors', 'preview_url', 'edit_url', 'author', 'status']
@@ -172,7 +167,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     image = SerializerMethodField()
     author = AuthorSerializer(read_only=True, allow_null=True, required=False)
     contentlink_set = LinkSerializer(many=True, allow_null=True, required=False)
-    co_authors = DllM2MField(allow_null=True, many=True, queryset=DllUser.objects.all())
+    co_authors = DllM2MField(allow_null=True, many=True, required=False, queryset=DllUser.objects.all())
     competences = DllM2MField(allow_null=True, many=True, queryset=Competence.objects.all())
     sub_competences = DllM2MField(allow_null=True, many=True, queryset=SubCompetence.objects.all())
     related_content = DllM2MField(allow_null=True, many=True, queryset=Content.objects.all())
@@ -251,6 +246,8 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         links_data = validated_data.pop('contentlink_set', [])
         co_authors = validated_data.pop('co_authors', [])
         content = super(BaseContentSubclassSerializer, self).create(validated_data)
+        self._update_content_links(content, links_data)
+        self._update_co_authors(content, co_authors)
         return content
 
     def _update_content_links(self, content, data):
@@ -278,16 +275,22 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             )
             invitation.send_invitation_mail()
 
+    def _update_m2m_fields(self, instance, field, values):
+        for pk in values:
+            getattr(instance, field).add(pk)
+        for pk in getattr(instance, field).values_list('pk', flat=True):
+            if pk not in values:
+                getattr(instance, field).remove(pk)
+
+    def _update_array_fields(self, instance, field, values):
+        setattr(instance, field, values)
+
     def update(self, instance, validated_data):
         """
         `update_methods` provides a mapping of keys present in the serialized data that need further
         processing, and
         maps it to the corresponding processing method
         """
-        instance.name = validated_data['name']
-        instance.teaser = validated_data['teaser']
-        instance.additional_info = validated_data['additional_info']
-
         update_methods = {
             'contentlink_set': '_update_content_links',
             'co_authors': '_update_co_authors'
@@ -306,20 +309,22 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
                 method(instance, data)
 
         for field in self.get_m2m_fields():
-            values = validated_data.pop(field)
-            for pk in values:
-                getattr(instance, field).add(pk)
-            for pk in getattr(instance, field).values_list('pk', flat=True):
-                if pk not in values:
-                    getattr(instance, field).remove(pk)
+            try:
+                values = validated_data.pop(field)
+            except KeyError:
+                pass
+            else:
+                self._update_m2m_fields(instance, field, values)
 
         for field in self.get_array_fields():
-            values = validated_data.pop(field)
-            if values:
-                setattr(instance, field, values)
+            try:
+                values = validated_data.pop(field)
+            except KeyError:
+                pass
             else:
-                setattr(instance, field, [])
-        instance.save()
+                self._update_array_fields(instance, field, values)
+
+        instance = super().update(instance, validated_data)
         return instance
 
 
@@ -343,19 +348,6 @@ class ToolSerializer(BaseContentSubclassSerializer):
         ])
         return fields
 
-    def update(self, instance, validated_data):
-        instance = super(ToolSerializer, self).update(instance, validated_data)
-
-        instance.status = validated_data.get('status', None)
-        instance.requires_registration = validated_data.get('requires_registration', None)
-        instance.usk = validated_data.get('usk', None)
-        instance.privacy = validated_data.get('privacy', None)
-        instance.description = validated_data.get('description', None)
-        instance.usage = validated_data.get('usage', None)
-
-        instance.save()
-        return instance
-
     class Meta:
         model = Tool
         fields = '__all__'
@@ -370,20 +362,6 @@ class TrendSerializer(BaseContentSubclassSerializer):
             'publisher'
         ])
         return fields
-
-    def update(self, instance, validated_data):
-        instance = super(TrendSerializer, self).update(instance, validated_data)
-
-        instance.language = validated_data.get('language', None)
-        instance.licence = validated_data.get('licence', None)
-        instance.category = validated_data.get('category', None)
-        instance.publisher_date = validated_data.get('publisher_date', None)
-        instance.central_contents = validated_data.get('central_contents', None)
-        instance.citation_info = validated_data.get('citation_info', None)
-
-        instance.save()
-
-        return instance
 
     class Meta:
         model = Trend
@@ -417,20 +395,6 @@ class TeachingModuleSerializer(BaseContentSubclassSerializer):
         ])
         return fields
 
-    def update(self, instance, validated_data):
-        instance = super(TeachingModuleSerializer, self).update(instance, validated_data)
-
-        instance.description = validated_data.get('description', None)
-        instance.educational_plan_reference = validated_data.get('educational_plan_reference', None)
-        instance.state = validated_data.get('state', None)
-        instance.differentiating_attribute = validated_data.get('differentiating_attribute', None)
-        instance.licence = validated_data.get('licence', None)
-        instance.school_class = validated_data.get('school_class', None)
-
-        instance.save()
-
-        return instance
-
 
 class ContentPolymorphicSerializer(PolymorphicSerializer):
     model_serializer_mapping = {
@@ -438,9 +402,6 @@ class ContentPolymorphicSerializer(PolymorphicSerializer):
         Trend: TrendSerializer,
         TeachingModule: TeachingModuleSerializer
     }
-
-
-# todo: file serializer
 
 
 class FileSerializer(serializers.Serializer):

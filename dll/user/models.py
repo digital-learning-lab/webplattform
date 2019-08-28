@@ -43,11 +43,6 @@ class DllUserManager(BaseUserManager):
 
 
 class DllUser(AbstractUser):
-    GENDER_OPTIONS = (
-        ('male', _("Männlich")),
-        ('female', _("Weiblich")),
-    )
-
     email = models.EmailField(_('email address'), blank=True, unique=True)
     username = models.CharField(
         _('username'),
@@ -72,9 +67,7 @@ class DllUser(AbstractUser):
 
     @cached_property
     def full_name(self):
-        return f'{self.username}'
-        # TODO importer
-        # return f'{self.first_name} {self.last_name}'
+        return f'{self.first_name} {self.last_name}'
 
     def qs_of_personal_content(self):
         from dll.content.models import Content

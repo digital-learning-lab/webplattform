@@ -6,6 +6,7 @@ from django.core import mail
 from django.test import TestCase
 from django.urls import reverse, resolve
 
+from dll.communication.models import CommunicationEventType
 from dll.user.forms import SignUpForm
 from dll.user.views import SignUpView
 
@@ -22,7 +23,7 @@ class SignUpTests(TestCase):
         self.assertEquals(self.response.status_code, 200)
 
     def test_signup_url_resolves_signup_view(self):
-        view = resolve('/user/signup/')
+        view = resolve('/signup/')
         self.assertEquals(view.func.view_class, SignUpView)
 
     def test_csrf(self):
@@ -35,11 +36,10 @@ class SignUpTests(TestCase):
 
 class SuccessfulSignupTests(TestCase):
     def setUp(self):
-        settings.IGNORE_RECAPTCHA = True
+        CommunicationEventType.objects.create(code='USER_SIGNUP', name="User signup")
         url = reverse('user:signup')
         data = {
             'username': 'john',
-            'gender': 'male',
             'first_name': 'John',
             'last_name': 'Doe',
             'email': 'test@blueshoe.de',
@@ -52,7 +52,7 @@ class SuccessfulSignupTests(TestCase):
         self.profile_url = reverse('user:profile')
 
         # confirm registration
-        link = re.search(r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
+        link = re.search(r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.[a-z]{2,4})?\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
                          mail.outbox[0].body)
         activation_link = link.group(0)
         self.client.get(activation_link)

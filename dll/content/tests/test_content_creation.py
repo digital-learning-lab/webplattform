@@ -3,7 +3,8 @@ import random
 from django.test import TestCase
 from django.urls import reverse
 
-from dll.content.models import Tool, TeachingModule, Trend, ToolLink, Competence, SubCompetence, Content
+from dll.content.models import Tool, TeachingModule, Trend, ToolLink, Competence, SubCompetence, Content, Subject, \
+    SchoolType
 from dll.user.models import DllUser
 
 
@@ -20,7 +21,6 @@ class BaseTestCase(TestCase):
 
         author = {
             'username': 'alice',
-            'gender': 'male',
             'first_name': 'Alice',
             'last_name': 'Doe',
             'email': 'test+alice@blueshoe.de',
@@ -41,8 +41,8 @@ class BaseTestCase(TestCase):
             self.published_content.append(c.get_published().pk)
 
         # Create competence
-        Competence.objects.create(cid=1)
-        SubCompetence.objects.create(cid=11)
+        self.competence = Competence.objects.create(cid=1)
+        self.sub_competence = SubCompetence.objects.create(cid=11)
 
         self.create_view = reverse('draft-content-list')
 
@@ -61,7 +61,7 @@ class ContentListTests(BaseTestCase):
         data = response.json()
         self.assertTrue(len(data['results']) == 6)
         self.assertEqual(set(data['results'][0].keys()), {'name', 'image', 'type', 'type_verbose', 'teaser',
-                                                          'competences', 'url', 'created', 'id'})
+                                                          'competences', 'url', 'created', 'id', 'co_authors'})
         self.assertTrue(isinstance(data['results'][0]['competences'], list))
 
 
@@ -72,9 +72,9 @@ class TrendCreationTests(BaseTestCase):
             "name": "New Trend",
             "teaser": "Nunc interdum lacus sit amet orci.",
             "learning_goals": ["a", "b", "c"],
-            "related_content": random.choices(self.published_content, k=2),
-            "competences": [1],
-            "sub_competences": [1],
+            "related_content": [{"pk": pk} for pk in random.choices(self.published_content, k=2)],
+            "competences": [{"pk": self.competence.pk}],
+            "sub_competences": [{"pk": self.sub_competence.pk}],
             "resourcetype": "Trend",
             "contentlink_set": [
                 {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
@@ -91,9 +91,9 @@ class TrendCreationTests(BaseTestCase):
             "name": "New Trend",
             "teaser": "Nunc interdum lacus sit amet orci.",
             "learning_goals": ["a", "b", "c"],
-            "related_content": random.choices(self.published_content, k=2),
-            "competences": [1],
-            "sub_competences": [1],
+            "related_content": [{"pk": pk} for pk in random.choices(self.published_content, k=2)],
+            "competences": [{"pk": self.competence.pk}],
+            "sub_competences": [{"pk": self.sub_competence.pk}],
             "resourcetype": "Trend",
             "contentlink_set": [
                 {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
@@ -115,9 +115,9 @@ class ContentUpdateTests(BaseTestCase):
             "name": "New Trend",
             "teaser": "Nunc interdum lacus sit amet orci.",
             "learning_goals": ["a", "b", "c"],
-            "related_content": random.choices(self.published_content, k=2),
-            "competences": [1],
-            "sub_competences": [1],
+            "related_content": [{"pk": pk} for pk in random.choices(self.published_content, k=2)],
+            "competences": [{"pk": self.competence.pk}],
+            "sub_competences": [{"pk": self.sub_competence.pk}],
             "resourcetype": "Trend",
             "contentlink_set": [
                 {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
@@ -130,7 +130,7 @@ class ContentUpdateTests(BaseTestCase):
     def test_content_update(self):
         self.client.login(username='test+alice@blueshoe.de', password='password')
 
-        update_url = reverse('draft-content-detail', kwargs={'pk': self.content.pk})
+        update_url = reverse('draft-content-detail', kwargs={'slug': self.content.slug})
         post_data = {
             # "name": "New Trend",
             "teaser": "Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus.",
@@ -143,7 +143,7 @@ class ContentUpdateTests(BaseTestCase):
 
     def test_anonymous_user_cannot_update_content(self):
         self.client.logout()
-        update_url = reverse('draft-content-detail', kwargs={'pk': self.content.pk})
+        update_url = reverse('draft-content-detail', kwargs={'slug': self.content.slug})
         post_data = {
             # "name": "New Trend",
             "teaser": "Vestibulum purus quam, scelerisque ut, mollis sed, nonummy id, metus.",
@@ -170,9 +170,9 @@ class ContentDeleteTests(BaseTestCase):
             "name": "New Trend",
             "teaser": "Nunc interdum lacus sit amet orci.",
             "learning_goals": ["a", "b", "c"],
-            "related_content": random.choices(self.published_content, k=2),
-            "competences": [1],
-            "sub_competences": [1],
+            "related_content": [{"pk": pk} for pk in random.choices(self.published_content, k=2)],
+            "competences": [{"pk": self.competence.pk}],
+            "sub_competences": [{"pk": self.sub_competence.pk}],
             "resourcetype": "Trend",
             "contentlink_set": [
                 {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
@@ -184,7 +184,7 @@ class ContentDeleteTests(BaseTestCase):
 
     def test_author_can_delete_content(self):
         self.client.login(username='test+alice@blueshoe.de', password='password')
-        delete_view = reverse('draft-content-detail', kwargs={'pk': self.content.pk})
+        delete_view = reverse('draft-content-detail', kwargs={'slug': self.content.slug})
         response = self.client.delete(delete_view, content_type='application/json')
         self.assertEqual(response.status_code, 204)
 
@@ -194,7 +194,7 @@ class ContentDeleteTests(BaseTestCase):
 
     def test_anonymous_user_cannot_delete_content(self):
         self.client.logout()
-        delete_view = reverse('draft-content-detail', kwargs={'pk': self.content.pk})
+        delete_view = reverse('draft-content-detail', kwargs={'slug': self.content.slug})
         response = self.client.delete(delete_view, content_type='application/json')
         self.assertEqual(response.status_code, 403)
 
@@ -212,9 +212,9 @@ class ToolCreationTests(BaseTestCase):
             "name": "New Tool",
             "teaser": "Nunc interdum lacus sit amet orci.",
             "learning_goals": ["a", "b", "c"],
-            "related_content": random.choices(self.published_content, k=2),
-            "competences": [1],
-            "sub_competences": [1],
+            "related_content": [{"pk": pk} for pk in random.choices(self.published_content, k=2)],
+            "competences": [{"pk": self.competence.pk}],
+            "sub_competences": [{"pk": self.sub_competence.pk}],
             "resourcetype": "Tool",
             "contentlink_set": [
                 {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
@@ -228,6 +228,11 @@ class ToolCreationTests(BaseTestCase):
 
 
 class TeachingModuleCreationTests(BaseTestCase):
+    def setUp(self):
+        super().setUp()
+        self.subject = Subject.objects.create(name="Test")
+        self.school_type = SchoolType.objects.create(name="Test")
+
     def test_content_create(self):
         self.client.login(username='test+alice@blueshoe.de', password='password')
 
@@ -236,14 +241,16 @@ class TeachingModuleCreationTests(BaseTestCase):
             "name": "New TeachingModule",
             "teaser": "Nunc interdum lacus sit amet orci.",
             "learning_goals": ["a", "b", "c"],
-            "related_content": random.choices(self.published_content, k=2),
-            "competences": [1],
-            "sub_competences": [1],
+            "related_content": [{"pk": pk} for pk in random.choices(self.published_content, k=2)],
+            "competences": [{"pk": self.competence.pk}],
+            "sub_competences": [{"pk": self.sub_competence.pk}],
             "resourcetype": "TeachingModule",
             "contentlink_set": [
                 {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
                 {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
-            ]
+            ],
+            "subjects": [{"pk": self.subject.pk}],
+            "school_types": [{"pk": self.school_type.pk}]
         }
         response = self.client.post(create_view, data=post_data, content_type='application/json')
         data = response.json()

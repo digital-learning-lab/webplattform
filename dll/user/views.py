@@ -291,3 +291,7 @@ class PendingReviewContentView(UserContentView):
             return qs.instance_of(TeachingModule)
 
         return qs.none()
+
+
+class ProfileView(TemplateView):
+    template_name = 'dll/user/profile.html'
