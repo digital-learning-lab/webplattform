@@ -1,5 +1,7 @@
 <h2>Bausteine</h2>
 
 {% for module in object.related_teaching_modules %}
-  {% include 'dll/includes/content_teaser.html' with content=module %}
+  <div class="mb-5">
+    {% include 'dll/includes/content_teaser.html' with content=module %}
+  </div>
 {% endfor %}
