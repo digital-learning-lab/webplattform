@@ -52,23 +52,26 @@
         <div class="col">
           <ul class="content-box__actions">
             <li class="content-box__action">
-              <a :href="content.preview_url">
+              <a class="content-box__link content-box__link--preview" :href="content.preview_url">
                 <span class="far fa-eye"></span>
               </a>
             </li>
             <li class="content-box__action" v-if="mode === 'overview'">
-              <a :href="content.edit_url">
+              <a class="content-box__link content-box__link--action" :href="content.edit_url">
                 <span class="far fa-edit"></span>
               </a>
             </li>
             <li class="content-box__action" v-if="mode === 'review'">
-              <a :href="content.review_url">
+              <a class="content-box__link content-box__link--action" :href="content.review_url">
                 <span class="far fa-edit"></span>
               </a>
             </li>
           </ul>
         </div>
       </div>
+    </div>
+    <div v-if="contents.length === 0" class="text-center">
+      Es stehen keine Inhalte zur Verfügung.
     </div>
   </div>
 </template>

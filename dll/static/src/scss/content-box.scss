@@ -39,3 +39,9 @@
   font-size: 18px;
   font-weight: $font-weight-regular;
 }
+.content-box__link--preview {
+  color: $color--preview;
+}
+.content-box__link--action {
+  color: $color--tool;
+}
