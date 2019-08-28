@@ -2,6 +2,7 @@ import glob
 import logging
 import os
 import re
+from collections import defaultdict
 
 import dateparser
 import numpy as np
@@ -13,7 +14,7 @@ from filer.models import Image
 from psycopg2._range import NumericRange
 
 from dll.content.models import TeachingModule, ContentLink, Competence, SubCompetence, Trend, Tool, ToolApplication, \
-    OperatingSystem, Subject, SchoolType, TrendLink, LICENCE_CHOICES, ToolLink
+    OperatingSystem, Subject, SchoolType, TrendLink, LICENCE_CHOICES, ToolLink, Content
 from dll.general.utils import custom_slugify
 from dll.user.utils import get_default_tuhh_user
 from dll.user.models import DllUser
@@ -88,6 +89,8 @@ TEACHING_MODULES_KEYS_MAPPING = {
     22: 'datum'
 }
 
+link_this_later = defaultdict(list)
+
 
 class Command(BaseCommand):
     def add_arguments(self, parser):
@@ -101,6 +104,24 @@ class Command(BaseCommand):
         self._import_tools()
         self._import_teaching_modules()
         self._import_trends()
+
+        for target_obj_pk in link_this_later.keys():
+            try:
+                target_obj = Content.objects.get(pk=target_obj_pk)
+                for pk in link_this_later[target_obj_pk]:
+                    draft_content = Content.objects.get(pk=pk)
+                    published_content = draft_content.get_published()
+                    if published_content:
+                        target_obj.related_content.add(published_content)
+                    else:
+                        logger.warning("Published Content with name '{}' doesn't exist and can't be associated to "
+                                       "Content with name '{}' (pk {})".format(
+                            draft_content.name, target_obj.name, target_obj.pk))
+                target_obj.publish()
+            except Exception:
+                logger.exception("Can not link related content with pks {} to Content with pk {}".format(
+                    ', '.join(link_this_later[target_obj_pk]), target_obj_pk)
+                )
 
     @staticmethod
     def _read_xlsx_file(xlsx_file, content_type):
@@ -184,8 +205,10 @@ class Command(BaseCommand):
                     },
                 )
                 if created:
-                    logger.info("Created new Trend from folder {}".format(folder))
-                    # try to get the image
+                    logger.info("Created new Tool from folder {}".format(folder))
+                else:
+                    logger.info("Updated Tool from folder {}".format(folder))
+                # try to get the image
                 try:
                     image_path = glob.glob(os.path.join(self.TOOLS_FOLDER, folder, '*.jpg'))[0]
                     image_name = folder + '.jpg'
@@ -220,10 +243,12 @@ class Command(BaseCommand):
                 logger.debug("Parse links for Tool {}".format(folder))
                 try:
                     text, href = self._parse_markdown_link(data['website'])
-                    link = ToolLink.objects.create(
-                        url=href,
-                        name=text,
-                        tool=tool
+                    link, created = ToolLink.objects.update_or_create(
+                        tool=tool,
+                        defaults={
+                            'url': href,
+                            'name': text
+                        }
                     )
                 except AttributeError:
                     logger.error('Could not parse link {} for Tool {}'.format(data['website'], folder))
@@ -261,6 +286,7 @@ class Command(BaseCommand):
 
             # Try to parse the applications
             try:
+                logger.debug('Parse applications for Tool {}'.format(folder))
                 apps = self._parse_tool_applications(data['anwendung'])
                 tool.applications.add(*apps)
             except Exception as e:
@@ -269,18 +295,21 @@ class Command(BaseCommand):
 
             # Try to parse the operating systems
             try:
+                logger.debug('Parse operating systems for Tool {}'.format(folder))
                 tool.operating_systems.add(*self._parse_tools_os(data['betriebssystem']))
             except Exception as e:
                 logger.exception(e)
 
             # Try to connect Tool to other content
             try:
+                logger.debug('Parse related content for Tool {}'.format(folder))
                 self._parse_related_content(tool, data)
             except Exception as e:
                 logger.exception(e)
 
             # Try to publish the new Trend
             try:
+                logger.debug('Publish Tool {}'.format(folder))
                 tool.publish()
             except Exception as e:
                 logger.warning('Could not publish Tool {}'.format(folder))
@@ -342,6 +371,8 @@ class Command(BaseCommand):
                 )
                 if created:
                     logger.info("Created new Trend from folder {}".format(folder))
+                else:
+                    logger.info("Updated Trend from folder {}".format(folder))
                 # try to get the image
                 try:
                     image_path = glob.glob(os.path.join(self.TRENDS_FOLDER, folder, '*.jpg'))[0]
@@ -405,12 +436,14 @@ class Command(BaseCommand):
 
             # Try to connect Trend to other content
             try:
+                logger.debug('Parse related content for Trend {}'.format(folder))
                 self._parse_related_content(trend, data)
             except Exception as e:
                 logger.exception(e)
 
             # Try to publish the new Trend
             try:
+                logger.debug('Publish Trend {}'.format(folder))
                 trend.publish()
             except Exception as e:
                 logger.warning('Could not publish Trend {}'.format(folder))
@@ -490,6 +523,8 @@ class Command(BaseCommand):
                 )
                 if created:
                     logger.info("Created new TeachingModule from folder {}".format(folder))
+                else:
+                    logger.info("Updated TeachingModule from folder {}".format(folder))
                 # try to get the image
                 try:
                     image_path = glob.glob(os.path.join(self.TEACHING_MODULES_FOLDER, folder, '*.jpg'))[0]
@@ -564,6 +599,7 @@ class Command(BaseCommand):
 
             # Try to add the different school types and Subjects
             try:
+                logger.debug("Parse school types and subjects for TeachingModule {}".format(folder))
                 for name in filter(None, map(lambda x: x.strip(), data['schulform'].split(';'))):
                     school_type, created = SchoolType.objects.get_or_create(name=name)
                     teaching_module.school_types.add(school_type)
@@ -575,12 +611,14 @@ class Command(BaseCommand):
 
             # Try to connect TeachingModule to other content
             try:
+                logger.debug("Parse related content for TeachingModule {}".format(folder))
                 self._parse_related_content(teaching_module, data)
             except Exception as e:
                 logger.exception(e)
 
             # Try to publish the new TeachingModule
             try:
+                logger.debug("Publish TeachingModule {}".format(folder))
                 teaching_module.publish()
             except Exception as e:
                 logger.warning('Could not publish TeachingModule {}'.format(folder))
@@ -594,13 +632,17 @@ class Command(BaseCommand):
                 related_trend = Trend.objects.published().get(name=name)
                 obj.related_content.add(related_trend)
             except Trend.DoesNotExist:
-                related_trend = Trend(
-                    name=name,
-                    author=get_default_tuhh_user(),
-                    publisher_is_draft=True
-                )
-                related_trend.json_data['from_import'] = True
-                related_trend.save()
+                if Trend.objects.drafts().filter(name=name).exists():
+                    pass
+                else:
+                    related_trend = Trend(
+                        name=name,
+                        author=get_default_tuhh_user(),
+                        publisher_is_draft=True
+                    )
+                    related_trend.json_data['from_import'] = True
+                    related_trend.save()
+                    link_this_later[obj.pk].append(related_trend.pk)
             except Trend.MultipleObjectsReturned:
                 logger.error('Multiple Trends with the name ({name}) for {cls} in folder {folder}'.format(
                     name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
@@ -609,13 +651,17 @@ class Command(BaseCommand):
                 related_teaching_module = TeachingModule.objects.published().get(name=name)
                 obj.related_content.add(related_teaching_module)
             except TeachingModule.DoesNotExist:
-                related_teaching_module = TeachingModule(
-                    name=name,
-                    author=get_default_tuhh_user(),
-                    publisher_is_draft=True
-                )
-                related_teaching_module.json_data['from_import'] = True
-                related_teaching_module.save()
+                if Trend.objects.drafts().filter(name=name).exists():
+                    pass
+                else:
+                    related_teaching_module = TeachingModule(
+                        name=name,
+                        author=get_default_tuhh_user(),
+                        publisher_is_draft=True
+                    )
+                    related_teaching_module.json_data['from_import'] = True
+                    related_teaching_module.save()
+                    link_this_later[obj.pk].append(related_teaching_module.pk)
             except TeachingModule.MultipleObjectsReturned:
                 logger.error('Multiple TeachingModules with the name ({name}) for {cls} in folder {folder}'.format(
                     name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
@@ -624,13 +670,17 @@ class Command(BaseCommand):
                 related_tool = Tool.objects.published().get(name=name)
                 obj.related_content.add(related_tool)
             except Tool.DoesNotExist:
-                related_tool = Tool(
-                    name=name,
-                    author=get_default_tuhh_user(),
-                    publisher_is_draft=True
-                )
-                related_tool.json_data['from_import'] = True
-                related_tool.save()
+                if Tool.objects.drafts().filter(name=name).exists():
+                    pass
+                else:
+                    related_tool = Tool(
+                        name=name,
+                        author=get_default_tuhh_user(),
+                        publisher_is_draft=True
+                    )
+                    related_tool.json_data['from_import'] = True
+                    related_tool.save()
+                    link_this_later[obj.pk].append(related_tool.pk)
             except Tool.MultipleObjectsReturned:
                 logger.error('Multiple Tools with the name ({name}) for {cls} in folder {folder}'.format(
                     name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
