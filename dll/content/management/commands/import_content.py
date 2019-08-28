@@ -700,7 +700,8 @@ class Command(BaseCommand):
             return value, None
         elif type(value) == str:
             try:
-                a, b = map(lambda x: int(x.strip()), value.split(';'))
+                range = map(lambda x: int(x.strip()), value.split(';'))
+                a, b = min(range), max(range)
             except ValueError:
                 a = int(value.replace(';', ''))
                 b = None
