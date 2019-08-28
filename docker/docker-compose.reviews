@@ -40,8 +40,6 @@ services:
 
       - EMAIL_HOST=floki.rz.tuhh.de
       - EMAIL_PORT=25
-      - EMAIL_HOST_USER=None
-      - EMAIL_HOST_PASSWORD=None
       - EMAIL_USE_TLS=False
       - EMAIL_SENDER=digital.learning.lab@tuhh.de
       - EMAIL_RECEIVER_DLL=digital.learning.lab@tuhh.de
@@ -74,8 +72,6 @@ services:
     - SOLR_HOSTNAME=solr
     - EMAIL_HOST=floki.rz.tuhh.de
     - EMAIL_PORT=25
-    - EMAIL_HOST_USER=None
-    - EMAIL_HOST_PASSWORD=None
     - EMAIL_USE_TLS=False
     - EMAIL_SENDER=digital.learning.lab@tuhh.de
     - EMAIL_RECEIVER_DLL=dll@blueshoe.de

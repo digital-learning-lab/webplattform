@@ -255,7 +255,7 @@ LOCALE_PATHS = [
 EMAIL_HOST = os.getenv('EMAIL_HOST', None)
 
 # Port for sending e-mail.
-EMAIL_PORT = int(os.getenv('EMAIL_PORT', '25'))
+EMAIL_PORT = env.int('EMAIL_PORT')
 
 # Optional SMTP authentication information for EMAIL_HOST.
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', None)
