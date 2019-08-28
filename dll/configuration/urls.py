@@ -29,7 +29,7 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     OperatingSystemSearchView, ReviewViewSet, ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
     TrendDetailPreviewView, SubmitContentView, ApproveContentView, DeclineContentView
 from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
-    UserContentView, MyReviewsView, ReviewTeachingModuleView, ReviewToolView, ReviewTrendView
+    UserContentView, MyReviewsView, ReviewTeachingModuleView, ReviewToolView, ReviewTrendView, PendingReviewContentView
 
 router = DefaultRouter()
 router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
@@ -89,6 +89,7 @@ urlpatterns = [
     path('api/applications', ToolApplicationSearchView.as_view(), name='application-search'),
     path('api/operatingSystems', OperatingSystemSearchView.as_view(), name='operating-system-search'),
     path('api/meine-inhalte', UserContentView.as_view(), name='user-contents'),
+    path('api/review-inhalte', PendingReviewContentView.as_view(), name='content-pending'),
     path('api/inhalt-bearbeiten/<slug:slug>/vorschau-bild', FileUploadView.as_view(),
          name='add-preview-image'),
     path('api/inhalt-einreichen/<slug:slug>', SubmitContentView.as_view(),

@@ -11,6 +11,8 @@ from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from rest_framework.generics import ListAPIView
 
 from dll.content.models import Content, TeachingModule, Tool, Trend, Review
@@ -244,3 +246,35 @@ def activate_user(request, uidb64, token, backend='django.contrib.auth.backends.
         return redirect('user-content-overview')
     else:
         return render(request, 'dll/user/account_activation_invalid.html')
+
+
+class PendingReviewContentView(UserContentView):
+
+    def get_queryset(self):
+        qs = Content.objects.drafts().filter(reviews__is_active=True)
+
+        type = self.request.GET.get('type', None)
+        search_term = self.request.GET.get('q', None)
+
+        if type == 'trend':
+            qs = qs.instance_of(Trend)
+        if type == 'tool':
+            qs = qs.instance_of(Tool)
+        if type == 'teaching-module':
+            qs = qs.instance_of(TeachingModule)
+
+
+        if search_term:
+            qs = qs.filter(Q(name__icontains=search_term) | Q(teaser__icontains=search_term))
+
+        user = self.request.user
+
+        if user.is_superuser:
+            return qs
+
+        if is_tuhh_reviewer(user):
+            return qs.not_instance_of(TeachingModule)
+        if is_bsb_reviewer(user):
+            return qs.instance_of(TeachingModule)
+
+        return qs.none()

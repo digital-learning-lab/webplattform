@@ -12,7 +12,7 @@
           <option value="teaching-module">Unterrichtsbaustein</option>    
         </select>
       </div>
-      <div class="col">
+      <div class="col" v-if="mode === 'overview'">
         <div>
           <label for="status">Status:</label>
         </div>
@@ -79,7 +79,9 @@
         contents: [],
         type: null,
         searchTerm: null,
-        status: null
+        status: null,
+        retrieveUrl: null,
+        mode: null
       }
     },
     computed: {
@@ -93,7 +95,7 @@
     },
     methods: {
       updateContents () {
-        axios.get('/api/meine-inhalte', {
+        axios.get(this.retrieveUrl, {
           params: {
             ...this.params
           }
@@ -107,6 +109,11 @@
       }
     },
     created () {
+      if (!window.dllData.retrieveUrl) {
+        throw Error('Retrieve URL is not defined.')
+      }
+      this.retrieveUrl = window.dllData.retrieveUrl
+      this.mode = window.dllData.mode || 'overview'
       this.updateContents()
       this.debouncedUpdate = debounce(this.updateContents, 500)
     }

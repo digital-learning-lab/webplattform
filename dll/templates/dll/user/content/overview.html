@@ -20,3 +20,13 @@
 
   <div id="overview-app"></div>
 {% endblock %}
+
+{% block extra_scripts %}
+  {{ block.super }}
+  <script>
+  window.dllData = {
+    retrieveUrl: '/api/meine-inhalte',
+    mode: 'overview'
+  }
+  </script>
+{% endblock %}

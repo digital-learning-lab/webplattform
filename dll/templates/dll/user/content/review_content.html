@@ -8,22 +8,16 @@
     <p>Sofern die Sichtung des eingereichten Inhalts positiv ausfällt, können Sie das Element im Editiermodus (blauer Button) "freigeben". Der Inhalt wird anschließend direkt live im digital.learning.lab anzeigt. Sofern die Sichtung des eingereichten Inhalts negativ ausfällt, können Sie das Element im Editiermodus "zur Nachbearbeitung" an die Autor_innen zurückschicken. Der Inhalt wird dadurch wieder für die Autor_innen zur Bearbeitung freigeschaltet und erscheint nicht live im digital.learning.lab. </p>
   </div>
 
-
-  {% for content in contents %}
-    <a href="{{ content.get_review_url }}">{{ content }}</a> <br>
-  {% endfor %}
-
-  <div class="text-center">
-    <a class="button button--teaching-module mr-3" href="{% url 'add-teaching-module' %}">
-      Unterrichtsbaustein erstellen <span class="fas fa-plus"></span>
-    </a>
-    <a class="button button--trend mr-3" href="{% url 'add-trend' %}">
-      Trend erstellen <span class="fas fa-plus"></span>
-    </a>
-    <a class="button button--tool mr-3" href="{% url 'add-tool' %}">
-      Tool erstellen <span class=" fas fa-plus"></span>
-    </a>
-  </div>
-
   <div id="overview-app"></div>
 {% endblock %}
+
+{% block extra_scripts %}
+  {{ block.super }}
+  <script>
+  window.dllData = {
+    retrieveUrl: '/api/review-inhalte',
+    mode: 'review'
+  }
+  </script>
+{% endblock %}
+
