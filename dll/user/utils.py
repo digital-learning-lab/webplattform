@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, Permission
 
 
-# TODO: can/should this be done in a post_migrate signal?
 def get_bsb_reviewer_group():
     group, created = Group.objects.get_or_create(name='BSB-Reviewer')
     return group

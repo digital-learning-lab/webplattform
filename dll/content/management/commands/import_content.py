@@ -16,7 +16,7 @@ from psycopg2._range import NumericRange
 from dll.content.models import TeachingModule, ContentLink, Competence, SubCompetence, Trend, Tool, ToolApplication, \
     OperatingSystem, Subject, SchoolType, TrendLink, LICENCE_CHOICES, ToolLink, Content, ContentFile
 from dll.general.utils import custom_slugify
-from dll.user.utils import get_default_tuhh_user
+from dll.user.utils import get_default_tuhh_user, get_bsb_reviewer_group, get_tuhh_reviewer_group
 from dll.user.models import DllUser
 
 logger = logging.getLogger('dll.importer')
@@ -121,6 +121,10 @@ class Command(BaseCommand):
             except Exception:
                 logger.exception("Can not link related content with pks {} to Content with pk {}".format(
                                  ', '.join(link_this_later[target_obj_pk]), target_obj_pk))
+
+        # create the two groups here for now
+        get_bsb_reviewer_group()
+        get_tuhh_reviewer_group()
 
     @staticmethod
     def _read_xlsx_file(xlsx_file, content_type):
@@ -802,7 +806,10 @@ class Command(BaseCommand):
                 if created:
                     obj.username = author
                     obj.json_data['from_import'] = True
-                    password = author.split()[-1] + '_dll_2019'
+                    l = author.split()
+                    obj.first_name = ' '.join(l[:-1])
+                    obj.last_name = l[-1]
+                    password = obj.last_name + '_dll_2019'
                     obj.set_password(password)
                     obj.save()
                 author_list.append(obj)
