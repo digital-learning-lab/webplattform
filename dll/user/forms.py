@@ -1,6 +1,8 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+
 from django import forms
+from django.utils.translation import ugettext_lazy as _
 from django.contrib.auth.forms import UserCreationForm
 from django.urls import reverse_lazy
 
@@ -25,20 +27,13 @@ class SignUpForm(UserCreationForm):
         data_privacy_url = reverse_lazy('data-privacy')
         self.fields['terms_accepted'].label = f'Ja, ich stimme den <a href="/">Nutzungsbedingungen</a>- und den ' \
         f'<a href="{data_privacy_url}">Datenschutzbestimmungen</a> des digital.learning.lab zu.'
-        # self.helper.layout = Layout(
-        #     'email',
-        #     'first_name',
-        #     'last_name',
-        #     'password1'
-        #     'password2',
-        #     'terms_accepted'
-        # )
-        # self.fields['gender'].choices = self.fields['gender'].choices[1:]
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['email'].required = True
 
     class Meta:
         model = DllUser
         fields = (
-            # 'gender',
             'first_name',
             'last_name',
             'email',

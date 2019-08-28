@@ -178,7 +178,7 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
         url = 'https://%s%s' % (Site.objects.get_current().domain, relative_url)
         context = {
             'link_to_content': url,
-            'author': self.author.username,
+            'author': self.author.full_name,
             'content_type': instance.type_verbose,
             'content_title': instance.name
         }
@@ -550,7 +550,7 @@ class Review(TimeStampedModel):
         context = {
             'link_to_content': url,
             'content_title': self.content.name,
-            'author': instance.author.username,
+            'author': instance.author.full_name,
             'content_type': instance.type_verbose
         }
         cc_ids = (self.content.author.pk,) + tuple(self.content.co_authors.all().values_list('pk', flat=True))
@@ -572,7 +572,7 @@ class Review(TimeStampedModel):
         context = {
             'link_to_content': url,
             'content_title': self.content.name,
-            'author': instance.author.username,
+            'author': instance.author.full_name,
             'content_type': instance.type_verbose
         }
         cc_ids = (self.content.author.pk,) + tuple(self.content.co_authors.all().values_list('pk', flat=True))

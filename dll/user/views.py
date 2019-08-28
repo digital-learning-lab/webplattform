@@ -1,9 +1,10 @@
 import json
 
 from django.contrib.auth import login, get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
-from django.http import Http404
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 
@@ -44,13 +45,13 @@ class TestView(TemplateView):
         return ctx
 
 
-class MyContentView(TemplateView, BreadcrumbMixin):
+class MyContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
     template_name = 'dll/user/content/overview.html'
     breadcrumb_title = 'Meine Inhalte'
     breadcrumb_url = reverse_lazy('user-content-overview')
 
 
-class MyReviewsView(TemplateView, BreadcrumbMixin):
+class MyReviewsView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
     template_name = 'dll/user/content/review_content.html'
     breadcrumb_title = 'Review Inhalte'
     breadcrumb_url = reverse_lazy('user-content-overview')
@@ -69,7 +70,7 @@ class MyReviewsView(TemplateView, BreadcrumbMixin):
         return ctx
 
 
-class CreateEditContentView(TemplateView, BreadcrumbMixin):
+class CreateEditContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
     model = None
     serializer = None
 
@@ -181,6 +182,7 @@ class SignUpView(FormView):
     template_name = 'dll/user/signup.html'
     form_class = SignUpForm
     email_template = 'dll/user/email/account_activation_email.html'
+    success_url = reverse_lazy('user:signup-success')
 
     def form_valid(self, form):
         user = form.save(commit=False)
@@ -194,7 +196,7 @@ class SignUpView(FormView):
         confirmation_url = self.request.build_absolute_uri(confirmation_url)
 
         context = {
-            'username': user.username,
+            'username': user.full_name,
             'confirmation_url': confirmation_url
         }
         send_mail.delay(
@@ -203,7 +205,11 @@ class SignUpView(FormView):
             ctx=context
         )
 
-        return redirect('home')
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class SignUpSuccessfulView(TemplateView):
+    template_name = 'dll/user/signup_success.html'
 
 
 class UserContentView(ListAPIView):

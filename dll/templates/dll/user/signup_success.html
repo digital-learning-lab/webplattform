@@ -1,0 +1,20 @@
+{% extends 'dll/default_page.html' %}
+{% load crispy_forms_tags %}
+{% load i18n %}
+{% load breadcrumb_tags %}
+
+{% block breadcrumbs %}
+  {% simple_breadcrumb 'Registrierung' as breadcrumbs %}
+  {{ block.super }}
+{% endblock %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-12 col-md-9">
+      <h1>Bestätigen Sie Ihre E-Mail-Adresse</h1>
+      Wir haben Ihnen eine Bestätigungs-E-Mail geschickt. Sie können Ihre Registrierung über den darin enthaltenen
+      Link abschließen. Bitte kontaktieren Sie uns, sollten Sie innerhalb der nächsten Minuten keinen Link erhalten.
+
+    </div>
+  </div>
+{% endblock %}

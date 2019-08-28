@@ -206,8 +206,12 @@ LOGGING = {
         },
     },
 }
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 DEFAULT_FROM_EMAIL = 'default_from_email@tuhh.de'  # todo: default from email address
 
 LOGIN_URL = 'user:login'
@@ -242,3 +246,20 @@ HAYSTACK_CONNECTIONS = {
 
 BSB_REVIEW_MAIL = os.getenv('EMAIL_RECEIVER_DLL', 'dll@blueshoe.de')
 TUHH_REVIEW_MAIL = os.getenv('EMAIL_RECEIVER_BSB', 'dll@blueshoe.de')
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locales')
+]
+
+# Host for sending e-mail.
+EMAIL_HOST = os.getenv('EMAIL_HOST', None)
+
+# Port for sending e-mail.
+EMAIL_PORT = int(os.getenv('EMAIL_PORT', None))
+
+# Optional SMTP authentication information for EMAIL_HOST.
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', None)
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', None)
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', None)
+
+EMAIL_SENDER = os.getenv('EMAIL_SENDER', None)

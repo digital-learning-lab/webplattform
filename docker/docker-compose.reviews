@@ -17,7 +17,7 @@ services:
     links:
        - db
     command: >
-      bash -c "python manage.py migrate && python manage.py import_content -f /code/dll/media/inhalte && python manage.py collectstatic --noinput && python manage.py create_staging_users && python manage.py create_communication_event_types && python manage.py loaddata /code/dll/fixtures/sites.json && uwsgi --http :80 --wsgi-file /code/dll/configuration/wsgi.py --static-map /static=/code/static/ --static-map /media=/code/dll/media"
+      bash -c "python manage.py migrate && python manage.py import_content -f /code/dll/media/inhalte && python manage.py collectstatic --noinput && python manage.py create_staging_users && python manage.py create_communication_event_types && python manage.py loaddata /code/dll/fixtures/sites.json && python manage.py compilemessagess && uwsgi --http :80 --wsgi-file /code/dll/configuration/wsgi.py --static-map /static=/code/static/ --static-map /media=/code/dll/media"
     security_opt:
       - no-new-privileges
     environment:
@@ -27,7 +27,6 @@ services:
       - VIRTUAL_HOST=${CI_PROJECT_ID}-${CI_ENVIRONMENT_SLUG}
       - DJANGO_SECRET_KEY=${SECRET_KEY}
       - HOST_IP=${HOST_IP}
-      - DJANGO_DEBUG=True
       - DJANGO_LOG_LEVEL=DEBUG
 
       - ADMIN_USER=admin

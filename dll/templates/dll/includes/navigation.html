@@ -19,6 +19,9 @@
     </button>
   </div>
   <nav class="navigation">
+    {% if request.user.is_authenticated %}
+      <div class="navigation__user">{{ request.user.full_name }}</div>
+    {% endif %}
     <ul class="navigation__items">
       {% if request.path != '/' %}
         <li class="navigation__item js-navigation__item">

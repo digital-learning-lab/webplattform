@@ -51,7 +51,7 @@ class ContentListSerializer(serializers.ModelSerializer):
             return None
 
     def get_co_authors(self, obj):
-        return [f'{author.username}' for author in obj.co_authors.all()]
+        return [f'{author.full_name}' for author in obj.co_authors.all()]
 
     def get_type(self, obj):
         return obj.type
@@ -74,7 +74,7 @@ class ContentListInternalSerializer(ContentListSerializer):
     status = serializers.SerializerMethodField()
 
     def get_author(self, obj):
-        return str(obj.author.username)
+        return str(obj.author.full_name)
 
     def get_preview_url(self, obj):
         return obj.get_preview_url()
@@ -118,6 +118,11 @@ class ContentListInternalReviewSerializer(ContentListInternalSerializer):
 
 
 class AuthorSerializer(serializers.ModelSerializer):
+    username = SerializerMethodField(allow_null=True)
+
+    def get_username(self, obj):
+        return obj.full_name
+
     class Meta:
         model = DllUser
         fields = ['username', 'pk']
@@ -214,7 +219,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         return res
 
     def get_pending_co_authors(self, obj):
-        return [invite.to.username for invite in obj.invitations.filter(accepted__isnull=True)]
+        return [invite.to.full_name for invite in obj.invitations.filter(accepted__isnull=True)]
 
     def get_submitted(self, obj):
         return obj.review and (obj.review.status == Review.IN_PROGRESS or obj.review.status == Review.NEW)

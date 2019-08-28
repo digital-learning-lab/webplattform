@@ -1,0 +1,602 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-28 16:41+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: dll/communication/forms.py:10
+msgid "Anregungen zu den Unterrichtsbausteinen | E-Mail an die BSB"
+msgstr ""
+
+#: dll/communication/forms.py:13
+msgid "Anregungen zu Tools, Trends und zum dll allgemein | E-Mail an die TUHH"
+msgstr ""
+
+#: dll/communication/forms.py:16
+msgid "Einreichung eigener Unterrichtsbausteine | E-Mail an die BSB"
+msgstr ""
+
+#: dll/communication/models.py:26
+msgid "Auslösender User"
+msgstr ""
+
+#: dll/communication/models.py:31
+msgid "Event Type"
+msgstr ""
+
+#: dll/communication/models.py:34
+msgid "Kommunikations-Ereignis"
+msgstr ""
+
+#: dll/communication/models.py:35
+msgid "Kommunikations-Ereignisse"
+msgstr ""
+
+#: dll/communication/models.py:40
+msgid "'{type:s}' event for user #{number:s}"
+msgstr ""
+
+#: dll/communication/models.py:51
+msgid "Code, mit dem dieses Ereignis programmgesteuert gesucht werden kann."
+msgstr ""
+
+#: dll/communication/models.py:55
+msgid "Name"
+msgstr ""
+
+#: dll/communication/models.py:56
+msgid "Dies dient nur zu organisatorischen Zwecken."
+msgstr ""
+
+#: dll/communication/models.py:63
+msgid "Email Subject Template"
+msgstr ""
+
+#: dll/communication/models.py:65
+msgid "Email Body Template"
+msgstr ""
+
+#: dll/communication/models.py:67
+msgid "Email Body HTML Template"
+msgstr ""
+
+#: dll/communication/models.py:68
+msgid "HTML template"
+msgstr ""
+
+#: dll/communication/models.py:78
+msgid "Art des Kommunikations-Ereignis"
+msgstr ""
+
+#: dll/communication/models.py:79
+msgid "Arten von Kommunikations-Ereignissen"
+msgstr ""
+
+#: dll/communication/models.py:147
+msgid "Einladung von"
+msgstr ""
+
+#: dll/communication/models.py:149
+msgid "Einladung an"
+msgstr ""
+
+#: dll/communication/models.py:152 dll/content/models.py:325
+msgid "Status"
+msgstr ""
+
+#: dll/communication/models.py:153
+msgid "Nachricht"
+msgstr ""
+
+#: dll/communication/views.py:63
+msgid ""
+"Bestätigungslink versendet. Sie erhalten in Kürze eine E-Mail, um die "
+"Newsletter-Anmeldung zu bestätigen."
+msgstr ""
+
+#: dll/communication/views.py:102
+msgid "Newsletter Anmeldung erfolgreich"
+msgstr ""
+
+#: dll/communication/views.py:104
+msgid "Newsletter Anmeldung nicht erfolgreich. Versuchen Sie es erneut."
+msgstr ""
+
+#: dll/communication/views.py:124
+msgid "Sie sind nicht berechtigt die Anfrage zu akzeptieren"
+msgstr ""
+
+#: dll/communication/views.py:135
+msgid "Bestätigen Sie mit Ja oder Nein"
+msgstr ""
+
+#: dll/communication/views.py:140
+msgid "Die Einladung ist verfallen"
+msgstr ""
+
+#: dll/content/fields.py:13
+#, python-brace-format
+msgid "Expected a dictionary of items but got type \"{input_type}\"."
+msgstr ""
+
+#: dll/content/fields.py:14
+#, python-brace-format
+msgid "Got unexpected keys \"{unexpected}\"."
+msgstr ""
+
+#: dll/content/fields.py:15
+#, python-brace-format
+msgid ""
+"Bounds flags \"{bounds}\" not valid. Valid bounds are \"{valid_bounds}\"."
+msgstr ""
+
+#: dll/content/fields.py:16
+msgid "Range may not be empty."
+msgstr ""
+
+#: dll/content/models.py:36
+msgid "CC0"
+msgstr ""
+
+#: dll/content/models.py:37
+msgid "CC BY"
+msgstr ""
+
+#: dll/content/models.py:38
+msgid "CC BY 4.0"
+msgstr ""
+
+#: dll/content/models.py:39
+msgid "CC BY-NC"
+msgstr ""
+
+#: dll/content/models.py:40
+msgid "CC BY-NC-ND"
+msgstr ""
+
+#: dll/content/models.py:41
+msgid "CC BY-NC-SA"
+msgstr ""
+
+#: dll/content/models.py:42
+msgid "CC BY-ND"
+msgstr ""
+
+#: dll/content/models.py:43
+msgid "CC BY-SA"
+msgstr ""
+
+#: dll/content/models.py:44
+msgid "CC BY-SA 4.0"
+msgstr ""
+
+#: dll/content/models.py:45
+msgid "urheberrechtlich geschützt"
+msgstr ""
+
+#: dll/content/models.py:49
+msgid "Titel des Tools/Trends/Unterrichtsbausteins"
+msgstr ""
+
+#: dll/content/models.py:52
+msgid "Autor"
+msgstr ""
+
+#: dll/content/models.py:54
+msgid "Kollaborateure"
+msgstr ""
+
+#: dll/content/models.py:55
+msgid "Anzeigebild"
+msgstr ""
+
+#: dll/content/models.py:56
+msgid "Teaser"
+msgstr ""
+
+#: dll/content/models.py:57
+msgid "Lernziele"
+msgstr ""
+
+#: dll/content/models.py:59
+msgid "Verwandte Tools/Trends/Unterrichtsbausteine"
+msgstr ""
+
+#: dll/content/models.py:64
+msgid "Hinweise/Anmerkungen/Hintergrund"
+msgstr ""
+
+#: dll/content/models.py:65 dll/content/models.py:666
+msgid "Kompetenzen"
+msgstr ""
+
+#: dll/content/models.py:66 dll/content/models.py:789
+msgid "Subkompetenzen"
+msgstr ""
+
+#: dll/content/models.py:237
+msgid "Inhalt"
+msgstr ""
+
+#: dll/content/models.py:238
+msgid "Inhalte"
+msgstr ""
+
+#: dll/content/models.py:242 dll/content/models.py:331
+msgid "Beschreibung"
+msgstr ""
+
+#: dll/content/models.py:243
+msgid "Unterichtsgegenstand"
+msgstr ""
+
+#: dll/content/models.py:245
+msgid "Bildungsplanbezug"
+msgstr ""
+
+#: dll/content/models.py:246
+msgid "Jahrgangsstufe"
+msgstr ""
+
+#: dll/content/models.py:248
+msgid "Zeitumfang"
+msgstr ""
+
+#: dll/content/models.py:250
+msgid "Ausstattung"
+msgstr ""
+
+#: dll/content/models.py:252
+msgid "Bundesland"
+msgstr ""
+
+#: dll/content/models.py:253
+msgid "Differenzierung"
+msgstr ""
+
+#: dll/content/models.py:254
+msgid "Fachkompetenzen"
+msgstr ""
+
+#: dll/content/models.py:256 dll/content/models.py:836
+msgid "Unterrichtsfach"
+msgstr ""
+
+#: dll/content/models.py:257 dll/content/models.py:848
+msgid "Schulform"
+msgstr ""
+
+#: dll/content/models.py:258 dll/content/models.py:396
+msgid "Lizenz"
+msgstr ""
+
+#: dll/content/models.py:261
+msgid "Unterrichtsbaustein"
+msgstr ""
+
+#: dll/content/models.py:262
+msgid "Unterrichtsbausteine"
+msgstr ""
+
+#: dll/content/models.py:300
+msgid "Online"
+msgstr ""
+
+#: dll/content/models.py:301
+msgid "Offline"
+msgstr ""
+
+#: dll/content/models.py:302
+msgid "Online & Offline"
+msgstr ""
+
+#: dll/content/models.py:306
+msgid "Ohne Altersbeschränkung"
+msgstr ""
+
+#: dll/content/models.py:307
+msgid "Ab 6 Jahren"
+msgstr ""
+
+#: dll/content/models.py:308
+msgid "Ab 12 Jahren"
+msgstr ""
+
+#: dll/content/models.py:309
+msgid "Ab 16 Jahren"
+msgstr ""
+
+#: dll/content/models.py:310
+msgid "Ab 18 Jahren"
+msgstr ""
+
+#: dll/content/models.py:314
+msgid "Unbekannt"
+msgstr ""
+
+#: dll/content/models.py:315
+msgid "Es werden keinerlei Daten erhoben"
+msgstr ""
+
+#: dll/content/models.py:316
+msgid ""
+"Personenbezogene Daten wie z.B. Logins werden geschützt auf dem Server "
+"abgelegt. Es greift die EU-Datenschutz-Grundverordnung."
+msgstr ""
+
+#: dll/content/models.py:318
+msgid ""
+"Personenbezogene Daten werden erhoben. Dritte haben Zugriff auf diese Daten. "
+"Es greift die EU-Datenschutz-Grundverordnung."
+msgstr ""
+
+#: dll/content/models.py:320
+msgid ""
+"Personenbezogene Daten werden erhoben. Es greift NICHT die EU-Datenschutz-"
+"Grundverordnung."
+msgstr ""
+
+#: dll/content/models.py:323 dll/content/models.py:599
+msgid "Betriebssystem"
+msgstr ""
+
+#: dll/content/models.py:324 dll/content/models.py:867
+msgid "Anwendung"
+msgstr ""
+
+#: dll/content/models.py:327
+msgid "Altersfreigabe"
+msgstr ""
+
+#: dll/content/models.py:328
+msgid "Pro"
+msgstr ""
+
+#: dll/content/models.py:329
+msgid "Kontra"
+msgstr ""
+
+#: dll/content/models.py:330
+msgid "Datenschutz"
+msgstr ""
+
+#: dll/content/models.py:332
+msgid "Nutzung"
+msgstr ""
+
+#: dll/content/models.py:335
+msgid "Tool"
+msgstr ""
+
+#: dll/content/models.py:336
+msgid "Tools"
+msgstr ""
+
+#: dll/content/models.py:381
+msgid "Deutsch"
+msgstr ""
+
+#: dll/content/models.py:382
+msgid "Englisch"
+msgstr ""
+
+#: dll/content/models.py:383
+msgid "Französisch"
+msgstr ""
+
+#: dll/content/models.py:384
+msgid "Russisch"
+msgstr ""
+
+#: dll/content/models.py:388
+msgid "Keine Angaben"
+msgstr ""
+
+#: dll/content/models.py:389
+msgid "Forschung"
+msgstr ""
+
+#: dll/content/models.py:390
+msgid "Portal"
+msgstr ""
+
+#: dll/content/models.py:391
+msgid "Praxisbeispiel"
+msgstr ""
+
+#: dll/content/models.py:392
+msgid "Veröffentlichung"
+msgstr ""
+
+#: dll/content/models.py:395
+msgid "Sprache"
+msgstr ""
+
+#: dll/content/models.py:397
+msgid "Kategorie"
+msgstr ""
+
+#: dll/content/models.py:398
+msgid "Zielgruppe"
+msgstr ""
+
+#: dll/content/models.py:400
+msgid "Herausgeber"
+msgstr ""
+
+#: dll/content/models.py:402
+msgid "Datum der Veröffentlichung"
+msgstr ""
+
+#: dll/content/models.py:403
+msgid "Zentrale Inhalte"
+msgstr ""
+
+#: dll/content/models.py:404
+msgid "Zitierhinweis"
+msgstr ""
+
+#: dll/content/models.py:407
+msgid "Trend"
+msgstr ""
+
+#: dll/content/models.py:408
+msgid "Trends"
+msgstr ""
+
+#: dll/content/models.py:473
+msgid "Hilfetext für "
+msgstr ""
+
+#: dll/content/models.py:485
+msgid "Hilfetext für"
+msgstr ""
+
+#: dll/content/models.py:491
+msgid "Neu"
+msgstr ""
+
+#: dll/content/models.py:492
+msgid "In Bearbeitung"
+msgstr ""
+
+#: dll/content/models.py:493
+msgid "Akzeptiert"
+msgstr ""
+
+#: dll/content/models.py:494
+msgid "Abgelehnt"
+msgstr ""
+
+#: dll/content/models.py:600
+msgid "Betriebssysteme"
+msgstr ""
+
+#: dll/content/models.py:665
+msgid "Kompetenz"
+msgstr ""
+
+#: dll/content/models.py:788
+msgid "Subkompetenz"
+msgstr ""
+
+#: dll/content/models.py:794
+msgid "Audio"
+msgstr ""
+
+#: dll/content/models.py:795
+msgid "Video"
+msgstr ""
+
+#: dll/content/models.py:796
+msgid "Webseite"
+msgstr ""
+
+#: dll/content/models.py:797
+msgid "Literatur"
+msgstr ""
+
+#: dll/content/models.py:837
+msgid "Unterrichtsfächer"
+msgstr ""
+
+#: dll/content/models.py:849
+msgid "Schulformen"
+msgstr ""
+
+#: dll/content/models.py:854
+msgid "App"
+msgstr ""
+
+#: dll/content/models.py:855
+msgid "Website"
+msgstr ""
+
+#: dll/content/models.py:856
+msgid "Programm"
+msgstr ""
+
+#: dll/content/models.py:857
+msgid "Browser-Add-on"
+msgstr ""
+
+#: dll/content/models.py:868
+msgid "Anwendungen"
+msgstr ""
+
+#: dll/content/serializers.py:86
+msgid "Draft"
+msgstr "Entwurf"
+
+#: dll/content/serializers.py:90
+msgid "Approved - Resubmission declined."
+msgstr "Freigegeben - Neue Einreichung abgelehnt."
+
+#: dll/content/serializers.py:92
+msgid "Approved - Resubmission pending."
+msgstr "Freigegeben - Neue Einreichung ausstehend."
+
+#: dll/content/serializers.py:93
+msgid "Approved"
+msgstr "Freigegeben"
+
+#: dll/content/serializers.py:96
+msgid "Declined"
+msgstr "Abgelehnt"
+
+#: dll/content/serializers.py:99
+msgid "Submitted"
+msgstr "Eingereicht"
+
+#: dll/content/serializers.py:180 dll/content/serializers.py:205
+msgid "A content with this name already exists."
+msgstr ""
+
+#: dll/general/models.py:111
+msgid "Koauthorenschaftsanfrage"
+msgstr ""
+
+#: dll/general/models.py:112
+msgid "BSB Kontaktanfrage"
+msgstr ""
+
+#: dll/general/models.py:113
+msgid "DLL Kontaktanfrage"
+msgstr ""
+
+#: dll/templates/dll/includes/messages.html:6
+msgid "Important"
+msgstr ""
+
+#: dll/user/models.py:47
+msgid "Männlich"
+msgstr ""
+
+#: dll/user/models.py:48
+msgid "Weiblich"
+msgstr ""
+
+#: dll/user/models.py:51
+msgid "email address"
+msgstr "Email Adresse"
+
+#: dll/user/models.py:53
+msgid "username"
+msgstr "Nutzername"
+
+#: dll/user/models.py:58
+msgid "Double-opt-in confirmed"
+msgstr "Double-Opt-In bestätigt"

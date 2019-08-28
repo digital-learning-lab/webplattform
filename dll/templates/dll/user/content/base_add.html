@@ -10,7 +10,7 @@
 {% block extra_scripts %}
   <script>
     window.dllData = {
-      authorName: '{{ request.user.username }}',
+      authorName: '{{ request.user.full_name }}',
     {% if obj %}
       module: {{ obj|safe }},
       mode: {% block mode %}'edit'{% endblock %},

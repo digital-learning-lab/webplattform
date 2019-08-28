@@ -80,7 +80,6 @@
 .navigation__items {
   list-style: none;
   padding: 0 50px;
-  margin-top: 93px;
 }
 .navigation__item {
   border-top: 1px solid white;
@@ -91,19 +90,25 @@
     text-decoration: none;
     text-align: center;
     font-size: 20px;
-    color: #818181;
+    color: rgba(129, 129, 129, 1);
     transition: 0.3s color;
     font-weight: $font-weight-light;
     &:hover {
       color: rgba(255, 255, 255, 1);
     }
     &:visited, &:link, &:active, &:focus {
-      color: #818181;
+      color: rgba(129, 129, 129, 1);
     }
   }
 }
 .navigation__item:last-child {
   border-bottom: 1px solid white;
+}
+.navigation__user {
+  color: rgba(255, 255, 255, 1);
+  margin-top: 85px;
+  text-align: center;
+  margin-bottom: 10px;
 }
 @media (min-width: 768px) {
   .navigation {

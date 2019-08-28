@@ -175,8 +175,8 @@ class CoAuthorshipInvitation(TimeStampedModel):
         context = {
             'content_title': instance.name,
             'content_type': instance.type_verbose,
-            'author': self.by.username,
-            'invitee': self.to.username,
+            'author': self.by.full_name,
+            'invitee': self.to.full_name,
             'message': self.message,
             'token': token
         }
@@ -195,7 +195,7 @@ class CoAuthorshipInvitation(TimeStampedModel):
             'content_type': instance.type_verbose,
             'message': self.message,
             'invited_user_name': self.to.full_name,
-            'author': self.by.username,
+            'author': self.by.full_name,
         }
         send_mail.delay(
             event_type_code='COAUTHOR_INVITATION_ACCEPTED',
@@ -212,7 +212,7 @@ class CoAuthorshipInvitation(TimeStampedModel):
             'content_type': instance.type_verbose,
             'message': self.message,
             'invited_user_name': self.to.full_name,
-            'author': self.by.username,
+            'author': self.by.full_name,
         }
         send_mail.delay(
             event_type_code='COAUTHOR_INVITATION_DECLINED',
