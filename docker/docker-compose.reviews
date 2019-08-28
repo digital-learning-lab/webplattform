@@ -21,6 +21,9 @@ services:
     security_opt:
       - no-new-privileges
     environment:
+      - REDIS_HOSTNAME=redis
+      - CELERY_TASK_ALWAYS_EAGER=True
+      - SOLR_HOSTNAME=solr
       - VIRTUAL_HOST=${CI_PROJECT_ID}-${CI_ENVIRONMENT_SLUG}
       - DJANGO_SECRET_KEY=${SECRET_KEY}
       - HOST_IP=${HOST_IP}
@@ -56,6 +59,36 @@ services:
         - POSTGRES_PASSWORD=gdUsLuRrDa6gQmEqoK2oP9oHWvcPeq6J3jQpAnF6q5Tw7Rmci5D
         - POSTGRES_USER=dll_admin
         - POSTGRES_DB=dll_db
+  redis:
+    image: "redis:alpine"
+    hostname: redis
+  celery:
+    image: dll_web
+    command: [celery, worker, --app=dll.configuration.celery.app, --concurrency=1, --loglevel=DEBUG]
+    environment:
+    - REDIS_HOSTNAME=redis
+    - DATABASE_USER=postgres
+    - DATABASE_NAME=postgres
+    - DATABASE_HOST=db
+    - DJANGO_DEBUG=True
+    - CELERY_TASK_ALWAYS_EAGER=True
+    - SOLR_HOSTNAME=solr
+    user: "1000:1000"
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+      - redis
+  solr:
+    image: solr
+    ports:
+      - "8983:8983"
+    volumes:
+      - ./solr:/opt/solr/server/solr/core
+    entrypoint:
+      - docker-entrypoint.sh
+      - solr-precreate
+      - mycore
 
 networks:
   default:
