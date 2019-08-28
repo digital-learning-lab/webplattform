@@ -1,2 +1,9 @@
-COAUTHOR_INVITATION body
-Follow this link: {{ token }} to view invitation.
+Sehr geehrte(r) {{ invitee }},
+
+Sie wurden von {{ author }} eingeladen um als Co-Autor an dem {{ content_type }} - {{ content_title }} mitzuarbeiten.
+
+Über den folgenden Link können Sie die Co-Autor_innen-schaft annehmen oder ablehnen: {{ token }}
+
+Viele Grüße,
+Ihr digital.learning.lab Team
+

@@ -89,10 +89,11 @@ class CommunicationEventType(TimeStampedModel):
         # Build a dict of message name to Template instances
         templates = {'subject': 'email_subject_template',
                      'body': 'email_body_template',
-                     'html': 'email_body_html_template'}
+                     # 'html': 'email_body_html_template'
+                     }
         for name, attr_name in templates.items():
             field = getattr(self, attr_name, None)
-            if field is not None:
+            if field:
                 # Template content is in a model field
                 templates[name] = Template(field)
             else:
@@ -172,6 +173,9 @@ class CoAuthorshipInvitation(TimeStampedModel):
         token = 'https://%s%s' % (Site.objects.get_current().domain, token)
         context = {
             'content_title': self.content.name,
+            'content_type': self.content.type_verbose,
+            'author': self.by.username,
+            'invitee': self.to.username,
             'message': self.message,
             'token': token
         }

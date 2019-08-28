@@ -1,6 +1,6 @@
 <template>
   <div class="form-group">
-    <label :for="id">{{ label }}</label>
+    <label :for="id">{{ label }}<span v-if="required">*</span></label>
 
     <div class="custom-file">
       <div class="d-flex">

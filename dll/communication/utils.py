@@ -46,7 +46,7 @@ class Dispatcher(object):
         """
         from_email = event_type.from_email
         # Determine whether we are sending a HTML version too
-        if messages['html']:
+        if messages.get('html', None):
             email = EmailMultiAlternatives(messages['subject'],
                                            messages['body'],
                                            from_email=from_email,

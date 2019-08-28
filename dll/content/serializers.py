@@ -179,19 +179,18 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     tools = SerializerMethodField(allow_null=True)
     trends = SerializerMethodField(allow_null=True)
     teaching_modules = SerializerMethodField(allow_null=True)
-    contentlink_set = LinkSerializer(many=True, allow_null=True, required=False)
     review = ReviewSerializer(read_only=True)
     help_texts = SerializerMethodField(allow_null=True)
     preview_url = SerializerMethodField(allow_null=True)
     submitted = SerializerMethodField(allow_null=True)
+    pending_co_authors = SerializerMethodField(allow_null=True)
 
-    review = ReviewSerializer(read_only=True)
 
     def validate_name(self, data):
         """Make sure the slug of this name will be unique too."""
         expected_slug = custom_slugify(data)
         if Content.objects.drafts().filter(slug=expected_slug).count() > 1 or \
-                Content.objects.published().filter(slug=expected_slug).count():
+                Content.objects.published().filter(slug=expected_slug).count() > 1:
             raise ValidationError(_('A content with this name already exists.'))
         return data
 
@@ -202,6 +201,9 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             if obj.is_public:
                 res.append(x)
         return res
+
+    def get_pending_co_authors(self, obj):
+        return [invite.to.username for invite in obj.invitations.filter(accepted__isnull=True)]
 
     def get_submitted(self, obj):
         return obj.review and (obj.review.status == Review.IN_PROGRESS or obj.review.status == Review.NEW)
@@ -235,7 +237,6 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
 
     def get_m2m_fields(self):
         return [
-            'co_authors',
             'competences',
             'sub_competences',
             'related_content'
@@ -250,8 +251,6 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         links_data = validated_data.pop('contentlink_set', [])
         co_authors = validated_data.pop('co_authors', [])
         content = super(BaseContentSubclassSerializer, self).create(validated_data)
-        # self._update_content_links(content, links_data)
-        # self._update_co_authors(content, co_authors)
         return content
 
     def _update_content_links(self, content, data):
@@ -264,9 +263,10 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             ContentLink.objects.create(content=content, **dict(link))
 
     def _update_co_authors(self, content, co_authors):
+        invited_co_authors = set(DllUser.objects.filter(pk__in=content.invitations.values_list('to', flat=True)))
         current_co_authors = set(content.co_authors.all())
-        updated_list = set(co_authors)
-        new_co_authors = updated_list - current_co_authors
+        updated_list = set(DllUser.objects.filter(pk__in=co_authors))
+        new_co_authors = updated_list - current_co_authors - invited_co_authors
         removed_co_authors = current_co_authors - updated_list
         content.co_authors.remove(*removed_co_authors)
         for user in new_co_authors:
@@ -294,7 +294,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         }
         for update_key, update_method in update_methods.items():
             try:
-                data = validated_data.pop(update_key)
+                data = validated_data.pop(update_key, [])
                 method = getattr(self, update_method)
             except AttributeError:
                 logger.warning("No update method for {}".format(update_key))
@@ -304,10 +304,6 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
                 pass
             else:
                 method(instance, data)
-        instance = super().update(instance, validated_data)
-
-        co_authors = validated_data['co_authors']
-        # self._update_co_authors(instance, co_authors)
 
         for field in self.get_m2m_fields():
             values = validated_data.pop(field)

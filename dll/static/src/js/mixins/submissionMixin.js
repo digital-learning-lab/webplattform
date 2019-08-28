@@ -8,6 +8,7 @@ import Select from '../components/Select.vue'
 import RangeInput from '../components/RangeInput.vue'
 import LinksInput from '../components/LinksInput.vue'
 import ListInput from '../components/ListInput.vue'
+import PendingCoAuthors from '../components/PendingCoAuthors.vue'
 
 export const submissionMixin = {
   components: {
@@ -18,7 +19,8 @@ export const submissionMixin = {
     'AppRangeInput': RangeInput,
     'AppLinksInput': LinksInput,
     'AppListInput': ListInput,
-    'AppSelect': Select
+    'AppSelect': Select,
+    'AppPendingCoAuthors': PendingCoAuthors
   },
   data () {
     return {
@@ -219,6 +221,12 @@ export const submissionMixin = {
     validate () {
       this.errors = []
       for (let i = 0; i < this.requiredFields.length; i++) {
+        if (this.requiredFields[i].field === 'image' && !this.data.image) {
+          if (!this.previewImage) {
+            this.errors.push('Bitte füllen Sie das Pflichtfeld \'' + this.requiredFields[i].title + '\' aus.')
+          }
+          continue
+        }
         if (!this.data[this.requiredFields[i].field]) {
           this.errors.push('Bitte füllen Sie das Pflichtfeld \'' + this.requiredFields[i].title + '\' aus.')
         }

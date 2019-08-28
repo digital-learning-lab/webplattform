@@ -24,7 +24,7 @@ from taggit.managers import TaggableManager
 
 from .managers import ContentQuerySet
 from dll.general.models import DllSlugField, PublisherModel
-from dll.user.utils import get_default_tuhh_user
+from dll.user.utils import get_default_tuhh_user, get_bsb_reviewer_group, get_tuhh_reviewer_group
 from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
 

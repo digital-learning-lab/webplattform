@@ -1,1 +1,1 @@
-COAUTHOR_INVITATION subject
+Einladung Mitarbeit am {{ content_type }} - {{ content_title }}

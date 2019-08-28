@@ -130,6 +130,9 @@
         if (!newValue && this.prefetch) {
           this.fetchOptions('', function () {})
         }
+      },
+      value (newValue) {
+        this.inputValue = newValue
       }
     }
   }

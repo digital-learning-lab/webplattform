@@ -3,12 +3,13 @@
       <app-text-input id="author" :readonly="true" label="Autor_in" :value.sync="data.author" :required="true"></app-text-input>
       <app-text-input id="title" :readonly="readonly" :review="review" label="Titel des Unterrichtbausteins" :value.sync="data.name" :review-value.sync="reviewValue.name" :required="true" :character-counter="true" :maximal-chars="140" :help-text="getHelpText('name')"></app-text-input>
     <div v-if="mode === 'edit' || mode === 'review'">
-      <app-file-input id="image" :readonly="readonly" :review="review" label="Anzeigebild" file-label="Bild wählen" :value.sync="previewImage" :review-value.sync="reviewValue.image" :image="data.image" :help-text="getHelpText('image')" :hintText="imageHintText"></app-file-input>
+      <app-file-input id="image" :readonly="readonly" :review="review" :required="true" label="Anzeigebild" file-label="Bild wählen" :value.sync="previewImage" :review-value.sync="reviewValue.image" :image="data.image" :help-text="getHelpText('image')" :hintText="imageHintText"></app-file-input>
       <app-text-area id="teaser" :readonly="readonly" :review="review" label="Teaser" :required="true" :value.sync="data.teaser" :review-value.sync="reviewValue.teaser" :rows="3" :help-text="getHelpText('teaser')"></app-text-area>
       <app-text-area id="description" :readonly="readonly" :review="review" label="Detaillierte Beschreibung" :required="true" :value.sync="data.description" :review-value.sync="reviewValue.description" :character-counter="true" :maximal-chars="1800" :rows="10" :help-text="getHelpText('description')"></app-text-area>
       <app-dropdown id="co_authors" :readonly="readonly" :review="review" label="Co-Autor_innen" :value.sync="data.co_authors" :review-value.sync="reviewValue.co_authors" fetch-url="/api/authors" :multiple="true" :help-text="getHelpText('co_authors')"></app-dropdown>
-      <app-dropdown id="schoolType" :readonly="readonly" :review="review" label="Schulform" :value.sync="data.school_types" :review-value.sync="reviewValue.school_types" fetch-url="/api/schoolTypes" :multiple="true" :prefetch="true" :help-text="getHelpText('school_types')"></app-dropdown>
-      <app-dropdown id="subject" :readonly="readonly" :review="review" label="Unterrichtsfach" :value.sync="data.subjects" :review-value.sync="reviewValue.subjects" fetch-url="/api/subjects" :multiple="true" :prefetch="true" :help-text="getHelpText('subjects')"></app-dropdown>
+      <app-pending-co-authors :pending_co_authors="data.pending_co_authors"></app-pending-co-authors>
+      <app-dropdown id="schoolType" :readonly="readonly" :review="review" :required="true" label="Schulform" :value.sync="data.school_types" :review-value.sync="reviewValue.school_types" fetch-url="/api/schoolTypes" :multiple="true" :prefetch="true" :help-text="getHelpText('school_types')"></app-dropdown>
+      <app-dropdown id="subject" :readonly="readonly" :review="review" :required="true" label="Unterrichtsfach" :value.sync="data.subjects" :review-value.sync="reviewValue.subjects" fetch-url="/api/subjects" :multiple="true" :prefetch="true" :help-text="getHelpText('subjects')"></app-dropdown>
       <app-select id="state" :readonly="readonly" :review="review" label="Bundesland" :value.sync="data.state" :review-value.sync="reviewValue.state" :default-val="data.state" :options="germanStateOptions" :help-text="getHelpText('state')"></app-select>
       <app-dropdown id="teaching-modules" :readonly="readonly" :review="review" label="Passende Unterrichtsbausteine" :value.sync="data.teaching_modules" :review-value.sync="reviewValue.teaching_modules" fetch-url="/api/unterrichtsbausteine" :multiple="true" :help-text="getHelpText('teaching_modules')"></app-dropdown>
       <app-dropdown id="tools" :readonly="readonly" :review="review" label="Verwendete Tools" :value.sync="data.tools" :review-value.sync="reviewValue.tools" fetch-url="/api/tools" :multiple="true" :help-text="getHelpText('tools')"></app-dropdown>
@@ -51,8 +52,8 @@
           {field: 'image', title: 'Anzeigebild'},
           {field: 'competences', title: 'Kompetenzen in der digitalen Welt'},
           {field: 'description', title: 'Detaillierte Beschreibung'},
-          {field: 'school_type', title: 'Schulform'},
-          {field: 'subject', title: 'Unterrichtsfach'}
+          {field: 'school_types', title: 'Schulform'},
+          {field: 'subjects', title: 'Unterrichtsfach'}
         ],
         data: {
           author: '',

@@ -8,8 +8,7 @@ from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from filer.models import Image, Folder
 from psycopg2._range import NumericRange
-from rest_framework import viewsets, filters, mixins, status,
-from rest_framework.permissions import DjangoObjectPermissions
+from rest_framework import viewsets, filters, mixins, status
 from rest_framework.generics import ListAPIView, GenericAPIView
 from rest_framework.parsers import FileUploadParser
 from rest_framework.permissions import DjangoObjectPermissions
