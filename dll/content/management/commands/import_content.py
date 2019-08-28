@@ -706,6 +706,7 @@ class Command(BaseCommand):
                 a = int(value.replace(';', ''))
                 b = None
 
+            logger.debug(f'Range is {a} to {b}')
             return a, b
         else:
             raise ValueError

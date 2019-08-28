@@ -79,6 +79,7 @@
 }
 .navigation__items {
   list-style: none;
+  margin-top: 95px;
   padding: 0 50px;
 }
 .navigation__item {
@@ -109,6 +110,9 @@
   margin-top: 85px;
   text-align: center;
   margin-bottom: 10px;
+}
+.navigation__user + .navigation__items {
+  margin-top: 0;
 }
 @media (min-width: 768px) {
   .navigation {
