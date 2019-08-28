@@ -30,7 +30,9 @@ class HelpTextFieldForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(HelpTextFieldForm, self).__init__(*args, **kwargs)
         # todo: make a choices select
-        instance: HelpText = kwargs.get('instance')
+        instance: HelpTextField = kwargs.get('instance')
         if instance:
-            self.fields['name'] = forms.ChoiceField(choices=instance.get_help_text_fields_for_content_type())
+            help_text = instance.help_text
+            if help_text:
+                self.fields['name'] = forms.ChoiceField(choices=help_text.get_help_text_fields_for_content_type())
 

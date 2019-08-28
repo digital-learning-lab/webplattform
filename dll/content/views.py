@@ -1,7 +1,7 @@
 import json
 import random
 
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404, HttpResponse
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
@@ -10,7 +10,7 @@ from filer.models import Image, Folder
 from psycopg2._range import NumericRange
 from rest_framework import viewsets, filters, mixins, status,
 from rest_framework.permissions import DjangoObjectPermissions
-from rest_framework.generics import ListAPIView
+from rest_framework.generics import ListAPIView, GenericAPIView
 from rest_framework.parsers import FileUploadParser
 from rest_framework.permissions import DjangoObjectPermissions
 from rest_framework.response import Response
@@ -49,9 +49,9 @@ class HomePageView(TemplateView):
         ctx = super(HomePageView, self).get_context_data(**kwargs)
         content_pks = []
         try:
-            content_pks += random.choices(TeachingModule.objects.drafts().values_list('pk', flat=True), k=2)
-            content_pks += random.choices(Trend.objects.drafts().values_list('pk', flat=True), k=2)
-            content_pks += random.choices(Tool.objects.drafts().values_list('pk', flat=True), k=2)
+            content_pks += random.choices(TeachingModule.objects.published().values_list('pk', flat=True), k=2)
+            content_pks += random.choices(Trend.objects.published().values_list('pk', flat=True), k=2)
+            content_pks += random.choices(Tool.objects.published().values_list('pk', flat=True), k=2)
         except IndexError:
             pass  # no content yet
         ctx['contents'] = Content.objects.filter(pk__in=content_pks)
@@ -88,11 +88,35 @@ class DevelopmentView(TemplateView, BreadcrumbMixin):
     breadcrumb_url = reverse_lazy('development')
 
 
-class ContentDetailView(DetailView):
+class ContentDetailBase(DetailView):
     def get_context_data(self, **kwargs):
-        ctx = super(ContentDetailView, self).get_context_data(**kwargs)
+        ctx = super(ContentDetailBase, self).get_context_data(**kwargs)
         ctx['competences'] = Competence.objects.all()
         return ctx
+
+
+class ContentDetailView(ContentDetailBase):
+    def get_queryset(self):
+        qs = super(ContentDetailView, self).get_queryset()
+        return qs.published()
+
+
+class ContentPreviewView(ContentDetailBase):
+    def get_context_data(self, **kwargs):
+        ctx = super(ContentPreviewView, self).get_context_data(**kwargs)
+        ctx['preview'] = True
+        return ctx
+
+    def get_object(self, queryset=None):
+        obj = super(ContentPreviewView, self).get_object(queryset=queryset)
+        user = self.request.user
+        if not user.has_perm('content.view_content', obj):
+            raise Http404
+        return obj
+
+    def get_queryset(self):
+        qs = super(ContentPreviewView, self).get_queryset()
+        return qs.drafts()
 
 
 class ToolDetailView(ContentDetailView):
@@ -106,6 +130,21 @@ class TrendDetailView(ContentDetailView):
 
 
 class TeachingModuleDetailView(ContentDetailView):
+    model = TeachingModule
+    template_name = 'dll/content/teaching_module_detail.html'
+
+
+class ToolDetailPreviewView(ContentPreviewView):
+    model = Tool
+    template_name = 'dll/content/tool_detail.html'
+
+
+class TrendDetailPreviewView(ContentPreviewView):
+    model = Trend
+    template_name = 'dll/content/trend_detail.html'
+
+
+class TeachingModuleDetailPreviewView(ContentPreviewView):
     model = TeachingModule
     template_name = 'dll/content/teaching_module_detail.html'
 
@@ -171,16 +210,54 @@ class DraftsContentViewSet(AutoPermissionViewSetMixin,
         serializer.save(author=self.request.user)
 
 
+class SubmitContentView(GenericAPIView):
+    queryset = Content.objects.drafts()
+    lookup_field = 'slug'
+
+    def post(self, *args, **kwargs):
+        obj = self.get_object()
+        user = self.request.user
+        if user.has_perm('content.change_content', obj):
+            obj.submit_for_review()
+            return HttpResponse(status=200)
+        return HttpResponse(status=403)
+
+
 class ReviewViewSet(mixins.RetrieveModelMixin,
                     mixins.UpdateModelMixin,
                     viewsets.GenericViewSet):
     """Authors have only view permission, reviewers have view and edit permission"""
     serializer_class = ReviewSerializer
-    queryset = Review.objects.all()
+    queryset = Review.objects.filter(content__publisher_is_draft=True, is_active=True)
     permission_classes = [DjangoObjectPermissions]
+    lookup_field = 'content__slug'
+    lookup_url_kwarg = 'slug'
 
     def perform_update(self, serializer):
         serializer.save()
+
+
+class BaseActionReviewView(GenericAPIView):
+    queryset = Review.objects.filter(content__publisher_is_draft=True, is_active=True)
+    lookup_field = 'content__slug'
+    lookup_url_kwarg = 'slug'
+    serializer_class = ReviewSerializer
+
+
+class ApproveContentView(BaseActionReviewView):
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.accept(self.request.user)
+        return JsonResponse(self.get_serializer(instance=obj).data)
+
+
+class DeclineContentView(BaseActionReviewView):
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        obj.decline(self.request.user)
+        return JsonResponse(self.get_serializer(instance=obj).data)
 
 
 class CompetenceFilterView(DetailView):
@@ -393,16 +470,6 @@ class OperatingSystemSearchView(ListAPIView):
 
 class ToolApplicationSearchView(ListAPIView):
     queryset = ToolApplication.objects.all()
-    serializer_class = SubjectSerializer
-    filter_backends = [
-        DjangoFilterBackend,
-        filters.SearchFilter
-    ]
-    search_fields = ['name']
-
-
-class SearchView(ListAPIView):
-    queryset = OperatingSystem.objects.all()
     serializer_class = SubjectSerializer
     filter_backends = [
         DjangoFilterBackend,

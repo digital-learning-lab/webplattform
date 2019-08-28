@@ -1,3 +1,4 @@
+import rules
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser, Group
 from django.contrib.postgres.fields import JSONField
@@ -63,7 +64,7 @@ class DllUser(AbstractUser):
 
     USERNAME_FIELD = 'email'
     EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'gender']
+    REQUIRED_FIELDS = ['first_name', 'last_name']
     objects = DllUserManager()
 
     def __str__(self):
@@ -84,3 +85,8 @@ class DllUser(AbstractUser):
 
     def qs_any_content(self):
         return list(self.qs_of_personal_content()) + list(self.qs_of_coauthored_content())
+
+    @property
+    def is_reviewer(self):
+        return self.is_superuser or rules.is_group_member('BSB-Reviewer')(self) or \
+               rules.is_group_member('TUHH-Reviewer')(self)

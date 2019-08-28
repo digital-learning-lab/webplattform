@@ -4,19 +4,27 @@
     <div class="row">
       <div class="col d-flex align-items-baseline">
         <label class="mr-3" :for="id + 'from'">{{ labelFrom }}:</label>
-        <input :type="type" class="form-control" :id="id + '-from'" v-model="from" :min="min" :max="max">
+        <input :type="type" class="form-control" :id="id + '-from'" v-model="from" :min="min" :max="max" :readonly="readonly">
       </div>
       <div class="col d-flex align-items-baseline">
         <label class="mr-3" :for="id + 'to'">{{ labelTo }}:</label>
-        <input :type="type" class="form-control" :id="id + '-to'" v-model="to" :min="min" :max="max">
+        <input :type="type" class="form-control" :id="id + '-to'" v-model="to" :min="min" :max="max" :readonly="readonly">
       </div>
     </div>
+    <app-review-input :mode="review ? 'review' : 'edit'" :id="'id'+-review" :name="label" :reviewValue.sync="ownReviewValue"></app-review-input>
   </div>
 </template>
 
 <script>
+  import ReviewInput from './ReviewInput.vue'
+  import { reviewMixin } from '../mixins/reviewMixin'
+
   export default {
     name: 'RangeInput',
+    components: {
+      'AppReviewInput': ReviewInput
+    },
+    mixins: [reviewMixin],
     props: {
       id: {
         type: String,
@@ -60,6 +68,11 @@
       max: {
         type: Number,
         default: null,
+        required: false
+      },
+      readonly: {
+        type: Boolean,
+        default: false,
         required: false
       }
     },

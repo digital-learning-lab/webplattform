@@ -1,19 +1,29 @@
 <template>
   <div class="form-group">
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
-    <v-select v-model="inputValue" :options="options" @search="fetchOptions" :multiple="multiple" :disabled="disabled"></v-select>
+    <div class="d-flex">
+    <v-select v-model="inputValue" :options="options" @search="fetchOptions" :multiple="multiple" :disabled="disabled || readonly"></v-select>
+      <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
+        <span class="far fa-question-circle"></span>
+      </button>
+    </div>
+    <app-review-input :mode="review ? 'review' : 'edit'" :id="'id'+-review" :name="label" :reviewValue.sync="ownReviewValue"></app-review-input>
   </div>
 </template>
 
 <script>
   import vSelect from 'vue-select'
   import axios from 'axios'
+  import ReviewInput from './ReviewInput.vue'
+  import { reviewMixin } from '../mixins/reviewMixin'
 
   export default {
     name: 'Dropdown',
     components: {
-      'v-select': vSelect
+      'v-select': vSelect,
+      'AppReviewInput': ReviewInput
     },
+    mixins: [reviewMixin],
     props: {
       prefetch: {
         type: Boolean,
@@ -61,6 +71,16 @@
         required: false
       },
       disabled: {
+        type: Boolean,
+        default: false,
+        required: false
+      },
+      helpText: {
+        type: String,
+        default: '',
+        required: false
+      },
+      readonly: {
         type: Boolean,
         default: false,
         required: false
@@ -116,5 +136,7 @@
 </script>
 
 <style scoped>
-
+  .v-select {
+    width: 100%;
+  }
 </style>

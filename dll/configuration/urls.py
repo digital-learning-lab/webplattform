@@ -26,9 +26,10 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
     CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView, ToolApplicationSearchView, \
-    OperatingSystemSearchView, ReviewViewSet
+    OperatingSystemSearchView, ReviewViewSet,  ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
+    TrendDetailPreviewView, SubmitContentView, ApproveContentView, DeclineContentView
 from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
-    UserContentView
+    UserContentView, MyReviewsView, ReviewTeachingModuleView, ReviewToolView, ReviewTrendView, PendingReviewContentView
 
 router = DefaultRouter()
 router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
@@ -45,16 +46,27 @@ urlpatterns = [
     path('entwicklung', DevelopmentView.as_view(), name='development'),
     path('faq', views.flatpage, {'url': '/faq/'}, name='faq'),
     path('tools/<slug:slug>', ToolDetailView.as_view(), name='tool-detail'),
+    path('tools/<slug:slug>/vorschau', ToolDetailPreviewView.as_view(), name='tool-detail-preview'),
     path('trends/<slug:slug>', TrendDetailView.as_view(), name='trend-detail'),
+    path('trends/<slug:slug>/vorschau', TrendDetailPreviewView.as_view(), name='trend-detail-preview'),
     path('unterrichtsbausteine/<slug:slug>', TeachingModuleDetailView.as_view(), name='teaching-module-detail'),
+    path('unterrichtsbausteine/<slug:slug>/vorschau', TeachingModuleDetailPreviewView.as_view(),
+         name='teaching-module-detail-preview'),
     path('kompetenz/<slug:slug>', CompetenceFilterView.as_view(), name='competence-filter'),
     path('unterrichtsbausteine', TeachingModuleFilterView.as_view(), name='teaching-modules-filter'),
     path('tools', ToolFilterView.as_view(), name='tools-filter'),
     path('trends', TrendFilterView.as_view(), name='trends-filter'),
     path('meine-inhalte', MyContentView.as_view(), name='user-content-overview'),
+    path('review-inhalte', MyReviewsView.as_view(), name='user-content-review'),
     path('meine-inhalte/unterrichtsbausteine/', CreateEditTeachingModuleView.as_view(), name='add-teaching-module'),
     path('meine-inhalte/unterrichtsbausteine/<slug:slug>', CreateEditTeachingModuleView.as_view(),
          name='edit-teaching-module'),
+    path('review-inhalte/unterrichtsbausteine/<slug:slug>/review', ReviewTeachingModuleView.as_view(),
+         name='review-teaching-module'),
+    path('review-inhalte/tools/<slug:slug>/review', ReviewToolView.as_view(),
+         name='review-tool'),
+    path('review-inhalte/trends/<slug:slug>/review', ReviewTrendView.as_view(),
+         name='review-trend'),
     path('meine-inhalte/tools/', CreateEditToolView.as_view(), name='add-tool'),
     path('meine-inhalte/tools/<slug:slug>', CreateEditToolView.as_view(),
          name='edit-tool'),
@@ -77,8 +89,15 @@ urlpatterns = [
     path('api/applications', ToolApplicationSearchView.as_view(), name='application-search'),
     path('api/operatingSystems', OperatingSystemSearchView.as_view(), name='operating-system-search'),
     path('api/meine-inhalte', UserContentView.as_view(), name='user-contents'),
+    path('api/review-inhalte', PendingReviewContentView.as_view(), name='content-pending'),
     path('api/inhalt-bearbeiten/<slug:slug>/vorschau-bild', FileUploadView.as_view(),
          name='add-preview-image'),
+    path('api/inhalt-einreichen/<slug:slug>', SubmitContentView.as_view(),
+         name='submit-content'),
+    path('api/review/<slug:slug>/approve', ApproveContentView.as_view(),
+         name='approve-content'),
+    path('api/review/<slug:slug>/decline', DeclineContentView.as_view(),
+         name='decline-content'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

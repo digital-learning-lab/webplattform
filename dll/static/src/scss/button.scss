@@ -6,11 +6,26 @@
   margin: 1rem 0;
   border: 0;
   font-weight: $font-weight-semi-bold;
+  .button[disabled] {
+    opacity: 0.7;
+  }
 }
 .button--primary {
   background-color: $color--oracle;
   &:hover {
     background-color: $color--smalt-blue;
+  }
+}
+.button--preview {
+  background-color: $color--preview;
+  &:hover {
+    background-color: $color--preview;
+  }
+}
+.button--submit {
+  background-color: $color--submit;
+  &:hover {
+    background-color: $color--submit;
   }
 }
 .button--teaching-module,
@@ -60,7 +75,6 @@
 .button--danger,
 .button--danger:visited {
   color: rgba(255, 255, 255, 1);
-  font-weight: $font-weight-light;
   background-color: $color--punch;
   &:hover {
     color: rgba(255, 255, 255, 1);

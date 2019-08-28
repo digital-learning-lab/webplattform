@@ -1,6 +1,7 @@
 import logging
 
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
@@ -9,7 +10,7 @@ from easy_thumbnails.files import get_thumbnailer
 from psycopg2._range import NumericRange
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.fields import SerializerMethodField, IntegerField, CharField
+from rest_framework.fields import SerializerMethodField, IntegerField, CharField, SlugField
 from rest_framework.relations import RelatedField
 from rest_framework.validators import UniqueValidator
 from rest_polymorphic.serializers import PolymorphicSerializer
@@ -17,7 +18,9 @@ from rest_polymorphic.serializers import PolymorphicSerializer
 from dll.communication.models import CoAuthorshipInvitation
 from dll.communication.tokens import co_author_invitation_token
 from dll.content.fields import RangeField
-from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication
+from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication, \
+    HelpText, Review
+from dll.general.utils import custom_slugify
 from dll.user.models import DllUser
 from .models import Content, Tool, Trend, TeachingModule, ContentLink, Review
 
@@ -74,18 +77,26 @@ class ContentListInternalSerializer(ContentListSerializer):
         return str(obj.author.username)
 
     def get_preview_url(self, obj):
-        return obj.get_absolute_url()
+        return obj.get_preview_url()
 
     def get_edit_url(self, obj):
         return obj.get_edit_url()
 
     def get_status(self, obj):
         status = _('Draft')
-        if not obj.publisher_is_draft:
-            status = _('Approved')
+        if obj.publisher_linked:
+            if obj.review:
+                if obj.review.status == Review.DECLINED:
+                    return _('Approved - Resubmission declined.')
+                else:
+                    return _('Approved - Resubmission pending.')
+            return _('Approved')
 
-        if obj.publisher_is_draft and obj.reviews.all().count():
-            status = _('Submitted')
+        if obj.publisher_is_draft and obj.review and obj.review.status == Review.DECLINED:
+            return _('Declined')
+
+        if obj.publisher_is_draft and obj.reviews.count():
+            return _('Submitted')
 
         return status
 
@@ -170,6 +181,19 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     teaching_modules = SerializerMethodField(allow_null=True)
     contentlink_set = LinkSerializer(many=True, allow_null=True, required=False)
     review = ReviewSerializer(read_only=True)
+    help_texts = SerializerMethodField(allow_null=True)
+    preview_url = SerializerMethodField(allow_null=True)
+    submitted = SerializerMethodField(allow_null=True)
+
+    review = ReviewSerializer(read_only=True)
+
+    def validate_name(self, data):
+        """Make sure the slug of this name will be unique too."""
+        expected_slug = custom_slugify(data)
+        if Content.objects.drafts().filter(slug=expected_slug).count() > 1 or \
+                Content.objects.published().filter(slug=expected_slug).count():
+            raise ValidationError(_('A content with this name already exists.'))
+        return data
 
     def validate_related_content(self, data):
         res = []
@@ -178,6 +202,22 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             if obj.is_public:
                 res.append(x)
         return res
+
+    def get_submitted(self, obj):
+        return obj.review and (obj.review.status == Review.IN_PROGRESS or obj.review.status == Review.NEW)
+
+    def get_help_texts(self, obj):
+        result = {}
+        try:
+            help_text = HelpText.objects.get(content_type=ContentType.objects.get_for_model(obj))
+            for field in help_text.help_text_fields.all():
+                result[field.name.split('.')[-1]] = field.text
+        except HelpText.DoesNotExist:
+            pass
+        return result
+
+    def get_preview_url(self, obj):
+        return obj.get_preview_url()
 
     def get_image(self, obj):
         if obj.image:
@@ -210,8 +250,8 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         links_data = validated_data.pop('contentlink_set', [])
         co_authors = validated_data.pop('co_authors', [])
         content = super(BaseContentSubclassSerializer, self).create(validated_data)
-        self._update_content_links(content, links_data)
-        self._update_co_authors(content, co_authors)
+        # self._update_content_links(content, links_data)
+        # self._update_co_authors(content, co_authors)
         return content
 
     def _update_content_links(self, content, data):
@@ -266,6 +306,8 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
                 method(instance, data)
         instance = super().update(instance, validated_data)
 
+        co_authors = validated_data['co_authors']
+        # self._update_co_authors(instance, co_authors)
 
         for field in self.get_m2m_fields():
             values = validated_data.pop(field)

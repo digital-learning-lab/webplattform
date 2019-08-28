@@ -1,0 +1,23 @@
+{% extends 'dll/default_page.html' %}
+
+{% block content %}
+  <div>
+    <h3>Eingereichte Inhalte sichten und freigeben</h3>
+    <p>In diesem Bereich können Sie die eingereichten Inhalte sichten, den Autor_innen eine Rückmeldung geben und freigeben.</p>
+    <p>Nachfolgend finden Sie alle Inhalte aufgelistet, die aktuell von Autor_innen zur Sichtung eingereicht wurden. Über das gelbe Symbol können Sie sich die eingereichten Inhalte im    Vorschaumodus ansehen. Falls Sie Rückfragen zum eingereichten Inhalt haben, können Sie die Autor_innen direkt über die Plattform kontaktieren.</p>
+    <p>Sofern die Sichtung des eingereichten Inhalts positiv ausfällt, können Sie das Element im Editiermodus (blauer Button) "freigeben". Der Inhalt wird anschließend direkt live im digital.learning.lab anzeigt. Sofern die Sichtung des eingereichten Inhalts negativ ausfällt, können Sie das Element im Editiermodus "zur Nachbearbeitung" an die Autor_innen zurückschicken. Der Inhalt wird dadurch wieder für die Autor_innen zur Bearbeitung freigeschaltet und erscheint nicht live im digital.learning.lab. </p>
+  </div>
+
+  <div id="overview-app"></div>
+{% endblock %}
+
+{% block extra_scripts %}
+  {{ block.super }}
+  <script>
+  window.dllData = {
+    retrieveUrl: '/api/review-inhalte',
+    mode: 'review'
+  }
+  </script>
+{% endblock %}
+

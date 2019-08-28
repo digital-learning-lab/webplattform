@@ -1,15 +1,28 @@
 <template>
   <div class="form-group">
     <label :for="id">{{ label }}</label>
-    <select :name="id" :id="id" class="form-control" v-model="inputValue">
-      <option v-for="option in options" :value="option.value" :selected="option.value === defaultVal">{{ option.label }}</option>
-    </select>
+    <div class="d-flex">
+      <select :name="id" :id="id" class="form-control" v-model="inputValue" :disabled="readonly">
+        <option v-for="option in options" :value="option.value" :selected="option.value === defaultVal">{{ option.label }}</option>
+      </select>
+      <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
+        <span class="far fa-question-circle"></span>
+      </button>
+    </div>
+    <app-review-input :mode="review ? 'review' : 'edit'" :id="'id'+-review" :name="label" :reviewValue.sync="ownReviewValue"></app-review-input>
   </div>
 </template>
 
 <script>
+  import { reviewMixin } from '../mixins/reviewMixin'
+  import ReviewInput from './ReviewInput.vue'
+
   export default {
     name: 'Select',
+    components: {
+      'AppReviewInput': ReviewInput
+    },
+    mixins: [reviewMixin],
     props: {
       id: {
         type: String,
@@ -33,6 +46,16 @@
       },
       defaultVal: {
         default: '',
+        required: false
+      },
+      helpText: {
+        type: String,
+        default: '',
+        required: false
+      },
+      readonly: {
+        type: Boolean,
+        default: false,
         required: false
       }
     },

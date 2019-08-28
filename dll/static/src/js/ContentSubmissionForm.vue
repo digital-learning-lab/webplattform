@@ -1,5 +1,8 @@
 <template>
   <form class="mb-4">
+    <div class="alert alert-success" v-if="data.submitted && mode !== 'review'">
+      Der Inhalt wurde eingereicht und wird in nun von einem Mitarbeiter geprüft.
+    </div>
     <div class="alert alert-primary" v-if="saved">
       Ihre Änderungen wurden gespeichert.
     </div>
@@ -9,12 +12,35 @@
       </ul>
     </div>
     <div v-if="mode === 'edit'">
-      <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading">Speichern</button>
-      <button class="button button--primary" type="button" :disabled="loading">Vorschau</button>
-      <button class="button button--primary" type="button" :disabled="loading">Einreichen</button>
-      <button class="button button--primary" type="button" :disabled="loading">Löschen</button>
+      <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading" v-if="!data.submitted">Speichern</button>
+      <button class="button button--preview" type="button" :disabled="loading" @click="$emit('preview')">Vorschau</button>
+      <button class="button button--submit" type="button" :disabled="loading" @click="$emit('submit')" v-if="!data.submitted">Einreichen</button>
+      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')">Löschen</button>
     </div>
-    <slot></slot>
+    <div v-if="mode === 'review'">
+      <button class="button button--primary" type="button" @click="$emit('update-review')" :disabled="loading">Speichern</button>
+      <button class="button button--submit" type="button" :disabled="loading" @click="$emit('approve-review')">Freigeben</button>
+      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('decline-review')">Ablehnen</button>
+    </div>
+    <slot v-if="mode === 'edit' || mode === 'create' || mode === 'review'"></slot>
+    <div v-if="mode === 'delete'">
+      <h3>Wollen Sie den folgenden Inhalt wirklich löschen?</h3>
+      <p><b>{{ data.name }}</b></p>
+
+      <button type="button" class="button button--danger" @click="$emit('delete')">Ja, Inhalt löschen</button>
+      <button type="button" class="button button--primary" @click="mode = 'edit'">Nein, abbrechen.</button>
+    </div>
+    <div v-if="mode === 'review'">
+      <button class="button button--primary" type="button" @click="$emit('update-review')" :disabled="loading">Speichern</button>
+      <button class="button button--submit" type="button" :disabled="loading" @click="$emit('approve-review')">Freigeben</button>
+      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('decline-review')">Ablehnen</button>
+    </div>
+    <div v-if="mode === 'edit'">
+      <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading" v-if="!data.submitted">Speichern</button>
+      <button class="button button--preview" type="button" :disabled="loading" @click="$emit('preview')">Vorschau</button>
+      <button class="button button--submit" type="button" :disabled="loading" @click="$emit('submit')" v-if="!data.submitted">Einreichen</button>
+      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')" >Löschen</button>
+    </div>
     <button class="button button--primary" @click="$emit('create')" type="button" v-if="mode === 'create'">Speichern</button>
   </form>
 </template>
@@ -44,6 +70,13 @@
         type: Boolean,
         default: false,
         required: true
+      },
+      data: {
+        type: Object,
+        default: () => {
+          return {}
+        },
+        required: false
       }
     }
   }

@@ -1,14 +1,27 @@
 <template>
   <div class="form-group">
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
-    <textarea :type="type" class="form-control" :id="id" :placeholder="placeholder" v-model="inputValue" :readonly="readOnly" :maxlength="maximalChars" :rows="rows"></textarea>
+    <div class="d-flex">
+      <textarea :type="type" class="form-control" :id="id" :placeholder="placeholder" v-model="inputValue" :readonly="readonly" :maxlength="maximalChars" :rows="rows"></textarea>
+      <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
+        <span class="far fa-question-circle"></span>
+      </button>
+    </div>
     <small v-if="characterCounter" class="form-text text-muted float-right">{{ charactersLeft }} Zeichen verbleibend</small>
+    <app-review-input :mode="review ? 'review' : 'edit'" :id="'id'+-review" :name="label" :reviewValue.sync="ownReviewValue"></app-review-input>
   </div>
 </template>
 
 <script>
+  import ReviewInput from './ReviewInput.vue'
+  import { reviewMixin } from '../mixins/reviewMixin'
+
   export default {
     name: 'TextInput',
+    components: {
+      'AppReviewInput': ReviewInput
+    },
+    mixins: [reviewMixin],
     props: {
       id: {
         type: String,
@@ -20,7 +33,7 @@
         default: 'text',
         required: false
       },
-      readOnly: {
+      readonly: {
         type: Boolean,
         default: false,
         required: false
@@ -58,6 +71,11 @@
       rows: {
         type: Number,
         default: 10,
+        required: false
+      },
+      helpText: {
+        type: String,
+        default: '',
         required: false
       }
     },

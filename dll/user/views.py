@@ -2,7 +2,9 @@ import json
 
 from django.contrib.auth import login, get_user_model
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
+from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
@@ -10,10 +12,13 @@ from django.urls import reverse_lazy, reverse
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from rest_framework.generics import ListAPIView
 
 from dll.communication.tasks import send_mail
-from dll.content.models import Content, TeachingModule, Tool, Trend
+from dll.content.models import Content, TeachingModule, Tool, Trend, Review
+from dll.content.rules import is_bsb_reviewer, is_tuhh_reviewer
 from dll.content.serializers import TeachingModuleSerializer, ToolSerializer, TrendSerializer, \
     ContentListInternalSerializer
 from dll.content.views import BreadcrumbMixin
@@ -43,16 +48,28 @@ class TestView(TemplateView):
         return ctx
 
 
-
-
 class MyContentView(TemplateView, BreadcrumbMixin):
     template_name = 'dll/user/content/overview.html'
     breadcrumb_title = 'Meine Inhalte'
     breadcrumb_url = reverse_lazy('user-content-overview')
 
+
+class MyReviewsView(TemplateView, BreadcrumbMixin):
+    template_name = 'dll/user/content/review_content.html'
+    breadcrumb_title = 'Review Inhalte'
+    breadcrumb_url = reverse_lazy('user-content-overview')
+
     def get_context_data(self, **kwargs):
-        ctx = super(MyContentView, self).get_context_data(**kwargs)
-        ctx['contents'] = self.request.user.qs_any_content()
+        ctx = super(MyReviewsView, self).get_context_data(**kwargs)
+        user = self.request.user
+        base_qs = Content.objects.drafts().filter(Q(reviews__status=Review.NEW) | Q(reviews__status=Review.IN_PROGRESS))
+        if is_bsb_reviewer(user):
+            ctx['contents'] = base_qs.instance_of(TeachingModule)
+        elif is_tuhh_reviewer(user):
+            ctx['contents'] = base_qs.not_instance_of(TeachingModule)
+        elif user.is_superuser:
+            ctx['contents'] = base_qs
+        # ctx['contents'] = self.request.user.qs_any_content()
         return ctx
 
 
@@ -65,14 +82,21 @@ class CreateEditContentView(TemplateView, BreadcrumbMixin):
         slug = self.kwargs.get('slug', None)
         if slug:
             obj = self.get_object()
-            ctx['obj'] = json.dumps(self.serializer(obj).data)
+            data = self.serializer(obj).data
+            if obj and obj.review and obj.review.status != Review.DECLINED and not self.request.user.is_reviewer:
+                data['review'] = None
+            ctx['obj'] = json.dumps(data)
         return ctx
 
     def get_object(self):
+        qs = self.model.objects.drafts()
         if not getattr(self, 'object', None):
             slug = self.kwargs.get('slug', None)
             if slug:
-                self.object = get_object_or_404(self.model, slug=slug)
+                try:
+                    self.object = qs.get(slug=slug)
+                except ObjectDoesNotExist:
+                    raise Http404
         return getattr(self, 'object', None)
 
     def get_breadcrumbs(self):
@@ -98,6 +122,19 @@ class CreateEditTeachingModuleView(CreateEditContentView):
     serializer = TeachingModuleSerializer
 
 
+class ReviewTeachingModuleView(CreateEditTeachingModuleView):
+    template_name = 'dll/user/content/review_teaching_module.html'
+    def get_breadcrumbs(self):
+        bcs = super(CreateEditTeachingModuleView, self).get_breadcrumbs()
+        result = []
+        result.append(bcs[0])
+        result.extend([
+            {'title': 'Review Inhalte', 'url': reverse_lazy('user-content-review')},
+            {'title': 'Digitalen Unterrichtbaustein reviewen', 'url': reverse_lazy('user-content-review')},
+        ])
+        return result
+
+
 class CreateEditToolView(CreateEditContentView):
     template_name = 'dll/user/content/add_tool.html'
     breadcrumb_title = 'Tool {}'
@@ -106,12 +143,39 @@ class CreateEditToolView(CreateEditContentView):
     serializer = ToolSerializer
 
 
+class ReviewToolView(CreateEditToolView):
+    template_name = 'dll/user/content/review_tool.html'
+    def get_breadcrumbs(self):
+        bcs = super(CreateEditToolView, self).get_breadcrumbs()
+        result = []
+        result.append(bcs[0])
+        result.extend([
+            {'title': 'Review Inhalte', 'url': reverse_lazy('user-content-review')},
+            {'title': 'Tool reviewen', 'url': reverse_lazy('user-content-review')},
+        ])
+        return result
+
+
 class CreateEditTrendView(CreateEditContentView):
     template_name = 'dll/user/content/add_trend.html'
     breadcrumb_title = 'Trend {}'
     breadcrumb_url = reverse_lazy('add-trend')
     model = Trend
     serializer = TrendSerializer
+
+
+class ReviewTrendView(CreateEditTrendView):
+    template_name = 'dll/user/content/review_trend.html'
+
+    def get_breadcrumbs(self):
+        bcs = super(CreateEditTrendView, self).get_breadcrumbs()
+        result = []
+        result.append(bcs[0])
+        result.extend([
+            {'title': 'Review Inhalte', 'url': reverse_lazy('user-content-review')},
+            {'title': 'Trend reviewen', 'url': reverse_lazy('user-content-review')},
+        ])
+        return result
 
 
 class SignUpView(FormView):
@@ -164,11 +228,13 @@ class UserContentView(ListAPIView):
             qs = qs.instance_of(TeachingModule)
 
         if status == 'draft':
-            qs = qs.filter(publisher_linked__isnull=True)
+            qs = qs.filter(publisher_linked__isnull=True, reviews__isnull=True)
         if status == 'submitted':
-            qs = qs.filter(reviews__isnull=False)
+            qs = qs.filter(Q(reviews__status=Review.NEW) | Q(reviews__status=Review.IN_PROGRESS))
         if status == 'approved':
             qs = qs.filter(publisher_linked__isnull=False)
+        if status == 'declined':
+            qs = qs.filter(reviews__status=Review.DECLINED)
 
         if search_term:
             qs = qs.filter(Q(name__icontains=search_term) | Q(teaser__icontains=search_term))
@@ -190,3 +256,35 @@ def activate_user(request, uidb64, token, backend='django.contrib.auth.backends.
         return redirect('user-content-overview')
     else:
         return render(request, 'dll/user/account_activation_invalid.html')
+
+
+class PendingReviewContentView(UserContentView):
+
+    def get_queryset(self):
+        qs = Content.objects.drafts().filter(reviews__is_active=True)
+
+        type = self.request.GET.get('type', None)
+        search_term = self.request.GET.get('q', None)
+
+        if type == 'trend':
+            qs = qs.instance_of(Trend)
+        if type == 'tool':
+            qs = qs.instance_of(Tool)
+        if type == 'teaching-module':
+            qs = qs.instance_of(TeachingModule)
+
+
+        if search_term:
+            qs = qs.filter(Q(name__icontains=search_term) | Q(teaser__icontains=search_term))
+
+        user = self.request.user
+
+        if user.is_superuser:
+            return qs
+
+        if is_tuhh_reviewer(user):
+            return qs.not_instance_of(TeachingModule)
+        if is_bsb_reviewer(user):
+            return qs.instance_of(TeachingModule)
+
+        return qs.none()

@@ -1,4 +1,5 @@
 import 'bootstrap/js/dist/tab'
+import 'bootstrap/js/dist/tooltip'
 import '../scss/main.scss'
 
 import './flower'
@@ -12,3 +13,5 @@ import './toolFilter'
 import './teachingModuleSubmission'
 import './toolSubmission'
 import './trendSubmission'
+
+$('[data-toggle="tooltip"]').tooltip()

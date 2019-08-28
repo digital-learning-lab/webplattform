@@ -1,0 +1,21 @@
+{% extends 'dll/default_page.html' %}
+
+{% block content %}
+  <a href="{% url 'user-content-overview' %}" role="button" aria-pressed="true">Zurück</a>
+    {% block intro %}{% endblock %}
+    {% block app %}{% endblock %}
+    {% block outro %}{% endblock %}
+{% endblock %}
+
+{% block extra_scripts %}
+  <script>
+    window.dllData = {
+      authorName: '{{ request.user.username }}',
+    {% if obj %}
+      module: {{ obj|safe }},
+      mode: {% block mode %}'edit'{% endblock %},
+    {% endif %}
+      csrfToken: '{{ csrf_token }}'
+    }
+  </script>
+{% endblock %}

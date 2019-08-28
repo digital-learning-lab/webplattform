@@ -12,7 +12,7 @@
           <option value="teaching-module">Unterrichtsbaustein</option>    
         </select>
       </div>
-      <div class="col">
+      <div class="col" v-if="mode === 'overview'">
         <div>
           <label for="status">Status:</label>
         </div>
@@ -21,6 +21,7 @@
           <option value="draft">Entwurf</option>
           <option value="submitted">Eingereicht</option>
           <option value="approved">Freigegeben</option>
+          <option value="declined">Abgelehnt</option>
         </select>
       </div>
       <div class="col">
@@ -40,7 +41,7 @@
             <span class="fas fa-user"></span> {{ content.author }}
           </div>
         </div>
-        <div class="col" v-if="content.co_authors">
+        <div class="col" v-if="content.co_authors.length">
           <div class="content-box__coauthors">
             <span class="fas fa-users align-top"></span>
             <ul class="list-unstyled d-inline-block ml-1">
@@ -78,7 +79,9 @@
         contents: [],
         type: null,
         searchTerm: null,
-        status: null
+        status: null,
+        retrieveUrl: null,
+        mode: null
       }
     },
     computed: {
@@ -92,7 +95,7 @@
     },
     methods: {
       updateContents () {
-        axios.get('/api/meine-inhalte', {
+        axios.get(this.retrieveUrl, {
           params: {
             ...this.params
           }
@@ -106,6 +109,11 @@
       }
     },
     created () {
+      if (!window.dllData.retrieveUrl) {
+        throw Error('Retrieve URL is not defined.')
+      }
+      this.retrieveUrl = window.dllData.retrieveUrl
+      this.mode = window.dllData.mode || 'overview'
       this.updateContents()
       this.debouncedUpdate = debounce(this.updateContents, 500)
     }

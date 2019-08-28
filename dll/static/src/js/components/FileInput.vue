@@ -3,16 +3,30 @@
     <label :for="id">{{ label }}</label>
 
     <div class="custom-file">
-      <input type="file" class="custom-file-input" :id="id" @change="processInput" :accept="accept">
-      <label class="custom-file-label" :for="id"><span v-if="fileName">{{ fileName }}</span><span v-else>{{ fileLabel }}</span></label>
+      <div class="d-flex">
+        <input type="file" class="custom-file-input" :id="id" @change="processInput" :disabled="readonly" :accept="accept">
+        <label class="custom-file-label" :for="id"><span v-if="fileName">{{ fileName }}</span><span v-else>{{ fileLabel }}</span></label>
+        <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
+          <span class="far fa-question-circle"></span>
+        </button>
+      </div>
     </div>
+    <small v-if="hintText" class="form-text text-muted">{{ hintText }}</small>
     <img v-if="imageUrl" :src="imageUrl" alt="Vorschaubild" class="img-thumbnail">
+    <app-review-input :mode="review ? 'review' : 'edit'" :id="'id'+-review" :name="label" :reviewValue.sync="ownReviewValue"></app-review-input>
   </div>
 </template>
 
 <script>
+  import ReviewInput from './ReviewInput.vue'
+  import { reviewMixin } from '../mixins/reviewMixin'
+
   export default {
     name: 'FileInput',
+    components: {
+      'AppReviewInput': ReviewInput
+    },
+    mixins: [reviewMixin],
     props: {
       id: {
         type: String,
@@ -44,6 +58,21 @@
       accept: {
         type: String,
         default: 'image/gif, image/jpeg, image/png',
+        required: false
+      },
+      helpText: {
+        type: String,
+        default: '',
+        required: false
+      },
+      hintText: {
+        type: String,
+        default: null,
+        required: false
+      },
+      readonly: {
+        type: Boolean,
+        default: false,
         required: false
       }
     },

@@ -12,7 +12,15 @@
       <div class="row">
         <div class="col col-12 col-lg-4">
           <div class="sidebar sidebar--{{ object.type }}">
-            <h3 class="sidebar__headline">{{ object.type_verbose }} - Informationen</h3>
+            {% if preview %}
+              <div class="sidebar--preview">
+                Vorschaumodus
+                <a href="{{ object.get_edit_url }}" class="sidebar--backlink">Zurück</a>
+              </div>
+            {% endif %}
+            <h3 class="sidebar__headline">
+                {{ object.type_verbose }} - Informationen
+            </h3>
             <ul class="sidebar__information">
               {% if object.competences.all.count %}
                 <li class="sidebar__information-item">
