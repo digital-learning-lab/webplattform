@@ -63,7 +63,7 @@ services:
     image: "redis:alpine"
     hostname: redis
   celery:
-    image: dll_web
+    image: '${CI_PROJECT_PATH_SLUG}:${CI_COMMIT_REF_SLUG}'
     command: [celery, worker, --app=dll.configuration.celery.app, --concurrency=1, --loglevel=DEBUG]
     environment:
     - REDIS_HOSTNAME=redis
