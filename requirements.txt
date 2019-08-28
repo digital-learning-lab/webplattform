@@ -23,3 +23,5 @@ django-rest-polymorphic
 rules
 celery
 redis
+pysolr
+django-haystack

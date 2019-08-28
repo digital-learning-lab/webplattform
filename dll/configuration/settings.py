@@ -62,7 +62,8 @@ INSTALLED_APPS = [
     'dll.communication',
     'rest_framework',
     'django_filters',
-    'rules.apps.AutodiscoverRulesConfig'
+    'rules.apps.AutodiscoverRulesConfig',
+    'haystack'
 ]
 
 MIDDLEWARE = [
@@ -230,3 +231,11 @@ CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://{hostname}:6379/0'
     hostname=env.str('REDIS_HOSTNAME'),
 ))
 CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_TASK_ALWAYS_EAGER')
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
+        'URL': 'http://{}:8983/solr/mycore'.format(env.str('SOLR_HOSTNAME')),
+        'ADMIN_URL': 'http://{}:8983/solr/admin/cores'.format(env.str('SOLR_HOSTNAME'))
+    },
+}
