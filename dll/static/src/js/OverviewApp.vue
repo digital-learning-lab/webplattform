@@ -70,6 +70,7 @@
         </div>
       </div>
     </div>
+    <app-pagination :current-page="currentPage" :pagination="pagination" @prev="previousPage" @next="nextPage" @jump="jumpTo"></app-pagination>
     <div v-if="contents.length === 0" class="text-center">
       Es stehen keine Inhalte zur Verfügung.
     </div>
@@ -79,6 +80,7 @@
 <script>
   import { debounce } from 'lodash'
   import axios from 'axios'
+  import Pagination from './components/Pagination.vue'
 
   export default {
     name: 'OverviewApp',
@@ -91,6 +93,9 @@
         retrieveUrl: null,
         mode: null
       }
+    },
+    components: {
+      'AppPagination': Pagination
     },
     computed: {
       params () {

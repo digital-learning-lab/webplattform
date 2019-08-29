@@ -1,0 +1,21 @@
+.tabs {
+  border-bottom: 0;
+}
+.tab__link {
+  border: 0 !important;
+  &:hover .tab__svg--off,
+  &.active .tab__svg--off {
+    display: none;
+  }
+  &:hover .tab__svg--on,
+  &.active .tab__svg--on {
+    display: block;
+  }
+}
+.tab__svg {
+  width: 100%;
+  max-width: 125px;
+}
+.tab__svg--on {
+  display: none;
+}
