@@ -1,11 +1,11 @@
+{% if object.content_files.count %}
 <h2>Material</h2>
 
-{% if object.content_files.count %}
   <li class="sidebar__information-item">
     <span class="sidebar__information-icon icon-subject"></span>
     <ul class="list-unstyled">
-      {% for file in object.content_file %}
-        <li><a href="{{ file.url }}">{{ file.name }}</a></li>
+      {% for file in object.content_files %}
+        <li><a href="{{ file.file.url }}">{{ file.title }}</a></li>
       {% endfor %}
     </ul>
   </li>
