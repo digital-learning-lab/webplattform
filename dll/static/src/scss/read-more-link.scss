@@ -1,0 +1,15 @@
+.read-more-link {
+  display: inline-block;
+  margin-bottom: 1rem;
+  .read-more-link__less {
+    display: none;
+  }
+}
+.show + .read-more-link {
+  .read-more-link__less {
+    display: block;
+  }
+  .read-more-link__more {
+    display: none;
+  }
+}

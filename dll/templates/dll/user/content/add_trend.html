@@ -12,17 +12,21 @@
     Medien, andere thematisch relevante Veröffentlichungen, Praxisbeispiele von Schulprojekten oder
     -konzepten sowie weitere für Lehrkräfte entwickelte Portale mit Inhalten und Ideen zur
     Unterrichtsgestaltung in digitalen Zeiten.
-    <span class="collapsed" style="display: block;">
-                    <a href="javascript:void(0)"> weiter lesen &gt;&gt;</a>
-                </span>
-    <span class="expanded" style="display: none;">
-                So sollen Lehrkräfte ergänzend zu den konkreten Konzepten und
-                Beispielen der digitalen Unterrichtsbausteine sowie der Beschreibungen der Tools inspiriert werden,
-                eigene Ideen auszuprobieren, und gleichzeitig sensibilisiert werden, sich mit den verschiedenen
-                Perspektiven und Aspekten zu Unterrichtsgestaltung in digitalen Zeiten auseinander zu setzen.
-                <a href="javascript:void(0)" style="display: block;">&lt;&lt; weniger anzeigen</a>
-                </span>
   </p>
+  <p class="collapse" id="additionalDescriptionText">
+    So sollen Lehrkräfte ergänzend zu den konkreten Konzepten und
+    Beispielen der digitalen Unterrichtsbausteine sowie der Beschreibungen der Tools inspiriert werden,
+    eigene Ideen auszuprobieren, und gleichzeitig sensibilisiert werden, sich mit den verschiedenen
+    Perspektiven und Aspekten zu Unterrichtsgestaltung in digitalen Zeiten auseinander zu setzen.
+  </p>
+  <a href="#additionalDescriptionText" class="read-more-link" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="additionalDescriptionText">
+    <span class="read-more-link__more">
+      weiter lesen &gt;&gt;
+    </span>
+    <span class="read-more-link__less">
+      &lt;&lt; weniger lesen
+    </span>
+  </a>
 {% endblock %}
 {% block app %}
   <div id="trend-submission"></div>
