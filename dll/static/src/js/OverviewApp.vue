@@ -81,6 +81,7 @@
   import { debounce } from 'lodash'
   import axios from 'axios'
   import Pagination from './components/Pagination.vue'
+  import { paginationMixin } from './mixins/paginationMixin'
 
   export default {
     name: 'OverviewApp',
@@ -97,6 +98,7 @@
     components: {
       'AppPagination': Pagination
     },
+    mixins: [paginationMixin],
     computed: {
       params () {
         return {
@@ -107,14 +109,16 @@
       }
     },
     methods: {
-      updateContents () {
+      updateContents (page) {
         axios.get(this.retrieveUrl, {
           params: {
-            ...this.params
+            ...this.params,
+            page: Number.isInteger(page) ? page : 1,
           }
         })
         .then(res => {
           this.contents = res.data.results
+          this.updatePagination(res)
         })
         .catch(err => {
           console.log(err)

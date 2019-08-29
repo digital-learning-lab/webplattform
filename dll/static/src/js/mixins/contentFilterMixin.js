@@ -4,6 +4,7 @@ import ContentTeaser from '../components/ContentTeaser.vue'
 import CompetenceFilter from '../components/CompetenceFilter.vue'
 import Pagination from '../components/Pagination.vue'
 import { preventEnter } from './preventEnterMixin'
+import { paginationMixin } from './paginationMixin'
 
 export const contentFilter = {
   components: {
@@ -11,7 +12,7 @@ export const contentFilter = {
     'AppCompetenceFilter': CompetenceFilter,
     'AppPagination': Pagination
   },
-  mixins: [preventEnter],
+  mixins: [preventEnter, paginationMixin],
   data () {
     return {
       dataUrl: null,
@@ -20,26 +21,10 @@ export const contentFilter = {
       sortBy: 'latest',
       searchTerm: '',
       currentPage: 1,
-      competences: [],
-      pagination: {
-        count: 0,
-        perPage: 10,
-        next: null,
-        prev: null
-      }
+      competences: []
     }
   },
   methods: {
-    jumpTo (event, page) {
-      this.currentPage = page
-      this.updateContents(page)
-    },
-    previousPage () {
-      this.updateContents(--this.currentPage)
-    },
-    nextPage () {
-      this.updateContents(++this.currentPage)
-    },
     sortContents (a, b) {
       const nameA = a.name.toUpperCase();
       const nameB = b.name.toUpperCase();
@@ -73,12 +58,7 @@ export const contentFilter = {
       })
         .then(response => {
           this.contents = response.data.results
-          this.pagination = {
-            count: response.data.count,
-            perPage: 10,
-            next: response.data.next,
-            prev: response.data.previous
-          }
+          this.updatePagination(response)
           this.loading = false
         })
         .catch(error => {
