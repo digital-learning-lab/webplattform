@@ -266,6 +266,7 @@ EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', None)
 
 EMAIL_SENDER = os.getenv('EMAIL_SENDER', None)
 
+
 logger.error(f'EMAIL_HOST: {EMAIL_HOST}')
 logger.error(f'EMAIL_PORT: {EMAIL_PORT}')
 logger.error(f'EMAIL_HOST_USER: {EMAIL_HOST_USER}')
