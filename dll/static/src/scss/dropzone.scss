@@ -1,0 +1,10 @@
+
+.dropzone .dz-preview .dz-details .dz-filename:not(:hover) {
+  overflow: visible;
+  word-break: break-word;
+  text-overflow: unset;
+  white-space: normal;
+}
+.vue-dropzone > .dz-preview .dz-details {
+  background-color: $color--teaching-module;
+}
