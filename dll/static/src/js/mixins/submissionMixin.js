@@ -1,4 +1,3 @@
-import axios from 'axios'
 
 import TextInput from '../components/TextInput.vue'
 import TextArea from '../components/TextArea.vue'
@@ -9,6 +8,7 @@ import RangeInput from '../components/RangeInput.vue'
 import LinksInput from '../components/LinksInput.vue'
 import ListInput from '../components/ListInput.vue'
 import PendingCoAuthors from '../components/PendingCoAuthors.vue'
+import { axiosMixin } from './axiosMixin'
 
 export const submissionMixin = {
   components: {
@@ -22,6 +22,7 @@ export const submissionMixin = {
     'AppSelect': Select,
     'AppPendingCoAuthors': PendingCoAuthors
   },
+  mixins: [axiosMixin],
   data () {
     return {
       mode: 'create',
@@ -134,14 +135,6 @@ export const submissionMixin = {
       }
       return null
     },
-    getAxiosInstance () {
-      const axiosInstance = axios.create({
-        headers: {
-          'X-CSRFToken': window.dllData.csrfToken
-        }
-      })
-      return axiosInstance
-    },
     createContent () {
       this.errors = []
       const axiosInstance = this.getAxiosInstance()
@@ -184,7 +177,7 @@ export const submissionMixin = {
       if (this.previewImage) {
         let formData = new FormData()
 
-        formData.append('image', this.previewImage, this.previewImage.name)
+        formData.append('file', this.previewImage, this.previewImage.name)
         axiosInstance.put('/api/inhalt-bearbeiten/' + this.data.slug + '/vorschau-bild', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'

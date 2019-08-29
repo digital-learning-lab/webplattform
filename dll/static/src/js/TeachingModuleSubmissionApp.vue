@@ -29,6 +29,7 @@
       <app-select id="license" :readonly="readonly" :review="review" label="Lizenz" :options="licenseOptions" :default-val="data.licence" :value.sync="data.licence" :review-value.sync="reviewValue.licence" :help-text="getHelpText('licence')"></app-select>
       <app-links-input id="mediaLinks" :readonly="readonly" :review="review" :links.sync="data.mediaLinks" :review-value.sync="reviewValue.mediaLinks" label="Links zu Audio- und Videomedien" :type="'video'" :help-text="getHelpText('contentlink>')"></app-links-input>
       <app-links-input id="literatureLinks" :readonly="readonly" :review="review" :links.sync="data.literatureLinks" :review-value.sync="reviewValue.literatureLinks" label="Weiterführende Literatur und Links" :help-text="getHelpText('contentlink>')"></app-links-input>
+      <app-dropzone :slug="data.slug" label="Anhänge" :files="data.content_files"></app-dropzone>
     </div>
   </app-content-submission-form>
 </template>
@@ -36,12 +37,14 @@
 <script>
   import { submissionMixin } from './mixins/submissionMixin'
   import ContentSubmissionForm from './ContentSubmissionForm.vue'
+  import Dropzone from './components/Dropzone.vue'
 
   export default {
     name: 'TeachingModuleSubmissionApp',
     mixins: [submissionMixin],
     components: {
-      'AppContentSubmissionForm': ContentSubmissionForm
+      'AppContentSubmissionForm': ContentSubmissionForm,
+      'AppDropzone': Dropzone
     },
     data () {
       return {

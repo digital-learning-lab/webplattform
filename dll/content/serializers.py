@@ -200,6 +200,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     preview_url = SerializerMethodField(allow_null=True)
     submitted = SerializerMethodField(allow_null=True)
     pending_co_authors = SerializerMethodField(allow_null=True)
+    content_files = SerializerMethodField(allow_null=True)
 
 
     def validate_name(self, data):
@@ -217,6 +218,9 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             if obj.is_public:
                 res.append(x)
         return res
+
+    def get_content_files(self, obj):
+        return  [{'title': file.title, 'url': file.file.url, 'id': file.id} for file in obj.content_files.all()]
 
     def get_pending_co_authors(self, obj):
         return [invite.to.full_name for invite in obj.invitations.filter(accepted__isnull=True)]
@@ -456,8 +460,9 @@ class ContentPolymorphicSerializer(PolymorphicSerializer):
     }
 
 
-# todo: file serializer
+class ImageFileSerializer(serializers.Serializer):
+    image = serializers.FileField()
 
 
 class FileSerializer(serializers.Serializer):
-    image = serializers.FileField()
+    file = serializers.FileField()

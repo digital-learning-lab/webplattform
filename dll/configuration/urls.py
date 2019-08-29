@@ -26,8 +26,9 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
     CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView, ToolApplicationSearchView, \
-    OperatingSystemSearchView, ReviewViewSet,  ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
-    TrendDetailPreviewView, SubmitContentView, ApproveContentView, DeclineContentView
+    OperatingSystemSearchView, ReviewViewSet, ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
+    TrendDetailPreviewView, SubmitContentView, ApproveContentView, DeclineContentView, ImageUploadView, \
+    DeleteContentFileView
 from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
     UserContentView, MyReviewsView, ReviewTeachingModuleView, ReviewToolView, ReviewTrendView, PendingReviewContentView
 
@@ -90,8 +91,12 @@ urlpatterns = [
     path('api/operatingSystems', OperatingSystemSearchView.as_view(), name='operating-system-search'),
     path('api/meine-inhalte', UserContentView.as_view(), name='user-contents'),
     path('api/review-inhalte', PendingReviewContentView.as_view(), name='content-pending'),
-    path('api/inhalt-bearbeiten/<slug:slug>/vorschau-bild', FileUploadView.as_view(),
+    path('api/inhalt-bearbeiten/<slug:slug>/vorschau-bild', ImageUploadView.as_view(),
          name='add-preview-image'),
+    path('api/inhalt-bearbeiten/<slug:slug>/file-upload', FileUploadView.as_view(),
+         name='add-content-file'),
+    path('api/inhalt-bearbeiten/<slug:slug>/file-remove/<int:pk>', DeleteContentFileView.as_view(),
+         name='remove-content-file'),
     path('api/inhalt-einreichen/<slug:slug>', SubmitContentView.as_view(),
          name='submit-content'),
     path('api/review/<slug:slug>/approve', ApproveContentView.as_view(),

@@ -1,15 +1,16 @@
 import json
 import random
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, Http404, HttpResponse
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
-from filer.models import Image, Folder
+from filer.models import Image, Folder, File
 from psycopg2._range import NumericRange
 from rest_framework import viewsets, filters, mixins, status
-from rest_framework.generics import ListAPIView, GenericAPIView
+from rest_framework.generics import ListAPIView, GenericAPIView, DestroyAPIView
 from rest_framework.parsers import FileUploadParser
 from rest_framework.permissions import DjangoObjectPermissions
 from rest_framework.response import Response
@@ -17,9 +18,9 @@ from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject, SubCompetence, SchoolType, \
-    Review, OperatingSystem, ToolApplication
+    Review, OperatingSystem, ToolApplication, ContentFile
 from dll.content.serializers import AuthorSerializer, CompetenceSerializer, SubCompetenceSerializer, \
-    SchoolTypeSerializer, ReviewSerializer, SubjectSerializer, FileSerializer
+    SchoolTypeSerializer, ReviewSerializer, SubjectSerializer, ImageFileSerializer, FileSerializer
 from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
 from .serializers import ContentListSerializer, ContentPolymorphicSerializer
@@ -489,7 +490,7 @@ class StateSearchView(APIView):
         })
 
 
-class FileUploadView(APIView):
+class FileUploadBaseView(APIView):
     parser_class = (FileUploadParser,)
 
     def put(self, request, *args, **kwargs):
@@ -500,8 +501,15 @@ class FileUploadView(APIView):
         obj = Content.objects.drafts().get(slug=slug)
         file_serializer = FileSerializer(data=request.data)
 
+        return obj, file_serializer
+
+
+class ImageUploadView(FileUploadBaseView):
+
+    def put(self, request, *args, **kwargs):
+        obj, file_serializer = super(ImageUploadView, self).put(*args, **kwargs)
         if file_serializer.is_valid():
-            image = file_serializer.validated_data['image']
+            image = file_serializer.validated_data['file']
             filer_folder = Folder.objects.get(name=obj.__class__.__name__)
             filer_image = Image.objects.create(
                 original_filename=image.name,
@@ -515,3 +523,52 @@ class FileUploadView(APIView):
             return Response(file_serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class FileUploadView(FileUploadBaseView):
+
+    def put(self, request, *args, **kwargs):
+        obj, file_serializer = super(FileUploadView, self).put(request, *args, **kwargs)
+        if file_serializer.is_valid():
+            file = file_serializer.validated_data['file']
+            filer_folder = Folder.objects.get(name=obj.__class__.__name__)
+            filer_file = File.objects.create(
+                original_filename=file.name,
+                file=file,
+                folder=filer_folder,
+                owner=self.request.user
+            )
+
+            cf = ContentFile.objects.create(
+                content=obj,
+                title=file.name,
+                file = filer_file
+            )
+            result = {
+                'title': cf.title,
+                'url': cf.file.url,
+                'id': cf.id
+            }
+            return Response(result, status=status.HTTP_201_CREATED)
+        else:
+            return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteContentFileView(DestroyAPIView):
+    queryset = Content.objects.drafts()
+
+    def get_object(self):
+        slug = self.kwargs.get('slug', None)
+        id = self.kwargs.get('pk', None)
+        user = self.request.user
+        if not slug or not id:
+            raise Http404
+        try:
+            content = Content.objects.drafts().get(slug=slug)
+            if not user.has_perm('content.delete_content', content):
+                return HttpResponse(status=status.HTTP_403_FORBIDDEN)
+            content_file = content.content_files.get(id=id)
+        except ObjectDoesNotExist:
+            raise Http404
+
+        return content_file
