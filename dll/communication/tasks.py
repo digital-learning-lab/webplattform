@@ -1,5 +1,7 @@
 import logging
 
+from django.conf import settings
+
 from dll.communication.models import CommunicationEventType
 from dll.communication.utils import Dispatcher
 from dll.configuration.celery import app
@@ -19,7 +21,7 @@ def send_mail(self, event_type_code, ctx=None, recipient_ids=None, sender_id=Non
 
     event_type = CommunicationEventType.objects.get(code=event_type_code)
 
-    sender = DllUser.objects.get(pk=sender_id) if sender_id else None
+    sender = settings.EMAIL_SENDER
 
     messages = event_type.get_messages(ctx=ctx)
 
