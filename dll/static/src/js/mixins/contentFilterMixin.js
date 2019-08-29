@@ -3,6 +3,7 @@ import axios from 'axios'
 import ContentTeaser from '../components/ContentTeaser.vue'
 import CompetenceFilter from '../components/CompetenceFilter.vue'
 import Pagination from '../components/Pagination.vue'
+import { preventEnter } from './preventEnterMixin'
 
 export const contentFilter = {
   components: {
@@ -10,6 +11,7 @@ export const contentFilter = {
     'AppCompetenceFilter': CompetenceFilter,
     'AppPagination': Pagination
   },
+  mixins: [preventEnter],
   data () {
     return {
       dataUrl: null,

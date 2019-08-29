@@ -13,7 +13,7 @@
             <option value="za">Z-A</option>
           </select>
           <h3 class="form-subhead">Schlagwortsuche</h3>
-          <input type="text" v-model="searchTerm" name="searchTerm" class="form-control">
+          <input type="text" v-model="searchTerm" name="searchTerm" class="form-control" @keydown="preventEnter">
           <app-competence-filter :competences.sync="competences"></app-competence-filter>
            <div>
             <h3 class="form-subhead">Anwendung:</h3>

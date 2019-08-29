@@ -11,7 +11,7 @@
             <option value="za">Z-A</option>
           </select>
           <h3 class="form-subhead">Schlagwortsuche</h3>
-          <input type="text" v-model="searchTerm" name="searchTerm" class="form-control">
+          <input type="text" v-model="searchTerm" name="searchTerm" class="form-control" @keydown="preventEnter">
           <h3 class="form-subhead">Auswahl</h3>
           <ul class="list-unstyled">
             <li class="form-check">
@@ -54,6 +54,7 @@
   import axios from 'axios'
   import ContentTeaser from './components/ContentTeaser.vue'
   import Pagination from './components/Pagination.vue'
+  import { preventEnter } from './mixins/preventEnterMixin'
 
   export default {
     name: 'CompetenceFilterApp',
@@ -61,6 +62,7 @@
       'AppContentTeaser': ContentTeaser,
       'AppPagination': Pagination
     },
+    mixins: [preventEnter],
     data () {
       return {
         contents: [],
