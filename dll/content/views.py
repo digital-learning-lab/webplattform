@@ -54,6 +54,10 @@ class HomePageView(TemplateView):
         except IndexError:
             pass  # no content yet
         ctx['contents'] = Content.objects.filter(pk__in=content_pks)
+        try:
+            ctx['training_trend'] = Trend.objects.published().get(slug='fortbildung-digitallearninglab')
+        except Trend.DoesNotExist:
+            pass
         return ctx
 
 
