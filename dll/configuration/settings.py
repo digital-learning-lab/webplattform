@@ -259,8 +259,8 @@ EMAIL_HOST = os.getenv('EMAIL_HOST', None)
 EMAIL_PORT = env.int('EMAIL_PORT')
 
 # Optional SMTP authentication information for EMAIL_HOST.
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', None)
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', None)
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', None)
 
 
