@@ -20,7 +20,6 @@ export const contentFilter = {
       loading: true,
       sortBy: 'latest',
       searchTerm: '',
-      currentPage: 1,
       competences: []
     }
   },

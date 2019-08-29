@@ -1,3 +1,4 @@
+
 export const paginationMixin = {
   data () {
     return {
@@ -6,7 +7,8 @@ export const paginationMixin = {
         perPage: 10,
         next: null,
         prev: null
-      }
+      },
+      currentPage: 1
     }
   },
   methods: {
