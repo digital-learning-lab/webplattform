@@ -10,10 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
+import logging
 import os
 from environs import Env
 env = Env()
-
+logger = logging.getLogger('dll.settings')
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -264,3 +265,10 @@ EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', None)
 
 
 EMAIL_SENDER = os.getenv('EMAIL_SENDER', None)
+
+logger.debug(f'EMAIL_HOST: {EMAIL_HOST}')
+logger.debug(f'EMAIL_PORT: {EMAIL_PORT}')
+logger.debug(f'EMAIL_HOST_USER: {EMAIL_HOST_USER}')
+logger.debug(f'EMAIL_HOST_PASSWORD: {EMAIL_HOST_PASSWORD}')
+logger.debug(f'EMAIL_USE_TLS: {EMAIL_USE_TLS}')
+logger.debug(f'EMAIL_SENDER: {EMAIL_SENDER}')
