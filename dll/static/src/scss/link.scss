@@ -1,0 +1,18 @@
+.link--teaching-module {
+  color: $color--teaching-module;
+  &:hover {
+    color: darken($color--teaching-module, 10%);
+  }
+}
+.link--trend {
+  color: $color--trend;
+  &:hover {
+    color: darken($color--trend, 10%);
+  }
+}
+.link--tool {
+  color: $color--tool;
+  &:hover {
+    color: darken($color--tool, 10%);
+  }
+}
