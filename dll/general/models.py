@@ -94,6 +94,12 @@ class PublisherModel(PublisherModelBase):
     def copy_relations(self, src, dst):
         pass
 
+    def delete(self, **kwargs):
+        if self.publisher_is_draft:
+            if self.publisher_linked:
+                self.publisher_linked.delete()
+        return super(PublisherModel, self).delete(**kwargs)
+
 
 class DllSlugField(AutoSlugField):
 

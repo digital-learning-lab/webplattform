@@ -25,3 +25,4 @@ celery
 redis
 pysolr
 django-haystack
+django-select2

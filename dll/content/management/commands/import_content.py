@@ -14,7 +14,7 @@ from filer.models import Image
 from psycopg2._range import NumericRange
 
 from dll.content.models import TeachingModule, ContentLink, Competence, SubCompetence, Trend, Tool, ToolApplication, \
-    OperatingSystem, Subject, SchoolType, TrendLink, LICENCE_CHOICES, ToolLink, Content
+    OperatingSystem, Subject, SchoolType, TrendLink, LICENCE_CHOICES, ToolLink, Content, ContentFile
 from dll.general.utils import custom_slugify
 from dll.user.utils import get_default_tuhh_user
 from dll.user.models import DllUser
@@ -97,6 +97,9 @@ class Command(BaseCommand):
         parser.add_argument('-f', '--folder', type=str)
 
     def handle(self, *args, **options):
+        Tool.objects.all().delete()
+        Trend.objects.all().delete()
+        TeachingModule.objects.all().delete()
         base_dir = options['folder']
         self.TOOLS_FOLDER = os.path.join(base_dir, 'Tool')
         self.TRENDS_FOLDER = os.path.join(base_dir, 'Trend')
@@ -107,21 +110,28 @@ class Command(BaseCommand):
 
         for target_obj_pk in link_this_later.keys():
             try:
-                target_obj = Content.objects.get(pk=target_obj_pk)
+                # get the draft and attach the published content to it, then republish it
+                target_obj = Content.objects.drafts().get(pk=target_obj_pk)
                 for pk in link_this_later[target_obj_pk]:
                     draft_content = Content.objects.get(pk=pk)
                     published_content = draft_content.get_published()
                     if published_content:
                         target_obj.related_content.add(published_content)
                     else:
-                        logger.warning("Published Content with name '{}' doesn't exist and can't be associated to "
-                                       "Content with name '{}' (pk {})".format(
-                            draft_content.name, target_obj.name, target_obj.pk))
+                        logger.warning("Published {draft_cls_name} with name '{draft_title}' (pk {draft_pk}) doesn't "
+                                       "exist and can't be associated to {target_cls_name} with name '{target_title}' "
+                                       "(pk {target_pk})".format(
+                                        draft_cls_name=draft_content.__class__.__name__,
+                                        draft_title=draft_content.name,
+                                        draft_pk=draft_content.pk,
+                                        target_cls_name=target_obj.__class__.__name__,
+                                        target_title=target_obj.name,
+                                        target_pk=target_obj.pk))
+                # republish the draft
                 target_obj.publish()
             except Exception:
                 logger.exception("Can not link related content with pks {} to Content with pk {}".format(
-                    ', '.join(link_this_later[target_obj_pk]), target_obj_pk)
-                )
+                                 ', '.join(link_this_later[target_obj_pk]), target_obj_pk))
 
     @staticmethod
     def _read_xlsx_file(xlsx_file, content_type):
@@ -227,7 +237,7 @@ class Command(BaseCommand):
                 logger.debug("Parse competences for Tool {}".format(folder))
                 # make it a string first, because pandas parses single digits to integers
                 competences = str(data['digitalkompetenz'])
-                competence_list = list(filter(None, map(lambda x: x.strip(), competences.split(';'))))
+                competence_list = filter_map_strip_split(competences)
                 main_competences = self._parse_main_competences(competence_list)
                 sub_competences = self._parse_sub_competences(competence_list)
                 tool.competences.add(*main_competences)
@@ -242,7 +252,7 @@ class Command(BaseCommand):
             try:
                 logger.debug("Parse links for Tool {}".format(folder))
                 try:
-                    text, href = self._parse_markdown_link(data['website'])
+                    text, href = parse_markdown_link(data['website'])
                     link, created = ToolLink.objects.update_or_create(
                         tool=tool,
                         defaults={
@@ -254,9 +264,9 @@ class Command(BaseCommand):
                     logger.error('Could not parse link {} for Tool {}'.format(data['website'], folder))
                     continue
 
-                for md_link in filter(None, data['schr_anleitung'].split(';')):
+                for md_link in filter_map_strip_split(data['schr_anleitung']):
                     try:
-                        text, href = self._parse_markdown_link(md_link)
+                        text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
                             url=href,
                             name=text,
@@ -267,9 +277,9 @@ class Command(BaseCommand):
                         logger.error('Could not parse link {} for Tool {}'.format(md_link, folder))
                         continue
 
-                for md_link in filter(None, data['video_anleitung'].split(';')):
+                for md_link in filter_map_strip_split(data['video_anleitung']):
                     try:
-                        text, href = self._parse_markdown_link(md_link)
+                        text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
                             url=href,
                             name=text,
@@ -307,7 +317,22 @@ class Command(BaseCommand):
             except Exception as e:
                 logger.exception(e)
 
-            # Try to publish the new Trend
+            # Try to import the files from the folder as ContentFile objects
+            try:
+                logger.debug('Search files for Tool in folder {}'.format(folder))
+                directory = os.path.join(self.TOOLS_FOLDER, folder, 'Anhang')
+                if os.path.isdir(directory):
+                    files = os.listdir(directory)
+                    # exclude hidden files
+                    files = filter(lambda x: not x.startswith('.'), files)
+                    for f in files:
+                        self._save_file_for_content(tool, os.path.join(directory, f))
+                else:
+                    logger.debug('No files found for Tool in folder {}'.format(folder))
+            except Exception:
+                logger.exception("An error occurred during file import from folder {}".format(folder))
+
+            # Try to publish the new Tool
             try:
                 logger.debug('Publish Tool {}'.format(folder))
                 tool.publish()
@@ -392,7 +417,7 @@ class Command(BaseCommand):
                 logger.debug("Parse competences for Trend {}".format(folder))
                 # make it a string first, because pandas parses single digits to integers
                 competences = str(data['digitalkompetenz'])
-                competence_list = list(filter(None, map(lambda x: x.strip(), competences.split(';'))))
+                competence_list = filter_map_strip_split(competences)
                 main_competences = self._parse_main_competences(competence_list)
                 sub_competences = self._parse_sub_competences(competence_list)
                 trend.competences.add(*main_competences)
@@ -407,9 +432,9 @@ class Command(BaseCommand):
             # Try to parse the links
             try:
                 logger.debug("Parse links for Trend {}".format(folder))
-                for md_link in filter(None, data['weiterelinks'].split(';')):
+                for md_link in filter_map_strip_split(data['weiterelinks']):
                     try:
-                        text, href = self._parse_markdown_link(md_link)
+                        text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
                             url=href,
                             name=text,
@@ -419,9 +444,9 @@ class Command(BaseCommand):
                     except AttributeError:
                         logger.error('Could not parse link {} for Trend {}'.format(md_link, folder))
                         continue
-                for md_link in filter(None, data['website'].split(';')):
+                for md_link in filter_map_strip_split(data['website']):
                     try:
-                        text, href = self._parse_markdown_link(md_link)
+                        text, href = parse_markdown_link(md_link)
                         link = TrendLink.objects.create(
                             url=href,
                             name=text,
@@ -440,6 +465,21 @@ class Command(BaseCommand):
                 self._parse_related_content(trend, data)
             except Exception as e:
                 logger.exception(e)
+
+            # Try to import the files from the folder as ContentFile objects
+            try:
+                logger.debug('Search files for Trend in folder {}'.format(folder))
+                directory = os.path.join(self.TRENDS_FOLDER, folder, 'Anhang')
+                if os.path.isdir(directory):
+                    files = os.listdir(directory)
+                    # exclude hidden files
+                    files = filter(lambda x: not x.startswith('.'), files)
+                    for f in files:
+                        self._save_file_for_content(trend, os.path.join(directory, f))
+                else:
+                    logger.debug('No files found for Trend in folder {}'.format(folder))
+            except Exception:
+                logger.exception("An error occurred during file import from folder {}".format(folder))
 
             # Try to publish the new Trend
             try:
@@ -554,7 +594,7 @@ class Command(BaseCommand):
                 logger.debug("Parse competences for TeachingModule {}".format(folder))
                 # make it a string first, because pandas parses single digits to integers
                 competences = str(data['digitalkompetenz'])
-                competence_list = list(filter(None, map(lambda x: x.strip(), competences.split(';'))))
+                competence_list = filter_map_strip_split(competences)
                 main_competences = self._parse_main_competences(competence_list)
                 sub_competences = self._parse_sub_competences(competence_list)
                 teaching_module.competences.add(*main_competences)
@@ -568,9 +608,9 @@ class Command(BaseCommand):
             # Try to parse the links
             try:
                 logger.debug("Parse links for TeachingModule {}".format(folder))
-                for md_link in filter(None, data['medialinks'].split(';')):
+                for md_link in filter_map_strip_split(data['medialinks']):
                     try:
-                        text, href = self._parse_markdown_link(md_link)
+                        text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
                             url=href,
                             name=text,
@@ -581,9 +621,9 @@ class Command(BaseCommand):
                         logger.error('Could not parse link {} for TeachingModule {}'.format(md_link, folder))
                         continue
 
-                for md_link in filter(None, data['literaturlinks'].split(';')):
+                for md_link in filter_map_strip_split(data['literaturlinks']):
                     try:
-                        text, href = self._parse_markdown_link(md_link)
+                        text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
                             url=href,
                             name=text,
@@ -600,116 +640,117 @@ class Command(BaseCommand):
             # Try to add the different school types and Subjects
             try:
                 logger.debug("Parse school types and subjects for TeachingModule {}".format(folder))
-                for name in filter(None, map(lambda x: x.strip(), data['schulform'].split(';'))):
+                for name in filter_map_strip_split(data['schulform']):
                     school_type, created = SchoolType.objects.get_or_create(name=name)
                     teaching_module.school_types.add(school_type)
-                for name in filter(None, map(lambda x: x.strip(), data['unterrichtsfach'].split(';'))):
+                for name in filter_map_strip_split(data['unterrichtsfach']):
                     subject, created = Subject.objects.get_or_create(name=name)
                     teaching_module.subjects.add(subject)
-            except Exception as e:
-                logger.exception(e)
+            except Exception:
+                logger.exception("Could not parse school types and subjects for TeachingModule {}".format(folder))
 
             # Try to connect TeachingModule to other content
             try:
                 logger.debug("Parse related content for TeachingModule {}".format(folder))
                 self._parse_related_content(teaching_module, data)
-            except Exception as e:
-                logger.exception(e)
+            except Exception:
+                logger.exception("Could not parse related content for TeachingModule {}".format(folder))
+
+            # Try to import the files from the folder as ContentFile objects
+            try:
+                logger.debug('Search files for TeachingModule in folder {}'.format(folder))
+                directory = os.path.join(self.TEACHING_MODULES_FOLDER, folder, 'Anhang')
+                if os.path.isdir(directory):
+                    files = os.listdir(directory)
+                    # exclude hidden files
+                    files = filter(lambda x: not x.startswith('.'), files)
+                    for f in files:
+                        self._save_file_for_content(teaching_module, os.path.join(directory, f))
+                else:
+                    logger.debug('No files found for TeachingModule in folder {}'.format(folder))
+            except Exception:
+                logger.exception("An error occurred during file import from folder {}".format(folder))
 
             # Try to publish the new TeachingModule
             try:
                 logger.debug("Publish TeachingModule {}".format(folder))
                 teaching_module.publish()
-            except Exception as e:
-                logger.warning('Could not publish TeachingModule {}'.format(folder))
-                logger.exception(e)
+            except Exception:
+                logger.exception('Could not publish TeachingModule {}'.format(folder))
                 continue
 
     def _parse_related_content(self, obj, data):
-        for name in filter(None, map(lambda x: x.strip(), data.get('aehnliche_trends', '').split(';'))):
+        for name in filter_map_strip_split(data.get('aehnliche_trends', '')):
             try:
-                related_trend = Trend.objects.published().get(name=name)
-                obj.related_content.add(related_trend)
+                related_trend = Trend.objects.drafts().get(name=name)
             except Trend.DoesNotExist:
-                if Trend.objects.drafts().filter(name=name).exists():
-                    pass
-                else:
-                    related_trend = Trend(
-                        name=name,
-                        author=get_default_tuhh_user(),
-                        publisher_is_draft=True
-                    )
-                    related_trend.json_data['from_import'] = True
-                    related_trend.save()
-                    link_this_later[obj.pk].append(related_trend.pk)
-            except Trend.MultipleObjectsReturned:
-                logger.error('Multiple Trends with the name ({name}) for {cls} in folder {folder}'.format(
-                    name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
-        for name in filter(None, map(lambda x: x.strip(), data.get('uBaustein', '').split(';'))):
+                related_trend = Trend(
+                    name=name,
+                    author=get_default_tuhh_user(),
+                    publisher_is_draft=True
+                )
+                related_trend.json_data['from_import'] = True
+                related_trend.save()
+            finally:
+                link_this_later[obj.pk].append(related_trend.pk)
+        for name in filter_map_strip_split(data.get('uBaustein', '')):
             try:
-                related_teaching_module = TeachingModule.objects.published().get(name=name)
-                obj.related_content.add(related_teaching_module)
+                related_teaching_module = TeachingModule.objects.drafts().get(name=name)
             except TeachingModule.DoesNotExist:
-                if Trend.objects.drafts().filter(name=name).exists():
-                    pass
-                else:
-                    related_teaching_module = TeachingModule(
-                        name=name,
-                        author=get_default_tuhh_user(),
-                        publisher_is_draft=True
-                    )
-                    related_teaching_module.json_data['from_import'] = True
-                    related_teaching_module.save()
-                    link_this_later[obj.pk].append(related_teaching_module.pk)
-            except TeachingModule.MultipleObjectsReturned:
-                logger.error('Multiple TeachingModules with the name ({name}) for {cls} in folder {folder}'.format(
-                    name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
-        for name in filter(None, map(lambda x: x.strip(), data.get('tool', '').split(';'))):
+                related_teaching_module = TeachingModule(
+                    name=name,
+                    author=get_default_tuhh_user(),
+                    publisher_is_draft=True
+                )
+                related_teaching_module.json_data['from_import'] = True
+                related_teaching_module.save()
+            finally:
+                link_this_later[obj.pk].append(related_teaching_module.pk)
+        for name in filter_map_strip_split(data.get('tool', '')):
             try:
-                related_tool = Tool.objects.published().get(name=name)
-                obj.related_content.add(related_tool)
+                related_tool = Tool.objects.drafts().get(name=name)
             except Tool.DoesNotExist:
-                if Tool.objects.drafts().filter(name=name).exists():
-                    pass
-                else:
-                    related_tool = Tool(
-                        name=name,
-                        author=get_default_tuhh_user(),
-                        publisher_is_draft=True
-                    )
-                    related_tool.json_data['from_import'] = True
-                    related_tool.save()
-                    link_this_later[obj.pk].append(related_tool.pk)
-            except Tool.MultipleObjectsReturned:
-                logger.error('Multiple Tools with the name ({name}) for {cls} in folder {folder}'.format(
-                    name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
-        for markdown_link in filter(None, map(lambda x: x.strip(), data.get('aehnliche_tools', '').split(';'))):
+                related_tool = Tool(
+                    name=name,
+                    author=get_default_tuhh_user(),
+                    publisher_is_draft=True
+                )
+                related_tool.json_data['from_import'] = True
+                related_tool.save()
+            finally:
+                link_this_later[obj.pk].append(related_tool.pk)
+        for markdown_link in filter_map_strip_split(data.get('aehnliche_tools', '')):
             try:
-                text, href = self._parse_markdown_link(markdown_link)
+                text, href = parse_markdown_link(markdown_link)
             except AttributeError:
-                logger.error('Could not parse related Tool link {} for Trend {}'.format(markdown_link, obj.base_folder))
-                continue
+                logger.info('Could not parse related Tool link {} for Tool {}. '
+                            'Trying to interpret it as a Tool name'.format(
+                             markdown_link, obj.base_folder))
+                text = markdown_link
+                href = None
 
             try:
-                related_tool = Tool.objects.published().get(name=text)
-                obj.related_content.add(related_tool)
+                related_tool = Tool.objects.drafts().get(name=text)
             except Tool.DoesNotExist:
-                if Tool.objects.drafts().filter(name=text).exists():
-                    pass
-                else:
-                    related_tool = Tool(
-                        name=text,
-                        author=get_default_tuhh_user(),
-                        publisher_is_draft=True
-                    )
-                    related_tool.json_data['from_import'] = True
-                    related_tool.save()
+                related_tool = Tool(
+                    name=text,
+                    author=get_default_tuhh_user(),
+                    publisher_is_draft=True
+                )
+                related_tool.json_data['from_import'] = True
+                related_tool.save()
+                if href is not None:
                     tool_link = ToolLink.objects.create(
                         url=href,
                         name=text,
                         tool=related_tool
                     )
-                    link_this_later[obj.pk].append(related_tool.pk)
+            finally:
+                link_this_later[obj.pk].append(related_tool.pk)
+
+    @staticmethod
+    def _save_file_for_content(obj, path):
+        obj.add_file_from_path(path)
 
     @staticmethod
     def _import_image_from_path_to_folder(image_path, image_name, folder):
@@ -751,18 +792,11 @@ class Command(BaseCommand):
         return value.replace(';', '\n')
 
     @staticmethod
-    def _parse_markdown_link(value):
-        m = re.match(r"\[([^\[\]]+)\]\(([^)]+)", value)
-        text, href = m.group(1, 2)
-        return text, href
-
-    @staticmethod
     def _parse_links(value):
         links = []
-        l = filter(None, map(lambda x: x.strip(), value.split(';')))
+        l = filter_map_strip_split(value)
         for s in l:
-            m = re.match(r"\[([^\[\]]+)\]\(([^)]+)", s)
-            text, href = m.group(1, 2)
+            text, href = parse_markdown_link(s)
             links.append({'text': text, 'href': href})
         return links
 
@@ -770,7 +804,7 @@ class Command(BaseCommand):
     def _parse_authors(value):
         """Returns a list of DllUser instances. First item is the author, all following authors are co-authors"""
         author_list = []
-        authors = filter(None, value.split(';'))
+        authors = filter_map_strip_split(value)
         if authors:
             for author in authors:
                 autogenerated_email = custom_slugify(author) + "@dll.web"
@@ -890,7 +924,17 @@ class Command(BaseCommand):
     @staticmethod
     def _parse_tools_os(value):
         os_lst = []
-        for name in filter(None, map(lambda x: x.strip(), value.split(';'))):
+        for name in filter_map_strip_split(value):
             op_sys, created = OperatingSystem.objects.get_or_create(name=name)
             os_lst.append(op_sys)
         return os_lst
+
+
+def filter_map_strip_split(value):
+    return list(filter(None, map(lambda x: x.strip(), value.strip().split(';'))))
+
+
+def parse_markdown_link(value):
+    m = re.match(r"\s?\[(.+)\]\s?\(([^)]+)", value)
+    text, href = m.group(1, 2)
+    return text, href

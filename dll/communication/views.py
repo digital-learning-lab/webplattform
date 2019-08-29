@@ -6,32 +6,51 @@ from django.urls import reverse_lazy, reverse
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
-from django.views.generic import FormView
+from django.views.generic import FormView, TemplateView
 
 from dll.communication.forms import ContactForm, NewsletterForm
 from dll.communication.models import NewsletterSubscrption, CoAuthorshipInvitation
 from dll.communication.tokens import newsletter_confirm_token, co_author_invitation_token
+from dll.communication.utils import validate_recaptcha
 from dll.content.views import BreadcrumbMixin
 from django.utils.translation import ugettext_lazy as _
 
 
 class ContactView(FormView, BreadcrumbMixin):
-    template_name = 'dll/contact.html'
+    template_name = 'dll/communication/contact.html'
     breadcrumb_title = 'Kontakt'
     breadcrumb_url = reverse_lazy('communication:contact')
     form_class = ContactForm
-    success_url = reverse_lazy('faq')
+    success_url = reverse_lazy('communication:contact-success')
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ContactView, self).get_context_data(**kwargs)
+        ctx['GOOGLE_RECAPTCHA_WEBSITE_KEY'] = settings.GOOGLE_RECAPTCHA_WEBSITE_KEY
+        return ctx
 
     def post(self, request, *args, **kwargs):
-        if settings.VALIDATE_RECAPTCHA:
-            pass  # todo: build in recaptcha
+        form = self.get_form()
+        if form.is_valid():
+            if settings.VALIDATE_RECAPTCHA:
+                key = request.POST.get('g-recaptcha-response')
+                valid = validate_recaptcha(key)
+                if valid:
+                    return self.form_valid(form)
+                else:
+                    return self.form_invalid(form)
+            else:
+                return self.form_valid(form)
         else:
-            return super(ContactView, self).post(request, *args, **kwargs)
+            return self.form_invalid(form)
 
     def form_valid(self, form):
         # send_mail(event_type_code='')
         form.send_emails(self.request.user)
         return super(ContactView, self).form_valid(form)
+
+
+class ContactSuccessView(TemplateView):
+    template_name = 'dll/communication/contact_success.html'
 
 
 class NewsletterRegisterView(FormView, BreadcrumbMixin):

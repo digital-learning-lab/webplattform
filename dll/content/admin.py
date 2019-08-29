@@ -31,10 +31,6 @@ class HelpTextFieldInline(admin.TabularInline):
         else:
             return False
 
-    def get_formset(self, request, obj=None, **kwargs):
-        formset = super(HelpTextFieldInline, self).get_formset(request, obj, **kwargs)
-        return formset
-
 
 @admin.register(HelpText)
 class HelpTextAdmin(admin.ModelAdmin):
@@ -44,10 +40,20 @@ class HelpTextAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if obj:
             readonly_fields = self.readonly_fields
-            readonly_fields += ('content_type',)
+            # readonly_fields += ('content_type',)
             return readonly_fields
         else:
             return self.readonly_fields
+
+    class Media:
+        js = (
+            '//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js',
+            '//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js',
+        )
+
+        css = {
+            'all': ('//cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css',)
+        }
 
 
 @admin.register(FlatPage)

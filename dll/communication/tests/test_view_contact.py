@@ -1,14 +1,14 @@
 from django.conf import settings
 from django.core import mail
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from dll.communication.models import CommunicationEventType
 
 
+@override_settings(VALIDATE_RECAPTCHA=False)
 class ContactTests(TestCase):
     def setUp(self):
-        settings.VALIDATE_RECAPTCHA = False
         self.contact_url = reverse('communication:contact')
         self.test_data = {
             'from_email': "test@blueshoe.de",
