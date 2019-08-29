@@ -16,7 +16,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
-from filer.models import Folder, Image
+from filer.models import Folder, Image, File as FilerFile
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 from rules.contrib.models import RulesModelMixin, RulesModelBaseMixin
@@ -149,7 +149,17 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
             link.save()
 
         for file in src.contentfile_set.all():
+            # create a copy of the filer file object
+            dst_file = file.file
+            dst_file.pk, dst_file.id = None, None
+            file_name, extension = os.path.splitext(dst_file.label)
+            file_name += " (public)"
+            dst_file.name = file_name + extension
+            dst_file.save()
+
+            # create a new instance of the ContentFile object
             file.pk, file.id, file.created, file.modified = None, None, None, None
+            file.file = dst_file
             file.content = dst
             file.save()
 
@@ -160,16 +170,35 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
     def update_or_add_image_from_path(self, path, update=False, image_name=None):
         if self.image:
             self.image.delete()
-        filer_folder, created = Folder.objects.get_or_create(name=self.__class__.__name__)
+        base_folder, created = Folder.objects.get_or_create(name=self.__class__._meta.verbose_name_plural, level=0)
+        sub_folder, created = Folder.objects.get_or_create(name=self.base_folder, level=1, parent=base_folder)
+        images_folder, created = Folder.objects.get_or_create(name="Images", parent=sub_folder, level=2)
         if image_name is None:
             image_name = str(os.path.dirname(path).split(os.sep)[-1]) + str(os.path.splitext(path))
         file = File(open(path, 'rb'), name=image_name)
         filer_image = Image.objects.create(original_filename=image_name,
                                            file=file,
-                                           folder=filer_folder,
+                                           folder=images_folder,
                                            owner=get_default_tuhh_user())
         self.image = filer_image
         self.save()
+
+    def add_file_from_path(self, path, file_name=None):
+        file = File(open(path, 'rb'), name=file_name)
+        base_folder, created = Folder.objects.get_or_create(name=self.__class__._meta.verbose_name_plural, level=0)
+        sub_folder, created = Folder.objects.get_or_create(name=self.base_folder, level=1, parent=base_folder)
+        files_folder, created = Folder.objects.get_or_create(name="Files", parent=sub_folder, level=2)
+        if file_name is None:
+            file_name = os.path.basename(path)
+        filer_file = FilerFile.objects.create(original_filename=file_name,
+                                              file=file,
+                                              folder=files_folder,
+                                              owner=get_default_tuhh_user())
+        ContentFile.objects.create(
+            file=filer_file,
+            title=file_name,
+            content=self
+        )
 
     def send_content_submitted_mail(self, by_user=None):
         from dll.communication.tasks import send_mail
@@ -858,3 +887,8 @@ def auto_delete_filer_image_on_delete(sender, instance, **kwargs):
     # for reasons unknown, this works without specifying the concrete sender model
     if instance.image:
         instance.image.delete()
+
+
+@receiver(models.signals.post_delete, sender=ContentFile)
+def auto_delete_filer_file_on_delete(sender, instance, **kwargs):
+    instance.file.delete()

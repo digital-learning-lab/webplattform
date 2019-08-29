@@ -14,7 +14,7 @@ from filer.models import Image
 from psycopg2._range import NumericRange
 
 from dll.content.models import TeachingModule, ContentLink, Competence, SubCompetence, Trend, Tool, ToolApplication, \
-    OperatingSystem, Subject, SchoolType, TrendLink, LICENCE_CHOICES, ToolLink, Content
+    OperatingSystem, Subject, SchoolType, TrendLink, LICENCE_CHOICES, ToolLink, Content, ContentFile
 from dll.general.utils import custom_slugify
 from dll.user.utils import get_default_tuhh_user
 from dll.user.models import DllUser
@@ -317,7 +317,22 @@ class Command(BaseCommand):
             except Exception as e:
                 logger.exception(e)
 
-            # Try to publish the new Trend
+            # Try to import the files from the folder as ContentFile objects
+            try:
+                logger.debug('Search files for Tool in folder {}'.format(folder))
+                directory = os.path.join(self.TOOLS_FOLDER, folder, 'Anhang')
+                if os.path.isdir(directory):
+                    files = os.listdir(directory)
+                    # exclude hidden files
+                    files = filter(lambda x: not x.startswith('.'), files)
+                    for f in files:
+                        self._save_file_for_content(tool, os.path.join(directory, f))
+                else:
+                    logger.debug('No files found for Tool in folder {}'.format(folder))
+            except Exception:
+                logger.exception("An error occurred during file import from folder {}".format(folder))
+
+            # Try to publish the new Tool
             try:
                 logger.debug('Publish Tool {}'.format(folder))
                 tool.publish()
@@ -450,6 +465,21 @@ class Command(BaseCommand):
                 self._parse_related_content(trend, data)
             except Exception as e:
                 logger.exception(e)
+
+            # Try to import the files from the folder as ContentFile objects
+            try:
+                logger.debug('Search files for Trend in folder {}'.format(folder))
+                directory = os.path.join(self.TRENDS_FOLDER, folder, 'Anhang')
+                if os.path.isdir(directory):
+                    files = os.listdir(directory)
+                    # exclude hidden files
+                    files = filter(lambda x: not x.startswith('.'), files)
+                    for f in files:
+                        self._save_file_for_content(trend, os.path.join(directory, f))
+                else:
+                    logger.debug('No files found for Trend in folder {}'.format(folder))
+            except Exception:
+                logger.exception("An error occurred during file import from folder {}".format(folder))
 
             # Try to publish the new Trend
             try:
@@ -616,23 +646,37 @@ class Command(BaseCommand):
                 for name in filter_map_strip_split(data['unterrichtsfach']):
                     subject, created = Subject.objects.get_or_create(name=name)
                     teaching_module.subjects.add(subject)
-            except Exception as e:
-                logger.exception(e)
+            except Exception:
+                logger.exception("Could not parse school types and subjects for TeachingModule {}".format(folder))
 
             # Try to connect TeachingModule to other content
             try:
                 logger.debug("Parse related content for TeachingModule {}".format(folder))
                 self._parse_related_content(teaching_module, data)
-            except Exception as e:
-                logger.exception(e)
+            except Exception:
+                logger.exception("Could not parse related content for TeachingModule {}".format(folder))
+
+            # Try to import the files from the folder as ContentFile objects
+            try:
+                logger.debug('Search files for TeachingModule in folder {}'.format(folder))
+                directory = os.path.join(self.TEACHING_MODULES_FOLDER, folder, 'Anhang')
+                if os.path.isdir(directory):
+                    files = os.listdir(directory)
+                    # exclude hidden files
+                    files = filter(lambda x: not x.startswith('.'), files)
+                    for f in files:
+                        self._save_file_for_content(teaching_module, os.path.join(directory, f))
+                else:
+                    logger.debug('No files found for TeachingModule in folder {}'.format(folder))
+            except Exception:
+                logger.exception("An error occurred during file import from folder {}".format(folder))
 
             # Try to publish the new TeachingModule
             try:
                 logger.debug("Publish TeachingModule {}".format(folder))
                 teaching_module.publish()
-            except Exception as e:
-                logger.warning('Could not publish TeachingModule {}'.format(folder))
-                logger.exception(e)
+            except Exception:
+                logger.exception('Could not publish TeachingModule {}'.format(folder))
                 continue
 
     def _parse_related_content(self, obj, data):
@@ -703,6 +747,10 @@ class Command(BaseCommand):
                     )
             finally:
                 link_this_later[obj.pk].append(related_tool.pk)
+
+    @staticmethod
+    def _save_file_for_content(obj, path):
+        obj.add_file_from_path(path)
 
     @staticmethod
     def _import_image_from_path_to_folder(image_path, image_name, folder):
