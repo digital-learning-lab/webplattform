@@ -9,15 +9,26 @@ $sidebar-preview-button-color: darken($sidebar-preview-color, 8%);
   height: 100%;
   padding: 1rem 0;
   font-size: 0.9rem;
+  position: relative;
+  z-index: 1000;
 }
 .sidebar--teaching-module {
   background-color: $color--teaching-module;
+  .sidebar__nav {
+    background-color: $color--teaching-module;
+  }
 }
 .sidebar--trend {
   background-color: $color--trend;
+  .sidebar__nav {
+    background-color: $color--trend;
+  }
 }
 .sidebar--tool {
   background-color: $color--tool;
+  .sidebar__nav {
+    background-color: $color--tool;
+  }
 }
 .sidebar__headline {
   margin: 0;
@@ -46,12 +57,6 @@ $sidebar-preview-button-color: darken($sidebar-preview-color, 8%);
   padding-left: 0;
   list-style: none;
 }
-.sidebar__nav-item {
-  border-top: 2px solid white;
-  &:last-child {
-    border-bottom: 2px solid white;
-  }
-}
 .sidebar__nav-link {
   color: rgba(255, 255, 255, 1);
   padding: 1rem 1rem;
@@ -67,9 +72,35 @@ $sidebar-preview-button-color: darken($sidebar-preview-color, 8%);
     background-color: $color--daintree;
   }
 }
+
+.sidebar__nav {
+  font-size: 0.65rem;
+  position: fixed;
+  bottom: 0;
+  height: 63px;
+  display: flex;
+  left: 0;
+  width: 100%;
+  overflow-x: scroll;
+}
+.sidebar__nav-item {
+  flex: 0 0 auto;
+  border-top: 0;
+  border-bottom: 0;
+  border-right: 1px solid rgba(255, 255, 255, 1);
+  &:last-child {
+    border-right: 0;
+    border-bottom: 0;
+  }
+}
+.sidebar__nav-link {
+  padding: 1.5rem 1rem;
+  display: block;
+  text-align: center;
+  width: 100%;
+}
 .sidebar__nav-link-item {
-  float: right;
-  margin-top: -4px;
+  display: none;
 }
 
 .sidebar--preview {
@@ -104,5 +135,29 @@ $sidebar-preview-button-color: darken($sidebar-preview-color, 8%);
   }
   .sidebar--preview {
     padding-left: $sidebar-side-padding--desktop;
+  }
+}
+
+@media (min-width: 992px) {
+  .sidebar__nav {
+    position: relative;
+    font-size: 0.9rem;
+    height: auto;
+    display: block;
+  }
+  .sidebar__nav-item {
+    display: block;
+    border-top: 2px solid white;
+    &:last-child {
+      border-bottom: 2px solid white;
+    }
+  }
+  .sidebar__nav-link {
+    text-align: left;
+  }
+  .sidebar__nav-link-item {
+    display: block;
+    float: right;
+    margin-top: -4px;
   }
 }
