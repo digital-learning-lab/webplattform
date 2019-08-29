@@ -200,7 +200,6 @@ class DraftsContentViewSet(AutoPermissionViewSetMixin,
                            mixins.DestroyModelMixin,
                            viewsets.GenericViewSet):
     """Authors can create, update and retrieve content, reviewers can only retrieve"""
-    # todo: delete public version when draft is deleted
     serializer_class = ContentPolymorphicSerializer
     queryset = Content.objects.drafts()
     lookup_field = 'slug'
