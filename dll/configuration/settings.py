@@ -63,7 +63,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'rules.apps.AutodiscoverRulesConfig',
-    'haystack'
+    'haystack',
+    'django_select2'
 ]
 
 MIDDLEWARE = [

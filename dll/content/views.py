@@ -17,7 +17,7 @@ from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject, SubCompetence, SchoolType, \
-    Review, OperatingSystem, ToolApplication
+    Review, OperatingSystem, ToolApplication, HelpText
 from dll.content.serializers import AuthorSerializer, CompetenceSerializer, SubCompetenceSerializer, \
     SchoolTypeSerializer, ReviewSerializer, SubjectSerializer, FileSerializer
 from dll.general.utils import GERMAN_STATES
@@ -510,3 +510,11 @@ class FileUploadView(APIView):
             return Response(file_serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def admin_help_text_choices(request):
+    ct = request.GET.get('content_type', None)
+    ht = HelpText.objects.get(content_type_id=ct)
+    choices = ht.get_help_text_fields_for_content_type()
+    results = [{'text': i[1], 'id': i[0]} for i in choices]
+    return JsonResponse({'results': results, 'more': False})
