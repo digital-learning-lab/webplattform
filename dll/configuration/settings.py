@@ -225,7 +225,10 @@ REST_FRAMEWORK = {
 
 CONTACT_EMAIL_BSB = "stabsstelle-digitalisierung@bsb.hamburg.de"
 CONTACT_EMAIL_DLL = "digital.learning.lab@tuhh.de"
-VALIDATE_RECAPTCHA = False
+VALIDATE_RECAPTCHA = True
+GOOGLE_RECAPTCHA_VERIFICATION_URL = 'https://www.google.com/recaptcha/api/siteverify'
+GOOGLE_RECAPTCHA_SECRET_KEY = '6Ld4o7UUAAAAAGLcWGPoJcw0hXIhCY7B9vUAPzl2'
+GOOGLE_RECAPTCHA_WEBSITE_KEY = '6Ld4o7UUAAAAAJtCYsBxmfyr2sA3HABsP_rsbEd0'
 
 CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://{hostname}:6379/0'.format(
     hostname=env.str('REDIS_HOSTNAME'),

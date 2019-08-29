@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 import logging
 
+import requests
+from django.conf import settings
 from django.utils.encoding import smart_text as u
 from django.core.mail import EmailMessage, EmailMultiAlternatives
 
 from .models import CommunicationEvent
+
+
+logger = logging.getLogger('dll.communication.utils')
 
 
 class Dispatcher(object):
@@ -73,3 +78,24 @@ class Dispatcher(object):
             cc=cc,
             bcc=bcc
         )
+
+
+def validate_recaptcha(key):
+    parameters = {
+        'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+        'response': key
+    }
+
+    response = requests.post(settings.GOOGLE_RECAPTCHA_VERIFICATION_URL, data=parameters)
+
+    if str(response.status_code)[0] == "2":
+        response = response.json()
+
+        if response['success']:
+            return True
+        else:
+            logger.warning("Invalid reCaptcha. Error codes: {}".format(', '.join(response['error-codes'])))
+            return False
+    else:
+        logger.warning("Invalid reCaptcha. Response status code is {}".format(response.status_code))
+        return False
