@@ -78,20 +78,20 @@
 
 {% block sidebar_navigation_items %}
   <li class="sidebar__nav-item">
-    <a class="sidebar__nav-link nav-link active" id="entry-tab" data-toggle="pill" href="#entry" role="tab" aria-controls="entry" aria-selected="true">
+    <a class="sidebar__nav-link nav-link active js-sidebar-nav-item" id="entry-tab" data-toggle="pill" href="#entry" role="tab" aria-controls="entry" aria-selected="true">
       Einstieg
       <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
     </a>
   </li>
   <li class="sidebar__nav-item">
-    <a class="sidebar__nav-link nav-link" id="detail-tab" data-toggle="pill" href="#detail" role="tab" aria-controls="detail" aria-selected="true">
+    <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="detail-tab" data-toggle="pill" href="#detail" role="tab" aria-controls="detail" aria-selected="true">
       Details
       <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
     </a>
   </li>
   {% if object.additional_info or object.has_tutorial_links %}
     <li class="sidebar__nav-item">
-      <a class="sidebar__nav-link nav-link" id="hints-tab" data-toggle="pill" href="#hints" role="tab" aria-controls="hints" aria-selected="true">
+      <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="hints-tab" data-toggle="pill" href="#hints" role="tab" aria-controls="hints" aria-selected="true">
         Hinweise & Links
         <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
       </a>
@@ -99,7 +99,7 @@
   {% endif %}
   {% if object.related_teaching_modules %}
     <li class="sidebar__nav-item">
-      <a class="sidebar__nav-link nav-link" id="material-tab" data-toggle="pill" href="#material" role="tab" aria-controls="material" aria-selected="true">
+      <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="material-tab" data-toggle="pill" href="#material" role="tab" aria-controls="material" aria-selected="true">
         Material
         <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
       </a>
@@ -107,7 +107,7 @@
   {% endif %}
   {% if object.related_tools %}
     <li class="sidebar__nav-item">
-      <a class="sidebar__nav-link nav-link" id="tools-tab" data-toggle="pill" href="#tools" role="tab" aria-controls="tools" aria-selected="true">
+      <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="tools-tab" data-toggle="pill" href="#tools" role="tab" aria-controls="tools" aria-selected="true">
         Tools
         <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
       </a>
@@ -115,7 +115,7 @@
   {% endif %}
   {% if object.related_trends %}
     <li class="sidebar__nav-item">
-      <a class="sidebar__nav-link nav-link" id="trends-tab" data-toggle="pill" href="#trends" role="tab" aria-controls="trends" aria-selected="true">
+      <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="trends-tab" data-toggle="pill" href="#trends" role="tab" aria-controls="trends" aria-selected="true">
         Trends
         <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
       </a>

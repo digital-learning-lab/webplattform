@@ -50,20 +50,20 @@
 
 {% block sidebar_navigation_items %}
   <li class="sidebar__nav-item">
-    <a class="sidebar__nav-link nav-link active" id="overview-tab" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">
+    <a class="sidebar__nav-link nav-link js-sidebar-nav-item active" id="overview-tab" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">
       Überblick
       <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
     </a>
   </li>
   <li class="sidebar__nav-item">
-    <a class="sidebar__nav-link nav-link" id="hints-tab" data-toggle="pill" href="#hints" role="tab" aria-controls="hints" aria-selected="true">
+    <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="hints-tab" data-toggle="pill" href="#hints" role="tab" aria-controls="hints" aria-selected="true">
       Hinweise & Tutorials
       <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
     </a>
   </li>
   {% if object.related_teaching_modules %}
   <li class="sidebar__nav-item">
-    <a class="sidebar__nav-link nav-link" id="modules-tab" data-toggle="pill" href="#modules" role="tab" aria-controls="modules" aria-selected="true">
+    <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="modules-tab" data-toggle="pill" href="#modules" role="tab" aria-controls="modules" aria-selected="true">
       Bausteine
       <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
     </a>
@@ -71,7 +71,7 @@
   {% endif %}
   {% if object.related_tools %}
   <li class="sidebar__nav-item">
-    <a class="sidebar__nav-link nav-link" id="similar-tools-tab" data-toggle="pill" href="#similar-tools" role="tab" aria-controls="similar-tools" aria-selected="true">
+    <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="similar-tools-tab" data-toggle="pill" href="#similar-tools" role="tab" aria-controls="similar-tools" aria-selected="true">
       Ähnliche Tools
       <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
     </a>
