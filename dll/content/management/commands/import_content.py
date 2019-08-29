@@ -97,6 +97,9 @@ class Command(BaseCommand):
         parser.add_argument('-f', '--folder', type=str)
 
     def handle(self, *args, **options):
+        Tool.objects.all().delete()
+        Trend.objects.all().delete()
+        TeachingModule.objects.all().delete()
         base_dir = options['folder']
         self.TOOLS_FOLDER = os.path.join(base_dir, 'Tool')
         self.TRENDS_FOLDER = os.path.join(base_dir, 'Trend')
@@ -115,9 +118,15 @@ class Command(BaseCommand):
                     if published_content:
                         target_obj.related_content.add(published_content)
                     else:
-                        logger.warning("Published Content with name '{}' doesn't exist and can't be associated to "
-                                       "Content with name '{}' (pk {})".format(
-                                        draft_content.name, target_obj.name, target_obj.pk))
+                        logger.warning("Published {draft_cls_name} with name '{draft_title}' (pk {draft_pk} doesn't "
+                                       "exist and can't be associated to {target_cls_name} with name '{target_title}' "
+                                       "(pk {target_pk})".format(
+                                        draft_cls_name=draft_content.__class__.__name__,
+                                        draft_title=draft_content.name,
+                                        draft_pk=draft_content.pk,
+                                        target_cls_name=target_obj.__class__.__name__,
+                                        target_title=target_obj.name,
+                                        target_pk=target_obj.pk))
                 # republish the draft
                 target_obj.publish()
             except Exception:
@@ -243,7 +252,7 @@ class Command(BaseCommand):
             try:
                 logger.debug("Parse links for Tool {}".format(folder))
                 try:
-                    text, href = self._parse_markdown_link(data['website'])
+                    text, href = parse_markdown_link(data['website'])
                     link, created = ToolLink.objects.update_or_create(
                         tool=tool,
                         defaults={
@@ -257,7 +266,7 @@ class Command(BaseCommand):
 
                 for md_link in filter(None, data['schr_anleitung'].split(';')):
                     try:
-                        text, href = self._parse_markdown_link(md_link)
+                        text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
                             url=href,
                             name=text,
@@ -270,7 +279,7 @@ class Command(BaseCommand):
 
                 for md_link in filter(None, data['video_anleitung'].split(';')):
                     try:
-                        text, href = self._parse_markdown_link(md_link)
+                        text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
                             url=href,
                             name=text,
@@ -410,7 +419,7 @@ class Command(BaseCommand):
                 logger.debug("Parse links for Trend {}".format(folder))
                 for md_link in filter(None, data['weiterelinks'].split(';')):
                     try:
-                        text, href = self._parse_markdown_link(md_link)
+                        text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
                             url=href,
                             name=text,
@@ -422,7 +431,7 @@ class Command(BaseCommand):
                         continue
                 for md_link in filter(None, data['website'].split(';')):
                     try:
-                        text, href = self._parse_markdown_link(md_link)
+                        text, href = parse_markdown_link(md_link)
                         link = TrendLink.objects.create(
                             url=href,
                             name=text,
@@ -555,7 +564,7 @@ class Command(BaseCommand):
                 logger.debug("Parse competences for TeachingModule {}".format(folder))
                 # make it a string first, because pandas parses single digits to integers
                 competences = str(data['digitalkompetenz'])
-                competence_list = list(filter(None, map(lambda x: x.strip(), competences.split(';'))))
+                competence_list = filter_map_strip_split(competences)
                 main_competences = self._parse_main_competences(competence_list)
                 sub_competences = self._parse_sub_competences(competence_list)
                 teaching_module.competences.add(*main_competences)
@@ -571,7 +580,7 @@ class Command(BaseCommand):
                 logger.debug("Parse links for TeachingModule {}".format(folder))
                 for md_link in filter(None, data['medialinks'].split(';')):
                     try:
-                        text, href = self._parse_markdown_link(md_link)
+                        text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
                             url=href,
                             name=text,
@@ -584,7 +593,7 @@ class Command(BaseCommand):
 
                 for md_link in filter(None, data['literaturlinks'].split(';')):
                     try:
-                        text, href = self._parse_markdown_link(md_link)
+                        text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
                             url=href,
                             name=text,
@@ -601,10 +610,10 @@ class Command(BaseCommand):
             # Try to add the different school types and Subjects
             try:
                 logger.debug("Parse school types and subjects for TeachingModule {}".format(folder))
-                for name in filter(None, map(lambda x: x.strip(), data['schulform'].split(';'))):
+                for name in filter_map_strip_split(data['schulform']):
                     school_type, created = SchoolType.objects.get_or_create(name=name)
                     teaching_module.school_types.add(school_type)
-                for name in filter(None, map(lambda x: x.strip(), data['unterrichtsfach'].split(';'))):
+                for name in filter_map_strip_split(data['unterrichtsfach']):
                     subject, created = Subject.objects.get_or_create(name=name)
                     teaching_module.subjects.add(subject)
             except Exception as e:
@@ -627,7 +636,7 @@ class Command(BaseCommand):
                 continue
 
     def _parse_related_content(self, obj, data):
-        for name in filter(None, map(lambda x: x.strip(), data.get('aehnliche_trends', '').split(';'))):
+        for name in filter_map_strip_split(data.get('aehnliche_trends', '')):
             try:
                 related_trend = Trend.objects.drafts().get(name=name)
             except Trend.DoesNotExist:
@@ -640,7 +649,7 @@ class Command(BaseCommand):
                 related_trend.save()
             finally:
                 link_this_later[obj.pk].append(related_trend.pk)
-        for name in filter(None, map(lambda x: x.strip(), data.get('uBaustein', '').split(';'))):
+        for name in filter_map_strip_split(data.get('uBaustein', '')):
             try:
                 related_teaching_module = TeachingModule.objects.drafts().get(name=name)
             except TeachingModule.DoesNotExist:
@@ -653,7 +662,7 @@ class Command(BaseCommand):
                 related_teaching_module.save()
             finally:
                 link_this_later[obj.pk].append(related_teaching_module.pk)
-        for name in filter(None, map(lambda x: x.strip(), data.get('tool', '').split(';'))):
+        for name in filter_map_strip_split(data.get('tool', '')):
             try:
                 related_tool = Tool.objects.drafts().get(name=name)
             except Tool.DoesNotExist:
@@ -666,12 +675,15 @@ class Command(BaseCommand):
                 related_tool.save()
             finally:
                 link_this_later[obj.pk].append(related_tool.pk)
-        for markdown_link in filter(None, map(lambda x: x.strip(), data.get('aehnliche_tools', '').split(';'))):
+        for markdown_link in filter_map_strip_split(data.get('aehnliche_tools', '')):
             try:
-                text, href = self._parse_markdown_link(markdown_link)
+                text, href = parse_markdown_link(markdown_link)
             except AttributeError:
-                logger.error('Could not parse related Tool link {} for Trend {}'.format(markdown_link, obj.base_folder))
-                continue
+                logger.info('Could not parse related Tool link {} for Tool {}. '
+                            'Trying to interpret it as a Tool name'.format(
+                             markdown_link, obj.base_folder))
+                text = markdown_link
+                href = None
 
             try:
                 related_tool = Tool.objects.drafts().get(name=text)
@@ -683,11 +695,12 @@ class Command(BaseCommand):
                 )
                 related_tool.json_data['from_import'] = True
                 related_tool.save()
-                tool_link = ToolLink.objects.create(
-                    url=href,
-                    name=text,
-                    tool=related_tool
-                )
+                if href is not None:
+                    tool_link = ToolLink.objects.create(
+                        url=href,
+                        name=text,
+                        tool=related_tool
+                    )
             finally:
                 link_this_later[obj.pk].append(related_tool.pk)
 
@@ -730,18 +743,11 @@ class Command(BaseCommand):
         return value.replace(';', '\n')
 
     @staticmethod
-    def _parse_markdown_link(value):
-        m = re.match(r"\[([^\[\]]+)\]\(([^)]+)", value)
-        text, href = m.group(1, 2)
-        return text, href
-
-    @staticmethod
     def _parse_links(value):
         links = []
-        l = filter(None, map(lambda x: x.strip(), value.split(';')))
+        l = filter_map_strip_split(value)
         for s in l:
-            m = re.match(r"\[([^\[\]]+)\]\(([^)]+)", s)
-            text, href = m.group(1, 2)
+            text, href = parse_markdown_link(s)
             links.append({'text': text, 'href': href})
         return links
 
@@ -749,7 +755,7 @@ class Command(BaseCommand):
     def _parse_authors(value):
         """Returns a list of DllUser instances. First item is the author, all following authors are co-authors"""
         author_list = []
-        authors = filter(None, value.split(';'))
+        authors = filter_map_strip_split(value)
         if authors:
             for author in authors:
                 autogenerated_email = custom_slugify(author) + "@dll.web"
@@ -869,7 +875,17 @@ class Command(BaseCommand):
     @staticmethod
     def _parse_tools_os(value):
         os_lst = []
-        for name in filter(None, map(lambda x: x.strip(), value.split(';'))):
+        for name in filter_map_strip_split(value):
             op_sys, created = OperatingSystem.objects.get_or_create(name=name)
             os_lst.append(op_sys)
         return os_lst
+
+
+def filter_map_strip_split(value):
+    return list(filter(None, map(lambda x: x.strip(), value.strip().split(';'))))
+
+
+def parse_markdown_link(value):
+    m = re.match(r"\s?\[(.+)\]\s?\(([^)]+)", value)
+    text, href = m.group(1, 2)
+    return text, href
