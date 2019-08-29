@@ -213,8 +213,6 @@ else:
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
-DEFAULT_FROM_EMAIL = 'default_from_email@tuhh.de'  # todo: default from email address
-
 LOGIN_URL = 'user:login'
 LOGIN_REDIRECT_URL = 'user-content-overview'
 LOGOUT_REDIRECT_URL = 'home'
@@ -251,6 +249,9 @@ TUHH_REVIEW_MAIL = os.getenv('EMAIL_RECEIVER_BSB', 'dll@blueshoe.de')
 LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locales')
 ]
+
+
+DEFAULT_FROM_EMAIL = 'digital.learning.lab@tuhh.de'
 
 # Host for sending e-mail.
 EMAIL_HOST = os.getenv('EMAIL_HOST', None)

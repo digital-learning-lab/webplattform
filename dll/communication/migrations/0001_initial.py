@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
                 ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
                 ('code', models.CharField(help_text='Code, mit dem dieses Ereignis programmgesteuert gesucht werden kann.', max_length=128, unique=True)),
                 ('name', models.CharField(help_text='Dies dient nur zu organisatorischen Zwecken.', max_length=255, verbose_name='Name')),
-                ('from_email', models.EmailField(default='default_from_email@tuhh.de', max_length=128)),
+                ('from_email', models.EmailField(default='digital.learning.lab@tuhh.de', max_length=128)),
                 ('email_subject_template', models.CharField(blank=True, max_length=255, null=True, verbose_name='Email Subject Template')),
                 ('email_body_template', models.TextField(blank=True, null=True, verbose_name='Email Body Template')),
                 ('email_body_html_template', models.TextField(blank=True, help_text='HTML template', null=True, verbose_name='Email Body HTML Template')),

@@ -54,7 +54,7 @@ class CommunicationEventType(TimeStampedModel):
     name = models.CharField(
         _('Name'), max_length=255,
         help_text=_("Dies dient nur zu organisatorischen Zwecken."))
-    from_email = models.EmailField(max_length=128, default=settings.DEFAULT_FROM_EMAIL)
+    from_email = models.EmailField(max_length=128, default=settings.EMAIL_SENDER)
     # Template content for emails
     # NOTE: There's an intentional distinction between None and ''. None
     # instructs Oscar to look for a file-based template, '' is just an empty
