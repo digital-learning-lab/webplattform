@@ -67,7 +67,9 @@ class DllUser(AbstractUser):
 
     @cached_property
     def full_name(self):
-        return f'{self.first_name} {self.last_name}'
+        if self.first_name or self.last_name:
+            return f'{self.first_name} {self.last_name}'
+        return self.username
 
     def qs_of_personal_content(self):
         from dll.content.models import Content

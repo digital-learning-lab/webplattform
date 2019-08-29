@@ -25,7 +25,7 @@ from taggit.managers import TaggableManager
 from .managers import ContentQuerySet
 from dll.general.models import DllSlugField, PublisherModel
 from dll.user.utils import get_default_tuhh_user, get_bsb_reviewer_group, get_tuhh_reviewer_group
-from dll.general.utils import GERMAN_STATES
+from dll.general.utils import GERMAN_STATES, custom_slugify
 from dll.user.models import DllUser
 
 
@@ -183,11 +183,16 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
         self.image = filer_image
         self.save()
 
+    def get_folder(self):
+        base = self.base_folder or custom_slugify(self.name)
+        base_folder, created = Folder.objects.get_or_create(name=self.__class__._meta.verbose_name_plural, level=0)
+        sub_folder, created = Folder.objects.get_or_create(name=base, level=1, parent=base_folder)
+        files_folder, created = Folder.objects.get_or_create(name="Files", parent=sub_folder, level=2)
+        return files_folder
+
     def add_file_from_path(self, path, file_name=None):
         file = File(open(path, 'rb'), name=file_name)
-        base_folder, created = Folder.objects.get_or_create(name=self.__class__._meta.verbose_name_plural, level=0)
-        sub_folder, created = Folder.objects.get_or_create(name=self.base_folder, level=1, parent=base_folder)
-        files_folder, created = Folder.objects.get_or_create(name="Files", parent=sub_folder, level=2)
+        files_folder = self.get_folder()
         if file_name is None:
             file_name = os.path.basename(path)
         filer_file = FilerFile.objects.create(original_filename=file_name,

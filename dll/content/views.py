@@ -538,18 +538,18 @@ class FileUploadView(FileUploadBaseView):
         obj, file_serializer = super(FileUploadView, self).put(request, *args, **kwargs)
         if file_serializer.is_valid():
             file = file_serializer.validated_data['file']
-            filer_folder = Folder.objects.get(name=obj.__class__.__name__)
+            folder = obj.get_folder()
+
             filer_file = File.objects.create(
                 original_filename=file.name,
                 file=file,
-                folder=filer_folder,
+                folder=folder,
                 owner=self.request.user
             )
-
             cf = ContentFile.objects.create(
                 content=obj,
                 title=file.name,
-                file = filer_file
+                file = filer_file,
             )
             result = {
                 'title': cf.title,
