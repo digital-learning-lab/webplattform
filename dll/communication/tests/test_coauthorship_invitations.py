@@ -14,7 +14,6 @@ class BaseTestCase(TestCase):
     def setUp(self):
         author = {
             'username': 'alice',
-            'gender': 'female',
             'first_name': 'Alice',
             'last_name': 'Doe',
             'email': 'alice@blueshoe.de',
@@ -22,7 +21,6 @@ class BaseTestCase(TestCase):
 
         co_author = {
             'username': 'bob',
-            'gender': 'male',
             'first_name': 'Bob',
             'last_name': 'Doe',
             'email': 'bob@blueshoe.de',
@@ -30,7 +28,6 @@ class BaseTestCase(TestCase):
 
         new_co_author = {
             'username': 'carmen',
-            'gender': 'female',
             'first_name': 'Carmen',
             'last_name': 'Doe',
             'email': 'carmen@blueshoe.de',
@@ -38,7 +35,6 @@ class BaseTestCase(TestCase):
 
         removed_co_author = {
             'username': 'daniel',
-            'gender': 'male',
             'first_name': 'Daniel',
             'last_name': 'Doe',
             'email': 'daniel@blueshoe.de',
@@ -78,9 +74,9 @@ class CoAuthorshipInvitationTests(BaseTestCase):
         - mail contains valid link
         """
         self.client.login(username='alice@blueshoe.de', password='password')
-        update_url = reverse('draft-content-detail', kwargs={'pk': self.content.pk})
+        update_url = reverse('draft-content-detail', kwargs={'slug': self.content.slug})
         post_data = {
-            "co_authors": [self.co_author.pk, self.new_co_author.pk],
+            "co_authors": [{"pk": self.co_author.pk}, {"pk": self.new_co_author.pk}],
             "resourcetype": "TeachingModule"
         }
         self.client.patch(update_url, data=post_data, content_type='application/json')
@@ -138,16 +134,16 @@ class InvitationDeclineTests(BaseTestCase):
     def setUp(self):
         super().setUp()
         self.client.login(username='alice@blueshoe.de', password='password')
-        update_url = reverse('draft-content-detail', kwargs={'pk': self.content.pk})
+        update_url = reverse('draft-content-detail', kwargs={'slug': self.content.slug})
         post_data = {
-            "co_authors": [self.co_author.pk, self.new_co_author.pk],
+            "co_authors": [{"pk": self.co_author.pk}, {"pk": self.new_co_author.pk}],
             "resourcetype": "TeachingModule"
         }
         self.client.patch(update_url, data=post_data, content_type='application/json')
         self.client.logout()
         CommunicationEventType.objects.create(code='COAUTHOR_INVITATION_DECLINED', name="Coauthor invitation accepted")
 
-    def test_accept_invitation_link(self):
+    def test_decline_invitation_link(self):
         self.client.login(username='carmen@blueshoe.de', password='password')
         email = mail.outbox[0]
         link = re.search(

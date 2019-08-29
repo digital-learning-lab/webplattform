@@ -625,8 +625,7 @@ class Command(BaseCommand):
                 logger.exception(e)
                 continue
 
-    @staticmethod
-    def _parse_related_content(obj, data):
+    def _parse_related_content(self, obj, data):
         for name in filter(None, map(lambda x: x.strip(), data.get('aehnliche_trends', '').split(';'))):
             try:
                 related_trend = Trend.objects.published().get(name=name)
@@ -684,6 +683,33 @@ class Command(BaseCommand):
             except Tool.MultipleObjectsReturned:
                 logger.error('Multiple Tools with the name ({name}) for {cls} in folder {folder}'.format(
                     name=name, cls=obj.__class__.__name__, folder=obj.base_folder))
+        for markdown_link in filter(None, map(lambda x: x.strip(), data.get('aehnliche_tools', '').split(';'))):
+            try:
+                text, href = self._parse_markdown_link(markdown_link)
+            except AttributeError:
+                logger.error('Could not parse related Tool link {} for Trend {}'.format(markdown_link, obj.base_folder))
+                continue
+
+            try:
+                related_tool = Tool.objects.published().get(name=text)
+                obj.related_content.add(related_tool)
+            except Tool.DoesNotExist:
+                if Tool.objects.drafts().filter(name=text).exists():
+                    pass
+                else:
+                    related_tool = Tool(
+                        name=text,
+                        author=get_default_tuhh_user(),
+                        publisher_is_draft=True
+                    )
+                    related_tool.json_data['from_import'] = True
+                    related_tool.save()
+                    tool_link = ToolLink.objects.create(
+                        url=href,
+                        name=text,
+                        tool=related_tool
+                    )
+                    link_this_later[obj.pk].append(related_tool.pk)
 
     @staticmethod
     def _import_image_from_path_to_folder(image_path, image_name, folder):

@@ -16,7 +16,6 @@ class BaseTestCase(TestCase):
 
         author = {
             'username': 'alice',
-            'gender': 'male',
             'first_name': 'Alice',
             'last_name': 'Doe',
             'email': 'test+alice@blueshoe.de',
@@ -24,7 +23,6 @@ class BaseTestCase(TestCase):
 
         co_author = {
             'username': 'bob',
-            'gender': 'female',
             'first_name': 'Bob',
             'last_name': 'Doe',
             'email': 'test+bob@blueshoe.de',
@@ -32,7 +30,6 @@ class BaseTestCase(TestCase):
 
         other_author = {
             'username': 'john',
-            'gender': 'female',
             'first_name': 'John',
             'last_name': 'Doe',
             'email': 'test+john@blueshoe.de',
@@ -40,7 +37,6 @@ class BaseTestCase(TestCase):
 
         bsb_reviewer = {
             'username': 'carmen',
-            'gender': 'female',
             'first_name': 'Carmen',
             'last_name': 'Doe',
             'email': 'test+carmen@blueshoe.de',
@@ -48,7 +44,6 @@ class BaseTestCase(TestCase):
 
         tuhh_reviewer = {
             'username': 'daniel',
-            'gender': 'female',
             'first_name': 'Daniel',
             'last_name': 'Doe',
             'email': 'test+daniel@blueshoe.de',
