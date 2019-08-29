@@ -8,3 +8,7 @@ $('.js-navigation__item').click(function (e) {
   $('.navigation').removeClass('navigation--is-active')
   $('.navigation-toggle').removeClass('navigation-toggle--is-active')
 })
+$('.js-navigation-scroll').click(function (e) {
+  e.preventDefault();
+  $('html, body').animate({scrollTop: $('#dll-aufbau').offset().top - $('.js-header').height() - 20})
+})

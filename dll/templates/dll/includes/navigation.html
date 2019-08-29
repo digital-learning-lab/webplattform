@@ -44,7 +44,7 @@
         {% endif %}
       {% endif %}
       <li class="navigation__item js-navigation__item">
-        <a href="/#dll-aufbau">Was ist das dll?</a>
+        <a href="/#dll-aufbau"{% if request.path == '/' %}class="js-navigation-scroll"{% endif %}>Was ist das dll?</a>
       </li>
       <li class="navigation__item js-navigation__item">
         <a href="{% url 'communication:contact' %}">Kontakt</a>
