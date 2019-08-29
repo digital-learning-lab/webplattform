@@ -21,7 +21,7 @@ def send_mail(self, event_type_code, ctx=None, recipient_ids=None, sender_id=Non
 
     event_type = CommunicationEventType.objects.get(code=event_type_code)
 
-    sender = settings.EMAIL_SENDER
+    sender = DllUser.objects.get(pk=sender_id) if sender_id else None
 
     messages = event_type.get_messages(ctx=ctx)
 
