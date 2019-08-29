@@ -110,7 +110,7 @@ class Command(BaseCommand):
 
         for target_obj_pk in link_this_later.keys():
             try:
-                # get the draft and attach the published content to it
+                # get the draft and attach the published content to it, then republish it
                 target_obj = Content.objects.drafts().get(pk=target_obj_pk)
                 for pk in link_this_later[target_obj_pk]:
                     draft_content = Content.objects.get(pk=pk)
@@ -118,7 +118,7 @@ class Command(BaseCommand):
                     if published_content:
                         target_obj.related_content.add(published_content)
                     else:
-                        logger.warning("Published {draft_cls_name} with name '{draft_title}' (pk {draft_pk} doesn't "
+                        logger.warning("Published {draft_cls_name} with name '{draft_title}' (pk {draft_pk}) doesn't "
                                        "exist and can't be associated to {target_cls_name} with name '{target_title}' "
                                        "(pk {target_pk})".format(
                                         draft_cls_name=draft_content.__class__.__name__,
@@ -237,7 +237,7 @@ class Command(BaseCommand):
                 logger.debug("Parse competences for Tool {}".format(folder))
                 # make it a string first, because pandas parses single digits to integers
                 competences = str(data['digitalkompetenz'])
-                competence_list = list(filter(None, map(lambda x: x.strip(), competences.split(';'))))
+                competence_list = filter_map_strip_split(competences)
                 main_competences = self._parse_main_competences(competence_list)
                 sub_competences = self._parse_sub_competences(competence_list)
                 tool.competences.add(*main_competences)
@@ -264,7 +264,7 @@ class Command(BaseCommand):
                     logger.error('Could not parse link {} for Tool {}'.format(data['website'], folder))
                     continue
 
-                for md_link in filter(None, data['schr_anleitung'].split(';')):
+                for md_link in filter_map_strip_split(data['schr_anleitung']):
                     try:
                         text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
@@ -277,7 +277,7 @@ class Command(BaseCommand):
                         logger.error('Could not parse link {} for Tool {}'.format(md_link, folder))
                         continue
 
-                for md_link in filter(None, data['video_anleitung'].split(';')):
+                for md_link in filter_map_strip_split(data['video_anleitung']):
                     try:
                         text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
@@ -402,7 +402,7 @@ class Command(BaseCommand):
                 logger.debug("Parse competences for Trend {}".format(folder))
                 # make it a string first, because pandas parses single digits to integers
                 competences = str(data['digitalkompetenz'])
-                competence_list = list(filter(None, map(lambda x: x.strip(), competences.split(';'))))
+                competence_list = filter_map_strip_split(competences)
                 main_competences = self._parse_main_competences(competence_list)
                 sub_competences = self._parse_sub_competences(competence_list)
                 trend.competences.add(*main_competences)
@@ -417,7 +417,7 @@ class Command(BaseCommand):
             # Try to parse the links
             try:
                 logger.debug("Parse links for Trend {}".format(folder))
-                for md_link in filter(None, data['weiterelinks'].split(';')):
+                for md_link in filter_map_strip_split(data['weiterelinks']):
                     try:
                         text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
@@ -429,7 +429,7 @@ class Command(BaseCommand):
                     except AttributeError:
                         logger.error('Could not parse link {} for Trend {}'.format(md_link, folder))
                         continue
-                for md_link in filter(None, data['website'].split(';')):
+                for md_link in filter_map_strip_split(data['website']):
                     try:
                         text, href = parse_markdown_link(md_link)
                         link = TrendLink.objects.create(
@@ -578,7 +578,7 @@ class Command(BaseCommand):
             # Try to parse the links
             try:
                 logger.debug("Parse links for TeachingModule {}".format(folder))
-                for md_link in filter(None, data['medialinks'].split(';')):
+                for md_link in filter_map_strip_split(data['medialinks']):
                     try:
                         text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
@@ -591,7 +591,7 @@ class Command(BaseCommand):
                         logger.error('Could not parse link {} for TeachingModule {}'.format(md_link, folder))
                         continue
 
-                for md_link in filter(None, data['literaturlinks'].split(';')):
+                for md_link in filter_map_strip_split(data['literaturlinks']):
                     try:
                         text, href = parse_markdown_link(md_link)
                         link = ContentLink.objects.create(
