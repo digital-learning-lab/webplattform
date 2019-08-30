@@ -93,7 +93,7 @@
   {% endif %}
   {% if object.related_tools %}
     <div class="tab-pane fade" id="similar-tools" role="tabpanel" aria-labelledby="similar-tools-tab">
-      {% include 'dll/content/tools/similar_tools.html' %}
+      {% include 'dll/content/includes/tools.html' with headline='Ähnliche Tools' %}
     </div>
   {% endif %}
 {% endblock %}
