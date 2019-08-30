@@ -88,11 +88,39 @@
         this.to = this.range['upper']
       }
     },
+    methods: {
+      checkValues () {
+        if (this.to && this.from && parseInt(this.from) >= parseInt(this.to)) {
+          if (parseInt(this.to) === 1) {
+            this.to = 2
+          }
+          this.from = this.to - 1
+        }
+      }
+    },
     watch: {
       from (newValue) {
+        if (newValue || newValue === 0) {
+          if (newValue < this.min) {
+            this.from = this.min
+          }
+          if (newValue > this.max) {
+            this.from = this.max
+          }
+          this.checkValues()
+        }
         this.$emit('update:range', {'lower': parseInt(this.from), 'upper': parseInt(this.to)})
       },
       to (newValue) {
+        if (newValue || newValue === 0) {
+          if (newValue < this.min) {
+            this.to = this.min
+          }
+          if (newValue > this.max) {
+            this.to = this.max
+          }
+          this.checkValues()
+        }
         this.$emit('update:range', {'lower': parseInt(this.from), 'upper': parseInt(this.to)})
       }
     }
