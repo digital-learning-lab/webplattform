@@ -25,7 +25,7 @@ from taggit.managers import TaggableManager
 from .managers import ContentQuerySet
 from dll.general.models import DllSlugField, PublisherModel
 from dll.user.utils import get_default_tuhh_user, get_bsb_reviewer_group, get_tuhh_reviewer_group
-from dll.general.utils import GERMAN_STATES
+from dll.general.utils import GERMAN_STATES, custom_slugify
 from dll.user.models import DllUser
 
 
@@ -44,6 +44,7 @@ LICENCE_CHOICES = (
     (8, _("CC BY-SA 4.0")),
     (9, _("urheberrechtlich geschützt")),
 )
+
 
 class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
     name = models.CharField(_("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200)
@@ -115,52 +116,54 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
             Review.objects.create(content=self, is_active=True, submitted_by=by_user)
         self.send_content_submitted_mail(by_user=by_user)
 
-    def copy_relations(self, src, dst):
+    def copy_relations(self, draft_instance, public_instance):
         # image
-        super(Content, self).copy_relations(src, dst)
-        if src.image:
-            dst_image = src.image
-            dst_image.pk = None
-            dst_image.id = None
-            file_name, extension = os.path.splitext(dst_image.label)
+        super(Content, self).copy_relations(draft_instance, public_instance)
+        if draft_instance.image:
+            public_image = draft_instance.image
+            public_image.pk = None
+            public_image.id = None
+            file_name, extension = os.path.splitext(public_image.label)
             file_name += " (public)"
-            dst_image.name = file_name + extension
-            dst_image.save()
-            dst.image = dst_image
-            dst.save()
+            public_image.name = file_name + extension
+            public_image.save()
+            public_instance.image = public_image
+            public_instance.save()
 
         # co-authors
-        dst.co_authors.add(*src.co_authors.all())
+        public_instance.co_authors.add(*draft_instance.co_authors.all())
 
         # related content
-        dst.related_content.add(*src.related_content.all())
+        public_related_content = Content.objects.published().filter(
+            publisher_draft__in=draft_instance.related_content.all())
+        public_instance.related_content.add(*public_related_content)
 
         # competences
-        dst.competences.add(*src.competences.all())
-        dst.sub_competences.add(*src.sub_competences.all())
+        public_instance.competences.add(*draft_instance.competences.all())
+        public_instance.sub_competences.add(*draft_instance.sub_competences.all())
 
         # tags
-        dst.tags.add(*src.tags.all())
+        public_instance.tags.add(*draft_instance.tags.all())
 
         # links and files
-        for link in src.contentlink_set.all():
+        for link in draft_instance.contentlink_set.all():
             link.pk, link.id, link.created, link.modified = None, None, None, None
-            link.content = dst
+            link.content = public_instance
             link.save()
 
-        for file in src.contentfile_set.all():
+        for file in draft_instance.contentfile_set.all():
             # create a copy of the filer file object
-            dst_file = file.file
-            dst_file.pk, dst_file.id = None, None
-            file_name, extension = os.path.splitext(dst_file.label)
+            public_file = file.file
+            public_file.pk, public_file.id = None, None
+            file_name, extension = os.path.splitext(public_file.label)
             file_name += " (public)"
-            dst_file.name = file_name + extension
-            dst_file.save()
+            public_file.name = file_name + extension
+            public_file.save()
 
             # create a new instance of the ContentFile object
             file.pk, file.id, file.created, file.modified = None, None, None, None
-            file.file = dst_file
-            file.content = dst
+            file.file = public_file
+            file.content = public_instance
             file.save()
 
     def suggest_related_content(self):
@@ -168,10 +171,11 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
         return self.objects.none()
 
     def update_or_add_image_from_path(self, path, update=False, image_name=None):
+        base = self.base_folder or custom_slugify(self.name)
         if self.image:
             self.image.delete()
         base_folder, created = Folder.objects.get_or_create(name=self.__class__._meta.verbose_name_plural, level=0)
-        sub_folder, created = Folder.objects.get_or_create(name=self.base_folder, level=1, parent=base_folder)
+        sub_folder, created = Folder.objects.get_or_create(name=base, level=1, parent=base_folder)
         images_folder, created = Folder.objects.get_or_create(name="Images", parent=sub_folder, level=2)
         if image_name is None:
             image_name = str(os.path.dirname(path).split(os.sep)[-1]) + str(os.path.splitext(path))
@@ -184,9 +188,10 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
         self.save()
 
     def add_file_from_path(self, path, file_name=None):
+        base = self.base_folder or custom_slugify(self.name)
         file = File(open(path, 'rb'), name=file_name)
         base_folder, created = Folder.objects.get_or_create(name=self.__class__._meta.verbose_name_plural, level=0)
-        sub_folder, created = Folder.objects.get_or_create(name=self.base_folder, level=1, parent=base_folder)
+        sub_folder, created = Folder.objects.get_or_create(name=base, level=1, parent=base_folder)
         files_folder, created = Folder.objects.get_or_create(name="Files", parent=sub_folder, level=2)
         if file_name is None:
             file_name = os.path.basename(path)
@@ -299,10 +304,10 @@ class TeachingModule(Content):
                    'school_types', 'licence'}
         return fields
 
-    def copy_relations(self, src, dst):
-        super(TeachingModule, self).copy_relations(src, dst)
-        dst.subjects.add(*src.subjects.all())
-        dst.school_types.add(*src.school_types.all())
+    def copy_relations(self, draft_instance, public_instance):
+        super(TeachingModule, self).copy_relations(draft_instance, public_instance)
+        public_instance.subjects.add(*draft_instance.subjects.all())
+        public_instance.school_types.add(*draft_instance.school_types.all())
 
     def get_absolute_url(self):
         return reverse('teaching-module-detail', kwargs={'slug': self.slug})
@@ -384,17 +389,17 @@ class Tool(Content):
     def get_review_url(self):
         return reverse('review-tool', kwargs={'slug': self.slug})
 
-    def copy_relations(self, src, dst):
-        super(Tool, self).copy_relations(src, dst)
-        dst.operating_systems.add(*src.operating_systems.all())
-        dst.applications.add(*src.applications.all())
+    def copy_relations(self, draft_instance, public_instance):
+        super(Tool, self).copy_relations(draft_instance, public_instance)
+        public_instance.operating_systems.add(*draft_instance.operating_systems.all())
+        public_instance.applications.add(*draft_instance.applications.all())
 
-        url_clone = src.url
+        url_clone = draft_instance.url
         url_clone.pk = None
         url_clone.id = None
         url_clone.created = None
         url_clone.modified = None
-        url_clone.tool = dst
+        url_clone.tool = public_instance
         url_clone.save()
 
 
@@ -456,8 +461,8 @@ class Trend(Content):
     def get_review_url(self):
         return reverse('review-trend', kwargs={'slug': self.slug})
 
-    def copy_relations(self, src, dst):
-        super(Trend, self).copy_relations(src, dst)
+    def copy_relations(self, draft_instance, public_instance):
+        super(Trend, self).copy_relations(draft_instance, public_instance)
 
 
 class HelpText(TimeStampedModel):

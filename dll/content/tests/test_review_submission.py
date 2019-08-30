@@ -3,7 +3,7 @@ from django.core.files import File
 from django.test import TestCase
 from filer.models import File as FilerFile
 
-from dll.content.models import TeachingModule, Review, ContentLink, ContentFile
+from dll.content.models import TeachingModule, Review, ContentLink, ContentFile, Content
 from dll.user.models import DllUser
 
 
@@ -69,7 +69,7 @@ class BaseTestCase(TestCase):
         # related content
         self.content.related_content.add(TeachingModule.objects.create(
             name='Bar',
-            author=self.other_author
+            author=self.other_author,
         ))
 
         # co authors
@@ -141,7 +141,7 @@ class ReviewDeclineTests(BaseTestCase):
 class ReviewAcceptTests(BaseTestCase):
     def setUp(self):
         super().setUp()
-        self.content.submit_for_review()
+        self.content.submit_for_review(by_user=self.author)
         self.content.review.accept(by_user=self.bsb_reviewer)
 
         self.draft = self.content.get_draft()
@@ -170,7 +170,9 @@ class ReviewAcceptTests(BaseTestCase):
         self.assertEqual(set(self.draft.tags.all()), set(self.public.tags.all()))
 
     def test_public_and_draft_have_same_related_content(self):
-        self.assertEqual(set(self.draft.related_content.all()), set(self.public.related_content.all()))
+        published_related_content = Content.objects.published().filter(
+            publisher_draft__in=self.draft.related_content.all())
+        self.assertEqual(set(published_related_content), set(self.public.related_content.all()))
 
     def test_draft_and_public_have_different_pks(self):
         self.assertFalse(self.content.pk == self.content.get_published().pk)
