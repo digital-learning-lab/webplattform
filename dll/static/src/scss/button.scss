@@ -19,13 +19,13 @@
 .button--preview {
   background-color: $color--preview;
   &:hover {
-    background-color: $color--preview;
+    background-color: darken($color--preview, 5%);
   }
 }
 .button--submit {
   background-color: $color--submit;
   &:hover {
-    background-color: $color--submit;
+    background-color: darken($color--submit, 10%);
   }
 }
 .button--teaching-module,
@@ -78,7 +78,7 @@
   background-color: $color--punch;
   &:hover {
     color: rgba(255, 255, 255, 1);
-    background-color: $color--punch;
+    background-color: darken($color--punch, 10%);
     text-decoration: none;
   }
 }
