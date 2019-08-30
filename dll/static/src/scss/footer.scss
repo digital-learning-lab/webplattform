@@ -17,6 +17,10 @@
 .footer__partner-logo {
   height: auto;
   max-height: 40px;
-  margin-right: 15px;
   max-width: 100%;
+}
+@media(min-width: 768px) {
+  .footer__partner-logo {
+    margin-right: 15px;
+  }
 }
