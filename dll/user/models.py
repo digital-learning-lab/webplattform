@@ -1,11 +1,12 @@
 import rules
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser, Group
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models
 from django.db.models import Q
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
+from django_extensions.db.models import TimeStampedModel
 
 from dll.general.models import DllSlugField
 
@@ -42,7 +43,7 @@ class DllUserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-class DllUser(AbstractUser):
+class DllUser(TimeStampedModel, AbstractUser):
     email = models.EmailField(_('email address'), blank=True, unique=True)
     username = models.CharField(
         _('username'),
@@ -53,6 +54,13 @@ class DllUser(AbstractUser):
         _('Double-opt-in confirmed'),
         default=False,
     )
+    doi_confirmed_date = models.DateTimeField(
+        _('Datum der Registrierungsbestätigung'),
+        null=True,
+        editable=False
+    )
+
+    additional_emails = ArrayField(models.EmailField(), null=True)
 
     slug = DllSlugField(populate_from='username')
     json_data = JSONField(default=dict)

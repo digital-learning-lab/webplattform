@@ -1,0 +1,14 @@
+{% extends 'dll/default_page.html' %}
+{% load breadcrumb_tags crispy_forms_tags %}
+
+{% block content %}
+    <h2>Sind Sie Sicher?</h2>
+    <p>Inhalte werden an TUHH vergeben</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <a href="{% url 'user:account_delete' %}">
+            <button class="button button--danger" type="submit">Löschen</button>
+        </a>
+    </form>
+{% endblock %}

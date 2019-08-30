@@ -23,7 +23,7 @@ class HelpTextAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(HelpTextAdminForm, self).__init__(*args, **kwargs)
-        instance = kwargs.get('instance')
+        instance = kwargs.get('instance', None)
         if instance:
             self.fields['content_type'] = forms.ModelChoiceField(queryset=ContentType.objects.all(), widget=forms.Select(attrs={'disabled': True}))
             pass
