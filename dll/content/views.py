@@ -349,7 +349,7 @@ class TeachingModuleDataFilterView(ContentDataFilterView):
 
         if class_to:
             qs = qs.filter(TeachingModule___school_class__overlap=NumericRange(None, int(class_to)))
-        return qs
+        return qs.distinct()
 
 
 class ToolFilterView(TemplateView):
@@ -374,7 +374,7 @@ class ToolDataFilterView(ContentDataFilterView):
 
         if operating_systems:
             qs = qs.filter(Tool___operating_systems__pk__in=operating_systems)
-        return qs
+        return qs.distinct()
 
 class TrendFilterView(TemplateView):
     template_name = 'dll/filter/trends.html'
@@ -395,7 +395,7 @@ class TrendDataFilterView(ContentDataFilterView):
         if trend_types:
             qs = qs.filter(Trend___category__in=trend_types)
 
-        return qs
+        return qs.distinct()
 
 
 class AuthorSearchView(ListAPIView):
