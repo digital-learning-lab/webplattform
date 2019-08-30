@@ -30,6 +30,7 @@ class BaseTestCase(TestCase):
         self.author.set_password('password')
         self.author.save()
         self.published_content = []
+        self.drafted_content = []
 
         for content in content_list:
             c = content['model'].objects.create(name=content['name'], teaser=content['teaser'], author=self.author)
@@ -38,6 +39,7 @@ class BaseTestCase(TestCase):
                 c.url = url
                 c.save()
             c.publish()
+            self.drafted_content.append(c.pk)
             self.published_content.append(c.get_published().pk)
 
         # Create competence

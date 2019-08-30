@@ -108,27 +108,16 @@ class Command(BaseCommand):
         self._import_teaching_modules()
         self._import_trends()
 
+        # we link the objects after the import, because only then we have all content imported and published
         for target_obj_pk in link_this_later.keys():
             try:
-                # get the draft and attach the published content to it, then republish it
-                target_obj = Content.objects.drafts().get(pk=target_obj_pk)
+                # connect the drafts to each other. copy_relations / publishing will handle the relations between
+                # the published versions correctly and only connect published content with eachother
+                draft_target_obj = Content.objects.drafts().get(pk=target_obj_pk)
                 for pk in link_this_later[target_obj_pk]:
-                    draft_content = Content.objects.get(pk=pk)
-                    published_content = draft_content.get_published()
-                    if published_content:
-                        target_obj.related_content.add(published_content)
-                    else:
-                        logger.warning("Published {draft_cls_name} with name '{draft_title}' (pk {draft_pk}) doesn't "
-                                       "exist and can't be associated to {target_cls_name} with name '{target_title}' "
-                                       "(pk {target_pk})".format(
-                                        draft_cls_name=draft_content.__class__.__name__,
-                                        draft_title=draft_content.name,
-                                        draft_pk=draft_content.pk,
-                                        target_cls_name=target_obj.__class__.__name__,
-                                        target_title=target_obj.name,
-                                        target_pk=target_obj.pk))
-                # republish the draft
-                target_obj.publish()
+                    draft_related_content = Content.objects.get(pk=pk)
+                    draft_target_obj.related_content.add(draft_related_content)
+                draft_target_obj.publish()
             except Exception:
                 logger.exception("Can not link related content with pks {} to Content with pk {}".format(
                                  ', '.join(link_this_later[target_obj_pk]), target_obj_pk))
