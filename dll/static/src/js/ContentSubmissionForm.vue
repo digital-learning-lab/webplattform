@@ -35,6 +35,9 @@
       <button class="button button--submit" type="button" :disabled="loading" @click="$emit('approve-review')">Freigeben</button>
       <button class="button button--danger" type="button" :disabled="loading" @click="$emit('decline-review')">Ablehnen</button>
     </div>
+    <div class="alert alert-primary" v-if="saved">
+      Ihre Änderungen wurden gespeichert.
+    </div>
     <div v-if="mode === 'edit'">
       <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading" v-if="!data.submitted">Speichern</button>
       <button class="button button--preview" type="button" :disabled="loading" @click="$emit('preview')">Vorschau</button>
