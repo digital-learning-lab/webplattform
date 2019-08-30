@@ -27,9 +27,9 @@
       <app-text-area id="differentiatingAttributes" :readonly="readonly" :review="review" label="Möglichkeiten der Differenzierung/Individualisierung" :value.sync="data.differentiating_attribute" :review-value.sync="reviewValue.differentiating_attribute" :character-counter="true" :maximal-chars="700" :help-text="getHelpText('differentiating_attribute')"></app-text-area>
       <app-text-area id="hints" :readonly="readonly" :review="review" label="Hinweise" :value.sync="data.additional_info" :review-value.sync="reviewValue.additional_info" :character-counter="true" :maximal-chars="1000" :help-text="getHelpText('additional_info')"></app-text-area>
       <app-select id="license" :readonly="readonly" :review="review" label="Lizenz" :options="licenseOptions" :default-val="data.licence" :value.sync="data.licence" :review-value.sync="reviewValue.licence" :help-text="getHelpText('licence')"></app-select>
-      <app-links-input id="mediaLinks" :readonly="readonly" :review="review" :links.sync="data.mediaLinks" :review-value.sync="reviewValue.mediaLinks" label="Links zu Audio- und Videomedien" :type="'video'" :help-text="getHelpText('contentlink>')"></app-links-input>
-      <app-links-input id="literatureLinks" :readonly="readonly" :review="review" :links.sync="data.literatureLinks" :review-value.sync="reviewValue.literatureLinks" label="Weiterführende Literatur und Links" :help-text="getHelpText('contentlink>')"></app-links-input>
-      <app-dropzone :slug="data.slug" label="Anhänge" :files="data.content_files"></app-dropzone>
+      <app-links-input id="mediaLinks" :readonly="readonly" :review="review" :links.sync="data.mediaLinks" :review-value.sync="reviewValue.mediaLinks" label="Links zu Audio- und Videomedien" :type="'video'" :help-text="getHelpText('contentlink')"></app-links-input>
+      <app-links-input id="literatureLinks" :readonly="readonly" :review="review" :links.sync="data.literatureLinks" :review-value.sync="reviewValue.literatureLinks" label="Weiterführende Literatur und Links" :help-text="getHelpText('contentlink')"></app-links-input>
+      <app-dropzone :slug="data.slug" label="Anhänge" :files="data.content_files" :help-text="getHelpText('contentfile')"></app-dropzone>
     </div>
   </app-content-submission-form>
 </template>

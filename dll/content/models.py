@@ -67,7 +67,7 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
     json_data = JSONField(default=dict)
     site = models.ForeignKey(Site, on_delete=models.CASCADE, default=settings.SITE_ID)
 
-    tags = TaggableManager()
+    tags = TaggableManager(verbose_name=_('Tags'))
     objects = PolymorphicManager.from_queryset(ContentQuerySet)()
 
     def __str__(self):
@@ -473,7 +473,11 @@ class Trend(Content):
 
 
 class HelpText(TimeStampedModel):
-    content_type = models.OneToOneField(ContentType, on_delete=models.CASCADE, related_name='help_text')
+    content_type = models.OneToOneField(
+        ContentType,
+        on_delete=models.CASCADE,
+        related_name='help_text'
+    )
 
     def data(self):
         fields = self.get_fields()
@@ -491,8 +495,40 @@ class HelpText(TimeStampedModel):
         returns the available choices for the inline admin
         :return: (('teaser', 'Teaser'), )
         """
+        EXCLUDED_FIELDS = [
+            'review',
+            'coauthorshipinvitation',
+            'id',
+            'polymorphic_ctype',
+            'created',
+            'modified',
+            'view_count',
+            'base_folder',
+            'json_data',
+            'co_authors',
+            'related_content',
+            'competences',
+            'sub_competences',
+            'publisher_is_draft',
+            'content',
+            'publisher_linked',
+            'site',
+            'slug',
+            'content_ptr',
+            'tagged_items'
+
+        ]
         fields = self.get_fields()
-        choices = ((str(field), str(getattr(field, 'verbose_name', field.name))) for field in fields)
+        choices = []
+
+        for field in fields:
+            name = str(field)
+            # Field name may look like this:
+            # content.Content.base_folder
+            # or this:
+            # <ManyToOneRel: communication.coauthorshipinvitation>
+            if not name.split('.')[-1].strip('>') in EXCLUDED_FIELDS:
+                choices.append((str(field), str(getattr(field, 'verbose_name', field.name))))
         return choices
 
     def get_fields(self):
@@ -839,6 +875,7 @@ class ContentLink(TimeStampedModel):
         on_delete=models.CASCADE,
         null=True  # null=True because can be a one2one relation to e.g. Tool
     )
+
 
 
 class TrendLink(TimeStampedModel):

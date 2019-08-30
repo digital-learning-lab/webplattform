@@ -3,6 +3,7 @@ from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.flatpages.forms import FlatpageForm
+from django.db.models import Q
 from django_select2.forms import HeavySelect2Widget
 from dll.content.models import HelpText, HelpTextField
 
@@ -24,9 +25,16 @@ class HelpTextAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(HelpTextAdminForm, self).__init__(*args, **kwargs)
         instance = kwargs.get('instance')
+        if not instance:
+            self.fields['content_type'] = forms.ModelChoiceField(
+                queryset=ContentType.objects.filter(model__in=['teachingmodule', 'trend', 'tool']),
+                label='Art des Inhalts'
+            )
         if instance:
-            self.fields['content_type'] = forms.ModelChoiceField(queryset=ContentType.objects.all(), widget=forms.Select(attrs={'disabled': True}))
-            pass
+            self.fields['content_type'] = forms.ModelChoiceField(
+                queryset=ContentType.objects.all(),
+                widget=forms.Select(attrs={'disabled': True})
+            )
 
 
 class HelpTextFieldForm(forms.ModelForm):

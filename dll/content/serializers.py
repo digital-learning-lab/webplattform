@@ -228,7 +228,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         try:
             help_text = HelpText.objects.get(content_type=ContentType.objects.get_for_model(obj))
             for field in help_text.help_text_fields.all():
-                result[field.name.split('.')[-1]] = field.text
+                result[field.name.split('.')[-1].strip('>')] = field.text
         except HelpText.DoesNotExist:
             pass
         return result
