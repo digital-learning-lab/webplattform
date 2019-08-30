@@ -12,6 +12,9 @@
   height: 48px;
   border: 0;
 }
+.pagination__number {
+  display: inline-block;
+}
 .pagination__button--active {
   color: rgba(255, 255, 255, 1);
   background-color: $color--daintree;
