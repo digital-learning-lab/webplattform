@@ -29,6 +29,14 @@ USERS = [
         'is_superuser': True,
         'is_active': True
     },
+    {
+        'username': 'Thorsten Puderbach',
+        'email': 'thorsten.puderbach@bsb.hamburg.de',
+        'password': 'test1234!',
+        'is_staff': True,
+        'is_superuser': True,
+        'is_active': True
+    },
 ]
 
 
