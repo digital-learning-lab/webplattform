@@ -9,16 +9,14 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import SerializerMethodField, IntegerField, CharField
 from rest_framework.relations import RelatedField
-from rest_framework.validators import UniqueValidator
 from rest_polymorphic.serializers import PolymorphicSerializer
 
 from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
 from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication, \
-    HelpText, Review
+    HelpText, Content, Tool, Trend, TeachingModule, ContentLink, Review
 from dll.general.utils import custom_slugify
 from dll.user.models import DllUser
-from .models import Content, Tool, Trend, TeachingModule, ContentLink, Review
 
 
 logger = logging.getLogger('dll.communication.serializers')
