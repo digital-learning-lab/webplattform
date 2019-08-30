@@ -105,6 +105,10 @@ export const submissionMixin = {
     },
     submitContent () {
       this.updateContent().then(res => {
+        this.validate()
+        if (this.errors.length) {
+          throw Error('Form is not valid!')
+        }
         this.loading = true
         const axios = this.getAxiosInstance()
         axios.post('/api/inhalt-einreichen/' + this.data.slug)
@@ -160,10 +164,6 @@ export const submissionMixin = {
       })
     },
     updateContent () {
-      this.validate()
-      if (this.errors.length) {
-        return
-      }
       if (this.data.literatureLinks && this.data.mediaLinks) {
         this.data.contentlink_set = this.data.mediaLinks.concat(this.data.literatureLinks)
       } else if (this.data.mediaLinks) {
@@ -228,7 +228,9 @@ export const submissionMixin = {
       }
     },
     goToPreview () {
-      document.location = this.data.preview_url
+      this.updateContent().then(res => {
+        document.location = this.data.preview_url
+      })
     },
     setContent (content) {
       this.data = content
