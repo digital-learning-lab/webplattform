@@ -167,6 +167,28 @@ class DllM2MField(RelatedField):
         return data['pk']
 
 
+class RelatedContentField(DllM2MField):
+
+    def to_representation(self, value):
+        try:
+            content = Content.objects.get(pk=value.pk).get_published()
+            print(content)
+            if content:
+                pk = content.pk
+                label = content.name
+            else:
+                print('Not published content')
+                return {}
+        except Content.DoesNotExist:
+            return {}
+        return {'pk': pk, 'label': label}
+    
+    def to_internal_value(self, data):
+        pk = data['pk']
+        content = Content.objects.get(pk=pk)
+        return content.get_draft().pk
+
+
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
@@ -174,19 +196,14 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class BaseContentSubclassSerializer(serializers.ModelSerializer):
-    name = CharField(required=True, validators=[
-        UniqueValidator(
-            queryset=Content.objects.all(),
-            message=_('A content with this name already exists.')
-        )
-    ])
+    name = CharField(required=True)
     image = SerializerMethodField()
     author = AuthorSerializer(read_only=True, allow_null=True, required=False)
     contentlink_set = LinkSerializer(many=True, allow_null=True, required=False)
     co_authors = DllM2MField(allow_null=True, many=True, required=False, queryset=DllUser.objects.all())
     competences = DllM2MField(allow_null=True, many=True, queryset=Competence.objects.all())
     sub_competences = DllM2MField(allow_null=True, many=True, queryset=SubCompetence.objects.all())
-    related_content = DllM2MField(allow_null=True, many=True, queryset=Content.objects.all())
+    related_content = RelatedContentField(allow_null=True, many=True, queryset=Content.objects.drafts())
     tools = SerializerMethodField(allow_null=True)
     trends = SerializerMethodField(allow_null=True)
     teaching_modules = SerializerMethodField(allow_null=True)
@@ -196,7 +213,6 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     submitted = SerializerMethodField(allow_null=True)
     pending_co_authors = SerializerMethodField(allow_null=True)
     content_files = SerializerMethodField(allow_null=True)
-
 
     def validate_name(self, data):
         """Make sure the slug of this name will be unique too."""
@@ -210,7 +226,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         res = []
         for x in data:
             obj = Content.objects.get(pk=x)
-            if obj.is_public:
+            if obj.is_draft:
                 res.append(x)
         return res
 
@@ -241,14 +257,23 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             return {'name': str(obj.image), 'url': obj.image.url}
         return None
 
+    def _get_content_name(self, content):
+        pub = content.get_published()
+        if pub:
+            return pub.name
+        return content.name
+
     def get_tools(self, obj):
-        return [{'pk': content.pk, 'label': content.name} for content in obj.related_content.instance_of(Tool)]
+        return [{'pk': content.pk, 'label': self._get_content_name(content)}
+                for content in obj.related_content.drafts().instance_of(Tool)]
 
     def get_trends(self, obj):
-        return [{'pk': content.pk, 'label': content.name} for content in obj.related_content.instance_of(Trend)]
+        return [{'pk': content.pk, 'label': self._get_content_name(content)}
+                for content in obj.related_content.drafts().instance_of(Trend)]
 
     def get_teaching_modules(self, obj):
-        return [{'pk': content.pk, 'label': content.name} for content in obj.related_content.instance_of(TeachingModule)]
+        return [{'pk': content.pk, 'label': self._get_content_name(content)}
+                for content in obj.related_content.drafts().instance_of(TeachingModule)]
 
     def get_m2m_fields(self):
         return [

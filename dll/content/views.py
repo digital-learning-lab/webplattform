@@ -7,7 +7,7 @@ from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
-from filer.models import Image, Folder, File
+from filer.models import Image, File
 from psycopg2._range import NumericRange
 from rest_framework import viewsets, filters, mixins, status
 from rest_framework.generics import ListAPIView, GenericAPIView, DestroyAPIView
@@ -20,7 +20,7 @@ from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject, SubCompetence, SchoolType, \
     Review, OperatingSystem, ToolApplication, HelpText, ContentFile
 from dll.content.serializers import AuthorSerializer, CompetenceSerializer, SubCompetenceSerializer, \
-    SchoolTypeSerializer, ReviewSerializer, SubjectSerializer, ImageFileSerializer, FileSerializer
+    SchoolTypeSerializer, ReviewSerializer, SubjectSerializer, FileSerializer
 from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
 from .serializers import ContentListSerializer, ContentPolymorphicSerializer
@@ -277,8 +277,6 @@ class ContentDataFilterView(ListAPIView):
     ]
     search_fields = ['name', 'teaser']
     model = None
-    permission_classes = []
-    authentication_classes = []
 
     def get_queryset(self):
         qs = super(ContentDataFilterView, self).get_queryset().objects.instance_of(self.model)
@@ -506,10 +504,10 @@ class FileUploadBaseView(APIView):
 class ImageUploadView(FileUploadBaseView):
 
     def put(self, request, *args, **kwargs):
-        obj, file_serializer = super(ImageUploadView, self).put(*args, **kwargs)
+        obj, file_serializer = super(ImageUploadView, self).put(request, *args, **kwargs)
         if file_serializer.is_valid():
             image = file_serializer.validated_data['file']
-            filer_folder = Folder.objects.get(name=obj.__class__.__name__)
+            filer_folder = obj.get_folder()
             filer_image = Image.objects.create(
                 original_filename=image.name,
                 file=image,

@@ -105,6 +105,14 @@
       </a>
     </li>
   {% endif %}
+  {% if object.related_teaching_modules %}
+    <li class="sidebar__nav-item">
+      <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="teaching-modules-tab" data-toggle="pill" href="#teaching-modules" role="tab" aria-controls="tools" aria-selected="true">
+        Unterrichtsbausteine
+        <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+      </a>
+    </li>
+  {% endif %}
   {% if object.related_tools %}
     <li class="sidebar__nav-item">
       <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="tools-tab" data-toggle="pill" href="#tools" role="tab" aria-controls="tools" aria-selected="true">
@@ -136,6 +144,11 @@
   {% if object.additional_info or object.has_tutorial_links %}
     <div class="tab-pane fade" id="hints" role="tabpanel" aria-labelledby="hints-tab">
       {% include 'dll/content/teaching_module/hints.html' %}
+    </div>
+  {% endif %}
+  {% if object.related_teaching_modules %}
+    <div class="tab-pane fade" id="teaching-modules" role="tabpanel" aria-labelledby="teaching-modules-tab">
+      {% include 'dll/content/includes/teaching_module.html' with headline='Unterrichtsbausteine' %}
     </div>
   {% endif %}
   {% if object.related_tools %}
