@@ -23,8 +23,6 @@
 </template>
 
 <script>
-  // import { competences } from '../mixins/competenceMixin.js'
-
   export default {
     name: 'ContentTeaser',
     props: {
@@ -35,7 +33,6 @@
         }
       }
     },
-    // mixins: [competences],
     computed: {
       contentClass: function () {
         return this.content.type ? `content-teaser--${this.content.type}` : ''

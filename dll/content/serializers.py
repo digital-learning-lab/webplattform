@@ -39,7 +39,7 @@ class ContentListSerializer(serializers.ModelSerializer):
     def get_image(self, obj):
         if obj.image is not None:
             thumbnailer = get_thumbnailer(obj.image)
-            thumb = thumbnailer.get_thumbnail({'size': (300,300)})
+            thumb = thumbnailer.get_thumbnail({'size': (300,300), 'crop': True})
             return str(thumb)
         else:
             return None
