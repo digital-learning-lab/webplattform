@@ -70,9 +70,11 @@
   position: fixed;
   top: 0;
   right: 0;
-  transition: transform 400ms, width 400ms;
   transform: translateX(100%);
   width: 100%;
+}
+.navigation--transition {
+  transition: transform 400ms, width 400ms;
 }
 .navigation--is-active {
   transform: translateX(0%);

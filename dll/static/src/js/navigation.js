@@ -12,3 +12,4 @@ $('.js-navigation-scroll').click(function (e) {
   e.preventDefault();
   $('html, body').animate({scrollTop: $('#dll-aufbau').offset().top - $('.js-header').height() - 20})
 })
+$('.navigation').addClass('navigation--transition')
