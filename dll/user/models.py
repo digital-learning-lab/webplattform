@@ -89,5 +89,22 @@ class DllUser(TimeStampedModel, AbstractUser):
 
     @property
     def is_reviewer(self):
+        # todo: rewrite this as rule
         return self.is_superuser or rules.is_group_member('BSB-Reviewer')(self) or \
                rules.is_group_member('TUHH-Reviewer')(self)
+
+    @cached_property
+    def status_list(self) -> list:
+        status_list = []
+        if self.is_superuser:
+            status_list.append(_("Administrator"))
+        if self.is_reviewer:
+            status_list.append(_("Reviewer"))
+        if self.is_active:
+            status_list.append(_("Author"))
+        return status_list
+
+
+class EmailChangeRequest(TimeStampedModel):
+    user = models.ForeignKey(DllUser, on_delete=models.CASCADE)
+    email = models.EmailField()

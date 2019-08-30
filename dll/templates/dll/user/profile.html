@@ -6,7 +6,7 @@
     {{ form|crispy }}
     <div class="d-flex">
         <a href="{% url 'user:password_change' %}"><button class="button button--submit" type="button">Passwort ändern</button></a>
-        <a href="{% url 'user:emails' %}"><button class="button button--preview" type="button">Email ändern</button></a>
+        <a href="{% url 'user:email' %}"><button class="button button--preview" type="button">Email ändern</button></a>
         <a href="{% url 'user:logout' %}"><button class="button button--neutral" type="button">Abmelden</button></a>  {# todo: font-weight-semi-bold #}
         <a href="{% url 'user:account_delete' %}"><button class="button button--danger" type="button">Löschen</button></a>
     </div>

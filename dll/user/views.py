@@ -1,5 +1,6 @@
 import json
 
+from django.contrib import messages
 from django.contrib.auth import login, get_user_model
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
@@ -25,8 +26,8 @@ from dll.content.rules import is_bsb_reviewer, is_tuhh_reviewer
 from dll.content.serializers import TeachingModuleSerializer, ToolSerializer, TrendSerializer, \
     ContentListInternalSerializer
 from dll.content.views import BreadcrumbMixin
-from dll.user.models import DllUser
-from dll.user.tokens import account_activation_token
+from dll.user.models import DllUser, EmailChangeRequest
+from dll.user.tokens import account_activation_token, email_confirmation_token
 from .forms import SignUpForm
 
 
@@ -248,6 +249,7 @@ class UserContentView(ListAPIView):
 
         return qs
 
+
 def activate_user(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -280,7 +282,6 @@ class PendingReviewContentView(UserContentView):
             qs = qs.instance_of(Tool)
         if type == 'teaching-module':
             qs = qs.instance_of(TeachingModule)
-
 
         if search_term:
             qs = qs.filter(Q(name__icontains=search_term) | Q(teaser__icontains=search_term))
@@ -329,13 +330,55 @@ class ProfileViewChangePassword(BaseProfileView):
 
 
 class ProfileViewEmails(BaseProfileView):
-    template_name = 'dll/user/account_emails.html'
+    template_name = 'dll/user/account_email.html'
     form_class = UserEmailsForm
+    success_url = reverse_lazy('user:profile')
 
     def get_breadcrumbs(self):
         bcs = super(ProfileViewEmails, self).get_breadcrumbs()
-        bcs.append({'title': _("E-Mails"), 'url': reverse_lazy('user:emails')})
+        bcs.append({'title': _("E-Mails"), 'url': reverse_lazy('user:email')})
         return bcs
+
+    def form_valid(self, form):
+        from dll.communication.tasks import send_mail
+
+        cr = EmailChangeRequest.objects.create(user=self.request.user, email=form.cleaned_data['email'])
+
+        confirmation_url = reverse('user:email_confirm', kwargs={
+            'cr_idb64': urlsafe_base64_encode(force_bytes(cr.pk)),
+            'token': email_confirmation_token.make_token(cr),
+        })
+        confirmation_url = self.request.build_absolute_uri(confirmation_url)
+
+        context = {
+            'full_name': self.request.user.full_name,
+            'confirmation_url': confirmation_url
+        }
+
+        send_mail.delay(
+            event_type_code='USER_EMAIL_CHANGE',
+            ctx=context,
+            email=form.cleaned_data['email']
+        )
+        return HttpResponseRedirect(self.get_success_url())
+
+
+def confirm_email(request, cr_idb64, token):
+    try:
+        cr_id = force_text(urlsafe_base64_decode(cr_idb64))
+        cr = EmailChangeRequest.objects.get(pk=cr_id)
+    except (TypeError, ValueError, OverflowError, USER_MODEL.DoesNotExist):
+        cr = None
+
+    if cr is not None and email_confirmation_token.check_token(cr, token):
+        cr.user.email = cr.email
+        cr.user.save()
+        cr.delete()
+        messages.success(request, _("Ihre E-Mail wurde erfolgreich geändert."))
+        return redirect('user:profile')
+    else:
+        messages.warning(request, _("Ihr E-Mail Aktivierungslink ist ungültig."))
+        return HttpResponseRedirect('user:profile')
 
 
 class ProfileViewDelete(BaseProfileView):
