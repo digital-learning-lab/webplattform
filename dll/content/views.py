@@ -266,6 +266,7 @@ class DeclineContentView(BaseActionReviewView):
 class CompetenceFilterView(DetailView):
     model = Competence
     template_name = 'dll/filter/competence.html'
+    query_pk_and_slug = True
 
 
 class ContentDataFilterView(ListAPIView):
