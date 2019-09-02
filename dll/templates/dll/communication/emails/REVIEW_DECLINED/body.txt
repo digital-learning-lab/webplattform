@@ -1,7 +1,7 @@
-Sehr geehrte(r) {{ author }},
+Guten Tag {{ author }},
 
-ihr eingereichter Inhalt - {{ content_type }} - {{ content_title }} wurde überprüft. Bitte verbessern Sie die im Formular
-angegebenen Punkte: {{ link_to_content }}
+Ihr eingereichter Inhalt - {{ content_type }} - {{ content_title }} wurde gesichtet. Das Feedback für die Nachbearbeitung 
+Ihres Bausteins können Sie hier einsehen: {{ link_to_content }}
 
 Viele Grüße,
 Ihr digital.learning.lab Team
