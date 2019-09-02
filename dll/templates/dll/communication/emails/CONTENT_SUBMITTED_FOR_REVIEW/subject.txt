@@ -1,1 +1,1 @@
-Baustein zur Sichtung im digital.learning.lab eingereicht
+{{ content_type }} - {{ content_title }} zur Sichtung im digital.learning.lab eingereicht
