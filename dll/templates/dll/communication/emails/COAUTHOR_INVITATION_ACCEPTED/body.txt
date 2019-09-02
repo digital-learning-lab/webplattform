@@ -1,6 +1,6 @@
 Guten Tag {{ author }},
 
-{{ co_author }} hat Ihre Einladung zur Zusammenarbewit am {{ content_type }} - {{ content_title }} im digital.learning.lab angenommen.
+{{ co_author }} hat Ihre Einladung zur Zusammenarbeit am {{ content_type }} - {{ content_title }} im digital.learning.lab angenommen.
 
 Viele Grüße,
 Ihr digital.learning.lab Team
