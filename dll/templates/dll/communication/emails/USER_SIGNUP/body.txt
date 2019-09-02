@@ -1,7 +1,7 @@
 {% autoescape off %}
-Sehr geehrte(r) {{ username }},
+Guten Tag {{ username }},
 
-bitte nutzen Sie den folgenden Link um Ihre Registrierung zu bestätigen:
+hier können Sie Ihre Registrierung beim digital.learning.lab bestätigen:
 
 {{ confirmation_url }}
 
