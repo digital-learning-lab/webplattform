@@ -1,6 +1,6 @@
 Guten Tag {{ author }},
 
-ihr eingereichter Inhalt - {{ content_type }} - {{ content_title }} wurde gesichtet und veröffentlicht.
+ihr eingereichter Inhalt - {{ content_type }} - {{ content_title }} wurde gesichtet und im digital.learning.lab veröffentlicht.
 
 Sie können diesen unter {{ link_to_content }} erreichen.
 
