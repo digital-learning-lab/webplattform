@@ -4,7 +4,7 @@ Sehr geehrte Damen und Herren,
 
 {{ content_type }} - {{ content_title }}
 
-Zur Überprüfung: {{ link_to_content }}
+Hier können Sie den Baustein sichten: {{ link_to_content }}
 
 Viele Grüße,
 Ihr digital.learning.lab Team
