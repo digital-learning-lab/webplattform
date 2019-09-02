@@ -899,6 +899,7 @@ class Command(BaseCommand):
         applications_list = []
         lst = value.split(';')
         for i in lst:
+            i = i.strip(' ')
             app, created = ToolApplication.objects.get_or_create(name=i)
             applications_list.append(app)
         return applications_list
