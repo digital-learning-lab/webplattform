@@ -62,7 +62,7 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
     view_count = models.PositiveIntegerField(default=0, editable=False)
     base_folder = models.CharField(max_length=100, null=True, editable=False)
     # additional_info: 'hinweise' for ubausteine, 'anmerkung'  for tools, 'hintergrund' for Trends
-    additional_info = models.TextField(_("Hinweise/Anmerkungen/Hintergrund"), max_length=500, blank=True, null=True)
+    additional_info = models.TextField(_("Hinweise/Anmerkungen/Hintergrund"), max_length=1500, blank=True, null=True)
     competences = models.ManyToManyField('Competence', verbose_name=_("Kompetenzen"), blank=True)
     sub_competences = models.ManyToManyField('SubCompetence', verbose_name=_("Subkompetenzen"), blank=True)
     json_data = JSONField(default=dict)
@@ -288,7 +288,7 @@ class TeachingModule(Content):
     equipment = ArrayField(models.CharField(max_length=200), verbose_name=_("Ausstattung"), default=list, null=True,
                            blank=True)
     state = models.CharField(_("Bundesland"), max_length=22, choices=GERMAN_STATES, null=True, blank=True)
-    differentiating_attribute = models.TextField(_("Differenzierung"), max_length=500, null=True, blank=True)
+    differentiating_attribute = models.TextField(_("Differenzierung"), max_length=700, null=True, blank=True)
     expertise = ArrayField(models.CharField(max_length=200), verbose_name=_("Fachkompetenzen"), default=list, null=True,
                            blank=True)
     subjects = models.ManyToManyField('Subject', verbose_name=_("Unterrichtsfach"), blank=True)
