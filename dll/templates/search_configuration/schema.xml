@@ -39,6 +39,49 @@
 -->
 
 <schema name="default-config" version="1.6">
+
+    <!--
+    ######################## django-haystack specifics begin ########################
+    -->
+
+    <fieldType name="edge_ngram" class="solr.TextField" positionIncrementGap="1">
+        <analyzer type="index">
+            <tokenizer class="solr.WhitespaceTokenizerFactory" />
+            <filter class="solr.LowerCaseFilterFactory" />
+            <filter class="solr.WordDelimiterGraphFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
+            <filter class="solr.EdgeNGramFilterFactory" minGramSize="2" maxGramSize="15" />
+        </analyzer>
+        <analyzer type="query">
+            <tokenizer class="solr.WhitespaceTokenizerFactory" />
+            <filter class="solr.LowerCaseFilterFactory" />
+            <filter class="solr.WordDelimiterGraphFilterFactory" generateWordParts="1" generateNumberParts="1" catenateWords="0" catenateNumbers="0" catenateAll="0" splitOnCaseChange="1"/>
+        </analyzer>
+    </fieldType>
+
+    <fieldType name="ngram" class="solr.TextField" >
+        <analyzer type="index">
+            <tokenizer class="solr.KeywordTokenizerFactory"/>
+            <filter class="solr.LowerCaseFilterFactory"/>
+            <filter class="solr.NGramFilterFactory" minGramSize="3" maxGramSize="15" />
+        </analyzer>
+        <analyzer type="query">
+            <tokenizer class="solr.KeywordTokenizerFactory"/>
+            <filter class="solr.LowerCaseFilterFactory"/>
+        </analyzer>
+    </fieldType>
+
+    <field name="{{ ID }}" type="string" indexed="true" stored="true" multiValued="false" required="true"/>
+    <field name="{{ DJANGO_CT }}" type="string" indexed="true" stored="true" multiValued="false"/>
+    <field name="{{ DJANGO_ID }}" type="string" indexed="true" stored="true" multiValued="false"/>
+    {% for field in fields %}
+    <field name="{{ field.field_name }}" type="{{ field.type }}" indexed="{{ field.indexed }}" stored="{{ field.stored }}" multiValued="{{ field.multi_valued }}" />
+    {% endfor %}
+    <uniqueKey>{{ ID }}</uniqueKey>
+
+    <!--
+    ######################## django-haystack specifics end ########################
+    -->
+
     <!-- attribute "name" is the name of this schema and is only used for display purposes.
        version="x.y" is Solr's version number for the schema syntax and
        semantics.  It should not normally be changed by applications.
