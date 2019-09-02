@@ -1,1 +1,1 @@
-COAUTHOR_INVITATION_DECLINED body subject
+Co_Autor/in hat die Anfrage zur Zusammenarbeit im digital.learning.lab abgelehnt
