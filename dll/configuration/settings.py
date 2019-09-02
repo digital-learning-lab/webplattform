@@ -239,7 +239,7 @@ CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_TASK_ALWAYS_EAGER')
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://{}:8983/solr/mycore'.format(env.str('SOLR_HOSTNAME')),
+        'URL': 'http://{}:8983/solr/dll-default'.format(env.str('SOLR_HOSTNAME')),
         'ADMIN_URL': 'http://{}:8983/solr/admin/cores'.format(env.str('SOLR_HOSTNAME'))
     },
 }

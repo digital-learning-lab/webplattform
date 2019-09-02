@@ -7,6 +7,9 @@ from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from filer.models import Image, Folder
+from haystack.backends import SQ
+from haystack.inputs import AutoQuery
+from haystack.query import SearchQuerySet
 from psycopg2._range import NumericRange
 from rest_framework import viewsets, filters, mixins, status
 from rest_framework.generics import ListAPIView, GenericAPIView
@@ -518,3 +521,9 @@ def admin_help_text_choices(request):
     choices = ht.get_help_text_fields_for_content_type()
     results = [{'text': i[1], 'id': i[0]} for i in choices]
     return JsonResponse({'results': results, 'more': False})
+
+
+def search_view(request):
+    q = AutoQuery(request.GET.get('q', ''))
+    sqs = SearchQuerySet().filter(SQ(name=q) | SQ(teaser=q) | SQ(additional_info=q) | SQ(authors=q))
+    return JsonResponse({})

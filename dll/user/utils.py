@@ -25,5 +25,6 @@ def get_default_tuhh_user():
     if created:
         user.set_password(settings.DEFAULT_USER_PASSWORD)
     user.is_superuser = True
+    user.first_name = "TUHH"
     user.save()
     return user

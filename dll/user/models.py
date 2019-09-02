@@ -75,7 +75,7 @@ class DllUser(TimeStampedModel, AbstractUser):
 
     @cached_property
     def full_name(self):
-        return f'{self.first_name} {self.last_name}'
+        return ' '.join(filter(None, [self.first_name, self.last_name]))
 
     def qs_of_personal_content(self):
         from dll.content.models import Content
