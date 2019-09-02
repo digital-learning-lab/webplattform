@@ -56,8 +56,9 @@ services:
     ports:
       - "8983:8983"
     volumes:
-      - ./solr:/opt/solr/server/solr/core
+      - ./solr/conf:/opt/solr/server/solr/configsets/dll
     entrypoint:
-      - docker-entrypoint.sh
+#      - docker-entrypoint.sh
       - solr-precreate
-      - mycore
+#      - start-local-solr
+    command: ["dll-default", "/opt/solr/server/solr/configsets/dll"]
