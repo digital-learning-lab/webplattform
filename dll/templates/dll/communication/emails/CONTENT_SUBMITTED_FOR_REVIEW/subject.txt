@@ -1,1 +1,1 @@
-CONTENT_SUBMITTED_FOR_REVIEW body subject
+{{ content_type }} - {{ content_title }} zur Sichtung im digital.learning.lab eingereicht

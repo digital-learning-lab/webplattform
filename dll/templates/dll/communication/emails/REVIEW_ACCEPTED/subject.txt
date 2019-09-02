@@ -1,1 +1,1 @@
-REVIEW_ACCEPTED body subject
+Sichtung des {{ content_type }} - {{ content_title }} erfolgreich

@@ -1,1 +1,1 @@
-REVIEW_DECLINED body subject
+Feedback zu {{ content_type }} - {{ content_title }} nun verfügbar

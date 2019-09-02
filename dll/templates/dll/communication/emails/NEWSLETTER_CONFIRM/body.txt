@@ -1,5 +1,6 @@
+Guten Tag,
 
-Bitte bestätigen Sie Ihre Anmeldung an unserem Newsletter:
+bitte bestätigen Sie Ihre Anmeldung für den Newsletter des digital.learning.lab:
 {{ token }}
 
 Viele Grüße,

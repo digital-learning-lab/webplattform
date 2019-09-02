@@ -1,1 +1,1 @@
-Einladung Mitarbeit am {{ content_type }} - {{ content_title }}
+Einladung zur Zusammenarbeit am {{ content_type }} - {{ content_title }} im digital.learning.lab
