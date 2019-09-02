@@ -418,8 +418,6 @@ class Trend(Content):
     LANGUAGE_CHOICHES = (
         ('german', _("Deutsch")),
         ('english', _("Englisch")),
-        ('french', _("Französisch")),
-        ('russian', _("Russisch")),
     )
 
     CATEGORY_CHOICES = (

@@ -82,9 +82,7 @@
         ],
         languageOptions: [
           {value: 'german', label: 'Deutsch'},
-          {value: 'english', label: 'Englisch'},
-          {value: 'french', label: 'Französisch'},
-          {value: 'russian', label: 'Russisch'}
+          {value: 'english', label: 'Englisch'}
         ]
       }
     }
