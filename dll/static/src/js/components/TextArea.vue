@@ -2,7 +2,7 @@
   <div class="form-group">
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
     <div class="d-flex">
-      <textarea :type="type" class="form-control" :id="id" :placeholder="placeholder" v-model="inputValue" :readonly="readonly" :maxlength="maximalChars" :rows="rows"></textarea>
+      <textarea :type="type" class="form-control" :class="{'form__field--error': error}" :id="id" :placeholder="placeholder" v-model="inputValue" :readonly="readonly" :maxlength="maximalChars" :rows="rows"></textarea>
       <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
         <span class="far fa-question-circle"></span>
       </button>
@@ -76,6 +76,11 @@
       helpText: {
         type: String,
         default: '',
+        required: false
+      },
+      error: {
+        type: Boolean,
+        default: false,
         required: false
       }
     },

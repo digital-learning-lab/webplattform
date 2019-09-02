@@ -2,7 +2,7 @@
   <div class="form-group">
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
     <div class="d-flex">
-    <v-select v-model="inputValue" :options="options" @search="fetchOptions" :multiple="multiple" :disabled="disabled || readonly"></v-select>
+    <v-select v-model="inputValue" :options="options" :class="{'form__field--error': error}" @search="fetchOptions" :multiple="multiple" :disabled="disabled || readonly"></v-select>
       <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
         <span class="far fa-question-circle"></span>
       </button>
@@ -71,6 +71,11 @@
         required: false
       },
       disabled: {
+        type: Boolean,
+        default: false,
+        required: false
+      },
+      error: {
         type: Boolean,
         default: false,
         required: false

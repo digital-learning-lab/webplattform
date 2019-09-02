@@ -53,6 +53,7 @@ export const submissionMixin = {
         {value: 4, label:'CC BY-ND'},
         {value: 3, label:'CC BY-SA'}
       ],
+      errorFields: []
     }
   },
   methods: {
@@ -104,6 +105,7 @@ export const submissionMixin = {
         })
     },
     submitContent () {
+      this.errorFields = []
       this.updateContent().then(res => {
         this.validate()
         if (this.errors.length) {
@@ -218,12 +220,14 @@ export const submissionMixin = {
         if (this.requiredFields[i].field === 'image' && !this.data.image) {
           if (!this.previewImage) {
             this.errors.push('Bitte füllen Sie das Pflichtfeld \'' + this.requiredFields[i].title + '\' aus.')
+            this.errorFields.push(this.requiredFields[i].field)
           }
           continue
         }
         if (!this.data[this.requiredFields[i].field] ||
           (Array.isArray(this.data[this.requiredFields[i].field]) && !this.data[this.requiredFields[i].field].length)) {
           this.errors.push('Bitte füllen Sie das Pflichtfeld \'' + this.requiredFields[i].title + '\' aus.')
+          this.errorFields.push(this.requiredFields[i].field)
         }
       }
     },
