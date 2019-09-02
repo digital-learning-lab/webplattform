@@ -9,6 +9,11 @@
     <div class="d-flex align-items-baseline mb-2" v-for="link in internalLinks">
         <input type="text" class="form-control mr-3" :id="id" placeholder="Linktext" v-model="link.name" :readonly="readonly">
         <input type="text" class="form-control mr-3" :id="id" placeholder="https://example.org" v-model="link.url" :readonly="readonly">
+        <select class="form-control mr-3" name="types" v-model="link.type" v-if="types">
+          <option value="audio">Audio</option>
+          <option value="video">Video</option>
+          <option value="href">Text</option>
+        </select>
         <button class="button--danger button--smallSquare" @click="removeLink(link)" type="button" v-if="!readonly">
           <span class="fas fa-times"></span>
         </button>
@@ -66,6 +71,11 @@
         required: false
       },
       readonly: {
+        type: Boolean,
+        default: false,
+        required: false
+      },
+      types: {
         type: Boolean,
         default: false,
         required: false

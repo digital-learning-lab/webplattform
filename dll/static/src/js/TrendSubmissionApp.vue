@@ -22,9 +22,8 @@
       <app-select id="license" :readonly="readonly" :review="review" :review-value.sync="reviewValue.licence" label="Lizenz" :options="licenseOptions" :default-val="data.licence" :value.sync="data.licence" :help-text="getHelpText('licence')"></app-select>
       <app-text-area id="citation-info" :readonly="readonly" :review="review" :review-value.sync="reviewValue.citation_info" label="Zitierhinweis" :value.sync="data.citation_info" :character-counter="true" :maximal-chars="200" :help-text="getHelpText('citation_info')"></app-text-area>
 
-      <app-links-input id="websites" :links.sync="data.mediaLinks" :readonly="readonly" :review="review" :review-value.sync="reviewValue.mediaLinks" label="Website" type="href" :help-text="getHelpText('contentlink')"></app-links-input>
-      <app-links-input id="additionalLinks" :links.sync="data.literatureLinks" :readonly="readonly" :review="review" :review-value.sync="reviewValue.literatureLinks" label="Weitere Links" type="href" :help-text="getHelpText('contentlink')"></app-links-input>
-      <app-links-input id="additionalLinks" :links.sync="data.literatureLinks" :readonly="readonly" :review="review" :review-value.sync="reviewValue.literatureLinks" label="Weitere Links" type="href" :help-text="getHelpText('contentlink')"></app-links-input>
+      <app-links-input id="websites" :links.sync="data.literatureLinks" :readonly="readonly" :review="review" :review-value.sync="reviewValue.literatureLinks" label="Website" type="href" :help-text="getHelpText('contentlink')"></app-links-input>
+      <app-links-input id="additionalLinks" :links.sync="data.mediaLinks" :readonly="readonly" :review="review" :review-value.sync="reviewValue.mediaLinks" label="Weitere Links" type="href" :types="true" :help-text="getHelpText('contentlink')"></app-links-input>
 
     </div>
   </app-content-submission-form>
