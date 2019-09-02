@@ -1,3 +1,5 @@
+$input-border-color: rgba(238, 238, 238, 1);
+
 .search-form {
     display: none;
 }
@@ -7,17 +9,38 @@
     padding: 0.5rem 0.8rem;
     color: #00232d;
     background-color: rgba(255, 255, 255, 1);
-    border: 2px;
     height: 46px;
-    border-right: 0;
-    border-style: inset;
-    border-color: initial;
-    border-image: initial;
     border-top-left-radius: 15%;
     border-bottom-left-radius: 15%;
+    border-bottom-color: $input-border-color;
+    border-bottom-right-radius: 0;
+    border-bottom-style: inset;
+    border-bottom-width: 2px;
+    border-left-color: $input-border-color;
+    border-left-style: inset;
+    border-left-width: 2px;
+    border-right-color: $input-border-color;
+    border-right-style: inset;
+    border-right-width: 0;
+    border-top-color: $input-border-color;
+    border-top-right-radius: 0;
+    border-top-style: inset;
+    border-top-width: 2px;
+    vertical-align: top;
 }
 .search-form__field {
     border-left: 0;
+    border-bottom-color: $input-border-color;
+    border-bottom-style: inset;
+    border-bottom-width: 2px;
+    border-right-color: $input-border-color;
+    border-right-style: inset;
+    border-right-width: 2px;
+    border-left-color: $input-border-color;
+    border-left-style: inset;
+    border-top-color: $input-border-color;
+    border-top-style: inset;
+    border-top-width: 2px;
     border-top-right-radius: 7%;
     border-bottom-right-radius: 7%;
     display: inline-block;
@@ -25,8 +48,7 @@
     line-height: 1.15;
     padding: 12px 0;
     margin-left: -1px;
-    vertical-align: middle;
-    margin-top: -1px;
+    vertical-align: top;
 }
 @media (min-width: 576px) {
     .search-form {
