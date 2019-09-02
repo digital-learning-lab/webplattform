@@ -7,15 +7,12 @@
 
 
 # Solr
-### Update the schema
-`python manage.py build_solr_schema > solr/schema.xml`
-#### Instruct solr to use the `schema.xml` file
+
+#### Setup
+Instruct solr to use the `schema.xml` file:
 - add `<schemaFactory class="ClassicIndexSchemaFactory"/>` in the solrconfig.xml
-## Solr errors:
-`dll-default: org.apache.solr.common.SolrException:org.apache.solr.common.SolrException: fieldType 'pdates' not found in the schema` 
-https://github.com/nextcloud/fulltextsearch/issues/208
-```xml
-<fieldType name="pdate" class="solr.DatePointField" docValues="true"/>
-<fieldType name="pdates" class="solr.DatePointField" docValues="true" multiValued="true"/>
-<dynamicField name="*_pdts" type="pdates" indexed="true" stored="true"/>
-```
+- remove the `AddSchemaFieldsUpdateProcessorFactory` section from `solrconfig.xml` ([source](https://stackoverflow.com/questions/31719955/solr-error-this-indexschema-is-not-mutable)) 
+### Update the schema
+- `python manage.py build_solr_schema > solr/conf/schema.xml`
+- clear the weird output at the beginning of the xml file
+- convert fields such as `date` to `pdate`

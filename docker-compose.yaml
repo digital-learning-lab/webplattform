@@ -58,7 +58,5 @@ services:
     volumes:
       - ./solr/conf:/opt/solr/server/solr/configsets/dll
     entrypoint:
-#      - docker-entrypoint.sh
       - solr-precreate
-#      - start-local-solr
     command: ["dll-default", "/opt/solr/server/solr/configsets/dll"]
