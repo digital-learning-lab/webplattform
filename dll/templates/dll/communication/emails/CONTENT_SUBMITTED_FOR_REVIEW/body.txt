@@ -1,4 +1,4 @@
-Sehr geehrte Damen und Herren,
+Guten Tag,
 
 {{ author }} hat den folgenden Inhalt zur Überprüfung eingereicht:
 
