@@ -14,7 +14,7 @@ from filer.models import Image
 from psycopg2._range import NumericRange
 
 from dll.content.models import TeachingModule, ContentLink, Competence, SubCompetence, Trend, Tool, ToolApplication, \
-    OperatingSystem, Subject, SchoolType, TrendLink, LICENCE_CHOICES, ToolLink, Content, ContentFile
+    OperatingSystem, Subject, SchoolType, TrendLink, LICENCE_CHOICES, ToolLink, Content
 from dll.general.utils import custom_slugify
 from dll.user.utils import get_default_tuhh_user
 from dll.user.models import DllUser

@@ -311,9 +311,14 @@ class TeachingModuleFilterView(TemplateView):
         states_filter = [
             {'value': state[0], 'name': state[1]} for state in GERMAN_STATES
         ]
+        school_types_filter = [
+            {'value': school_type.pk, 'name': school_type.name} for school_type in SchoolType.objects.all()
+        ]
         states_filter.insert(0, {'value': '', 'name': '------'})
+        school_types_filter.insert(0, {'value': '', 'name': '------'})
         ctx['subject_filter'] = json.dumps(subject_filter)
         ctx['states_filter'] = json.dumps(states_filter)
+        ctx['school_types_filter'] = json.dumps(school_types_filter)
         return ctx
 
 
@@ -324,7 +329,8 @@ class TeachingModuleDataFilterView(ContentDataFilterView):
         qs = super(TeachingModuleDataFilterView, self).get_queryset()
 
         subjects = self.request.GET.getlist('subjects[]', [])
-        state = self.request.GET.get('state', [])
+        state = self.request.GET.get('state', None)
+        school_type = self.request.GET.get('schoolType', None)
         class_from = self.request.GET.get('schoolClassFrom', [])
         class_to = self.request.GET.get('schoolClassTo', [])
 
@@ -339,9 +345,11 @@ class TeachingModuleDataFilterView(ContentDataFilterView):
         except ValueError:
             class_to = None
 
-
         if subjects:
             qs = qs.filter(TeachingModule___subjects__pk__in=subjects)
+
+        if school_type:
+            qs = qs.filter(TeachingModule___school_types__pk__in=[school_type])
 
         if state:
             qs = qs.filter(TeachingModule___state=state)

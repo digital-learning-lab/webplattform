@@ -31,6 +31,12 @@
             </select>
           </div>
           <div>
+            <h3 class="form-subhead">Schulform</h3>
+            <select v-model="schoolType"  class="form-control">
+              <option v-for="schoolType in getSchoolTypes()" :value="schoolType.value">{{schoolType.name}}</option>
+            </select>
+          </div>
+          <div>
             <h3 class="form-subhead">Jahrgangsstufe von / bis:</h3>
               <div class="row">
                 <div class="col">
@@ -79,7 +85,8 @@
         subjects: [],
         state: '',
         schoolClassFrom: null,
-        schoolClassTo: null
+        schoolClassTo: null,
+        schoolType: null
       }
     },
     methods: {
@@ -89,12 +96,16 @@
       getStates ()  {
         return window.statesFilter
       },
+      getSchoolTypes () {
+        return window.schoolFilter
+      },
       getQueryParams () {
         return {
           subjects: this.subjects,
           state: this.state,
           schoolClassFrom: this.schoolClassFrom,
-          schoolClassTo: this.schoolClassTo
+          schoolClassTo: this.schoolClassTo,
+          schoolType: this.schoolType
         }
       }
     },
@@ -110,6 +121,9 @@
       },
       schoolClassTo () {
         this.debouncedUpdate()
+      },
+      schoolType () {
+        this.updateContents()
       }
     }
   }
