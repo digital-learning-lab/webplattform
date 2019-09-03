@@ -40,10 +40,11 @@ class HelpTextAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if obj:
             readonly_fields = self.readonly_fields
-            # readonly_fields += ('content_type',)
+            readonly_fields += ('content_type',)
             return readonly_fields
         else:
             return self.readonly_fields
+
 
     class Media:
         js = (

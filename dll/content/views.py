@@ -7,6 +7,7 @@ from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
+from django_select2.views import AutoResponseView
 from filer.models import Image, File
 from psycopg2._range import NumericRange
 from rest_framework import viewsets, filters, mixins, status
@@ -523,12 +524,14 @@ class ImageUploadView(FileUploadBaseView):
             return Response(file_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-def admin_help_text_choices(request):
-    ct = request.GET.get('content_type', None)
-    ht = HelpText.objects.get(content_type_id=ct)
-    choices = ht.get_help_text_fields_for_content_type()
-    results = [{'text': i[1], 'id': i[0]} for i in choices]
-    return JsonResponse({'results': results, 'more': False})
+class HelpTextFieldChoices(AutoResponseView):
+
+    def get(self, request, *args, **kwargs):
+        ct = request.GET.get('content_type', None)
+        ht = HelpText.objects.get(content_type_id=ct)
+        choices = ht.get_help_text_fields_for_content_type()
+        results = [{'text': i[1], 'id': i[0]} for i in choices]
+        return JsonResponse({'results': results, 'more': False})
 
 
 class FileUploadView(FileUploadBaseView):
