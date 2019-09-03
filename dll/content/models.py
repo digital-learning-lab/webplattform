@@ -571,37 +571,47 @@ class Review(TimeStampedModel):
 
     def send_review_accepted_mail(self):
         from dll.communication.tasks import send_mail
-        relative_url = self.content.get_absolute_url()  # todo: set correct url to content review
+        relative_url = self.content.get_edit_url()
         url = 'https://%s%s' % (Site.objects.get_current().domain, relative_url)
         context = {
             'link_to_content': url
         }
         cc_ids = (self.content.author.pk,) + tuple(self.content.co_authors.all().values_list('pk', flat=True))
-        cc_ids = set(cc_ids) - {self.submitted_by.pk}
+        if self.submitted_by:
+            recipient_ids = [self.submitted_by.pk]
+            cc_ids = set(cc_ids) - {self.submitted_by.pk}
+        else:
+            recipient_ids = set(cc_ids)
+            cc_ids = set()
 
         send_mail.delay(
             event_type_code='REVIEW_ACCEPTED',
             ctx=context,
             sender_id=getattr(self.accepted_by, 'pk', None),
-            recipient_ids=[self.submitted_by.pk],
+            recipient_ids=recipient_ids,
             cc=list(cc_ids)
         )
 
     def send_review_declined_mail(self):
         from dll.communication.tasks import send_mail
-        relative_url = self.content.get_absolute_url()  # todo: set correct url to content review
+        relative_url = self.content.get_edit_url()
         url = 'https://%s%s' % (Site.objects.get_current().domain, relative_url)
         context = {
             'link_to_content': url
         }
         cc_ids = (self.content.author.pk,) + tuple(self.content.co_authors.all().values_list('pk', flat=True))
-        cc_ids = set(cc_ids) - {self.submitted_by.pk}
+        if self.submitted_by:
+            recipient_ids = [self.submitted_by.pk]
+            cc_ids = set(cc_ids) - {self.submitted_by.pk}
+        else:
+            recipient_ids = set(cc_ids)
+            cc_ids = set()
 
         send_mail.delay(
             event_type_code='REVIEW_DECLINED',
             ctx=context,
             sender_id=getattr(self.declined_by, 'pk', None),
-            recipient_ids=[self.submitted_by.pk],
+            recipient_ids=recipient_ids,
             cc=list(cc_ids)
         )
 

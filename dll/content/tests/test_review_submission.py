@@ -100,7 +100,7 @@ class ContentEditTests(BaseTestCase):
 class ReviewSubmissionTests(BaseTestCase):
     def setUp(self):
         super().setUp()
-        self.content.submit_for_review()
+        self.content.submit_for_review(by_user=self.author)
 
     def test_content_has_a_review(self):
         self.assertTrue(isinstance(self.content.review, Review))
@@ -119,7 +119,7 @@ class ReviewSubmissionTests(BaseTestCase):
 class ReviewDeclineTests(BaseTestCase):
     def setUp(self):
         super().setUp()
-        self.content.submit_for_review()
+        self.content.submit_for_review(by_user=self.author)
         self.content.review.decline(by_user=self.bsb_reviewer)
 
     def test_review_status(self):
@@ -188,7 +188,7 @@ class ContentEditAfterPublishingTests(BaseTestCase):
     def setUp(self):
         super().setUp()
         # accept first version
-        self.content.submit_for_review()
+        self.content.submit_for_review(by_user=self.author)
         self.content.review.accept(by_user=self.bsb_reviewer)
 
         self.draft = self.content.get_draft()
@@ -199,7 +199,7 @@ class ContentEditAfterPublishingTests(BaseTestCase):
         self.draft.save()
 
         # submit modified draft for review
-        self.draft.submit_for_review()
+        self.draft.submit_for_review(by_user=self.author)
         self.draft.review.accept(by_user=self.bsb_reviewer)
         self.public2 = self.content.get_published()
 
