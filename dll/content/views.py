@@ -526,4 +526,5 @@ def admin_help_text_choices(request):
 def search_view(request):
     q = AutoQuery(request.GET.get('q', ''))
     sqs = SearchQuerySet().filter(SQ(name=q) | SQ(teaser=q) | SQ(additional_info=q) | SQ(authors=q))
-    return JsonResponse({})
+    results = [result.name for result in sqs[:10]]
+    return JsonResponse(results, safe=False)

@@ -6,7 +6,7 @@
 4. Run `docker-compose run --rm web python manage.py import_content -f ./path-to-inhalte`
 
 
-# Solr
+# Solr 8.2
 
 #### Setup
 Instruct solr to use the `schema.xml` file:
@@ -15,4 +15,3 @@ Instruct solr to use the `schema.xml` file:
 ### Update the schema
 - `python manage.py build_solr_schema > solr/conf/schema.xml`
 - clear the weird output at the beginning of the xml file
-- convert fields such as `date` to `pdate`
