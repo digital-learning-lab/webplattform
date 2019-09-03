@@ -102,6 +102,11 @@ class ContentDetailView(ContentDetailBase):
         qs = super(ContentDetailView, self).get_queryset()
         return qs.published()
 
+    def get_context_data(self, **kwargs):
+        ctx = super(ContentDetailView, self).get_context_data(**kwargs)
+        ctx['meta'] = self.get_object().as_meta(self.request)
+        return ctx
+
 
 class ContentPreviewView(ContentDetailBase):
     def get_context_data(self, **kwargs):

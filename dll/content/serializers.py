@@ -39,12 +39,7 @@ class ContentListSerializer(serializers.ModelSerializer):
                   'co_authors']
 
     def get_image(self, obj):
-        if obj.image is not None:
-            thumbnailer = get_thumbnailer(obj.image)
-            thumb = thumbnailer.get_thumbnail({'size': (300,300)})
-            return str(thumb)
-        else:
-            return None
+        return obj.get_image()
 
     def get_co_authors(self, obj):
         return [f'{author.username}' for author in obj.co_authors.all()]

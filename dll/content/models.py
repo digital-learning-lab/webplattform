@@ -14,9 +14,11 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
+from easy_thumbnails.files import get_thumbnailer
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
 from filer.models import Folder, Image, File as FilerFile
+from meta.models import ModelMeta
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 from rules.contrib.models import RulesModelMixin, RulesModelBaseMixin
@@ -46,7 +48,7 @@ LICENCE_CHOICES = (
 )
 
 
-class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
+class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     name = models.CharField(_("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200)
     slug = DllSlugField(populate_from='name', overwrite=True, allow_duplicates=True)
     # todo check if xxx-2 slugs are created if name does not change
@@ -70,6 +72,18 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
 
     tags = TaggableManager()
     objects = PolymorphicManager.from_queryset(ContentQuerySet)()
+
+    _metadata = {
+        'title': 'name',
+        'description': 'teaser',
+        'image': 'get_image',
+        'url': 'get_absolute_url',
+        'locale': 'de_DE',
+        'site_name': 'digital.learning.lab',
+        'article:published_time': 'created',
+        'article:author': 'author',
+        'article:section': 'type_verbose'
+    }
 
     def __str__(self):
         if self.is_public:
@@ -230,6 +244,14 @@ class Content(RulesModelMixin, PublisherModel, PolymorphicModel):
                 sender_id=getattr(by_user, 'pk', None),
                 recipient_ids=list(tuhh_reviewers.values_list('pk', flat=True))
             )
+
+    def get_image(self):
+        if self.image is not None:
+            thumbnailer = get_thumbnailer(self.image)
+            thumb = thumbnailer.get_thumbnail({'size': (300,300)})
+            return str(thumb)
+        else:
+            return None
 
     @cached_property
     def content_files(self):

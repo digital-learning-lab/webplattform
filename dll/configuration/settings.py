@@ -243,3 +243,7 @@ HAYSTACK_CONNECTIONS = {
         'ADMIN_URL': 'http://{}:8983/solr/admin/cores'.format(env.str('SOLR_HOSTNAME'))
     },
 }
+
+META_SITE_PROTOCOL = 'https'
+META_SITE_DOMAIN = 'dll.de'  # todo: correct domain
+META_USE_OG_PROPERTIES = True

@@ -25,7 +25,7 @@
   <link rel="icon" type="image/png" sizes="96x96" href="{% static 'img/icons/favicon-96x96.png' %}">
   <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/icons/favicon-16x16.png' %}">
   <meta name="msapplication-TileColor" content="#ffffff">
-  <meta name="msapplication-TileImage" content="{% static 'img/icons//favicon/ms-icon-144x144.png' %}">
+  <meta name="msapplication-TileImage" content="{% static 'img/icons/favicon/ms-icon-144x144.png' %}">
   {#TODO add real search URL#}
   <script type='application/ld+json'>
     {
@@ -44,6 +44,7 @@
         }
     }
   </script>
+  {% include "meta/meta.html" %}
 </head>
 <body>
 {% include 'dll/includes/navigation.html' %}
