@@ -118,6 +118,12 @@ class Command(BaseCommand):
                     draft_related_content = Content.objects.get(pk=pk)
                     draft_target_obj.related_content.add(draft_related_content)
                 draft_target_obj.publish()
+
+                if isinstance(draft_target_obj, TeachingModule):
+                    pub = draft_target_obj.get_published()
+                    pub.created = draft_target_obj.created
+                    pub.save()
+
             except Exception:
                 logger.exception("Can not link related content with pks {} to Content with pk {}".format(
                                  ', '.join(link_this_later[target_obj_pk]), target_obj_pk))
@@ -514,7 +520,8 @@ class Command(BaseCommand):
 
                 try:
                     if 'datum' in data.keys():
-                        date = dateparser.parse(data.get('datum'))
+                        date = dateparser.parse(data.get('datum'), settings={'RETURN_AS_TIMEZONE_AWARE': True,
+                                                                             'TIMEZONE': 'UTC'})
                     else:
                         date = timezone.now()
                 except TypeError:
@@ -550,7 +557,6 @@ class Command(BaseCommand):
                         'state': state,
                         'differentiating_attribute': data['differenzierung'],
                         'additional_info': data['hinweise'],
-                        'modified': date,
                         'licence': 5  # "CC BY-NC-SA"
                     }
                 )
@@ -558,6 +564,11 @@ class Command(BaseCommand):
                     logger.info("Created new TeachingModule from folder {}".format(folder))
                 else:
                     logger.info("Updated TeachingModule from folder {}".format(folder))
+
+                # update the creation date
+                teaching_module.created = date
+                teaching_module.save()
+
                 # try to get the image
                 try:
                     image_path = glob.glob(os.path.join(self.TEACHING_MODULES_FOLDER, folder, '*.jpg'))[0]
