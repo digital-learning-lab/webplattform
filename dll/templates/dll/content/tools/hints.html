@@ -30,11 +30,7 @@
       Nutzung
     </div>
     <div class="information-area__body">
-      <ul class="list-unstyled">
-        {% for usage in object.usage %}
-          <li>{{ usage }}</li>
-        {% endfor %}
-      </ul>
+      {{ object.usage }}
     </div>
   </div>
 {% endif %}

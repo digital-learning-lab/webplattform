@@ -2,14 +2,16 @@
 {% load thumbnail %}
 
 {% block body %}
-  <main class="row justify-content-center mt-5 mb-5">
+  <main class="container-fluid">
+  <div class="row justify-content-center mt-5 mb-5">
     <div class="col col-12 col-lg-11 col-xl-8">
       <div class="row">
         <div class="col col-12 offset-lg-4 col-lg-8">
           {% include 'dll/includes/breadcrumbs.html' %}
         </div>
       </div>
-      <div class="row">
+    <div class="row">
+      <div class="row no-gutters">
         <div class="col col-12 col-lg-4">
           <div class="sidebar sidebar--{{ object.type }}">
             {% if preview %}
@@ -68,8 +70,9 @@
             </div>
           </article>
         </div>
-
+</div>
       </div>
     </div>
+  </div>
   </main>
 {% endblock %}
