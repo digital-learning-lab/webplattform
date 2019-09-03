@@ -1,6 +1,39 @@
 {% extends 'dll/base.html' %}
 {% load thumbnail %}
 
+{% block json_ld %}{{ block.super }}{% if object.type == 'teaching-module' %}
+  <script type='application/ld+json'>
+    {
+      "@context": "https://schema.org",
+      "@type": "Course",
+      "name": "{{ object.name }}",
+      "description": "{{ object.description }}",
+      "provider": [{
+        "@type": "CollegeOrUniversity",
+        "name": "Hamburg University of Technology",
+        "sameAs": "https://www.tuhh.de"
+      },
+      {
+        "@type": "EducationalOrganization",
+        "name": "Institute of Technical Education and University Didactics",
+        "sameAs": "https://www.itbh-hh.de"
+      }],
+      "courseCode": "{{ object.slug }}",
+      "author": [{
+        "@type": "Person",
+        "name": "{{ object.author.full_name }}"
+      }{% if object.co_authors.count %}{% for author in object.co_autors.all %},{
+        "@type": "Person", "name": "{{ author.full_name }}"}{% endfor %}{% endif %}
+      ],
+      "dateCreated": "{{ object.created|date:'Y-m-d' }}",
+      "dateModified": "{{ object.modified|date:'Y-m-d' }}",
+      "datePublished": "{{ object.modified|date:'Y-m-d' }}",
+      "license": "{{ object.get_licence_display }}" {# nice-to-have refer via URL #},
+      "thumbnailUrl": "{% thumbnail object.image 750x500 upscale=True %}"
+    }
+  </script>{% endif %}
+{% endblock %}
+
 {% block body %}
   <main class="container-fluid">
   <div class="row justify-content-center mt-5 mb-5">
