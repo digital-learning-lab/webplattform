@@ -74,7 +74,12 @@ class CustomSolrSearchQuery(SolrSearchQuery):
 
         search_kwargs['defType'] = 'dismax'
         search_kwargs['mm'] = 3
-        boost_fields = (i[0] for i in self.query_filter.children[0].children)
+
+        # WARNING: major hack
+        try:
+            boost_fields = (i[0] for i in self.query_filter.children[0].children)
+        except Exception:
+            boost_fields = list()
         l = []
         for field in boost_fields:
             boost = connections[self._using].get_unified_index().fields[field].boost

@@ -19,6 +19,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
+from dll.content.filters import SolrTagFilter
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject, SubCompetence, SchoolType, \
     Review, OperatingSystem, ToolApplication, HelpText
 from dll.content.serializers import AuthorSerializer, CompetenceSerializer, SubCompetenceSerializer, \
@@ -161,9 +162,8 @@ class PublishedContentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Content.objects.published()
     filter_backends = [
         DjangoFilterBackend,
-        filters.SearchFilter
+        SolrTagFilter
     ]
-    search_fields = ['name', 'teaser']
     permission_classes = []
     authentication_classes = []
 
@@ -342,7 +342,6 @@ class TeachingModuleDataFilterView(ContentDataFilterView):
         except ValueError:
             class_to = None
 
-
         if subjects:
             qs = qs.filter(TeachingModule___subjects__pk__in=subjects)
 
@@ -381,6 +380,7 @@ class ToolDataFilterView(ContentDataFilterView):
             qs = qs.filter(Tool___operating_systems__pk__in=operating_systems)
         return qs
 
+
 class TrendFilterView(TemplateView):
     template_name = 'dll/filter/trends.html'
 
@@ -413,7 +413,6 @@ class AuthorSearchView(ListAPIView):
     search_fields = ['username']
 
 
-
 class CompetencesSearchView(ListAPIView):
     queryset = Competence.objects.all()
     serializer_class = CompetenceSerializer
@@ -436,7 +435,6 @@ class SubCompetencesSearchView(ListAPIView):
     def get_queryset(self):
         qs = super(SubCompetencesSearchView, self).get_queryset()
         competences = self.request.GET.getlist('competences[]', [])
-
 
         if competences:
             competences_ids = [json.loads(competence)['pk'] for competence in competences]
