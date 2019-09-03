@@ -6,9 +6,10 @@
         <span class="far fa-question-circle"></span>
       </button>
     </div>
-    <div class="d-flex align-items-baseline mb-2" v-for="link in internalLinks">
+    <div class="mb-2" v-for="link in internalLinks">
+      <div class="d-flex align-items-baseline ">
         <input type="text" class="form-control mr-3" :id="id" placeholder="Linktext" v-model="link.name" :readonly="readonly">
-        <input type="text" class="form-control mr-3" :id="id" placeholder="https://example.org" v-model="link.url" :readonly="readonly">
+        <input type="text" class="form-control mr-3" :id="id" placeholder="https://example.org" v-model="link.url" :readonly="readonly" @blur="checkLinkValid(link)">
         <select class="form-control mr-3" name="types" v-model="link.type" v-if="types">
           <option value="audio">Audio</option>
           <option value="video">Video</option>
@@ -17,6 +18,10 @@
         <button class="button--danger button--smallSquare" @click="removeLink(link)" type="button" v-if="!readonly">
           <span class="fas fa-times"></span>
         </button>
+      </div>
+      <div class="alert alert-danger mt-1" v-if="!link.validUrl">
+        Bitte geben Sie eine valide URL ein. Die URL muss mit http:// bzw. http:// beginnen.
+      </div>
     </div>
     <div v-if="!readonly">
       <button class="button--neutral button--smallSquare" @click="addLink" type="button">
@@ -88,15 +93,34 @@
     },
     methods: {
       addLink () {
-        this.internalLinks.push({name: '', url: '', type: this.type})
+        this.internalLinks.push({name: '', url: '', type: this.type, validUrl: true})
       },
       removeLink (link) {
         this.internalLinks.splice(this.internalLinks.indexOf(link), 1)
+      },
+      isValidUrl (url) {
+        // https://stackoverflow.com/questions/5717093/check-if-a-javascript-string-is-a-url
+        console.log('checking ' + url)
+        var pattern = new RegExp('^(https?:\\/\\/)'+
+          '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+
+          '((\\d{1,3}\\.){3}\\d{1,3}))'+
+          '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+
+          '(\\?[;&a-z\\d%_.~+=-]*)?'+
+          '(\\#[-a-z\\d_]*)?$','i');
+        console.log(!!pattern.test(url))
+        return !!pattern.test(url)
+      },
+      checkLinkValid (link) {
+        link.validUrl = this.isValidUrl(link.url)
+        this.$forceUpdate()
       }
     },
     created () {
       if (this.links) {
         this.internalLinks = this.links
+        for (let i = 0; i < this.internalLinks.length; i++) {
+          this.internalLinks[i].validUrl = true
+        }
       }
     },
     watch: {
