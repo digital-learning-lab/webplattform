@@ -1,8 +1,10 @@
 <template>
   <div class="row mt-5 mb-5">
-    <div class="col col-12 col-lg-5 col-xl-4">
+    <div class="col col-12 col-lg-5 col-xl-4 mb-4">
       <div class="section-info">
-        <form action="">
+        <h1 class="d-lg-none" v-html="window.competenceName"></h1>
+        <p class="mb-5 d-lg-none" v-html="window.competenceText"></p>
+        <form method="get" :action="resource" class="collapse d-lg-block" id="filterForm">
           <h2>Filtern nach</h2>
 
           <h3 class="form-subhead">Sortierung</h3>
@@ -28,11 +30,16 @@
             </li>
           </ul>
         </form>
+        <div class="text-center">
+          <button class="button button--primary d-lg-none" type="button" data-toggle="collapse" data-target="#filterForm" aria-expanded="false" aria-controls="filterForm">
+            Filter ausklappen <span class="fas fa-chevron-circle-down"></span>
+          </button>
+        </div>
       </div>
     </div>
     <div class="col col-12 col-lg-7 col-xl-8">
-      <h1 v-html="window.competenceName"></h1>
-      <p class="mb-5" v-html="window.competenceText"></p>
+      <h1 class="d-none d-lg-block" v-html="window.competenceName"></h1>
+      <p class="mb-5 d-none d-lg-block" v-html="window.competenceText"></p>
       <div class="row" v-if="contents.length > 0 || loading">
         <div class="col col-12 col-xl-6 mb-4" v-for="content in contents">
           <app-content-teaser :content="content"></app-content-teaser>
@@ -66,6 +73,7 @@
     data () {
       return {
         contents: [],
+        resource: '/api/inhalte',
         competence: {
           name: 'Kommunizieren & Kooperieren',
           description: 'Um im digitalen Raum adäquat KOMMUNIZIEREN & KOOPERIEREN zu können, braucht es entsprechende Kompetenzen, digitale Werkzeuge zur angemessenen und effektiven Kommunikation einsetzen und in digitalen Umgebungen zielgerichtet kooperieren zu können. Dabei geht es vor allem darum, entsprechend der jeweiligen Situation und ausgerichtet an den Kommunikations- bzw. Kooperationspartnern die passenden Werkzeuge auszuwählen und entsprechende Umgangsregeln einzuhalten.'
@@ -111,7 +119,7 @@
       },
       updateContents (page) {
         this.loading = true
-        axios.get('/api/inhalte', {
+        axios.get(this.resource, {
           params: {
             q: this.searchTerm,
             sorting: this.sortBy,

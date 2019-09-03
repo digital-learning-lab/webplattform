@@ -2,7 +2,7 @@
   <div class="row mt-5 mb-5">
     <div class="col col-12 col-lg-5 col-xl-4 mb-5">
       <div class="section-info">
-        <form action="">
+        <form action="" id="filterForm" class="collapse d-lg-block">
           <h2>Filtern nach</h2>
 
           <h3 class="form-subhead">Sortierung</h3>
@@ -43,6 +43,11 @@
               </div>
           </div>
         </form>
+        <div class="text-center">
+          <button class="button button--primary d-lg-none" type="button" data-toggle="collapse" data-target="#filterForm" aria-expanded="false" aria-controls="filterForm">
+            Filter ausklappen <span class="fas fa-chevron-circle-down"></span>
+          </button>
+        </div>
       </div>
     </div>
     <div class="col col-12 col-lg-7 col-xl-8">
