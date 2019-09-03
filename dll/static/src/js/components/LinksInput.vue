@@ -9,7 +9,7 @@
     <div class="mb-2" v-for="link in internalLinks">
       <div class="d-flex align-items-baseline ">
         <input type="text" class="form-control mr-3" :id="id" placeholder="Linktext" v-model="link.name" :readonly="readonly">
-        <input type="text" class="form-control mr-3" :id="id" placeholder="https://example.org" v-model="link.url" :readonly="readonly" @blur="checkLinkValid(link)">
+        <input type="text" class="form-control mr-3" :class="{'form__field--error': !link.validUrl}" :id="id" placeholder="https://example.org" v-model="link.url" :readonly="readonly" @blur="checkLinkValid(link)">
         <select class="form-control mr-3" name="types" v-model="link.type" v-if="types">
           <option value="audio">Audio</option>
           <option value="video">Video</option>
