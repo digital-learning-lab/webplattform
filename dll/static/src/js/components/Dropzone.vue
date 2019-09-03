@@ -48,7 +48,6 @@
     methods: {
       removeFile (e, file) {
         e.preventDefault()
-        console.log(file)
         this.removeFileFromList(file)
       },
       removeFileFromList (file) {
@@ -63,7 +62,6 @@
         })
       },
       addFileToList (file) {
-        console.log(file)
         this.fileList.push(JSON.parse(file.xhr.response))
       }
     },
@@ -75,6 +73,9 @@
           headers: {
             'X-CSRFToken': window.dllData.csrfToken
           },
+          acceptedFiles:
+            '.pdf,.docx,.doc,.pptx,.ppt,.xls,.xlsx,.odt,.odp,.ods,.wav,.mp3,.zip,.png,.jpg,.jpeg,.gif'
+          ,
           dictDefaultMessage: 'Dateien hier hinziehen',
           dictFallbackMessage: 'Ihr Browser ist nicht für den Dateiupload unterstützt.',
           dictFallbackText: null,
