@@ -8,6 +8,8 @@ from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.fields import AutoSlugField
 from django_extensions.db.models import TimeStampedModel
 
+from dll.general import signals
+from dll.general.signals import post_publish
 from .utils import custom_slugify
 
 
@@ -78,7 +80,7 @@ class PublisherModel(PublisherModelBase):
             logger.debug('Publish {} with pk {}'.format(self.__class__.__name__, self.pk))
             draft_obj = self
             if draft_obj.publisher_linked:
-                draft_obj.publisher_linked.delete()
+                draft_obj.publisher_linked.unpublish()
 
             publish_obj = self.__class__.objects.get(pk=self.pk)
             publish_obj.pk = None
@@ -90,6 +92,15 @@ class PublisherModel(PublisherModelBase):
             self.copy_relations(draft_obj, publish_obj)
             draft_obj.publisher_linked = publish_obj
             draft_obj.save()
+            signals.post_publish.send(sender=publish_obj.__class__, instance=publish_obj)
+
+    def unpublish(self, **kwargs):
+        """
+        utility function to delete
+        """
+        assert self.publisher_is_draft == self.STATE_PUBLISHED, "Only public instances can be unpublished"
+        signals.post_unpublish.send(sender=self.__class__, instance=self)
+        return self.delete(**kwargs)
 
     def copy_relations(self, src, dst):
         pass
@@ -97,8 +108,10 @@ class PublisherModel(PublisherModelBase):
     def delete(self, **kwargs):
         if self.publisher_is_draft:
             if self.publisher_linked:
-                self.publisher_linked.delete()
-        return super(PublisherModel, self).delete(**kwargs)
+                self.publisher_linked.unpublish(**kwargs)
+            return super(PublisherModel, self).delete(**kwargs)
+        else:
+            return self.unpublish(**kwargs)
 
 
 class DllSlugField(AutoSlugField):

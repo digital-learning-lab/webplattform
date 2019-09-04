@@ -115,25 +115,25 @@
     <field name="id" type="string" indexed="true" stored="true" multiValued="false" required="true"/>
     <field name="django_ct" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="django_id" type="string" indexed="true" stored="true" multiValued="false"/>
-
+    
     <field name="text" type="text_german" indexed="true" stored="true" multiValued="false" />
-
+    
     <field name="name" type="text_german" indexed="true" stored="true" multiValued="false" />
-
+    
     <field name="teaser" type="text_german" indexed="true" stored="true" multiValued="false" />
-
+    
     <field name="additional_info" type="text_german" indexed="true" stored="true" multiValued="false" />
-
+    
     <field name="tags" type="text_german" indexed="true" stored="true" multiValued="true" />
-
+    
     <field name="authors" type="text_german" indexed="true" stored="true" multiValued="true" />
-
+    
     <field name="published" type="pdate" indexed="true" stored="true" multiValued="false" />
-
+    
     <field name="subjects" type="text_german" indexed="true" stored="true" multiValued="true" />
-
+    
     <field name="operating_systems" type="text_german" indexed="true" stored="true" multiValued="true" />
-
+    
     <uniqueKey>id</uniqueKey>
 
     <!--

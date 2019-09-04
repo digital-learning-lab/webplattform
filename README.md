@@ -13,5 +13,4 @@ Instruct solr to use the `schema.xml` file:
 - add `<schemaFactory class="ClassicIndexSchemaFactory"/>` in the solrconfig.xml
 - remove the `AddSchemaFieldsUpdateProcessorFactory` section from `solrconfig.xml` ([source](https://stackoverflow.com/questions/31719955/solr-error-this-indexschema-is-not-mutable)) 
 ### Update the schema
-- `python manage.py build_solr_schema > solr/conf/schema.xml`
-- clear the weird output at the beginning of the xml file
+- `python manage.py build_solr_schema -f solr/conf/schema.xml`

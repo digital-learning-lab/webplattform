@@ -236,6 +236,8 @@ CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://{hostname}:6379/0'
 ))
 CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_TASK_ALWAYS_EAGER')
 
+# ---------------------- Haystack --------------------
+
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'solr.backend.CustomSolrEngine',
@@ -243,6 +245,10 @@ HAYSTACK_CONNECTIONS = {
         'ADMIN_URL': 'http://{}:8983/solr/admin/cores'.format(env.str('SOLR_HOSTNAME'))
     },
 }
+HAYSTACK_SIGNAL_PROCESSOR = 'dll.content.signals.ContentSignalProcessor'
+
+
+# ---------------------- Django Meta --------------------
 
 META_SITE_PROTOCOL = 'https'
 META_SITE_DOMAIN = 'dll.de'  # todo: correct domain
