@@ -2,4 +2,4 @@ FROM solr:8.2.0
 
 COPY solr/conf /opt/solr/server/solr/configsets/dll
 
-RUN solr-precreate dll-default /opt/solr/server/solr/configsets/dll
+CMD solr-precreate dll-default /opt/solr/server/solr/configsets/dll
