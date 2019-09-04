@@ -16,7 +16,7 @@ from psycopg2._range import NumericRange
 from dll.content.models import TeachingModule, ContentLink, Competence, SubCompetence, Trend, Tool, ToolApplication, \
     OperatingSystem, Subject, SchoolType, TrendLink, LICENCE_CHOICES, ToolLink, Content
 from dll.general.utils import custom_slugify
-from dll.user.utils import get_default_tuhh_user
+from dll.user.utils import get_default_tuhh_user, get_bsb_reviewer_group, get_tuhh_reviewer_group
 from dll.user.models import DllUser
 
 logger = logging.getLogger('dll.importer')
@@ -118,9 +118,19 @@ class Command(BaseCommand):
                     draft_related_content = Content.objects.get(pk=pk)
                     draft_target_obj.related_content.add(draft_related_content)
                 draft_target_obj.publish()
+
+                if isinstance(draft_target_obj, TeachingModule):
+                    pub = draft_target_obj.get_published()
+                    pub.created = draft_target_obj.created
+                    pub.save()
+
             except Exception:
                 logger.exception("Can not link related content with pks {} to Content with pk {}".format(
                                  ', '.join(link_this_later[target_obj_pk]), target_obj_pk))
+
+        # create the two groups here for now
+        get_bsb_reviewer_group()
+        get_tuhh_reviewer_group()
 
     @staticmethod
     def _read_xlsx_file(xlsx_file, content_type):
@@ -510,7 +520,8 @@ class Command(BaseCommand):
 
                 try:
                     if 'datum' in data.keys():
-                        date = dateparser.parse(data.get('datum'))
+                        date = dateparser.parse(data.get('datum'), settings={'RETURN_AS_TIMEZONE_AWARE': True,
+                                                                             'TIMEZONE': 'UTC'})
                     else:
                         date = timezone.now()
                 except TypeError:
@@ -546,7 +557,6 @@ class Command(BaseCommand):
                         'state': state,
                         'differentiating_attribute': data['differenzierung'],
                         'additional_info': data['hinweise'],
-                        'modified': date,
                         'licence': 5  # "CC BY-NC-SA"
                     }
                 )
@@ -554,6 +564,11 @@ class Command(BaseCommand):
                     logger.info("Created new TeachingModule from folder {}".format(folder))
                 else:
                     logger.info("Updated TeachingModule from folder {}".format(folder))
+
+                # update the creation date
+                teaching_module.created = date
+                teaching_module.save()
+
                 # try to get the image
                 try:
                     image_path = glob.glob(os.path.join(self.TEACHING_MODULES_FOLDER, folder, '*.jpg'))[0]
@@ -803,7 +818,10 @@ class Command(BaseCommand):
                 if created:
                     obj.username = author
                     obj.json_data['from_import'] = True
-                    password = author.split()[-1] + '_dll_2019'
+                    l = author.split()
+                    obj.first_name = ' '.join(l[:-1])
+                    obj.last_name = l[-1]
+                    password = obj.last_name + '_dll_2019'
                     obj.set_password(password)
                     obj.save()
                 author_list.append(obj)

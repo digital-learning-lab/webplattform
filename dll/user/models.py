@@ -1,11 +1,12 @@
 import rules
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser, Group
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 from django.db import models
 from django.db.models import Q
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
+from django_extensions.db.models import TimeStampedModel
 
 from dll.general.models import DllSlugField
 
@@ -42,7 +43,7 @@ class DllUserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-class DllUser(AbstractUser):
+class DllUser(TimeStampedModel, AbstractUser):
     email = models.EmailField(_('email address'), blank=True, unique=True)
     username = models.CharField(
         _('username'),
@@ -53,6 +54,13 @@ class DllUser(AbstractUser):
         _('Double-opt-in confirmed'),
         default=False,
     )
+    doi_confirmed_date = models.DateTimeField(
+        _('Datum der Registrierungsbestätigung'),
+        null=True,
+        editable=False
+    )
+
+    additional_emails = ArrayField(models.EmailField(), null=True)
 
     slug = DllSlugField(populate_from='username')
     json_data = JSONField(default=dict)
@@ -68,7 +76,7 @@ class DllUser(AbstractUser):
     @cached_property
     def full_name(self):
         if self.first_name or self.last_name:
-            return f'{self.first_name} {self.last_name}'
+           return ' '.join(filter(None, [self.first_name, self.last_name]))
         return self.username
 
     def qs_of_personal_content(self):
@@ -83,5 +91,22 @@ class DllUser(AbstractUser):
 
     @property
     def is_reviewer(self):
+        # todo: rewrite this as rule
         return self.is_superuser or rules.is_group_member('BSB-Reviewer')(self) or \
                rules.is_group_member('TUHH-Reviewer')(self)
+
+    @cached_property
+    def status_list(self) -> list:
+        status_list = []
+        if self.is_superuser:
+            status_list.append(_("Administrator"))
+        if self.is_reviewer:
+            status_list.append(_("Reviewer"))
+        if self.is_active:
+            status_list.append(_("Author"))
+        return status_list
+
+
+class EmailChangeRequest(TimeStampedModel):
+    user = models.ForeignKey(DllUser, on_delete=models.CASCADE)
+    email = models.EmailField()

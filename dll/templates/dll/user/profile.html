@@ -1,23 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h1>User Profile</h1>
-<h2>Welcome {{ request.user.username }}</h2>
-<h2>Own content</h2>
-<ul>
-    {% for foo in own_content %}
-        <li>{{ foo.name }}</li>
-    {% endfor %}
-</ul>
-<h2>Coauthored content</h2>
-<ul>
-    {% for foo in coauthored_content %}
-        <li>{{ foo.name }}</li>
-    {% endfor %}
-</ul>
-</body>
-</html>
+{% extends 'dll/default_page.html' %}
+{% load breadcrumb_tags crispy_forms_tags %}
+
+{% block content %}
+    <h1>Profilansicht</h1>
+    {{ form|crispy }}
+    <div class="d-flex">
+        <a href="{% url 'user:password_change' %}"><button class="button button--submit" type="button">Passwort ändern</button></a>
+        <a href="{% url 'user:email' %}"><button class="button button--preview" type="button">Email ändern</button></a>
+        <a href="{% url 'user:logout' %}"><button class="button button--neutral" type="button">Abmelden</button></a>  {# todo: font-weight-semi-bold #}
+        <a href="{% url 'user:account_delete' %}"><button class="button button--danger" type="button">Löschen</button></a>
+    </div>
+{% endblock %}

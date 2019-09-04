@@ -26,9 +26,9 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
     CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView, ToolApplicationSearchView, \
-    OperatingSystemSearchView, ReviewViewSet, ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
-    TrendDetailPreviewView, SubmitContentView, ApproveContentView, DeclineContentView, HelpTextFieldChoices,  \
-    ImageUploadView, DeleteContentFileView
+    OperatingSystemSearchView, ReviewViewSet,  ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
+    TrendDetailPreviewView, SubmitContentView, ApproveContentView, DeclineContentView, admin_help_text_choices, \
+    search_view, HelpTextFieldChoices, ImageUploadView, DeleteContentFileView
 from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
     UserContentView, MyReviewsView, ReviewTeachingModuleView, ReviewToolView, ReviewTrendView, PendingReviewContentView
 
@@ -103,7 +103,8 @@ urlpatterns = [
          name='approve-content'),
     path('api/review/<slug:slug>/decline', DeclineContentView.as_view(),
          name='decline-content'),
-    path('select2/admin_help_fields', HelpTextFieldChoices.as_view(), name='admin-help-text-choices')
+    path('select2/admin_help_fields', HelpTextFieldChoices.as_view(), name='admin-help-text-choices'),
+    path('suche', search_view, name='search')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:

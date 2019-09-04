@@ -239,13 +239,23 @@ CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://{hostname}:6379/0'
 ))
 CELERY_TASK_ALWAYS_EAGER = env.bool('CELERY_TASK_ALWAYS_EAGER')
 
+# ---------------------- Haystack --------------------
+
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.solr_backend.SolrEngine',
-        'URL': 'http://{}:8983/solr/mycore'.format(env.str('SOLR_HOSTNAME')),
+        'ENGINE': 'solr.backend.CustomSolrEngine',
+        'URL': 'http://{}:8983/solr/dll-default'.format(env.str('SOLR_HOSTNAME')),
         'ADMIN_URL': 'http://{}:8983/solr/admin/cores'.format(env.str('SOLR_HOSTNAME'))
     },
 }
+HAYSTACK_SIGNAL_PROCESSOR = 'dll.content.signals.ContentSignalProcessor'
+
+
+# ---------------------- Django Meta --------------------
+
+META_SITE_PROTOCOL = 'https'
+META_SITE_DOMAIN = 'dll.de'  # todo: correct domain
+META_USE_OG_PROPERTIES = True
 
 BSB_REVIEW_MAIL = os.getenv('EMAIL_RECEIVER_DLL', 'dll@blueshoe.de')
 TUHH_REVIEW_MAIL = os.getenv('EMAIL_RECEIVER_BSB', 'dll@blueshoe.de')

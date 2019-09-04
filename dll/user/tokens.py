@@ -10,4 +10,12 @@ class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
         )
 
 
+class EmailChangeConfirmationTokenGenerator(PasswordResetTokenGenerator):
+    def _make_hash_value(self, email_cr, timestamp):
+        return (
+            six.text_type(email_cr.pk) + six.text_type(timestamp)
+        )
+
+
 account_activation_token = AccountActivationTokenGenerator()
+email_confirmation_token = EmailChangeConfirmationTokenGenerator()

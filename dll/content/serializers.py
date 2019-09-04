@@ -37,12 +37,7 @@ class ContentListSerializer(serializers.ModelSerializer):
                   'co_authors']
 
     def get_image(self, obj):
-        if obj.image is not None:
-            thumbnailer = get_thumbnailer(obj.image)
-            thumb = thumbnailer.get_thumbnail({'size': (300,300), 'crop': True})
-            return str(thumb)
-        else:
-            return None
+        return obj.get_image()
 
     def get_co_authors(self, obj):
         return [f'{author.full_name}' for author in obj.co_authors.all()]
@@ -180,7 +175,7 @@ class RelatedContentField(DllM2MField):
         except Content.DoesNotExist:
             return {}
         return {'pk': pk, 'label': label}
-    
+
     def to_internal_value(self, data):
         pk = data['pk']
         content = Content.objects.get(pk=pk)

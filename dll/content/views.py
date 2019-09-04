@@ -9,6 +9,9 @@ from django.views.generic.base import ContextMixin
 from django_filters.rest_framework import DjangoFilterBackend
 from django_select2.views import AutoResponseView
 from filer.models import Image, File
+from haystack.backends import SQ
+from haystack.inputs import AutoQuery
+from haystack.query import SearchQuerySet
 from psycopg2._range import NumericRange
 from rest_framework import viewsets, filters, mixins, status
 from rest_framework.generics import ListAPIView, GenericAPIView, DestroyAPIView
@@ -18,6 +21,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
+from dll.content.filters import SolrTagFilter
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject, SubCompetence, SchoolType, \
     Review, OperatingSystem, ToolApplication, HelpText, ContentFile
 from dll.content.serializers import AuthorSerializer, CompetenceSerializer, SubCompetenceSerializer, \
@@ -105,6 +109,11 @@ class ContentDetailView(ContentDetailBase):
         qs = super(ContentDetailView, self).get_queryset()
         return qs.published()
 
+    def get_context_data(self, **kwargs):
+        ctx = super(ContentDetailView, self).get_context_data(**kwargs)
+        ctx['meta'] = self.get_object().as_meta(self.request)
+        return ctx
+
 
 class ContentPreviewView(ContentDetailBase):
     def get_context_data(self, **kwargs):
@@ -159,9 +168,8 @@ class PublishedContentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Content.objects.published()
     filter_backends = [
         DjangoFilterBackend,
-        filters.SearchFilter
+        SolrTagFilter
     ]
-    search_fields = ['name', 'teaser']
     permission_classes = []
     authentication_classes = []
 
@@ -275,9 +283,8 @@ class ContentDataFilterView(ListAPIView):
     serializer_class = ContentListSerializer
     filter_backends = [
         DjangoFilterBackend,
-        filters.SearchFilter
+        SolrTagFilter
     ]
-    search_fields = ['name', 'teaser']
     model = None
 
     def get_queryset(self):
@@ -386,6 +393,7 @@ class ToolDataFilterView(ContentDataFilterView):
             qs = qs.filter(Tool___operating_systems__pk__in=operating_systems)
         return qs.distinct()
 
+
 class TrendFilterView(TemplateView):
     template_name = 'dll/filter/trends.html'
 
@@ -418,7 +426,6 @@ class AuthorSearchView(ListAPIView):
     search_fields = ['username']
 
 
-
 class CompetencesSearchView(ListAPIView):
     queryset = Competence.objects.all()
     serializer_class = CompetenceSerializer
@@ -441,7 +448,6 @@ class SubCompetencesSearchView(ListAPIView):
     def get_queryset(self):
         qs = super(SubCompetencesSearchView, self).get_queryset()
         competences = self.request.GET.getlist('competences[]', [])
-
 
         if competences:
             competences_ids = [json.loads(competence)['pk'] for competence in competences]
@@ -589,3 +595,11 @@ class DeleteContentFileView(DestroyAPIView):
             raise Http404
 
         return content_file
+
+
+def search_view(request):
+    q = AutoQuery(request.GET.get('q', ''))
+    sqs = SearchQuerySet().filter(SQ(name=q) | SQ(teaser=q) | SQ(additional_info=q) | SQ(authors=q))
+    sqs.query.boost_fields = {'name': 2, 'teaser': 1.5, 'additional_info': 1, 'authors': 1}
+    results = [result.name for result in sqs[:10]]
+    return JsonResponse(results, safe=False)

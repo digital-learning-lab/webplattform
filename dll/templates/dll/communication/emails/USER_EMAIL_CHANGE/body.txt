@@ -1,0 +1,7 @@
+{% autoescape off %}
+Hi {{ full_name }},
+
+Please click on the link below to confirm your email:
+
+{{ confirmation_url }}
+{% endautoescape %}

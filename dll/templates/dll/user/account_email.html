@@ -1,0 +1,10 @@
+{% extends 'dll/default_page.html' %}
+{% load breadcrumb_tags crispy_forms_tags %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button class="button button--primary" type="submit">E-Mail speichern</button>
+    </form>
+{% endblock %}

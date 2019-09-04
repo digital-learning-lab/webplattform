@@ -1,5 +1,6 @@
 import json
 
+from django.contrib import messages
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
@@ -7,19 +8,25 @@ from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
+from django.utils import timezone
+from django.utils.translation import ugettext_lazy as _
 
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, UpdateView, DeleteView
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from rest_framework.generics import ListAPIView
 
 from dll.communication.tasks import send_mail
+from .forms import UserProfileForm, UserEmailsForm, UserPasswordChangeForm, UserAccountDeleteForm
 from dll.content.models import Content, TeachingModule, Tool, Trend, Review
 from dll.content.rules import is_bsb_reviewer, is_tuhh_reviewer
 from dll.content.serializers import TeachingModuleSerializer, ToolSerializer, TrendSerializer, \
     ContentListInternalSerializer, ContentListInternalReviewSerializer
 from dll.content.views import BreadcrumbMixin
-from dll.user.tokens import account_activation_token
+from dll.user.models import DllUser, EmailChangeRequest
+from dll.user.tokens import account_activation_token, email_confirmation_token
 from .forms import SignUpForm
 
 
@@ -246,6 +253,7 @@ class UserContentView(ListAPIView):
 
         return qs
 
+
 def activate_user(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
@@ -256,6 +264,7 @@ def activate_user(request, uidb64, token, backend='django.contrib.auth.backends.
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.doi_confirmed = True
+        user.doi_confirmed_date = timezone.now()
         user.save()
         login(request, user, backend=backend)
         return redirect('user-content-overview')
@@ -282,7 +291,6 @@ class PendingReviewContentView(UserContentView):
         if type == 'teaching-module':
             qs = qs.instance_of(TeachingModule)
 
-
         if search_term:
             qs = qs.filter(Q(name__icontains=search_term) | Q(teaser__icontains=search_term))
 
@@ -299,5 +307,102 @@ class PendingReviewContentView(UserContentView):
         return qs.none()
 
 
-class ProfileView(TemplateView):
+class BaseProfileView(FormView, BreadcrumbMixin):
+    breadcrumb_title = _('Mein Profil')
+    breadcrumb_url = reverse_lazy('user:profile')
+
+    def get_form_kwargs(self):
+        kwargs = super(BaseProfileView, self).get_form_kwargs()
+        kwargs['instance'] = getattr(self.request, 'user', None)
+        return kwargs
+
+
+class ProfileViewIndex(BaseProfileView):
     template_name = 'dll/user/profile.html'
+    form_class = UserProfileForm
+
+
+class ProfileViewChangePassword(BaseProfileView):
+    template_name = 'dll/user/password_change.html'
+    form_class = UserPasswordChangeForm
+    success_url = reverse_lazy('user:profile')
+
+    def get_breadcrumbs(self):
+        bcs = super(ProfileViewChangePassword, self).get_breadcrumbs()
+        bcs.append({'title': _("Passwort Ändern"), 'url': reverse_lazy('user:password_change')})
+        return bcs
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class ProfileViewEmails(BaseProfileView):
+    template_name = 'dll/user/account_email.html'
+    form_class = UserEmailsForm
+    success_url = reverse_lazy('user:profile')
+
+    def get_breadcrumbs(self):
+        bcs = super(ProfileViewEmails, self).get_breadcrumbs()
+        bcs.append({'title': _("E-Mails"), 'url': reverse_lazy('user:email')})
+        return bcs
+
+    def form_valid(self, form):
+        from dll.communication.tasks import send_mail
+
+        cr = EmailChangeRequest.objects.create(user=self.request.user, email=form.cleaned_data['email'])
+
+        confirmation_url = reverse('user:email_confirm', kwargs={
+            'cr_idb64': urlsafe_base64_encode(force_bytes(cr.pk)),
+            'token': email_confirmation_token.make_token(cr),
+        })
+        confirmation_url = self.request.build_absolute_uri(confirmation_url)
+
+        context = {
+            'full_name': self.request.user.full_name,
+            'confirmation_url': confirmation_url
+        }
+
+        send_mail.delay(
+            event_type_code='USER_EMAIL_CHANGE',
+            ctx=context,
+            email=form.cleaned_data['email']
+        )
+        return HttpResponseRedirect(self.get_success_url())
+
+
+def confirm_email(request, cr_idb64, token):
+    try:
+        cr_id = force_text(urlsafe_base64_decode(cr_idb64))
+        cr = EmailChangeRequest.objects.get(pk=cr_id)
+    except (TypeError, ValueError, OverflowError, USER_MODEL.DoesNotExist):
+        cr = None
+
+    if cr is not None and email_confirmation_token.check_token(cr, token):
+        cr.user.email = cr.email
+        cr.user.save()
+        cr.delete()
+        messages.success(request, _("Ihre E-Mail wurde erfolgreich geändert."))
+        return redirect('user:profile')
+    else:
+        messages.warning(request, _("Ihr E-Mail Aktivierungslink ist ungültig."))
+        return HttpResponseRedirect('user:profile')
+
+
+class ProfileViewDelete(BaseProfileView):
+    template_name = 'dll/user/account_delete.html'
+    form_class = UserAccountDeleteForm
+    success_url = reverse_lazy('user:account_delete_success')
+
+    def get_breadcrumbs(self):
+        bcs = super(ProfileViewDelete, self).get_breadcrumbs()
+        bcs.append({'title': _("Account löschen"), 'url': reverse_lazy('user:account_delete')})
+        return bcs
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class ProfileViewDeleteSuccess(TemplateView):
+    template_name = 'dll/user/account_delete_success.html'
