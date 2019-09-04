@@ -288,6 +288,8 @@ class ContentDataFilterView(ListAPIView):
         SolrTagFilter
     ]
     model = None
+    permission_classes = []
+    authentication_classes = []
 
     def get_queryset(self):
         qs = super(ContentDataFilterView, self).get_queryset().objects.instance_of(self.model)
