@@ -80,7 +80,7 @@ class PublisherModel(PublisherModelBase):
             logger.debug('Publish {} with pk {}'.format(self.__class__.__name__, self.pk))
             draft_obj = self
             if draft_obj.publisher_linked:
-                draft_obj.publisher_linked.unpublish()
+                draft_obj.publisher_linked.delete()
 
             publish_obj = self.__class__.objects.get(pk=self.pk)
             publish_obj.pk = None
@@ -94,13 +94,12 @@ class PublisherModel(PublisherModelBase):
             draft_obj.save()
             signals.post_publish.send(sender=publish_obj.__class__, instance=publish_obj)
 
-    def unpublish(self, **kwargs):
-        """
-        utility function to delete
-        """
-        assert self.publisher_is_draft == self.STATE_PUBLISHED, "Only public instances can be unpublished"
-        signals.post_unpublish.send(sender=self.__class__, instance=self)
-        return self.delete(**kwargs)
+    # def unpublish(self, **kwargs):
+    #     """
+    #     utility function to delete
+    #     """
+    #     assert self.publisher_is_draft == self.STATE_PUBLISHED, "Only public instances can be unpublished"
+    #     return self.delete(**kwargs)
 
     def copy_relations(self, src, dst):
         pass
@@ -108,10 +107,11 @@ class PublisherModel(PublisherModelBase):
     def delete(self, **kwargs):
         if self.publisher_is_draft:
             if self.publisher_linked:
-                self.publisher_linked.unpublish(**kwargs)
-            return super(PublisherModel, self).delete(**kwargs)
+                self.publisher_linked.delete(**kwargs)
+                signals.post_unpublish.send(sender=self.__class__, instance=self.publisher_linked)
         else:
-            return self.unpublish(**kwargs)
+            signals.post_unpublish.send(sender=self.__class__, instance=self)
+        return super(PublisherModel, self).delete(**kwargs)
 
 
 class DllSlugField(AutoSlugField):

@@ -259,7 +259,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     def get_image(self):
         if self.image is not None:
             thumbnailer = get_thumbnailer(self.image)
-            thumb = thumbnailer.get_thumbnail({'size': (300,300)})
+            thumb = thumbnailer.get_thumbnail({'size': (300,300), 'crop': True})
             return str(thumb)
         else:
             return None

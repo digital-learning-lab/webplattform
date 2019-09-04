@@ -27,7 +27,7 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
     CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView, ToolApplicationSearchView, \
     OperatingSystemSearchView, ReviewViewSet,  ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
-    TrendDetailPreviewView, SubmitContentView, ApproveContentView, DeclineContentView, admin_help_text_choices, \
+    TrendDetailPreviewView, SubmitContentView, ApproveContentView, DeclineContentView, \
     search_view, HelpTextFieldChoices, ImageUploadView, DeleteContentFileView
 from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
     UserContentView, MyReviewsView, ReviewTeachingModuleView, ReviewToolView, ReviewTrendView, PendingReviewContentView
