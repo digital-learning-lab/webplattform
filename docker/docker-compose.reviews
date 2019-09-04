@@ -79,15 +79,11 @@ services:
       - db
       - redis
   solr:
-    image: solr
+    build:
+      context: ../
+      dockerfile: ./Dockerfile.solr
     ports:
       - "8983:8983"
-    volumes:
-      - ../../solr/conf:/opt/solr/server/solr/configsets/dll
-    entrypoint:
-      - solr-precreate
-    command: ["dll-default", "/opt/solr/server/solr/configsets/dll"]
-
 networks:
   default:
     name: '${CI_PROJECT_ID}-${CI_ENVIRONMENT_SLUG}-${CI_PIPELINE_ID}'
