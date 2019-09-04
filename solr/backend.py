@@ -69,22 +69,16 @@ class CustomSolrSearchBackend(SolrSearchBackend):
 class CustomSolrSearchQuery(SolrSearchQuery):
 
     def build_params(self, spelling_query=None, **kwargs):
-        from haystack import connections
         search_kwargs = super(CustomSolrSearchQuery, self).build_params(spelling_query, **kwargs)
 
-        search_kwargs['defType'] = 'dismax'
-        search_kwargs['mm'] = 3
+        if hasattr(self, 'boost_fields'):
+            search_kwargs['defType'] = 'dismax'
+            search_kwargs['mm'] = 3
+            l = []
+            for field, boost in self.boost_fields.items():
+                l.append(f'{field}^{boost}')
+            search_kwargs['qf'] = ' '.join(l)
 
-        # WARNING: major hack
-        try:
-            boost_fields = (i[0] for i in self.query_filter.children[0].children)
-        except Exception:
-            boost_fields = list()
-        l = []
-        for field in boost_fields:
-            boost = connections[self._using].get_unified_index().fields[field].boost
-            l.append(f'{field}^{boost}')
-        search_kwargs['qf'] = ' '.join(l)
         return search_kwargs
 
 

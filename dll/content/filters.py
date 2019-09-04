@@ -8,12 +8,11 @@ class SolrTagFilter(BaseFilterBackend):
 
     def filter_queryset(self, request, queryset, view):
         q = request.GET.get('q', '')
-        if q:
+        if len(q) >= 3:
             q = AutoQuery(request.GET.get('q', ''))
-            pks = queryset.values_list('pk', flat=True)
             sqs = SearchQuerySet().filter(SQ(tags=q))
-            for i in sqs:
-                print(i)
-            return queryset
+            sqs.query.boost_fields = {'tags': 2}
+            pks = list(set(sqs.values_list('pk', flat=True)))
+            return queryset.filter(pk__in=pks)
         else:
             return queryset
