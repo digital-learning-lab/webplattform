@@ -143,6 +143,7 @@ $sidebar-preview-button-color: darken($sidebar-preview-color, 8%);
     font-size: 0.9rem;
     height: auto;
     display: block;
+    overflow: auto;
   }
   .sidebar__nav-item {
     display: block;
