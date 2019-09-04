@@ -28,6 +28,10 @@ def custom_slugify(value):
     return slugify(value)
 
 
+def remove_number_custom_slugify(value):
+    return custom_slugify(value     .strip('1234567890. '))
+
+
 GERMAN_STATES = (
     ('nordrhein-westfalen', 'Nordrhein-Westfalen'),
     ('niedersachsen', 'Niedersachsen'),
