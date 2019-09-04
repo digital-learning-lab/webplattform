@@ -124,6 +124,8 @@
     
     <field name="additional_info" type="text_german" indexed="true" stored="true" multiValued="false" />
     
+    <field name="url" type="text_german" indexed="true" stored="true" multiValued="false" />
+
     <field name="tags" type="text_german" indexed="true" stored="true" multiValued="true" />
     
     <field name="authors" type="text_german" indexed="true" stored="true" multiValued="true" />

@@ -8,6 +8,7 @@ class ContentIndex(indexes.SearchIndex):
     name = indexes.CharField(model_attr='name', boost=2)
     teaser = indexes.CharField(model_attr='teaser', boost=1.5)
     additional_info = indexes.CharField(model_attr='additional_info', boost=1)
+    url = indexes.CharField()
     tags = indexes.MultiValueField()
     authors = indexes.MultiValueField()
     published = indexes.DateTimeField(model_attr='created')
@@ -29,6 +30,10 @@ class ContentIndex(indexes.SearchIndex):
         a list of author and all co-authors full names
         """
         return [obj.author.full_name, *[i.full_name for i in obj.co_authors.all()]]
+
+    def prepare_url(self, obj):
+        instance = obj.get_real_instance()
+        return instance.get_absolute_url()
 
 
 class ToolsIndex(ContentIndex, indexes.Indexable):
