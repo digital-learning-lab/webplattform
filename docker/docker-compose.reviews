@@ -22,7 +22,6 @@ services:
       - no-new-privileges
     environment:
       - REDIS_HOSTNAME=redis
-      - CELERY_TASK_ALWAYS_EAGER=True
       - SOLR_HOSTNAME=solr
       - VIRTUAL_HOST=${CI_PROJECT_ID}-${CI_ENVIRONMENT_SLUG}
       - DJANGO_SECRET_KEY=${SECRET_KEY}
@@ -68,17 +67,14 @@ services:
     - DATABASE_NAME=postgres
     - DATABASE_HOST=db
     - DJANGO_DEBUG=True
-    - CELERY_TASK_ALWAYS_EAGER=True
     - SOLR_HOSTNAME=solr
     - EMAIL_HOST=floki.rz.tuhh.de
     - EMAIL_PORT=25
     - EMAIL_USE_TLS=False
     - EMAIL_SENDER=digital.learning.lab@tuhh.de
-    - EMAIL_RECEIVER_DLL=dll@blueshoe.de
-    - EMAIL_RECEIVER_BSB=dll@blueshoe.de
+    - EMAIL_RECEIVER_DLL=digital.learning.lab@tuhh.de
+    - EMAIL_RECEIVER_BSB=stabsstelle-digitalisierung@bsb.hamburg.de
     user: "1000:1000"
-    volumes:
-      - .:/code
     depends_on:
       - db
       - redis
@@ -87,7 +83,7 @@ services:
     ports:
       - "8983:8983"
     volumes:
-      - ./solr/conf:/opt/solr/server/solr/configsets/dll
+      - ../solr/conf:/opt/solr/server/solr/configsets/dll
     entrypoint:
       - solr-precreate
     command: ["dll-default", "/opt/solr/server/solr/configsets/dll"]
