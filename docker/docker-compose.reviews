@@ -27,7 +27,7 @@ services:
       - DJANGO_SECRET_KEY=${SECRET_KEY}
       - HOST_IP=${HOST_IP}
       - DJANGO_LOG_LEVEL=DEBUG
-
+      - CELERY_TASK_ALWAYS_EAGER=False
       - ADMIN_USER=admin
       - ADMIN_EMAIL=michael.heinemann@tuhh.de
       - ADMIN_PASSWORD=cgPPDMTCAVBgJnBUrucji
@@ -70,6 +70,7 @@ services:
     - SOLR_HOSTNAME=solr
     - EMAIL_HOST=floki.rz.tuhh.de
     - EMAIL_PORT=25
+    - CELERY_TASK_ALWAYS_EAGER=False
     - EMAIL_USE_TLS=False
     - EMAIL_SENDER=digital.learning.lab@tuhh.de
     - EMAIL_RECEIVER_DLL=digital.learning.lab@tuhh.de
