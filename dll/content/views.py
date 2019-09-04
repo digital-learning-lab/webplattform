@@ -276,9 +276,8 @@ class ContentDataFilterView(ListAPIView):
     serializer_class = ContentListSerializer
     filter_backends = [
         DjangoFilterBackend,
-        filters.SearchFilter
+        SolrTagFilter
     ]
-    search_fields = ['name', 'teaser']
     model = None
     permission_classes = []
     authentication_classes = []

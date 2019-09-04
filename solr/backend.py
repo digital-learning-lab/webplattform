@@ -73,7 +73,7 @@ class CustomSolrSearchQuery(SolrSearchQuery):
 
         if hasattr(self, 'boost_fields'):
             search_kwargs['defType'] = 'dismax'
-            search_kwargs['mm'] = 3
+            search_kwargs['mm'] = 3  # lower makes no sense, since the fieldType text_german has a minGramSize of 3
             l = []
             for field, boost in self.boost_fields.items():
                 l.append(f'{field}^{boost}')

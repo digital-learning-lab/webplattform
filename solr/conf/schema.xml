@@ -130,6 +130,10 @@
 
     <field name="published" type="pdate" indexed="true" stored="true" multiValued="false" />
 
+    <field name="subjects" type="text_german" indexed="true" stored="true" multiValued="true" />
+
+    <field name="operating_systems" type="text_german" indexed="true" stored="true" multiValued="true" />
+
     <uniqueKey>id</uniqueKey>
 
     <!--

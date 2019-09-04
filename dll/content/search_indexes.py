@@ -32,15 +32,23 @@ class ContentIndex(indexes.SearchIndex):
 
 
 class ToolsIndex(ContentIndex, indexes.Indexable):
+    operating_systems = indexes.MultiValueField()
 
     def get_model(self):
         return Tool
 
+    def prepare_operating_systems(self, obj):
+        return list(obj.operating_systems.values_list('name', flat=True))
+
 
 class TeachingModulesIndex(ContentIndex, indexes.Indexable):
+    subjects = indexes.MultiValueField()
 
     def get_model(self):
         return TeachingModule
+
+    def prepare_subjects(self, obj):
+        return list(obj.subjects.values_list('name', flat=True))
 
 
 class TrendsIndex(ContentIndex, indexes.Indexable):
