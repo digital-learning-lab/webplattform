@@ -2,6 +2,7 @@ $input-border-color: rgba(238, 238, 238, 1);
 
 .search-form {
     display: none;
+    position: relative;
 }
 .search-form__submit {
     display: inline-block;
@@ -49,6 +50,35 @@ $input-border-color: rgba(238, 238, 238, 1);
     padding: 12px 0;
     margin-left: -1px;
     vertical-align: top;
+}
+.algolia-autocomplete .aa-hint {
+    color: #999;
+}
+.algolia-autocomplete .aa-dropdown-menu {
+    background-color: #fff;
+    border: 1px solid #999;
+    border-top: none;
+    margin-left: -40px;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+    cursor: pointer;
+    padding: 5px 4px;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
+    background-color: #B2D7FF;
+}
+.algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
+    font-weight: bold;
+    font-style: normal;
+}
+.aa-suggestion {
+    border-bottom: 1px solid $color--daintree;
+    &:last-child {
+        border-bottom: 0;
+    };
+    p {
+        margin-bottom: 0;
+    }
 }
 @media (min-width: 576px) {
     .search-form {

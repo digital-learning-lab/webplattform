@@ -3,6 +3,8 @@ import random
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import JsonResponse, Http404, HttpResponse
+from django.shortcuts import render
+from django.template import Context
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
@@ -601,5 +603,11 @@ def search_view(request):
     q = AutoQuery(request.GET.get('q', ''))
     sqs = SearchQuerySet().filter(SQ(name=q) | SQ(teaser=q) | SQ(additional_info=q) | SQ(authors=q))
     sqs.query.boost_fields = {'name': 2, 'teaser': 1.5, 'additional_info': 1, 'authors': 1}
-    results = [result.name for result in sqs[:10]]
-    return JsonResponse(results, safe=False)
+    if request.is_ajax():
+        results = [{'title': result.name, 'url': result.object.get_absolute_url()} for result in sqs[:10]]
+        return JsonResponse(results, safe=False)
+
+    ctx = {
+        'results': Content.objects.filter(pk__in=sqs.values_list('pk', flat=True))
+    }
+    return render(request, 'dll/search.html', ctx)
