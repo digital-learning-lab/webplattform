@@ -95,11 +95,14 @@ link_this_later = defaultdict(list)
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('-f', '--folder', type=str)
+        parser.add_argument('-d', '--delete', action='store_true')
 
     def handle(self, *args, **options):
-        Tool.objects.all().delete()
-        Trend.objects.all().delete()
-        TeachingModule.objects.all().delete()
+        # delete all objects first, if specified
+        if options['delete']:
+            Tool.objects.all().delete()
+            Trend.objects.all().delete()
+            TeachingModule.objects.all().delete()
         base_dir = options['folder']
         self.TOOLS_FOLDER = os.path.join(base_dir, 'Tool')
         self.TRENDS_FOLDER = os.path.join(base_dir, 'Trend')
