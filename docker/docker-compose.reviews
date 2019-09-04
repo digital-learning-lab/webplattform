@@ -83,7 +83,7 @@ services:
     ports:
       - "8983:8983"
     volumes:
-      - ../solr/conf:/opt/solr/server/solr/configsets/dll
+      - ../../solr/conf:/opt/solr/server/solr/configsets/dll
     entrypoint:
       - solr-precreate
     command: ["dll-default", "/opt/solr/server/solr/configsets/dll"]
