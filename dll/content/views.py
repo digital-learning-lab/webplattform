@@ -547,8 +547,12 @@ class HelpTextFieldChoices(AutoResponseView):
     def get(self, request, *args, **kwargs):
         ct = request.GET.get('content_type', None)
         ht = HelpText.objects.get(content_type_id=ct)
+        term = request.GET.get('term', None)
         choices = ht.get_help_text_fields_for_content_type()
-        results = [{'text': i[1], 'id': i[0]} for i in choices]
+        if term:
+            results = [{'text': i[1], 'id': i[0]} for i in choices if term in str.lower(i[1])]
+        else:
+            results = [{'text': i[1], 'id': i[0]} for i in choices]
         return JsonResponse({'results': results, 'more': False})
 
 

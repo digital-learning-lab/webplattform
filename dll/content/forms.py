@@ -38,7 +38,7 @@ class HelpTextAdminForm(forms.ModelForm):
         if instance:
             self.fields['content_type'] = forms.ModelChoiceField(
                 queryset=ContentType.objects.filter(model__in=['teachingmodule', 'trend', 'tool']),
-                widget=forms.Select(attrs={'readonly': True}),
+                widget=forms.Select(attrs={'style': 'pointer-events: none; opacity: 0.5;'}),
                 initial=instance.content_type
             )
 
