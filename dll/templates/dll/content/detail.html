@@ -44,67 +44,65 @@
           </div>
         </div>
         <div class="row">
-          <div class="row no-gutters">
-            <div class="col col-12 col-lg-4">
-              <div class="sidebar sidebar--{{ object.type }}">
-                {% if preview %}
-                  <div class="sidebar--preview">
-                    Vorschaumodus
-                    <a href="javascript:history.back()" class="sidebar--backlink">Zurück</a>
-                  </div>
-                {% endif %}
-                <h3 class="sidebar__headline">
+          <div class="col col-12 col-lg-4">
+            <div class="sidebar sidebar--{{ object.type }}">
+              {% if preview %}
+                <div class="sidebar--preview">
+                  Vorschaumodus
+                  <a href="javascript:history.back()" class="sidebar--backlink">Zurück</a>
+                </div>
+              {% endif %}
+              <h3 class="sidebar__headline">
                 {{ object.type_verbose }} - Informationen
             </h3>
-                <ul class="sidebar__information">
-                  {% if object.competences.all.count %}
-                    <li class="sidebar__information-item">
-                      <span class="sidebar__information-icon icon-hexagon"></span>
-                      <ul class="list-unstyled">
-                        {% for competence in object.competences.all %}
-                          <li>{{ competence.name }}</li>
-                        {% endfor %}
-                      </ul>
-                    </li>
-                  {% endif %}
-                  {% block sidebar_information %}{% endblock %}
-                </ul>
-                <ul class="nav flex-column sidebar__nav" role="tablist" aria-orientation="vertical">
-                  {% block sidebar_navigation_items %}{% endblock %}
-                </ul>
-              </div>
+              <ul class="sidebar__information">
+                {% if object.competences.all.count %}
+                  <li class="sidebar__information-item">
+                    <span class="sidebar__information-icon icon-hexagon"></span>
+                    <ul class="list-unstyled">
+                      {% for competence in object.competences.all %}
+                        <li>{{ competence.name }}</li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                {% endif %}
+                {% block sidebar_information %}{% endblock %}
+              </ul>
+              <ul class="nav flex-column sidebar__nav" role="tablist" aria-orientation="vertical">
+                {% block sidebar_navigation_items %}{% endblock %}
+              </ul>
             </div>
-            <div class="col col-12 col-lg-8">
-              <article class="section-info">
-                <header>
-                  <div class="content-info content-info--{{ object.type }}">
-                    <img class="content-info__image" src="{% thumbnail object.image 750x500 upscale=True %}" srcset="{% thumbnail object.image 750x500 upscale=True %} 1x, {% thumbnail object.image 1500x1000 %} 2x" alt="{{ object.name }}">
-                    <div class="content-info__type">{{ object.type_verbose }}</div>
-                    <h1 class="content-info__title">{{ object.name }}</h1>
-                    {% if object.teaser %}<p class="content-info__teaser">{{ object.teaser|linebreaksbr }}</p>{% endif %}
-                    <div class="row align-items-center">
-                      {% block content_additional_information %}
-                        {% if object.author.full_name or object.co_authors.all.count %}
-                          <div class="col-12 col-sm-auto mb-4">
-                            <ul class="list-unstyled mb-0">
-                              <li>{{ object.author.full_name }}</li>
-                              {% if object.co_authors.count %}
-                                {% for author in object.co_authors.all %}
-                                  <li>{{ author.full_name }}</li>
-                                {% endfor %}
-                              {% endif %}
-                            </ul>
-                          </div>
-                        {% endif %}
-                      {% endblock %}
-                    </div>
+          </div>
+          <div class="col col-12 col-lg-8">
+            <article class="section-info">
+              <header>
+                <div class="content-info content-info--{{ object.type }}">
+                  <img class="content-info__image" src="{% thumbnail object.image 750x500 upscale=True %}" srcset="{% thumbnail object.image 750x500 upscale=True %} 1x, {% thumbnail object.image 1500x1000 %} 2x" alt="{{ object.name }}">
+                  <div class="content-info__type">{{ object.type_verbose }}</div>
+                  <h1 class="content-info__title">{{ object.name }}</h1>
+                  {% if object.teaser %}<p class="content-info__teaser">{{ object.teaser|linebreaksbr }}</p>{% endif %}
+                  <div class="row align-items-center">
+                    {% block content_additional_information %}
+                      {% if object.author.full_name or object.co_authors.all.count %}
+                        <div class="col-12 col-sm-auto mb-4">
+                          <ul class="list-unstyled mb-0">
+                            <li>{{ object.author.full_name }}</li>
+                            {% if object.co_authors.count %}
+                              {% for author in object.co_authors.all %}
+                                <li>{{ author.full_name }}</li>
+                              {% endfor %}
+                            {% endif %}
+                          </ul>
+                        </div>
+                      {% endif %}
+                    {% endblock %}
                   </div>
-                </header>
-                <div class="tab-content js-tab-content">
-                  {% block tab_contents %}{% endblock %}
                 </div>
-              </article>
-            </div>
+              </header>
+              <div class="tab-content js-tab-content">
+                {% block tab_contents %}{% endblock %}
+              </div>
+            </article>
           </div>
         </div>
       </div>
