@@ -17,3 +17,17 @@ class SolrTagFilter(BaseFilterBackend):
             return queryset.filter(pk__in=pks)
         else:
             return queryset
+
+
+class SortingFilter(BaseFilterBackend):
+
+    def filter_queryset(self, request, queryset, view):
+        sorting = request.GET.get('sorting', 'az')
+        if sorting == 'az':
+            return queryset.order_by('name')
+        elif sorting == 'latest':
+            return queryset.order_by('modified')
+        elif sorting == '-latest':
+            return queryset.order_by('-modified')
+        else:
+            return queryset.order_by('-name')

@@ -21,7 +21,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
-from dll.content.filters import SolrTagFilter
+from dll.content.filters import SolrTagFilter, SortingFilter
 from dll.content.models import Content, TeachingModule, Trend, Tool, Competence, Subject, SubCompetence, SchoolType, \
     Review, OperatingSystem, ToolApplication, HelpText, ContentFile
 from dll.content.serializers import AuthorSerializer, CompetenceSerializer, SubCompetenceSerializer, \
@@ -168,14 +168,14 @@ class PublishedContentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Content.objects.published()
     filter_backends = [
         DjangoFilterBackend,
-        SolrTagFilter
+        SolrTagFilter,
+        SortingFilter
     ]
     permission_classes = []
     authentication_classes = []
 
     def get_queryset(self):
         competence = self.request.GET.get('competence', '')
-        sorting = self.request.GET.get('sorting', 'az')
         teaching_modules = self.request.GET.get('teachingModules', 'true')
         trends = self.request.GET.get('trends', 'true')
         tools = self.request.GET.get('tools', 'true')
@@ -191,10 +191,7 @@ class PublishedContentViewSet(viewsets.ReadOnlyModelViewSet):
         if tools != 'true':
             qs = qs.not_instance_of(Tool)
 
-        if sorting == 'az':
-            return qs.order_by('name')
-        else:
-            return qs.order_by('-name')
+        return qs
 
     def get_serializer_class(self):
         name = resolve(self.request.path_info).url_name
@@ -283,7 +280,8 @@ class ContentDataFilterView(ListAPIView):
     serializer_class = ContentListSerializer
     filter_backends = [
         DjangoFilterBackend,
-        SolrTagFilter
+        SolrTagFilter,
+        SortingFilter
     ]
     model = None
 
@@ -291,20 +289,12 @@ class ContentDataFilterView(ListAPIView):
         qs = super(ContentDataFilterView, self).get_queryset().objects.instance_of(self.model)
         qs = qs.published()
 
-        sorting = self.request.GET.get('sorting', 'az')
         competences = self.request.GET.getlist('competences[]', [])
         print(competences)
         if competences:
             qs = qs.filter(competences__pk__in=competences)
 
-        if sorting == 'az':
-            return qs.order_by('name')
-        elif sorting == 'latest':
-            return qs.order_by('modified')
-        elif sorting == '-latest':
-            return qs.order_by('-modified')
-        else:
-            return qs.order_by('-name')
+        return qs
 
 
 class TeachingModuleFilterView(TemplateView):
@@ -379,12 +369,12 @@ class ToolDataFilterView(ContentDataFilterView):
     def get_queryset(self):
         qs = super(ToolDataFilterView, self).get_queryset()
 
-        status = self.request.GET.get('status', None)
+        tool_status = self.request.GET.get('status', None)
         applications = self.request.GET.getlist('applications[]', [])
         operating_systems = self.request.GET.getlist('operatingSystems[]', [])
 
-        if status:
-            qs = qs.filter(Tool___status=status)
+        if tool_status:
+            qs = qs.filter(Tool___status=tool_status)
 
         if applications:
             qs = qs.filter(Tool___applications__name__in=applications)
