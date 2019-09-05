@@ -3,6 +3,7 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
+from django.http import JsonResponse
 
 from dll.content.forms import FlatPageAdminForm, HelpTextAdminForm, HelpTextFieldForm
 from .models import TeachingModule, Competence, SubCompetence, Trend, Tool, HelpText, HelpTextField
@@ -32,10 +33,28 @@ class HelpTextFieldInline(admin.TabularInline):
             return False
 
 
+def download_as_json(modeladmin, request, queryset):
+    result = {
+        'list': []
+    }
+    for help_text in queryset:
+        help_text_json = {}
+        help_text_json['content_type'] = help_text.content_type.app_label + '.' + help_text.content_type.model
+        help_text_json['fields'] = []
+        for field in help_text.help_text_fields.all():
+            help_text_json['fields'].append({
+                'name': field.name,
+                'text': field.text
+            })
+        result['list'].append(help_text_json)
+    return JsonResponse(result)
+
+
 @admin.register(HelpText)
 class HelpTextAdmin(admin.ModelAdmin):
     form = HelpTextAdminForm
     inlines = [HelpTextFieldInline]
+    actions = [download_as_json]
 
     class Media:
         js = (
