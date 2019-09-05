@@ -69,7 +69,7 @@
         },
         requiredFields: [
         {field: 'name', title: 'Titel'},
-        {field: 'teaser', title: 'Teaser'},
+        {field: 'teaser', title: 'Kurzzusammenfassung'},
         {field: 'competences', title: 'Kompetenzen in der digitalen Welt'}
       ],
         categoryOptions: [
