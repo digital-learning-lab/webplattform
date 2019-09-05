@@ -137,7 +137,7 @@ export const submissionMixin = {
     },
     getHelpText (fieldName) {
       if (fieldName && this.data.help_texts) {
-        return this.data.help_texts[fieldName]
+        return this.data.help_texts[fieldName] || '.'
       }
       return null
     },
