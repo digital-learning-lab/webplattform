@@ -872,6 +872,7 @@ class SubCompetence(TimeStampedModel):
     cid = models.SmallIntegerField(unique=True, editable=False)
     name = models.CharField(max_length=500)
     competence = models.ForeignKey('Competence', on_delete=models.CASCADE)
+    ordering = models.IntegerField(unique=True)
     slug = DllSlugField(
         max_length=512,
         populate_from='name'

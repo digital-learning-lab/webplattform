@@ -45,6 +45,9 @@ class DllUserManager(BaseUserManager):
 
 class DllUser(TimeStampedModel, AbstractUser):
     email = models.EmailField(_('email address'), blank=True, unique=True)
+
+    first_name = models.CharField(_('first name'), max_length=80, blank=True)
+
     username = models.CharField(
         _('username'),
         max_length=150,

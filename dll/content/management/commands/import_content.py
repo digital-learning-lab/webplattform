@@ -8,7 +8,7 @@ import dateparser
 import numpy as np
 import pandas as pd
 from django.core.files import File
-from django.core.management import BaseCommand
+from django.core.management import BaseCommand, call_command
 from django.utils import timezone
 from filer.models import Image
 from psycopg2._range import NumericRange
@@ -100,6 +100,9 @@ class Command(BaseCommand):
         Tool.objects.all().delete()
         Trend.objects.all().delete()
         TeachingModule.objects.all().delete()
+
+        call_command('create_sub_competences')
+
         base_dir = options['folder']
         self.TOOLS_FOLDER = os.path.join(base_dir, 'Tool')
         self.TRENDS_FOLDER = os.path.join(base_dir, 'Trend')

@@ -455,7 +455,7 @@ class SubCompetencesSearchView(ListAPIView):
 
         if competences:
             competences_ids = [json.loads(competence)['pk'] for competence in competences]
-            return qs.filter(competence__pk__in=competences_ids)
+            return qs.filter(competence__pk__in=competences_ids).order_by('ordering')
         return qs.none()
 
 
