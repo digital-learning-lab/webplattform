@@ -57,9 +57,15 @@ services:
   redis:
     image: "redis:alpine"
     hostname: redis
+    labels:
+      ONLINE_JOURNALCTL: 'true'
+      ONLINE_JOURNALCTL_TOKEN: '${ONLINE_JOURNALCTL_TOKEN}'
   celery:
     image: '${CI_PROJECT_PATH_SLUG}:${CI_COMMIT_REF_SLUG}'
     command: [celery, worker, --app=dll.configuration.celery.app, --concurrency=1, --loglevel=DEBUG]
+    labels:
+      ONLINE_JOURNALCTL: 'true'
+      ONLINE_JOURNALCTL_TOKEN: '${ONLINE_JOURNALCTL_TOKEN}'
     environment:
     - REDIS_HOSTNAME=redis
     - DATABASE_USER=postgres
@@ -82,6 +88,9 @@ services:
     build:
       context: ../
       dockerfile: ./Dockerfile.solr
+    labels:
+      ONLINE_JOURNALCTL: 'true'
+      ONLINE_JOURNALCTL_TOKEN: '${ONLINE_JOURNALCTL_TOKEN}'
     ports:
       - "8983:8983"
 networks:
