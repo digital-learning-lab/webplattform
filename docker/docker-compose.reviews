@@ -41,7 +41,7 @@ services:
       - EMAIL_USE_TLS=False
       - EMAIL_SENDER=digital.learning.lab@tuhh.de
       - EMAIL_RECEIVER_DLL=digital.learning.lab@tuhh.de
-      - EMAIL_RECEIVER_BSB=stabsstelle-digitalisierung@bsb.hamburg.de
+      - EMAIL_RECEIVER_BSB=digital.learning.lab@tuhh.de
     logging:
       driver: journald
   db:
@@ -82,7 +82,7 @@ services:
     - EMAIL_USE_TLS=False
     - EMAIL_SENDER=digital.learning.lab@tuhh.de
     - EMAIL_RECEIVER_DLL=digital.learning.lab@tuhh.de
-    - EMAIL_RECEIVER_BSB=stabsstelle-digitalisierung@bsb.hamburg.de
+    - EMAIL_RECEIVER_BSB=digital.learning.lab@tuhh.de
     user: "1000:1000"
     depends_on:
       - db
