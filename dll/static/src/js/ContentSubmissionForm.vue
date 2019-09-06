@@ -38,6 +38,11 @@
     <div class="alert alert-primary" v-if="saved">
       Ihre Änderungen wurden gespeichert.
     </div>
+    <div class="alert alert-danger" v-if="errors.length">
+      <ul class="list-unstyled">
+        <li v-for="error in errors">{{ error }}</li>
+      </ul>
+    </div>
     <div v-if="mode === 'edit'">
       <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading" v-if="!data.submitted">Speichern</button>
       <button class="button button--preview" type="button" :disabled="loading" @click="$emit('preview')">Vorschau</button>

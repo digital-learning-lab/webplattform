@@ -535,8 +535,14 @@ class HelpText(TimeStampedModel):
             'site',
             'slug',
             'content_ptr',
-            'tagged_items'
+            'tagged_items',
+            'related_content'
 
+        ]
+        EXTRA_FIELDS = [
+            ('tools', 'Verwandte Tools'),
+            ('trends', 'Verwandte Trends'),
+            ('teaching_modules', 'Verwandte Unterrichtsbausteine'),
         ]
         fields = self.get_fields()
         choices = []
@@ -549,6 +555,7 @@ class HelpText(TimeStampedModel):
             # <ManyToOneRel: communication.coauthorshipinvitation>
             if not name.split('.')[-1].strip('>') in EXCLUDED_FIELDS:
                 choices.append((str(field), str(getattr(field, 'verbose_name', field.name))))
+        choices.extend(EXTRA_FIELDS)
         return choices
 
     def get_fields(self):

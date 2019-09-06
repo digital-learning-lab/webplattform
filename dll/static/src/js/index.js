@@ -18,4 +18,3 @@ import './toolSubmission'
 import './trendSubmission'
 import './recaptcha'
 
-$('[data-toggle="tooltip"]').tooltip()

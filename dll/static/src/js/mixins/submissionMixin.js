@@ -1,3 +1,5 @@
+import $ from 'jquery'
+import Vue from 'vue'
 
 import TextInput from '../components/TextInput.vue'
 import TextArea from '../components/TextArea.vue'
@@ -57,6 +59,9 @@ export const submissionMixin = {
     }
   },
   methods: {
+    initToolTips () {
+      $('[data-toggle="tooltip"]').tooltip()
+    },
     updateReview () {
       const axios = this.getAxiosInstance()
       this.loading = true
@@ -154,6 +159,9 @@ export const submissionMixin = {
         this.data = res.data
         this.data.author = window.dllData.authorName
         window.history.pushState('Content created', '', document.location.pathname + this.data.slug)
+        Vue.nextTick(() => {
+          this.initToolTips()
+        })
       }).catch(err => {
         this.loading = false
         if (err.response.status === 400) {
@@ -262,5 +270,8 @@ export const submissionMixin = {
       }
       this.data.author = window.dllData.authorName
     }
+  },
+  mounted () {
+    this.initTooltips()
   }
 }
