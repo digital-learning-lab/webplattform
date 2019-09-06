@@ -22,7 +22,7 @@
 
   {{ block.super }}
 
-  {% if 'tuhh' in object.json_data.signed_by %}
+  {% if 'tuhh' in object.json_data.from_import %}
     <div class="col">
       <img class="content-info__partner-logo" src="{% static 'img/partners/tuhh_logo.svg' %}" alt="Logo TUHH">
     </div>

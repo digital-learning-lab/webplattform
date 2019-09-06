@@ -4,7 +4,7 @@
 
 {% block content_additional_information %}
   {{ block.super }}
-  {% if 'bsb' in object.json_data.signed_by %}
+  {% if object.json_data.from_import %}
     <div class="col-12 col-sm-auto mb-4">
       <img class="content-info__partner-logo" src="{% static 'img/partners/Logo_BSB.jpg' %}" alt="Logo BSB">
     </div>

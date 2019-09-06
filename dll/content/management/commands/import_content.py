@@ -214,6 +214,9 @@ class Command(BaseCommand):
                         'usage': self._replace_semicolon_with_newline(data['nutzung']),
                         'additional_info': data['anmerkung'],
                         'base_folder': folder,
+                        'json_data': {
+                            'from_import': True
+                        }
                     },
                 )
                 if created:
@@ -394,6 +397,9 @@ class Command(BaseCommand):
                         'additional_info': data['hintergrund'],
                         'citation_info': data['zHinweis'],
                         'base_folder': folder,
+                        'json_data': {
+                            'from_import': True
+                        }
                     },
                 )
                 if created:
@@ -560,7 +566,10 @@ class Command(BaseCommand):
                         'state': state,
                         'differentiating_attribute': data['differenzierung'],
                         'additional_info': data['hinweise'],
-                        'licence': 5  # "CC BY-NC-SA"
+                        'licence': 5,  # "CC BY-NC-SA"
+                        'json_data': {
+                            'from_import': True
+                        }
                     }
                 )
                 if created:
