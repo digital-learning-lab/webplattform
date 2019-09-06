@@ -6,8 +6,8 @@ from dll.content.models import Content, Tool, TeachingModule, Trend
 class ContentIndex(indexes.SearchIndex):
     text = indexes.CharField(document=True, use_template=True)
     name = indexes.CharField(model_attr='name', boost=2)
-    teaser = indexes.CharField(model_attr='teaser', boost=1.5)
-    additional_info = indexes.CharField(model_attr='additional_info', boost=1)
+    teaser = indexes.CharField(model_attr='teaser', boost=1.5, null=True)
+    additional_info = indexes.CharField(model_attr='additional_info', boost=1, null=True)
     tags = indexes.MultiValueField()
     authors = indexes.MultiValueField()
     published = indexes.DateTimeField(model_attr='created')

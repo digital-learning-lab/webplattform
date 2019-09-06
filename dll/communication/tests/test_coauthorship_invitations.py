@@ -97,7 +97,8 @@ class CoAuthorshipInvitationTests(BaseTestCase):
         """
         email = mail.outbox[0]
         link = re.search(
-            r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.[a-z]{2,4})?\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
+            r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.[a-z]{2,4})?\b"
+            r"\/einladung\/([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
             email.body)
         self.invitation_link = link.group(0)
         response = self.client.get(self.invitation_link)
@@ -147,7 +148,8 @@ class InvitationDeclineTests(BaseTestCase):
         self.client.login(username='carmen@blueshoe.de', password='password')
         email = mail.outbox[0]
         link = re.search(
-            r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.[a-z]{2,4})?\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
+            r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.[a-z]{2,4})?\b"
+            r"\/einladung\/([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
             email.body)
         invitation_link = link.group(0)
         self.client.post(invitation_link, data={'user_response': "No"})

@@ -62,15 +62,14 @@ class NewsletterRegisterView(FormView, BreadcrumbMixin):
 
     def post(self, request, *args, **kwargs):
         if settings.VALIDATE_RECAPTCHA:
-            pass  # todo: build in recaptcha
-        else:
-            return super(NewsletterRegisterView, self).post(request, *args, **kwargs)
+            pass  # no reCaptcha validation required here
+        return super(NewsletterRegisterView, self).post(request, *args, **kwargs)
 
     def form_valid(self, form):
         subscription, created = NewsletterSubscrption.objects.update_or_create(
             email=form.cleaned_data['email_address'],
             defaults={
-                'checked_text': None  # todo: save terms text?
+                'checked_text': form.fields['check_text'].label
             }
         )
         token = reverse('communication:newsletter-confirm', kwargs={
@@ -94,9 +93,8 @@ class NewsletterUnregisterView(FormView, BreadcrumbMixin):
 
     def post(self, request, *args, **kwargs):
         if settings.VALIDATE_RECAPTCHA:
-            pass  # todo: build in recaptcha
-        else:
-            return super(NewsletterUnregisterView, self).post(request, *args, **kwargs)
+            pass  # no reCaptcha validation required here
+        return super(NewsletterUnregisterView, self).post(request, *args, **kwargs)
 
     def form_valid(self, form):
         try:

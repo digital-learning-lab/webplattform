@@ -51,5 +51,5 @@ def send_mail(self, event_type_code, ctx=None, recipient_ids=None, sender_id=Non
         logger.exception(e)
 
 
-# todo: remove too old unconfirmed subscriptions periodically.
+# todo: remove too old unconfirmed subscriptions periodically?
 # But emails will still be saved because CommunicationEvents were created... What to do about that?

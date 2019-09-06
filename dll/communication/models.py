@@ -110,17 +110,18 @@ class CommunicationEventType(TimeStampedModel):
         if ctx is None:
             ctx = {}
         ctx['static_base_url'] = getattr(
-            settings, 'STATIC_URL', None)  # TODO set url here for images etc
+            settings, 'STATIC_URL', None)  # set url here for images etc
 
         messages = {}
         for name, template in templates.items():
             messages[name] = template.render(ctx) if template else ''
 
-        # fixme: subject passed in context is ignored
-
-        # Ensure the email subject doesn't contain any newlines
-        messages['subject'] = messages['subject'].replace("\n", "")
-        messages['subject'] = messages['subject'].replace("\r", "")
+        if 'subject' in ctx:
+            messages['subject'] = ctx['subject']
+        else:
+            # Ensure the email subject doesn't contain any newlines
+            messages['subject'] = messages['subject'].replace("\n", "")
+            messages['subject'] = messages['subject'].replace("\r", "")
 
         return messages
 

@@ -14,3 +14,22 @@ Instruct solr to use the `schema.xml` file:
 - remove the `AddSchemaFieldsUpdateProcessorFactory` section from `solrconfig.xml` ([source](https://stackoverflow.com/questions/31719955/solr-error-this-indexschema-is-not-mutable)) 
 ### Update the schema
 - `python manage.py build_solr_schema -f solr/conf/schema.xml`
+
+
+# JSON Data fields
+### Content
+```yaml
+from_import: 
+  type: Bool
+  descr: created during import
+```
+
+### Review
+contains the reviewer comments on the content fields
+
+### DllUser
+```yaml
+from_import: 
+  type: Bool
+  descr: created during import
+```

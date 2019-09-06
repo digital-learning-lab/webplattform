@@ -48,17 +48,18 @@ class SuccessfulSignupTests(TestCase):
             'terms_accepted': True
         }
         self.response = self.client.post(url, data)
-        self.home_url = reverse('home')
+        self.success_url = reverse('user:signup-success')
         self.profile_url = reverse('user:profile')
 
         # confirm registration
-        link = re.search(r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.[a-z]{2,4})?\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
+        link = re.search(r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.[a-z]{2,4})?\b"
+                         r"\/account-activate\/([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
                          mail.outbox[0].body)
         activation_link = link.group(0)
         self.client.get(activation_link)
 
     def test_redirection(self):
-        self.assertRedirects(self.response, self.home_url)
+        self.assertRedirects(self.response, self.success_url)
 
     def test_user_creation(self):
         self.assertTrue(USER_MODEL.objects.count() > 0)

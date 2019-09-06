@@ -8,7 +8,6 @@ app_name = 'communication'
 
 urlpatterns = [
     path('kontakt', ContactView.as_view(), name='contact'),
-    path('kontakt', ContactView.as_view(), name='contact-form'), # todo: remove this. just for avoiding immense bug stacktraces from reverse error
     path('kontakt/vielen-dank', ContactSuccessView.as_view(), name='contact-success'),
     path('newsletter', NewsletterRegisterView.as_view(), name='newsletter'),
     path('newsletter/abmelden', NewsletterUnregisterView.as_view(), name='newsletter-unregister'),

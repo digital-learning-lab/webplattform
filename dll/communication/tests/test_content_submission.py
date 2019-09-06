@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core import mail
 from django.test import TestCase
 
@@ -68,17 +69,23 @@ class ContentSubmissionTests(BaseTestCase):
 
     def test_teaching_module_submission_sends_mail_to_bsb_reviewers(self):
         self.teaching_module.submit_for_review(by_user=self.author)
-        self.assertTrue(self.bsb_reviewer_1.email in mail.outbox[0].to)
-        self.assertTrue(self.bsb_reviewer_2.email in mail.outbox[0].to)
-        self.assertFalse(self.tuhh_reviewer_1.email in mail.outbox[0].to)
-        self.assertFalse(self.tuhh_reviewer_2.email in mail.outbox[0].to)
+        self.assertTrue(settings.BSB_REVIEW_MAIL in mail.outbox[0].to)
+        # related TODO check if review mail is suited for these causes
+        #  possibly roll back changes here. then uncomment following lines:
+        # self.assertTrue(self.bsb_reviewer_1.email in mail.outbox[0].to)
+        # self.assertTrue(self.bsb_reviewer_2.email in mail.outbox[0].to)
+        # self.assertFalse(self.tuhh_reviewer_1.email in mail.outbox[0].to)
+        # self.assertFalse(self.tuhh_reviewer_2.email in mail.outbox[0].to)
 
     def test_trend_submission_sends_mail_to_tuhh_reviewers(self):
         self.trend.submit_for_review(by_user=self.author)
-        self.assertFalse(self.bsb_reviewer_1.email in mail.outbox[0].to)
-        self.assertFalse(self.bsb_reviewer_2.email in mail.outbox[0].to)
-        self.assertTrue(self.tuhh_reviewer_1.email in mail.outbox[0].to)
-        self.assertTrue(self.tuhh_reviewer_2.email in mail.outbox[0].to)
+        self.assertTrue(settings.BSB_REVIEW_MAIL in mail.outbox[0].to)
+        # related TODO check if review mail is suited for these causes
+        #  possibly roll back changes here. then uncomment following lines:
+        # self.assertFalse(self.bsb_reviewer_1.email in mail.outbox[0].to)
+        # self.assertFalse(self.bsb_reviewer_2.email in mail.outbox[0].to)
+        # self.assertTrue(self.tuhh_reviewer_1.email in mail.outbox[0].to)
+        # self.assertTrue(self.tuhh_reviewer_2.email in mail.outbox[0].to)
 
 
 class ContentDeclineTests(BaseTestCase):

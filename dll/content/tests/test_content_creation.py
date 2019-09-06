@@ -105,7 +105,7 @@ class TrendCreationTests(BaseTestCase):
         response = self.client.post(self.create_view, data=post_data, content_type='application/json')
         data = response.json()
         self.assertEqual(response.status_code, 201)
-        self.assertTrue(data['author']['username'] == 'alice')
+        self.assertTrue(data['author']['username'] == 'Alice Doe')
 
 
 class ContentUpdateTests(BaseTestCase):
@@ -226,7 +226,7 @@ class ToolCreationTests(BaseTestCase):
         response = self.client.post(create_view, data=post_data, content_type='application/json')
         data = response.json()
         self.assertEqual(response.status_code, 201)
-        self.assertTrue(data['author']['username'] == 'alice')
+        self.assertTrue(data['author']['username'] == 'Alice Doe')
 
 
 class TeachingModuleCreationTests(BaseTestCase):
@@ -257,5 +257,5 @@ class TeachingModuleCreationTests(BaseTestCase):
         response = self.client.post(create_view, data=post_data, content_type='application/json')
         data = response.json()
         self.assertEqual(response.status_code, 201)
-        self.assertTrue(data['author']['username'] == 'alice')
+        self.assertTrue(data['author']['username'] == 'Alice Doe')
 

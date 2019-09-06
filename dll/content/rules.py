@@ -41,6 +41,7 @@ def check_content_for_review(user, content: Content):
     else:
         return False
 
+
 @rules.predicate
 def can_review(user, obj: Review):
     content = obj.content
