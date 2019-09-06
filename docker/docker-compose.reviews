@@ -68,14 +68,17 @@ services:
       ONLINE_JOURNALCTL_TOKEN: '${ONLINE_JOURNALCTL_TOKEN}'
     environment:
     - REDIS_HOSTNAME=redis
-    - DATABASE_USER=postgres
-    - DATABASE_NAME=postgres
+
+    - DATABASE_NAME=dll_db
     - DATABASE_HOST=db
-    - DJANGO_DEBUG=True
+    - DATABASE_USER=dll_admin
+    - DATABASE_PASSWORD=gdUsLuRrDa6gQmEqoK2oP9oHWvcPeq6J3jQpAnF6q5Tw7Rmci5D
+
+    - DJANGO_DEBUG=False
     - SOLR_HOSTNAME=solr
+    - CELERY_TASK_ALWAYS_EAGER=False
     - EMAIL_HOST=floki.rz.tuhh.de
     - EMAIL_PORT=25
-    - CELERY_TASK_ALWAYS_EAGER=False
     - EMAIL_USE_TLS=False
     - EMAIL_SENDER=digital.learning.lab@tuhh.de
     - EMAIL_RECEIVER_DLL=digital.learning.lab@tuhh.de
