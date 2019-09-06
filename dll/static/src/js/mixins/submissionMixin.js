@@ -272,6 +272,6 @@ export const submissionMixin = {
     }
   },
   mounted () {
-    this.initTooltips()
+    this.initToolTips()
   }
 }

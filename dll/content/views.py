@@ -17,6 +17,7 @@ from haystack.query import SearchQuerySet
 from psycopg2._range import NumericRange
 from rest_framework import viewsets, filters, mixins, status
 from rest_framework.generics import ListAPIView, GenericAPIView, DestroyAPIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import FileUploadParser
 from rest_framework.permissions import DjangoObjectPermissions
 from rest_framework.response import Response
@@ -420,6 +421,14 @@ class TrendDataFilterView(ContentDataFilterView):
         return qs.distinct()
 
 
+class DropdownSmallPagination(PageNumberPagination):
+    page_size = 50
+
+
+class DropdownLargePagination(PageNumberPagination):
+    page_size = 1000
+
+
 class AuthorSearchView(ListAPIView):
     queryset = DllUser.objects.all()
     serializer_class = AuthorSerializer
@@ -428,6 +437,7 @@ class AuthorSearchView(ListAPIView):
         filters.SearchFilter
     ]
     search_fields = ['username']
+    pagination_class = DropdownSmallPagination
 
 
 class CompetencesSearchView(ListAPIView):
@@ -448,6 +458,7 @@ class SubCompetencesSearchView(ListAPIView):
         filters.SearchFilter
     ]
     search_fields = ['name']
+    pagination_class = DropdownLargePagination
 
     def get_queryset(self):
         qs = super(SubCompetencesSearchView, self).get_queryset()
@@ -467,6 +478,7 @@ class SchoolTypesSearchView(ListAPIView):
         filters.SearchFilter
     ]
     search_fields = ['name']
+    pagination_class = DropdownLargePagination
 
 
 class SubjectSearchView(ListAPIView):
@@ -477,6 +489,7 @@ class SubjectSearchView(ListAPIView):
         filters.SearchFilter
     ]
     search_fields = ['name']
+    pagination_class = DropdownLargePagination
 
 
 class OperatingSystemSearchView(ListAPIView):
@@ -487,6 +500,7 @@ class OperatingSystemSearchView(ListAPIView):
         filters.SearchFilter
     ]
     search_fields = ['name']
+    pagination_class = DropdownLargePagination
 
 
 class ToolApplicationSearchView(ListAPIView):
@@ -497,6 +511,7 @@ class ToolApplicationSearchView(ListAPIView):
         filters.SearchFilter
     ]
     search_fields = ['name']
+    pagination_class = DropdownLargePagination
 
 
 class StateSearchView(APIView):
