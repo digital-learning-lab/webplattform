@@ -131,7 +131,16 @@ class CoAuthorInvitationConfirmView(View):
     http_method_names = ['get', 'post']
 
     def get(self, request, *args, **kwargs):
-        return render(request, 'dll/communication/invitation.html')
+        ctx = self.get_context(*args, **kwargs)
+        return render(request, 'dll/communication/invitation.html', context=ctx)
+
+    def get_context(self, *args, **kwargs):
+        invitation_id = force_text(urlsafe_base64_decode(kwargs['inv_id_b64']))
+        invitation = CoAuthorshipInvitation.objects.get(pk=invitation_id)
+        ctx = {
+            'content': invitation.content.get_real_instance()
+        }
+        return ctx
 
     def post(self, request, *args, **kwargs):
         user_response = request.POST.get('user_response', None)

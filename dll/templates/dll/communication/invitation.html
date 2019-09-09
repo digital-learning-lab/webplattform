@@ -2,9 +2,13 @@
 
 
 {% block content %}
+    <h1>Anfrage Co-Autorenschaft</h1>
+  <p>
+    Sie wurden eingeladen, um als Co-Autor/in an dem {{ content.type_verbose }} {{ content.name }} mitzuarbeiten. Möchten Sie die Einladung annehmen?
+  </p>
     <form action="." method="post">
     {% csrf_token %}
-        <input type="submit" name="user_response" value="Yes">
-        <input type="submit" name="user_response" value="No">
+      <button class="button button--primary mr-2" type="submit" name="user_response">Ja</button>
+      <button class="button button--danger" type="submit" name="user_response">Nein</button>
     </form>
 {% endblock %}
