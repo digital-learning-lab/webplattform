@@ -4,11 +4,11 @@
     <div class="row">
       <div class="col d-flex align-items-baseline">
         <label class="mr-3" :for="id + 'from'">{{ labelFrom }}:</label>
-        <input :type="type" class="form-control" :id="id + '-from'" v-model="from" :min="min" :max="max" :readonly="readonly">
+        <input :type="type" class="form-control" :id="id + '-from'" v-model="from" :min="min" :max="max" :readonly="readonly" @blur="validateFrom">
       </div>
       <div class="col d-flex align-items-baseline">
         <label class="mr-3" :for="id + 'to'">{{ labelTo }}:</label>
-        <input :type="type" class="form-control" :id="id + '-to'" v-model="to" :min="min" :max="max" :readonly="readonly">
+        <input :type="type" class="form-control" :id="id + '-to'" v-model="to" :min="min" :max="max" :readonly="readonly" @blur="validateTo">
       </div>
     </div>
     <app-review-input :mode="review ? 'review' : 'edit'" :id="'id'+-review" :name="label" :reviewValue.sync="ownReviewValue"></app-review-input>
@@ -96,22 +96,9 @@
           }
           this.from = this.to - 1
         }
-      }
-    },
-    watch: {
-      from (newValue) {
-        if (newValue || newValue === 0) {
-          if (newValue < this.min) {
-            this.from = this.min
-          }
-          if (newValue > this.max) {
-            this.from = this.max
-          }
-          this.checkValues()
-        }
-        this.$emit('update:range', {'lower': parseInt(this.from), 'upper': parseInt(this.to)})
       },
-      to (newValue) {
+      validateTo (e) {
+        let newValue = e.target.value
         if (newValue || newValue === 0) {
           if (newValue < this.min) {
             this.to = this.min
@@ -121,6 +108,25 @@
           }
           this.checkValues()
         }
+      },
+      validateFrom (e) {
+        let newValue = e.target.value
+        if (newValue || newValue === 0) {
+          if (newValue < this.min) {
+            this.from = this.min
+          }
+          if (newValue > this.max) {
+            this.from = this.max
+          }
+          this.checkValues()
+        }
+      }
+    },
+    watch: {
+      from (newValue) {
+        this.$emit('update:range', {'lower': parseInt(this.from), 'upper': parseInt(this.to)})
+      },
+      to (newValue) {
         this.$emit('update:range', {'lower': parseInt(this.from), 'upper': parseInt(this.to)})
       }
     }
