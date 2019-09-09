@@ -58,7 +58,7 @@ class NewsletterRegisterView(FormView, BreadcrumbMixin):
     breadcrumb_title = 'Newsletteranmeldung'
     breadcrumb_url = reverse_lazy('communication:newsletter')
     form_class = NewsletterForm
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('communication:newsletter-success')
 
     def post(self, request, *args, **kwargs):
         if settings.VALIDATE_RECAPTCHA:
@@ -82,6 +82,10 @@ class NewsletterRegisterView(FormView, BreadcrumbMixin):
                                          'E-Mail, um die Newsletter-Anmeldung zu bestätigen.'))
         messages.success(self.request, "test")
         return super(NewsletterRegisterView, self).form_valid(form)
+
+
+class NewsletterSuccessView(TemplateView):
+    template_name = 'dll/newsletter/success.html'
 
 
 class NewsletterUnregisterView(FormView, BreadcrumbMixin):

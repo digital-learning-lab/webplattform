@@ -1,32 +1,22 @@
-{% extends 'dll/base.html' %}
+{% extends 'dll/default_page.html' %}
 
-{% block body %}
-  <section class="mt-5 mb-5">
-  <div class="row justify-content-center no-gutters">
-      <div class="col col-12 col-md-9 col-xl-6">
-        <div class="section-info">
-          <div class="section-info__body">
-            <h2>Newsletter</h2>
-            <p>
-              Ja, ich möchte kostenlos den <i class="dll dll-dll_emblem dll-2x" style="font-weight:normal"></i> Newsletter abonnieren und an die angegebene E-Mail-Adresse
-              erhalten.<br>Ich kann diesen Service in jedem Newsletter abbestellen.
-            </p>
-            <form method="post">
-              {% csrf_token %}
-              <p>
-                <label for="id_email_address">Ihre E-Mail-Adresse:&nbsp;</label>
-                  {{ form.email_address }}
-              </p>
-                <p>
-                    {{ form.check_text }}
-                    <label for="id_check_text" class="font-weight-normal">&nbsp;{{ form.check_text.label }}</label>
-                </p>
-              <button class="button button--primary" type="submit">Jetzt anmelden</button>
-            </form>
-            <a href="{% url 'communication:newsletter-unregister' %}">&gt; Newsletter abbestellen</a>
-          </div>
-        </div>
-      </div>
-  </div>
-  </section>
+{% block content %}
+  <h2>Newsletter</h2>
+  <p>
+    Ja, ich möchte kostenlos den <i class="dll dll-dll_emblem dll-2x" style="font-weight:normal"></i> Newsletter abonnieren und an die angegebene E-Mail-Adresse
+    erhalten.<br>Ich kann diesen Service in jedem Newsletter abbestellen.
+  </p>
+  <form method="post">
+    {% csrf_token %}
+    <p>
+      <label for="id_email_address">Ihre E-Mail-Adresse:&nbsp;</label>
+      {{ form.email_address }}
+    </p>
+    <p>
+      {{ form.check_text }}
+      <label for="id_check_text" class="font-weight-normal">&nbsp;{{ form.check_text.label }}</label>
+    </p>
+    <button class="button button--primary" type="submit">Jetzt anmelden</button>
+  </form>
+  <a href="{% url 'communication:newsletter-unregister' %}">&gt; Newsletter abbestellen</a>
 {% endblock %}
