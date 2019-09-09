@@ -4,7 +4,7 @@
       <app-text-input id="title" :readonly="readonly" :review="review" label="Titel des Unterrichtbausteins" :value.sync="data.name" :review-value.sync="reviewValue.name" :error="errorFields.includes('name')" :required="true" :character-counter="true" :maximal-chars="140" :help-text="getHelpText('name')"></app-text-input>
     <div v-if="mode === 'edit' || mode === 'review'">
       <app-file-input id="image" :readonly="readonly" :review="review" :required="true" label="Anzeigebild" file-label="Bild wählen" :value.sync="previewImage" :review-value.sync="reviewValue.image" :error="errorFields.includes('image')" :image="data.image" :help-text="getHelpText('image')" :hintText="imageHintText"></app-file-input>
-      <app-text-area id="teaser" :readonly="readonly" :review="review" label="Teaser" :required="true" :value.sync="data.teaser" :review-value.sync="reviewValue.teaser" :error="errorFields.includes('teaser')" :rows="3" :help-text="getHelpText('teaser')" :character-counter="true" :maximal-chars="140"></app-text-area>
+      <app-text-area id="teaser" :readonly="readonly" :review="review" label="Kurzzusammenfassung" :required="true" :value.sync="data.teaser" :review-value.sync="reviewValue.teaser" :error="errorFields.includes('teaser')" :rows="3" :help-text="getHelpText('teaser')" :character-counter="true" :maximal-chars="140"></app-text-area>
       <app-text-area id="description" :readonly="readonly" :review="review" label="Detaillierte Beschreibung" :required="true" :value.sync="data.description" :review-value.sync="reviewValue.description" :error="errorFields.includes('description')" :character-counter="true" :maximal-chars="1800" :rows="10" :help-text="getHelpText('description')"></app-text-area>
       <app-dropdown id="co_authors" :readonly="readonly" :review="review" label="Co-Autor_innen" :value.sync="data.co_authors" :review-value.sync="reviewValue.co_authors" :error="errorFields.includes('co_authors')" fetch-url="/api/authors" :multiple="true" :help-text="getHelpText('co_authors')"></app-dropdown>
       <app-pending-co-authors :pending_co_authors="data.pending_co_authors"></app-pending-co-authors>
@@ -50,7 +50,7 @@
         resourceType: 'TeachingModule',
         requiredFields: [
           {field: 'name', title: 'Titel'},
-          {field: 'teaser', title: 'Teaser'},
+          {field: 'teaser', title: 'Kurzzusammenfassung'},
           {field: 'image', title: 'Anzeigebild'},
           {field: 'competences', title: 'Kompetenzen in der digitalen Welt'},
           {field: 'description', title: 'Detaillierte Beschreibung'},
