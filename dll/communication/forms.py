@@ -44,6 +44,8 @@ class ContactForm(forms.Form):
 
 class NewsletterForm(forms.Form):
     email_address = forms.EmailField()
+    # TODO: enter label for checkbox. This will be saved to the model
+    check_text = forms.BooleanField(widget=forms.CheckboxInput, label="I confirm", label_suffix='')
 
     def send_registration_email(self, token):
         context = {

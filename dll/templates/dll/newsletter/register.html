@@ -14,9 +14,13 @@
             <form method="post">
               {% csrf_token %}
               <p>
-                <label for="id_email_address">Ihre E-Mail-Adresse:</label>
-                <input type="email" name="email_address" required="" id="id_email_address">
+                <label for="id_email_address">Ihre E-Mail-Adresse:&nbsp;</label>
+                  {{ form.email_address }}
               </p>
+                <p>
+                    {{ form.check_text }}
+                    <label for="id_check_text" class="font-weight-normal">&nbsp;{{ form.check_text.label }}</label>
+                </p>
               <button class="button button--primary" type="submit">Jetzt anmelden</button>
             </form>
             <a href="{% url 'communication:newsletter-unregister' %}">&gt; Newsletter abbestellen</a>

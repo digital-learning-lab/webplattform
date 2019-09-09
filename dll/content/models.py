@@ -51,7 +51,6 @@ LICENCE_CHOICES = (
 class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     name = models.CharField(_("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200)
     slug = DllSlugField(populate_from='name', overwrite=True, allow_duplicates=True)
-    # todo check if xxx-2 slugs are created if name does not change
     author = models.ForeignKey(DllUser, on_delete=models.SET(get_default_tuhh_user), verbose_name=_("Autor"))
     co_authors = models.ManyToManyField(DllUser, related_name='collaborative_content',
                                         verbose_name=_("Kollaborateure"), blank=True)
@@ -67,7 +66,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     additional_info = models.TextField(_("Hinweise/Anmerkungen/Hintergrund"), max_length=1500, blank=True, null=True)
     competences = models.ManyToManyField('Competence', verbose_name=_("Kompetenzen"), blank=True)
     sub_competences = models.ManyToManyField('SubCompetence', verbose_name=_("Subkompetenzen"), blank=True)
-    json_data = JSONField(default=dict)
+    json_data = JSONField(default=dict)  # see README for details
     site = models.ForeignKey(Site, on_delete=models.CASCADE, default=settings.SITE_ID)
 
     tags = TaggableManager(verbose_name=_('Tags'))
@@ -119,13 +118,19 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         return content_type.help_text.data()
 
     def submit_for_review(self, by_user: DllUser=None):
-        # todo: do not allow resubmission if review is already submitted
         if self.review:
             # content was declined and now resubmitted
             review = self.review
-            review.status = Review.IN_PROGRESS
-            review.submitted_by = by_user
-            review.save()
+            if review.status == Review.DECLINED:
+                review.status = Review.IN_PROGRESS
+                review.submitted_by = by_user
+                review.save()
+            elif review.status == Review.ACCEPTED:
+                raise AssertionError("An already accepted content (pk: {}) has been "
+                                     "resubmitted for review (pk: {})".format(self.pk, review.pk))
+            elif review.status == Review.NEW or review.status == Review.IN_PROGRESS:
+                raise AssertionError("An already submitted content (pk: {}) has been "
+                                     "resubmitted for review (pk: {})".format(self.pk, review.pk))
         else:
             Review.objects.create(content=self, is_active=True, submitted_by=by_user)
         self.send_content_submitted_mail(by_user=by_user)
@@ -235,6 +240,8 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
             'content_title': instance.name
         }
         # TODO check if review mail is suited for these causes
+        #  maybe sending to a single mail address will be reverted with previous code that sends emails to all users in
+        #  the group
         if isinstance(self, TeachingModule):
             group = get_bsb_reviewer_group()
             # bsb_reviewers = DllUser.objects.filter(groups__pk=group.pk)
@@ -591,7 +598,7 @@ class Review(TimeStampedModel):
         (DECLINED, _("Abgelehnt")),
     )
     content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='reviews')
-    json_data = JSONField(default=dict)
+    json_data = JSONField(default=dict)  # see README for details
     is_active = models.BooleanField(default=False)
     status = models.IntegerField(choices=STATUS_CHOICES, default=NEW)
     count = models.PositiveSmallIntegerField(default=0)
@@ -976,15 +983,3 @@ class ToolApplication(TimeStampedModel):
         ordering = ["name"]
         verbose_name = _("Anwendung")
         verbose_name_plural = _("Anwendungen")
-
-
-@receiver(models.signals.post_delete, sender=Content)
-def auto_delete_filer_image_on_delete(sender, instance, **kwargs):
-    # for reasons unknown, this works without specifying the concrete sender model
-    if instance.image:
-        instance.image.delete()
-
-
-@receiver(models.signals.post_delete, sender=ContentFile)
-def auto_delete_filer_file_on_delete(sender, instance, **kwargs):
-    instance.file.delete()

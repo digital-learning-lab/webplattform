@@ -27,7 +27,8 @@ class SuccessfulLoginTests(TestCase):
         self.response = self.client.post(signup_url, data)
 
         # confirm registration
-        link = re.search(r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.[a-z]{2,4})?\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
+        link = re.search(r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.[a-z]{2,4})?\b"
+                         r"\/account-activate\/([-a-zA-Z0-9@:%_\+.~#?&//=]*)",
                          mail.outbox[0].body)
         activation_link = link.group(0)
         self.client.get(activation_link)

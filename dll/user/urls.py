@@ -21,7 +21,7 @@ urlpatterns = [
     path('profil/loeschen/', login_required(ProfileViewDelete.as_view()), name='account_delete'),
     path('profil/loeschen/erfolgreich/', ProfileViewDeleteSuccess.as_view(), name='account_delete_success'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+    re_path(r'^account-activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
             activate_user, name='activate'),
     path('reset/',
          auth_views.PasswordResetView.as_view(

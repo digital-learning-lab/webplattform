@@ -229,10 +229,15 @@ REST_FRAMEWORK = {
 
 CONTACT_EMAIL_BSB = "stabsstelle-digitalisierung@bsb.hamburg.de"
 CONTACT_EMAIL_DLL = "digital.learning.lab@tuhh.de"
+
+# ---------------------- ReCaptcha --------------------
+
 VALIDATE_RECAPTCHA = True
 GOOGLE_RECAPTCHA_VERIFICATION_URL = 'https://www.google.com/recaptcha/api/siteverify'
 GOOGLE_RECAPTCHA_SECRET_KEY = env.str('GOOGLE_RECAPTCHA_SECRET_KEY', '')
 GOOGLE_RECAPTCHA_WEBSITE_KEY = env.str('GOOGLE_RECAPTCHA_WEBSITE_KEY', '')
+
+# ---------------------- Celery --------------------
 
 CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='redis://{hostname}:6379/0'.format(
     hostname=env.str('REDIS_HOSTNAME'),
@@ -254,7 +259,7 @@ HAYSTACK_SIGNAL_PROCESSOR = 'dll.content.signals.ContentSignalProcessor'
 # ---------------------- Django Meta --------------------
 
 META_SITE_PROTOCOL = 'https'
-META_SITE_DOMAIN = 'dll.de'  # todo: correct domain
+META_SITE_DOMAIN = 'digitallearninglab.de/'
 META_USE_OG_PROPERTIES = True
 
 BSB_REVIEW_MAIL = os.getenv('EMAIL_RECEIVER_DLL', 'dll@blueshoe.de')
