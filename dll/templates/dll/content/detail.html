@@ -49,7 +49,7 @@
               {% if preview %}
                 <div class="sidebar--preview">
                   Vorschaumodus
-                  <a href="javascript:history.back()" class="sidebar--backlink">Zurück</a>
+                  <a href="{% if request.META.HTTP_REFERER %}{{ request.META.HTTP_REFERER }}{% else %}javascript:history.back(){% endif %}" class="sidebar--backlink">Zurück</a>
                 </div>
               {% endif %}
               <h3 class="sidebar__headline">
