@@ -60,6 +60,11 @@
       <li class="navigation__item js-navigation__item">
         <a href="{% url 'faq' %}">FAQ</a>
       </li>
+      {% if request.user.is_authenticated %}
+      <li class="navigation__item js-navigation__item">
+        <a href="{% url 'user:logout' %}">Logout</a>
+      </li>
+      {% endif %}
     </ul>
   </nav>
 </header>
