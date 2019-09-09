@@ -17,4 +17,6 @@ urlpatterns = [
             newsletter_registration_confirm, name='newsletter-confirm'),
     re_path(r'^einladung/(?P<inv_id_b64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
             login_required(CoAuthorInvitationConfirmView.as_view()), name='coauthor-invitation'),
+    path('einladung-beantworten/<int:pk>/',
+            login_required(CoAuthorInvitationConfirmView.as_view()), name='coauthor-invitation-internal'),
 ]

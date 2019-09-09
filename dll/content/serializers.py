@@ -2,6 +2,7 @@ import logging
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from easy_thumbnails.files import get_thumbnailer
 from psycopg2._range import NumericRange
@@ -92,6 +93,17 @@ class ContentListInternalSerializer(ContentListSerializer):
     class Meta(ContentListSerializer.Meta):
         fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created',
                   'co_authors', 'preview_url', 'edit_url', 'author', 'status']
+
+
+class ContentListInvitationSerializer(ContentListInternalSerializer):
+    invitation_url = serializers.SerializerMethodField()
+
+    def get_invitation_url(self, obj):
+        return reverse('communication:coauthor-invitation-internal', kwargs={'pk': obj.pk})
+
+    class Meta(ContentListSerializer.Meta):
+        fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created',
+                  'co_authors', 'preview_url', 'edit_url', 'author', 'status', 'invitation_url']
 
 
 class ContentListInternalReviewSerializer(ContentListInternalSerializer):
@@ -298,7 +310,8 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             ContentLink.objects.create(content=content, **dict(link))
 
     def _update_co_authors(self, content, co_authors):
-        invited_co_authors = set(DllUser.objects.filter(pk__in=content.invitations.values_list('to', flat=True)))
+        invited_co_authors = set(DllUser.objects.filter(pk__in=content.invitations.filter(accepted__isnull=True)
+                                                        .values_list('to', flat=True)))
         current_co_authors = set(content.co_authors.all())
         updated_list = set(DllUser.objects.filter(pk__in=co_authors))
         new_co_authors = updated_list - current_co_authors - invited_co_authors

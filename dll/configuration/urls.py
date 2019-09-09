@@ -30,7 +30,8 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     TrendDetailPreviewView, SubmitContentView, ApproveContentView, DeclineContentView, \
     search_view, HelpTextFieldChoices, ImageUploadView, DeleteContentFileView
 from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
-    UserContentView, MyReviewsView, ReviewTeachingModuleView, ReviewToolView, ReviewTrendView, PendingReviewContentView
+    UserContentView, MyReviewsView, ReviewTeachingModuleView, ReviewToolView, ReviewTrendView, PendingReviewContentView, \
+    UserInvitationView
 
 router = DefaultRouter()
 router.register(r'inhalte', PublishedContentViewSet, base_name='public-content')
@@ -90,8 +91,9 @@ urlpatterns = [
     path('api/applications', ToolApplicationSearchView.as_view(), name='application-search'),
     path('api/operatingSystems', OperatingSystemSearchView.as_view(), name='operating-system-search'),
     path('api/meine-inhalte', UserContentView.as_view(), name='user-contents'),
+    path('api/meine-einladungen', UserInvitationView.as_view(), name='user-invitations'),
     path('api/review-inhalte', PendingReviewContentView.as_view(), name='content-pending'),
-    path('api/inhalt-bearbeiten/<slug:slug>/vorschau-bild', ImageUploadView.as_view(),
+    path('api/inhalt-bearbeiten/<slugOslug>/vorschau-bild', ImageUploadView.as_view(),
          name='add-preview-image'),
     path('api/inhalt-bearbeiten/<slug:slug>/file-upload', FileUploadView.as_view(),
          name='add-content-file'),

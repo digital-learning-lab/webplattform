@@ -74,6 +74,37 @@
     <div v-if="contents.length === 0" class="text-center">
       Es stehen keine Inhalte zur Verfügung.
     </div>
+    <div v-if="mode === 'overview' && invitationContents.length">
+      <h2>Ausstehende Co-Autor Anfragen</h2>
+      <div class="content-box" :class="'content-box--' + content.type" v-for="content in invitationContents">
+        <div class="row">
+          <div class="col">
+            <div class="content-box__type">{{ content.type_verbose }} ({{ content.status }})</div>
+            <div class="content-box__title">{{ content.name }}</div>
+            <div class="content-box__author">
+              <span class="fas fa-user"></span> {{ content.author }}
+            </div>
+          </div>
+          <div class="col" v-if="content.co_authors.length">
+            <div class="content-box__coauthors">
+              <span class="fas fa-users align-top"></span>
+              <ul class="list-unstyled d-inline-block ml-1">
+                <li v-for="author in content.co_authors">{{ author }}</li>
+              </ul>
+            </div>
+          </div>
+          <div class="col">
+            <ul class="content-box__actions">
+              <li class="content-box__action">
+                <a class="content-box__link" :href="content.invitation_url">
+                  Einladung beantworten
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -92,7 +123,8 @@
         searchTerm: null,
         status: null,
         retrieveUrl: null,
-        mode: null
+        mode: null,
+        invitationContents: []
       }
     },
     components: {
@@ -133,6 +165,10 @@
       this.mode = window.dllData.mode || 'overview'
       this.updateContents()
       this.debouncedUpdate = debounce(this.updateContents, 500)
+      axios.get('/api/meine-einladungen')
+        .then(res => {
+          this.invitationContents = res.data.results
+        })
     }
   }
 </script>

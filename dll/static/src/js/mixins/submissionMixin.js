@@ -32,6 +32,7 @@ export const submissionMixin = {
       saved: false,
       data: {},
       reviewValue: {},
+      canDelete: false,
       loading: false,
       previewImage: null,
       imageHintText: 'Mit dem Upload bestätigen Sie, dass Sie der Inhaber des vollumfänglichen Nutzungsrechts sind und Ihnen beliebige Veröffentlichungen, Bearbeitungen und Unterlizenzierungen dieses Werkes gestattet sind.',
@@ -264,6 +265,7 @@ export const submissionMixin = {
   created () {
     if (window.dllData) {
       this.mode = window.dllData.mode || 'create'
+      this.canDelete = window.dllData.canDelete || false
       if (this.mode === 'edit' || this.mode === 'review') {
         this.setContent(window.dllData.module)
         if (window.dllData.module.review) {

@@ -10,12 +10,13 @@
 {% block extra_scripts %}
   <script>
     window.dllData = {
-      authorName: '{{ request.user.full_name }}',
+      authorName: '{{ author }}',
     {% if obj %}
       module: {{ obj|safe }},
       mode: {% block mode %}'edit'{% endblock %},
     {% endif %}
-      csrfToken: '{{ csrf_token }}'
+      csrfToken: '{{ csrf_token }}',
+      canDelete: {{ can_delete }}
     }
   </script>
 {% endblock %}

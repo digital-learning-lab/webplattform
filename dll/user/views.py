@@ -13,19 +13,18 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.generic import TemplateView, FormView, UpdateView, DeleteView
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
+from django.views.generic import TemplateView, FormView
 from rest_framework.generics import ListAPIView
 
+from dll.communication.models import CoAuthorshipInvitation
 from dll.communication.tasks import send_mail
 from .forms import UserProfileForm, UserEmailsForm, UserPasswordChangeForm, UserAccountDeleteForm
 from dll.content.models import Content, TeachingModule, Tool, Trend, Review
 from dll.content.rules import is_bsb_reviewer, is_tuhh_reviewer
 from dll.content.serializers import TeachingModuleSerializer, ToolSerializer, TrendSerializer, \
-    ContentListInternalSerializer, ContentListInternalReviewSerializer
+    ContentListInternalSerializer, ContentListInternalReviewSerializer, ContentListInvitationSerializer
 from dll.content.views import BreadcrumbMixin
-from dll.user.models import DllUser, EmailChangeRequest
+from dll.user.models import EmailChangeRequest
 from dll.user.tokens import account_activation_token, email_confirmation_token
 from .forms import SignUpForm
 
@@ -90,6 +89,11 @@ class CreateEditContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
             if obj and obj.review and obj.review.status != Review.DECLINED and not self.request.user.is_reviewer:
                 data['review'] = None
             ctx['obj'] = json.dumps(data)
+            ctx['author'] = obj.author.full_name
+            ctx['can_delete'] = 'true' if self.request.user.has_perm('can_delete', obj) else 'false'
+        else:
+            ctx['author'] = self.request.user.full_name
+            ctx['can_delete'] = 'true'
         return ctx
 
     def get_object(self):
@@ -252,6 +256,18 @@ class UserContentView(ListAPIView):
             qs = qs.filter(Q(name__icontains=search_term) | Q(teaser__icontains=search_term))
 
         return qs
+
+
+class UserInvitationView(UserContentView):
+    serializer_class = ContentListInvitationSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+
+        invitation_contents = CoAuthorshipInvitation.objects.filter(to=user, accepted=None)\
+            .values_list('content__pk', flat=True)
+
+        return Content.objects.filter(pk__in=invitation_contents)
 
 
 def activate_user(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'):

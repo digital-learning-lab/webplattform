@@ -8,7 +8,7 @@
   </p>
     <form action="." method="post">
     {% csrf_token %}
-      <button class="button button--primary mr-2" type="submit" name="user_response">Ja</button>
-      <button class="button button--danger" type="submit" name="user_response">Nein</button>
+      <button class="button button--primary mr-2" type="submit" name="user_response" value="Yes">Ja</button>
+      <button class="button button--danger" type="submit" name="user_response" value="No">Nein</button>
     </form>
 {% endblock %}

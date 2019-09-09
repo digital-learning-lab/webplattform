@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.http import Http404
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -135,8 +135,13 @@ class CoAuthorInvitationConfirmView(View):
         return render(request, 'dll/communication/invitation.html', context=ctx)
 
     def get_context(self, *args, **kwargs):
-        invitation_id = force_text(urlsafe_base64_decode(kwargs['inv_id_b64']))
-        invitation = CoAuthorshipInvitation.objects.get(pk=invitation_id)
+        if kwargs.get('inv_id_b64', None):
+            invitation_id = force_text(urlsafe_base64_decode(kwargs['inv_id_b64']))
+            invitation = CoAuthorshipInvitation.objects.get(pk=invitation_id)
+        else:
+            pk = kwargs.get('pk', None)
+            invitation = get_object_or_404(CoAuthorshipInvitation, to=self.request.user, content=pk,
+                                           accepted__isnull=True)
         ctx = {
             'content': invitation.content.get_real_instance()
         }
@@ -144,9 +149,14 @@ class CoAuthorInvitationConfirmView(View):
 
     def post(self, request, *args, **kwargs):
         user_response = request.POST.get('user_response', None)
+        user = self.request.user
         try:
-            invitation_id = force_text(urlsafe_base64_decode(kwargs['inv_id_b64']))
-            invitation = CoAuthorshipInvitation.objects.get(pk=invitation_id)
+            if kwargs.get('inv_id_b64', None):
+                invitation_id = force_text(urlsafe_base64_decode(kwargs['inv_id_b64']))
+                invitation = CoAuthorshipInvitation.objects.get(pk=invitation_id)
+            else:
+                pk = kwargs.get('pk', None)
+                invitation = get_object_or_404(CoAuthorshipInvitation, to=user, content=pk, accepted__isnull=True)
         except (TypeError, ValueError, OverflowError, CoAuthorshipInvitation.DoesNotExist):
             invitation = None
 
@@ -154,7 +164,8 @@ class CoAuthorInvitationConfirmView(View):
             messages.error(request, _("Sie sind nicht berechtigt die Anfrage zu akzeptieren"))
             return redirect('home')
 
-        if invitation is not None and co_author_invitation_token.check_token(invitation, kwargs['token']):
+        if invitation is not None and \
+                (co_author_invitation_token.check_token(invitation, kwargs.get('token', None)) or invitation.to == user):
             if user_response == "Yes":
                 invitation.accept()
                 return redirect('home')
@@ -168,4 +179,4 @@ class CoAuthorInvitationConfirmView(View):
             raise Http404
         else:
             messages.warning(request, _("Die Einladung ist verfallen"))
-            return redirect('home')
+            return redirect('user-content-overview')

@@ -15,7 +15,7 @@
       <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading" v-if="!data.submitted">Speichern</button>
       <button class="button button--preview" type="button" :disabled="loading" @click="$emit('preview')">Vorschau</button>
       <button class="button button--submit" type="button" :disabled="loading" @click="$emit('submit')" v-if="!data.submitted">Einreichen</button>
-      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')">Löschen</button>
+      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')" v-if="canDelete">Löschen</button>
     </div>
     <div v-if="mode === 'review'">
       <button class="button button--primary" type="button" @click="$emit('update-review')" :disabled="loading">Speichern</button>
@@ -47,7 +47,7 @@
       <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading" v-if="!data.submitted">Speichern</button>
       <button class="button button--preview" type="button" :disabled="loading" @click="$emit('preview')">Vorschau</button>
       <button class="button button--submit" type="button" :disabled="loading" @click="$emit('submit')" v-if="!data.submitted">Einreichen</button>
-      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')" >Löschen</button>
+      <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')" v-if="canDelete">Löschen</button>
     </div>
     <button class="button button--primary" @click="$emit('create')" type="button" v-if="mode === 'create'">Speichern</button>
   </form>
@@ -72,6 +72,11 @@
       mode: {
         type: String,
         default: 'create',
+        required: true
+      },
+      canDelete: {
+        type: Boolean,
+        default: false,
         required: true
       },
       loading: {

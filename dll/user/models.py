@@ -62,8 +62,6 @@ class DllUser(TimeStampedModel, AbstractUser):
         editable=False
     )
 
-    additional_emails = ArrayField(models.EmailField(), null=True)
-
     slug = DllSlugField(populate_from='username')
     json_data = JSONField(default=dict)  # see README for details
 
