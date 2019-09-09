@@ -5,9 +5,9 @@
     <h1>Profilansicht</h1>
     {{ form|crispy }}
     <div class="d-flex">
-        <a href="{% url 'user:password_change' %}"><button class="button button--submit" type="button">Passwort ändern</button></a>
-        <a href="{% url 'user:email' %}"><button class="button button--preview" type="button">Email ändern</button></a>
-        <a href="{% url 'user:logout' %}"><button class="button button--neutral" type="button">Abmelden</button></a>  {# todo: font-weight-semi-bold #}
-        <a href="{% url 'user:account_delete' %}"><button class="button button--danger" type="button">Löschen</button></a>
+        <a href="{% url 'user:password_change' %}" class="button button--submit mr-2">Passwort ändern</a>
+        <a href="{% url 'user:email' %}" class="button button--preview mr-2">Email ändern</a>
+        <a href="{% url 'user:logout' %}" class="button button--neutral mr-2">Abmelden</a>  {# todo: font-weight-semi-bold #}
+        <a href="{% url 'user:account_delete' %}" class="button button--danger">Löschen</a>
     </div>
 {% endblock %}

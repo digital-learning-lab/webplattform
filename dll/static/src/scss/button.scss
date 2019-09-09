@@ -13,18 +13,21 @@
 .button--primary {
   background-color: $color--oracle;
   &:hover {
+    color: rgba(255, 255, 255, 1);
     background-color: $color--smalt-blue;
   }
 }
 .button--preview {
   background-color: $color--preview;
   &:hover {
+    color: rgba(255, 255, 255, 1);
     background-color: darken($color--preview, 5%);
   }
 }
 .button--submit {
   background-color: $color--submit;
   &:hover {
+    color: rgba(255, 255, 255, 1);
     background-color: darken($color--submit, 10%);
   }
 }
