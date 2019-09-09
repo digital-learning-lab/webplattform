@@ -60,7 +60,9 @@ export const submissionMixin = {
   },
   methods: {
     initToolTips () {
-      $('[data-toggle="tooltip"]').tooltip()
+      $('[data-toggle="tooltip"]').tooltip({
+        trigger: 'hover'
+      })
     },
     updateReview () {
       const axios = this.getAxiosInstance()
