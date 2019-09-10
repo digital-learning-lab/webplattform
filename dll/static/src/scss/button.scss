@@ -93,3 +93,11 @@
   line-height: 40px;
   text-align: center;
 }
+.button--help:before {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 300;
+  content: "\f059";
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+
+}

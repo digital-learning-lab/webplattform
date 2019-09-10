@@ -3,9 +3,7 @@
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
     <div class="d-flex">
     <v-select v-model="inputValue" :options="calcOptions" :class="{'form__field--error': error}" @search="fetchOptions" :multiple="multiple" :disabled="disabled || readonly"></v-select>
-      <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
-        <span class="far fa-question-circle"></span>
-      </button>
+      <button class="button--neutral button--smallSquare button--help ml-1" type="button" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText"></button>
     </div>
     <app-review-input :mode="review ? 'review' : 'edit'" :id="'id'+-review" :name="label" :reviewValue.sync="ownReviewValue"></app-review-input>
   </div>

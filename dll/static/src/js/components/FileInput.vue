@@ -6,9 +6,7 @@
       <div class="d-flex">
         <input type="file" class="custom-file-input" :id="id" @change="processInput" :disabled="readonly" :accept="accept">
         <label class="custom-file-label" :class="{'form__field--error': error}" :for="id"><span v-if="fileName">{{ fileName }}</span><span v-else>{{ fileLabel }}</span></label>
-        <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
-          <span class="far fa-question-circle"></span>
-        </button>
+        <button class="button--neutral button--smallSquare button--help ml-1" type="button" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText"></button>
       </div>
     </div>
     <small v-if="hintText" class="form-text text-muted">{{ hintText }}</small>

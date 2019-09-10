@@ -62,20 +62,11 @@ export const submissionMixin = {
   methods: {
     initToolTips () {
       $('[data-toggle="tooltip"]').tooltip({
-        trigger: 'manual hover'
-      })
-      $('.far').click(e => {
-        let ele
-        if (e.target.tagName === 'SPAN') {
-          ele = $(e.target).parent()
-        } else {
-          ele = $(e.target)
-        }
-        if (ele.attr('aria-describedby') !== undefined) {
-          $(ele).tooltip('hide')
-        } else {
-          $(ele).tooltip('show')
-        }
+        trigger: 'manual'
+      }).click(e => {
+        $(e.target).tooltip('toggle')
+      }).on('show.bs.tooltip', () => {
+        $('[data-toggle="tooltip"]').tooltip('hide')
       })
     },
     updateReview () {

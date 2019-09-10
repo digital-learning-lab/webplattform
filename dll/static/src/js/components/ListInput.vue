@@ -2,9 +2,7 @@
   <div class="form-group">
     <div class="d-flex">
       <label :for="id" class="mb-2 w-100">{{ label }}:<span v-if="required">*</span></label>
-      <button class="button--neutral button--smallSquare ml-1" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText" type="button">
-        <span class="far fa-question-circle"></span>
-      </button>
+      <button class="button--neutral button--smallSquare button--help ml-1" type="button" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText"></button>
     </div>
     <div class="d-flex align-items-baseline mb-2" v-for="item in list">
       <input type="text" class="form-control mr-3" :id="id" :placeholder="placeholder" v-model="item.text" @input="emitUpdate" :readonly="readonly">
