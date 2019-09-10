@@ -28,7 +28,7 @@
       <app-select id="license" :readonly="readonly" :review="review" label="Lizenz" :options="licenseOptions" :default-val="data.licence" :value.sync="data.licence" :review-value.sync="reviewValue.licence" :error="errorFields.includes('licence')" :help-text="getHelpText('licence')"></app-select>
       <app-links-input id="mediaLinks" :readonly="readonly" :review="review" :links.sync="data.mediaLinks" :review-value.sync="reviewValue.mediaLinks" :error="errorFields.includes('mediaLinks')" label="Links zu Audio- und Videomedien" :type="'video'" :help-text="getHelpText('contentlink')" :types="true"></app-links-input>
       <app-links-input id="literatureLinks" :readonly="readonly" :review="review" :links.sync="data.literatureLinks" :review-value.sync="reviewValue.literatureLinks" :error="errorFields.includes('literatureLinks')" label="Weiterführende Literatur und Links" :help-text="getHelpText('contentlink')" :types="true"></app-links-input>
-      <app-dropzone :slug="data.slug" label="Anhänge" :files="data.content_files" :help-text="getHelpText('contentfile')"></app-dropzone>
+      <app-dropzone :slug="data.slug" label="Dateiupload" :files="data.content_files" :help-text="getHelpText('contentfile')"></app-dropzone>
     </div>
   </app-content-submission-form>
 </template>

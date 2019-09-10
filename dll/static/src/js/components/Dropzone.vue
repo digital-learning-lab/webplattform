@@ -1,6 +1,6 @@
 <template>
   <div>
-    <label for="dropzone" :label="label"></label>
+    <label for="dropzone">{{ label }}</label>
     <vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions" v-on:removedfile="removeFileFromList" @vdropzone-success="addFileToList" :include-styling="true"></vue-dropzone>
     <ul class="list-unstyled">
       <li v-for="file in fileList" class="file-list__item">
