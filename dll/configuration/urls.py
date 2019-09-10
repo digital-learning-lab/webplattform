@@ -93,7 +93,7 @@ urlpatterns = [
     path('api/meine-inhalte', UserContentView.as_view(), name='user-contents'),
     path('api/meine-einladungen', UserInvitationView.as_view(), name='user-invitations'),
     path('api/review-inhalte', PendingReviewContentView.as_view(), name='content-pending'),
-    path('api/inhalt-bearbeiten/<slugOslug>/vorschau-bild', ImageUploadView.as_view(),
+    path('api/inhalt-bearbeiten/<slug:slug>/vorschau-bild', ImageUploadView.as_view(),
          name='add-preview-image'),
     path('api/inhalt-bearbeiten/<slug:slug>/file-upload', FileUploadView.as_view(),
          name='add-content-file'),
