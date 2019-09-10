@@ -67,10 +67,7 @@ class NewsletterRegisterView(FormView, BreadcrumbMixin):
 
     def form_valid(self, form):
         subscription, created = NewsletterSubscrption.objects.update_or_create(
-            email=form.cleaned_data['email_address'],
-            defaults={
-                'checked_text': form.fields['check_text'].label
-            }
+            email=form.cleaned_data['email_address']
         )
         token = reverse('communication:newsletter-confirm', kwargs={
             'nl_id_b64': urlsafe_base64_encode(force_bytes(subscription.pk)),
