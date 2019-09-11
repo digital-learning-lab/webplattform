@@ -1,6 +1,6 @@
 <template>
   <div class="form-group">
-    <div class="d-flex">
+    <div class="d-flex mb-2">
       <label :for="id" class="mb-2 w-100">{{ label }}:<span v-if="required">*</span></label>
       <button class="button--neutral button--smallSquare button--help ml-1" type="button" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText"></button>
     </div>
@@ -66,6 +66,11 @@
         type: Boolean,
         default: false,
         required: false
+      },
+      min: {
+        type: Number,
+        default: 0,
+        required: false
       }
     },
     data () {
@@ -75,6 +80,13 @@
     },
     created () {
       this.list = this.initial.map(x => { return {text: x}})
+      if (!this.list.length) {
+        let i = 0;
+        while (i < this.min) {
+          this.addItem()
+          i++
+        }
+      }
     },
     methods: {
       addItem () {
@@ -90,7 +102,9 @@
     },
     watch: {
       list (newValue) {
-        const result = newValue.map(x => x.text)
+        const tempResult = newValue.map(x => x.text)
+        // Remove empty fields
+        const result = tempResult.filter(input => input.length !== 0)
         this.$emit('update:list', result)
       }
     }
