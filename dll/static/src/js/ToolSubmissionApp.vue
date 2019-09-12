@@ -11,7 +11,7 @@
       <app-dropdown id="tools" :readonly="readonly" :review="review" label="Verwendete Tools" :value.sync="data.tools" :review-value.sync="reviewValue.tools" :error="errorFields.includes('tools')" fetch-url="/api/tools" :multiple="true" :help-text="getHelpText('tools')" :prefetch="true"></app-dropdown>
       <app-dropdown id="trends" :readonly="readonly" :review="review" label="Passende Trends" :value.sync="data.trends" :review-value.sync="reviewValue.trends" :error="errorFields.includes('trends')" fetch-url="/api/trends" :multiple="true" :help-text="getHelpText('trends')" :prefetch="true"></app-dropdown>
       <app-dropdown id="competences" :readonly="readonly" :review="review" label="Kompetenzen in der digitalen Welt" :required="true" :value.sync="data.competences" :review-value.sync="reviewValue.competences" :error="errorFields.includes('competences')" fetch-url="/api/competences" :multiple="true" :prefetch="true" :help-text="getHelpText('competences')"></app-dropdown>
-      <app-links-input id="websites" :readonly="readonly" :review="review" :links.sync="data.websites" :review-value.sync="reviewValue.websites" :error="errorFields.includes('websites')" label="Website" :type="'null'" :help-text="getHelpText('websites')" :required="true"></app-links-input>
+      <app-link-input id="url" :readonly="readonly" :review="review" :link.sync="data.url" :review-value.sync="reviewValue.url" :error="errorFields.includes('url')" label="Website" :type="'null'" :help-text="getHelpText('url')" :required="true"></app-link-input>
       <app-list-input :min="1" id="pro" :readonly="readonly" :review="review" label="Vorteile" :list.sync="data.pro" :review-value.sync="reviewValue.pro" :error="errorFields.includes('pro')" :initial="data.pro" :help-text="getHelpText('pro')"></app-list-input>
       <app-list-input :min="1" id="contra" :readonly="readonly" :review="review" label="Nachteile" :list.sync="data.contra" :review-value.sync="reviewValue.contra" :error="errorFields.includes('contra')" :initial="data.contra" :help-text="getHelpText('contra')"></app-list-input>
       <app-select id="data-privacy" :readonly=readonly  :review="review" label="Datenschutz" :options="dataPrivacyOptions" default-val="" :value.sync="data.privacy" :review-value.sync="reviewValue.privacy" :error="errorFields.includes('privacy')" :default-val="data.privacy" :help-text="getHelpText('privacy')"></app-select>
@@ -47,7 +47,7 @@
           {field: 'teaser', title: 'Kurzzusammenfassung'},
           {field: 'image', title: 'Anzeigebild'},
           {field: 'competences', title: 'Kompetenzen in der digitalen Welt'},
-          {field: 'websites', title: 'Website'},
+          {field: 'url', title: 'Website'},
         ],
         data: {
           author: '',
@@ -98,7 +98,8 @@
           {value: 'onoff', label: 'Online & Offline'}
         ]
       }
-    }
+    },
+    methods: {}
   }
 </script>
 

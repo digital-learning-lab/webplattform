@@ -2,6 +2,7 @@ import logging
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from easy_thumbnails.files import get_thumbnailer
@@ -15,7 +16,7 @@ from rest_polymorphic.serializers import PolymorphicSerializer
 from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
 from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication, \
-    HelpText, Content, Tool, Trend, TeachingModule, ContentLink, Review
+    HelpText, Content, Tool, Trend, TeachingModule, ContentLink, Review, ToolLink
 from dll.general.utils import custom_slugify
 from dll.user.models import DllUser
 
@@ -379,9 +380,17 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         return instance
 
 
+class ToolLinkSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ToolLink
+        fields = ['url', 'name']
+
+
 class ToolSerializer(BaseContentSubclassSerializer):
     operating_systems = DllM2MField(allow_null=True, many=True, queryset=OperatingSystem.objects.all(), required=False)
     applications = DllM2MField(allow_null=True, many=True, queryset=ToolApplication.objects.all(), required=False)
+    url = ToolLinkSerializer(allow_null=True, many=False, required=False)
 
     def get_array_fields(self):
         fields = super(ToolSerializer, self).get_array_fields()
@@ -398,6 +407,22 @@ class ToolSerializer(BaseContentSubclassSerializer):
             'applications'
         ])
         return fields
+
+    def update(self, instance, validated_data):
+        if instance:
+            try:
+                if instance.url:
+                    instance.url.delete()
+            except ObjectDoesNotExist:
+                pass
+            url = validated_data.pop('url', None)
+            if url:
+                ToolLink.objects.create(**url, tool=instance)
+
+        instance = super(ToolSerializer, self).update(instance, validated_data)
+        return instance
+
+
 
     class Meta:
         model = Tool

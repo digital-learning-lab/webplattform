@@ -930,8 +930,8 @@ class TrendLink(TimeStampedModel):
 
 
 class ToolLink(TimeStampedModel):
-    url = models.URLField(max_length=2083)
-    name = models.CharField(max_length=300)
+    url = models.URLField(max_length=2083, blank=True, null=True)
+    name = models.CharField(max_length=300, blank=True, null=True)
     tool = models.OneToOneField('Tool', on_delete=models.CASCADE, related_name='url')
 
 
