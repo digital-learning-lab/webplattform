@@ -1,3 +1,4 @@
+import json
 import logging
 
 from django.conf import settings
@@ -178,12 +179,10 @@ class RelatedContentField(DllM2MField):
     def to_representation(self, value):
         try:
             content = Content.objects.get(pk=value.pk).get_published()
-            print(content)
             if content:
                 pk = content.pk
                 label = content.name
             else:
-                print('Not published content')
                 return {}
         except Content.DoesNotExist:
             return {}
@@ -199,6 +198,14 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['status', 'json_data']
+
+
+class AdditionalToolsField(RelatedField):
+    def to_internal_value(self, data):
+        return data
+
+    def to_representation(self, value):
+        return str(value)
 
 
 class BaseContentSubclassSerializer(serializers.ModelSerializer):
@@ -219,6 +226,8 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     submitted = SerializerMethodField(allow_null=True)
     pending_co_authors = SerializerMethodField(allow_null=True)
     content_files = SerializerMethodField(allow_null=True)
+    additional_tools = AdditionalToolsField(many=True, allow_null=True, required=False, queryset=Tool.objects.drafts(),
+                                            source='get_additional_tools', write_only=True)
 
     def validate_name(self, data):
         """Make sure the slug of this name will be unique too."""
@@ -375,6 +384,17 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
                 pass
             else:
                 self._update_array_fields(instance, field, values)
+
+        additional_tools = validated_data.pop('get_additional_tools', [])
+        for tool in additional_tools:
+            tool_instance = Tool.objects.create(
+                name=tool['name'],
+                author=instance.author
+            )
+            tool_instance.related_content.add(instance)
+            tool_instance.save()
+            ToolLink.objects.create(tool=tool_instance, url=tool['url'])
+
 
         instance = super().update(instance, validated_data)
         return instance

@@ -1,24 +1,24 @@
 <template>
   <div class="form-group">
-    <div class="d-flex">
-      <label  :for="id" class="mb-2 w-100">{{ label }}:<span v-if="required">*</span></label>
-      <button class="button--neutral button--smallSquare button--help ml-1" type="button" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText"></button>
-    </div>
-    <div class="mb-2" v-for="link in internalLinks">
-      <div class="d-flex align-items-baseline ">
-        <input type="text" class="form-control mr-3" :id="id" placeholder="Linktext" v-model="link.name" :readonly="readonly">
-        <input type="text" class="form-control mr-3" :class="{'form__field--error': !link.validUrl}" :id="id" placeholder="https://example.org" v-model="link.url" :readonly="readonly" @blur="checkLinkValid(link)">
-        <select class="form-control mr-3" name="types" v-model="link.type" v-if="types">
-          <option value="audio">Audio</option>
-          <option value="video">Video</option>
-          <option value="href">Text</option>
-        </select>
-        <button class="button--danger button--smallSquare" @click="removeLink(link)" type="button" v-if="!readonly">
-          <span class="fas fa-times"></span>
-        </button>
-      </div>
-      <div class="alert alert-danger mt-1" v-if="!link.validUrl">
-        Bitte geben Sie eine valide URL ein. Die URL muss mit http:// bzw. http:// beginnen.
+    <label  :for="id" class="mb-2 w-100">{{ label }}:<span v-if="required">*</span></label>
+    <button class="button--neutral button--smallSquare button--help ml-1 float-right" type="button" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText"></button>
+    <div class="form__list-inputs">
+      <div class="mb-2" v-for="link in internalLinks">
+        <div class="d-flex align-items-baseline ">
+          <input type="text" class="form-control mr-3" :id="id" :placeholder="namePlaceholder" v-model="link.name" :readonly="readonly">
+          <input type="text" class="form-control mr-3" :class="{'form__field--error': !link.validUrl}" :id="id" :placeholder="linkPlaceholder" v-model="link.url" :readonly="readonly" @blur="checkLinkValid(link)">
+          <select class="form-control mr-3" name="types" v-model="link.type" v-if="types">
+            <option value="audio">Audio</option>
+            <option value="video">Video</option>
+            <option value="href">Text</option>
+          </select>
+          <button class="button--danger button--smallSquare" @click="removeLink(link)" type="button" v-if="!readonly">
+            <span class="fas fa-times"></span>
+          </button>
+        </div>
+        <div class="alert alert-danger mt-1" v-if="!link.validUrl">
+          Bitte geben Sie eine valide URL ein. Die URL muss mit http:// bzw. http:// beginnen.
+        </div>
       </div>
     </div>
     <div v-if="!readonly">
@@ -49,6 +49,16 @@
       required: {
         type: Boolean,
         default: false,
+        required: false
+      },
+      namePlaceholder: {
+        type: String,
+        default: 'Linktext',
+        required: false
+      },
+      linkPlaceholder: {
+        type: String,
+        default: 'https://example.org',
         required: false
       },
       label: {
@@ -120,8 +130,21 @@
       }
     },
     watch: {
-      internalLinks (newValue) {
-        this.$emit('update:links', newValue)
+      internalLinks: {
+        handler: function (newValue) {
+          this.$emit('update:links', newValue)
+        },
+        deep: true
+      },
+      links (newValue) {
+        if (newValue) {
+          this.internalLinks = this.links
+          for (let i = 0; i < this.internalLinks.length; i++) {
+            this.internalLinks[i].validUrl = true
+          }
+        } else {
+          this.internalLinks = []
+        }
       }
     }
   }

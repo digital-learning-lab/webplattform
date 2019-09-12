@@ -13,6 +13,7 @@
       <app-select id="state" :readonly="readonly" :review="review" label="Bundesland" :value.sync="data.state" :review-value.sync="reviewValue.state" :error="errorFields.includes('state')" :default-val="data.state" :options="germanStateOptions" :help-text="getHelpText('state')"></app-select>
       <app-dropdown id="teaching-modules" :readonly="readonly" :review="review" label="Passende Unterrichtsbausteine" :value.sync="data.teaching_modules" :review-value.sync="reviewValue.teaching_modules" :error="errorFields.includes('teaching_modules')" fetch-url="/api/unterrichtsbausteine" :multiple="true" :help-text="getHelpText('teaching_modules')" :prefetch="true"></app-dropdown>
       <app-dropdown id="tools" :readonly="readonly" :review="review" label="Verwendete Tools" :value.sync="data.tools" :review-value.sync="reviewValue.tools" :error="errorFields.includes('tools')" fetch-url="/api/tools" :multiple="true" :help-text="getHelpText('tools')" :prefetch="true"></app-dropdown>
+      <app-links-input id="additional_tools" :readonly="readonly" :review="review" :links.sync="data.additional_tools" :review-value.sync="reviewValue.additional_tools" :error="errorFields.includes('additional_tools')" label="Andere Tools" :help-text="getHelpText('additional_tools')" link-placeholder="Link zum Tool" name-placeholder="Name des Tools"></app-links-input>
       <app-dropdown id="trends" :readonly="readonly" :review="review" label="Passende Trends" :value.sync="data.trends" :review-value.sync="reviewValue.trends" :error="errorFields.includes('trends')" fetch-url="/api/trends" :multiple="true" :help-text="getHelpText('trends')" :prefetch="true"></app-dropdown>
       <app-dropdown id="competences" :readonly="readonly" :review="review" label="Kompetenzen in der digitalen Welt" :required="true" :value.sync="data.competences" :review-value.sync="reviewValue.competences" :error="errorFields.includes('competences')" fetch-url="/api/competences" :multiple="true" :prefetch="true" :help-text="getHelpText('competences')"></app-dropdown>
       <app-dropdown id="subCompetences" :readonly="readonly" :review="review" label="Detaillierte Kompetenzbeschreibungen" :value.sync="data.sub_competences" :review-value.sync="reviewValue.sub_competences" :error="errorFields.includes('sub_competences')" :disabled="!data.competences.length" fetch-url="/api/sub-competences" :prefetch="true" :params="{competences: data.competences}" :multiple="true" :help-text="getHelpText('sub_competences')"></app-dropdown>
@@ -83,6 +84,7 @@
           subject_of_tuition: [],
           subjects: [],
           equipment: [],
+          additional_tools: [],
           hints: '',
           related_content: [],
           mediaLinks: [],

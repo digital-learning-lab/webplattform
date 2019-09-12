@@ -97,6 +97,10 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         else:
             return f"{self.name} ({self.__class__.__name__})"
 
+    def get_additional_tools(self):
+        tools = self.related_content.all().instance_of(Tool)
+        return tools.filter(publisher_linked__isnull=True, publisher_is_draft=True)
+
     @property
     def review(self):
         try:
@@ -569,6 +573,7 @@ class HelpText(TimeStampedModel):
             ('tools', 'Verwandte Tools'),
             ('trends', 'Verwandte Trends'),
             ('teaching_modules', 'Verwandte Unterrichtsbausteine'),
+            ('additional_tools', 'Andere Tools'),
         ]
         fields = self.get_fields()
         choices = []
