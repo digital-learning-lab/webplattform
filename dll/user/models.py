@@ -97,6 +97,15 @@ class DllUser(TimeStampedModel, AbstractUser):
         return self.is_superuser or rules.is_group_member('BSB-Reviewer')(self) or \
                rules.is_group_member('TUHH-Reviewer')(self)
 
+    def retire(self):
+        for content in self.qs_of_personal_content():
+            content.author = None
+            content.add_ex_author(self.full_name)
+
+        for content in self.qs_of_coauthored_content():
+            content.co_authors.remove(self)
+            content.add_ex_author(self.full_name)
+
     @cached_property
     def status_list(self) -> list:
         status_list = []

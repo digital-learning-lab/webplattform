@@ -51,7 +51,7 @@ LICENCE_CHOICES = (
 class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     name = models.CharField(_("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200)
     slug = DllSlugField(populate_from='name', overwrite=True, allow_duplicates=True)
-    author = models.ForeignKey(DllUser, on_delete=models.SET(get_default_tuhh_user), verbose_name=_("Autor"))
+    author = models.ForeignKey(DllUser, on_delete=models.SET_NULL, verbose_name=_("Autor"), null=True)
     co_authors = models.ManyToManyField(DllUser, related_name='collaborative_content',
                                         verbose_name=_("Kollaborateure"), blank=True)
     image = FilerImageField(on_delete=models.SET_NULL, null=True, verbose_name=_('Anzeigebild'))
@@ -68,6 +68,13 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     sub_competences = models.ManyToManyField('SubCompetence', verbose_name=_("Subkompetenzen"), blank=True)
     json_data = JSONField(default=dict)  # see README for details
     site = models.ForeignKey(Site, on_delete=models.CASCADE, default=settings.SITE_ID)
+
+    ex_authors = models.CharField(
+        _('Ex-Autoren'),
+        max_length=800,
+        null=True,
+        blank=True
+    )
 
     tags = TaggableManager(verbose_name=_('Tags'))
     objects = PolymorphicManager.from_queryset(ContentQuerySet)()
@@ -116,6 +123,19 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         if not hasattr(content_type, 'help_text'):
             HelpText.objects.create(content_type=content_type)
         return content_type.help_text.data()
+
+    def add_ex_author(self, name):
+        if self.ex_authors:
+            self.ex_authors = self.ex_authors + f', {name}'
+        else:
+            self.ex_authors = f', {name}'
+        self.save()
+
+    @property
+    def ex_authors_list(self):
+        if self.ex_authors:
+            return self.ex_authors.split(', ')
+        return []
 
     def submit_for_review(self, by_user: DllUser=None):
         if self.review:
