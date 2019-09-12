@@ -39,11 +39,7 @@
   {% if object.estimated_time %}
     <li class="sidebar__information-item">
       <span class="sidebar__information-icon icon-time"></span>
-      <ul class="list-unstyled">
-        {% for time in object.estimated_time %}
-          <li>{{ time }}</li>
-        {% endfor %}
-      </ul>
+      {{ object.estimated_time }}
     </li>
   {% endif %}
 

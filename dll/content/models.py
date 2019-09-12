@@ -312,8 +312,7 @@ class TeachingModule(Content):
     educational_plan_reference = models.TextField(_("Bildungsplanbezug"), null=True, blank=True)
     school_class = IntegerRangeField(verbose_name=_("Jahrgangsstufe"), null=True, blank=True)
     # estimated time e.g. Doppelstunde,unterrichtsbegleitend
-    estimated_time = ArrayField(models.CharField(max_length=200), verbose_name=_("Zeitumfang"), default=list, null=True,
-                                blank=True)
+    estimated_time = models.CharField(max_length=200, verbose_name=_("Zeitumfang"), null=True, blank=True)
     equipment = ArrayField(models.CharField(max_length=200), verbose_name=_("Ausstattung"), default=list, null=True,
                            blank=True)
     state = models.CharField(_("Bundesland"), max_length=22, choices=GERMAN_STATES, null=True, blank=True)

@@ -16,7 +16,7 @@
       <app-dropdown id="trends" :readonly="readonly" :review="review" label="Passende Trends" :value.sync="data.trends" :review-value.sync="reviewValue.trends" :error="errorFields.includes('trends')" fetch-url="/api/trends" :multiple="true" :help-text="getHelpText('trends')" :prefetch="true"></app-dropdown>
       <app-dropdown id="competences" :readonly="readonly" :review="review" label="Kompetenzen in der digitalen Welt" :required="true" :value.sync="data.competences" :review-value.sync="reviewValue.competences" :error="errorFields.includes('competences')" fetch-url="/api/competences" :multiple="true" :prefetch="true" :help-text="getHelpText('competences')"></app-dropdown>
       <app-dropdown id="subCompetences" :readonly="readonly" :review="review" label="Detaillierte Kompetenzbeschreibungen" :value.sync="data.sub_competences" :review-value.sync="reviewValue.sub_competences" :error="errorFields.includes('sub_competences')" :disabled="!data.competences.length" fetch-url="/api/sub-competences" :prefetch="true" :params="{competences: data.competences}" :multiple="true" :help-text="getHelpText('sub_competences')"></app-dropdown>
-      <app-list-input id="estimatedTime" :readonly="readonly" :review="review" label="Zeitumfang der Durchführung" :list.sync="data.estimated_time" :review-value.sync="reviewValue.estimated_time" :error="errorFields.includes('estimated_time')" :initial="data.estimated_time" :help-text="getHelpText('estimated_time')" :character-counter="true" :maximal-chars="250"></app-list-input>
+      <app-text-input id="estimatedTime" :readonly="readonly" :review="review" label="Zeitumfang der Durchführung" :value.sync="data.estimated_time" :review-value.sync="reviewValue.estimated_time" :error="errorFields.includes('estimated_time')" :initial="data.estimated_time" :help-text="getHelpText('estimated_time')" :character-counter="true" :maximal-chars="200"></app-text-input>
       <app-list-input id="goals" :min="1" :readonly="readonly" :review="review" label="Ziele" :list.sync="data.learning_goals" :review-value.sync="reviewValue.learning_goals" :error="errorFields.includes('learning_goals')" :initial="data.learning_goals" :help-text="getHelpText('learning_goals')"></app-list-input>
       <app-range-input id="classes" :readonly="readonly" :review="review" label="Jahrgangsstufe" label-from="Von" label-to="Bis" type="number" :range.sync="data.school_class" :review-value.sync="reviewValue.school_class" :error="errorFields.includes('school_class')" :min="1" :max="13" :help-text="getHelpText('school_class')"></app-range-input>
       <app-list-input id="subject-of-tuition" :min="1" :readonly="readonly" :review="review" label="Informationen zum Unterrichtsgegenstand" :list.sync="data.subject_of_tuition" :review-value.sync="reviewValue.subject_of_tuition" :error="errorFields.includes('subject_of_tuition')" :initial="data.subject_of_tuition" :help-text="getHelpText('subject_of_tuition')"></app-list-input>
@@ -68,7 +68,7 @@
           co_authors: [],
           school_types: [],
           state: '',
-          estimated_time: [],
+          estimated_time: '',
           competences: [],
           educational_plan_reference: '',
           differentiating_attribute: '',
