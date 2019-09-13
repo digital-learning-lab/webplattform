@@ -416,6 +416,9 @@ class ProfileViewDelete(BaseProfileView):
         return bcs
 
     def form_valid(self, form):
+        user = self.request.user
+        user.retire()
+
         form.save()
         return HttpResponseRedirect(self.get_success_url())
 

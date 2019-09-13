@@ -11,6 +11,7 @@ import LinksInput from '../components/LinksInput.vue'
 import ListInput from '../components/ListInput.vue'
 import PendingCoAuthors from '../components/PendingCoAuthors.vue'
 import { axiosMixin } from './axiosMixin'
+import LinkInput from '../components/LinkInput.vue'
 
 export const submissionMixin = {
   components: {
@@ -20,6 +21,7 @@ export const submissionMixin = {
     'AppTextArea': TextArea,
     'AppRangeInput': RangeInput,
     'AppLinksInput': LinksInput,
+    'AppLinkInput': LinkInput,
     'AppListInput': ListInput,
     'AppSelect': Select,
     'AppPendingCoAuthors': PendingCoAuthors
@@ -243,6 +245,18 @@ export const submissionMixin = {
           (Array.isArray(this.data[this.requiredFields[i].field]) && !this.data[this.requiredFields[i].field].length)) {
           this.errors.push('Bitte füllen Sie das Pflichtfeld \'' + this.requiredFields[i].title + '\' aus.')
           this.errorFields.push(this.requiredFields[i].field)
+        }
+        if (typeof this.data[this.requiredFields[i].field] === 'object') {
+          console.log(this.requiredFields[i].field)
+          for (let key in this.data[this.requiredFields[i].field]) {
+            console.log(key)
+            if (!this.data[this.requiredFields[i].field][key]) {
+              console.log(this.data[this.requiredFields[i].field][key])
+              this.errors.push('Bitte füllen Sie das Pflichtfeld \'' + this.requiredFields[i].title + '\' komplett aus.')
+              this.errorFields.push(this.requiredFields[i].field)
+              break
+            }
+          }
         }
       }
     },

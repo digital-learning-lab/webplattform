@@ -51,7 +51,7 @@ LICENCE_CHOICES = (
 class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     name = models.CharField(_("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200)
     slug = DllSlugField(populate_from='name', overwrite=True, allow_duplicates=True)
-    author = models.ForeignKey(DllUser, on_delete=models.SET(get_default_tuhh_user), verbose_name=_("Autor"))
+    author = models.ForeignKey(DllUser, on_delete=models.SET_NULL, verbose_name=_("Autor"), null=True)
     co_authors = models.ManyToManyField(DllUser, related_name='collaborative_content',
                                         verbose_name=_("Kollaborateure"), blank=True)
     image = FilerImageField(on_delete=models.SET_NULL, null=True, verbose_name=_('Anzeigebild'))
@@ -68,6 +68,13 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     sub_competences = models.ManyToManyField('SubCompetence', verbose_name=_("Subkompetenzen"), blank=True)
     json_data = JSONField(default=dict)  # see README for details
     site = models.ForeignKey(Site, on_delete=models.CASCADE, default=settings.SITE_ID)
+
+    ex_authors = models.CharField(
+        _('Ex-Autoren'),
+        max_length=800,
+        null=True,
+        blank=True
+    )
 
     tags = TaggableManager(verbose_name=_('Tags'))
     objects = PolymorphicManager.from_queryset(ContentQuerySet)()
@@ -89,6 +96,10 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
             return f"{self.name} ({self.__class__.__name__}, public)"
         else:
             return f"{self.name} ({self.__class__.__name__})"
+
+    def get_additional_tools(self):
+        tools = self.related_content.all().instance_of(Tool)
+        return tools.filter(publisher_linked__isnull=True, publisher_is_draft=True)
 
     @property
     def review(self):
@@ -116,6 +127,19 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         if not hasattr(content_type, 'help_text'):
             HelpText.objects.create(content_type=content_type)
         return content_type.help_text.data()
+
+    def add_ex_author(self, name):
+        if self.ex_authors:
+            self.ex_authors = self.ex_authors + f', {name}'
+        else:
+            self.ex_authors = f', {name}'
+        self.save()
+
+    @property
+    def ex_authors_list(self):
+        if self.ex_authors:
+            return self.ex_authors.split(', ')
+        return []
 
     def submit_for_review(self, by_user: DllUser=None):
         if self.review:
@@ -312,8 +336,7 @@ class TeachingModule(Content):
     educational_plan_reference = models.TextField(_("Bildungsplanbezug"), null=True, blank=True)
     school_class = IntegerRangeField(verbose_name=_("Jahrgangsstufe"), null=True, blank=True)
     # estimated time e.g. Doppelstunde,unterrichtsbegleitend
-    estimated_time = ArrayField(models.CharField(max_length=200), verbose_name=_("Zeitumfang"), default=list, null=True,
-                                blank=True)
+    estimated_time = models.CharField(max_length=200, verbose_name=_("Zeitumfang"), null=True, blank=True)
     equipment = ArrayField(models.CharField(max_length=200), verbose_name=_("Ausstattung"), default=list, null=True,
                            blank=True)
     state = models.CharField(_("Bundesland"), max_length=22, choices=GERMAN_STATES, null=True, blank=True)
@@ -550,6 +573,7 @@ class HelpText(TimeStampedModel):
             ('tools', 'Verwandte Tools'),
             ('trends', 'Verwandte Trends'),
             ('teaching_modules', 'Verwandte Unterrichtsbausteine'),
+            ('additional_tools', 'Andere Tools'),
         ]
         fields = self.get_fields()
         choices = []
@@ -931,8 +955,8 @@ class TrendLink(TimeStampedModel):
 
 
 class ToolLink(TimeStampedModel):
-    url = models.URLField(max_length=2083)
-    name = models.CharField(max_length=300)
+    url = models.URLField(max_length=2083, blank=True, null=True)
+    name = models.CharField(max_length=300, blank=True, null=True)
     tool = models.OneToOneField('Tool', on_delete=models.CASCADE, related_name='url')
 
 

@@ -83,13 +83,18 @@
                   {% if object.teaser %}<p class="content-info__teaser">{{ object.teaser|linebreaksbr }}</p>{% endif %}
                   <div class="row align-items-center">
                     {% block content_additional_information %}
-                      {% if object.author.full_name or object.co_authors.all.count %}
+                      {% if object.author.full_name or object.co_authors.all.count or object.ex_authors_list %}
                         <div class="col-12 col-sm-auto mb-4">
                           <ul class="list-unstyled mb-0">
                             <li>{{ object.author.full_name }}</li>
                             {% if object.co_authors.count %}
                               {% for author in object.co_authors.all %}
                                 <li>{{ author.full_name }}</li>
+                              {% endfor %}
+                            {% endif %}
+                            {% if object.ex_authors_list %}
+                              {% for author in object.ex_authors_list %}
+                                <li>{{ author }}</li>
                               {% endfor %}
                             {% endif %}
                           </ul>

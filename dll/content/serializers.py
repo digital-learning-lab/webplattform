@@ -1,7 +1,9 @@
+import json
 import logging
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from easy_thumbnails.files import get_thumbnailer
@@ -15,7 +17,7 @@ from rest_polymorphic.serializers import PolymorphicSerializer
 from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
 from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication, \
-    HelpText, Content, Tool, Trend, TeachingModule, ContentLink, Review
+    HelpText, Content, Tool, Trend, TeachingModule, ContentLink, Review, ToolLink
 from dll.general.utils import custom_slugify
 from dll.user.models import DllUser
 
@@ -177,12 +179,10 @@ class RelatedContentField(DllM2MField):
     def to_representation(self, value):
         try:
             content = Content.objects.get(pk=value.pk).get_published()
-            print(content)
             if content:
                 pk = content.pk
                 label = content.name
             else:
-                print('Not published content')
                 return {}
         except Content.DoesNotExist:
             return {}
@@ -198,6 +198,14 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ['status', 'json_data']
+
+
+class AdditionalToolsField(RelatedField):
+    def to_internal_value(self, data):
+        return data
+
+    def to_representation(self, value):
+        return str(value)
 
 
 class BaseContentSubclassSerializer(serializers.ModelSerializer):
@@ -218,6 +226,8 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     submitted = SerializerMethodField(allow_null=True)
     pending_co_authors = SerializerMethodField(allow_null=True)
     content_files = SerializerMethodField(allow_null=True)
+    additional_tools = AdditionalToolsField(many=True, allow_null=True, required=False, queryset=Tool.objects.drafts(),
+                                            source='get_additional_tools', write_only=True)
 
     def validate_name(self, data):
         """Make sure the slug of this name will be unique too."""
@@ -375,13 +385,32 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             else:
                 self._update_array_fields(instance, field, values)
 
+        additional_tools = validated_data.pop('get_additional_tools', [])
+        for tool in additional_tools:
+            tool_instance = Tool.objects.create(
+                name=tool['name'],
+                author=instance.author
+            )
+            tool_instance.related_content.add(instance)
+            tool_instance.save()
+            ToolLink.objects.create(tool=tool_instance, url=tool['url'])
+
+
         instance = super().update(instance, validated_data)
         return instance
+
+
+class ToolLinkSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ToolLink
+        fields = ['url', 'name']
 
 
 class ToolSerializer(BaseContentSubclassSerializer):
     operating_systems = DllM2MField(allow_null=True, many=True, queryset=OperatingSystem.objects.all(), required=False)
     applications = DllM2MField(allow_null=True, many=True, queryset=ToolApplication.objects.all(), required=False)
+    url = ToolLinkSerializer(allow_null=True, many=False, required=False)
 
     def get_array_fields(self):
         fields = super(ToolSerializer, self).get_array_fields()
@@ -398,6 +427,22 @@ class ToolSerializer(BaseContentSubclassSerializer):
             'applications'
         ])
         return fields
+
+    def update(self, instance, validated_data):
+        if instance:
+            try:
+                if instance.url:
+                    instance.url.delete()
+            except ObjectDoesNotExist:
+                pass
+            url = validated_data.pop('url', None)
+            if url:
+                ToolLink.objects.create(**url, tool=instance)
+
+        instance = super(ToolSerializer, self).update(instance, validated_data)
+        return instance
+
+
 
     class Meta:
         model = Tool

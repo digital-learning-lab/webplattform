@@ -21,3 +21,6 @@
 .form__field--error {
   border: 1px solid $color--punch;
 }
+.form__list-inputs {
+  max-width: calc(100% - 45px);
+}

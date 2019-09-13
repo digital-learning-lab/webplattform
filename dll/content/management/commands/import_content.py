@@ -560,7 +560,7 @@ class Command(BaseCommand):
                         'learning_goals': self._parse_semicolon_separated_values(data['lernziele']),
                         'teaser': data['teaser'],
                         'expertise': self._parse_semicolon_separated_values(data['fachkompetenz']),
-                        'estimated_time': self._parse_semicolon_separated_values(data['zeitumfang']),
+                        'estimated_time': ' '.join(self._parse_semicolon_separated_values(data['zeitumfang'])),
                         'equipment': self._parse_semicolon_separated_values(data['ausstattung']),
                         'school_class': class_range,
                         'subject_of_tuition': self._parse_semicolon_separated_values(data['unterrichtsgeg']),
@@ -803,7 +803,7 @@ class Command(BaseCommand):
         return list(gen)
 
     @staticmethod
-    def _parse_semicolon_separated_values(value):
+    def _parse_semicolon_separated_values(value) -> list:
         return list(map(lambda x: x.strip(), value.split(';')))
 
     @staticmethod
