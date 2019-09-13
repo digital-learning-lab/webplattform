@@ -305,6 +305,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         links_data = validated_data.pop('contentlink_set', [])
         co_authors = validated_data.pop('co_authors', [])
+        additional_tools = validated_data.pop('get_additional_tools', [])
         content = super(BaseContentSubclassSerializer, self).create(validated_data)
         self._update_content_links(content, links_data)
         self._update_co_authors(content, co_authors)
