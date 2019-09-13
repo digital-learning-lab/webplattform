@@ -47,6 +47,7 @@ urlpatterns = [
     path('nutzung', UsageView.as_view(), name='usage'),
     path('entwicklung', DevelopmentView.as_view(), name='development'),
     path('faq', views.flatpage, {'url': '/faq/'}, name='faq'),
+    path('terms', views.flatpage, {'url': '/terms/'}, name='terms'),
     path('tools/<slug:slug>', ToolDetailView.as_view(), name='tool-detail'),
     path('tools/<slug:slug>/vorschau', ToolDetailPreviewView.as_view(), name='tool-detail-preview'),
     path('trends/<slug:slug>', TrendDetailView.as_view(), name='trend-detail'),
