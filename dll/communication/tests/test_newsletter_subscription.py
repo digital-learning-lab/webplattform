@@ -25,10 +25,6 @@ class NewsletterSubscribeTests(TestCase):
         self.assertEqual(len(mail.outbox), 1)
         self.assertFalse(NewsletterSubscrption.objects.get().doi_confirmed)
 
-        sub = NewsletterSubscrption.objects.get()
-        form = NewsletterForm()
-        self.assertEqual(sub.checked_text, form.fields['check_text'].label)
-
         link = re.search(
             r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}(\.[a-z]{2,4})?\b"
             r"\/newsletter-activate\/([-a-zA-Z0-9@:%_\+.~#?&//=]*)",

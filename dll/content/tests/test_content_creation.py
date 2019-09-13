@@ -44,7 +44,7 @@ class BaseTestCase(TestCase):
 
         # Create competence
         self.competence = Competence.objects.create(cid=1)
-        self.sub_competence = SubCompetence.objects.create(cid=11)
+        self.sub_competence = SubCompetence.objects.create(cid=11, ordering=11)
 
         self.create_view = reverse('draft-content-list')
 
