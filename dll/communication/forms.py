@@ -60,3 +60,7 @@ class NewsletterForm(forms.Form):
             event_type_code='NEWSLETTER_UNREGISTER_CONFIRM',
             email=self.cleaned_data['email_address']
         )
+
+
+class CsvImportForm(forms.Form):
+    csv_file = forms.FileField()
