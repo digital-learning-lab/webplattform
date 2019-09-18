@@ -37,6 +37,12 @@ USERS = [
         'is_superuser': True,
         'is_active': True
     },
+    {
+        'username': 'kmk',
+        'email': 'test@kmk.de',
+        'password': 'test1234!',
+        'is_active': True
+    },
 ]
 
 
