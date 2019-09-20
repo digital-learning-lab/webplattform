@@ -84,7 +84,7 @@ register_images:
     script:
         - docker build --no-cache -t ${CONTAINER_STAGING_IMAGE} ${DOCKER_FILE_PATH}
         - docker push ${CONTAINER_STAGING_IMAGE}
-        - docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE} ${DOCKER_FILE_PATH}
+        - docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE} ${DOCKER_FILE_PATH}/Dockerfile.solr
         - docker push ${CONTAINER_STAGING_SOLR_IMAGE}
     tags:
         - floki_build
