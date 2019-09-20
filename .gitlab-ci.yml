@@ -79,7 +79,8 @@ stop_review:
 
 register_images:
     stage: register
-    before_script: *before_script_definition
+    before_script:
+        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
     script:
         - docker build --no-cache -t ${CONTAINER_STAGING_IMAGE} ${DOCKER_FILE_PATH}
         - docker push ${CONTAINER_STAGING_IMAGE}
