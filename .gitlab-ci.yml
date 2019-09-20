@@ -2,6 +2,7 @@ variables:
     CONTAINER_REGISTRY: collaborating.tuhh.de:5005
     CONTAINER_TEST_IMAGE: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:${CI_COMMIT_REF_SLUG}
     CONTAINER_STAGING_IMAGE: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:latest
+    CONTAINER_STAGING_SOLR_IMAGE: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}-solr:latest
     CONTAINER_RELEASE_IMAGE: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:release
     BASE_IMAGE: ${CONTAINER_REGISTRY}/itbh/tnt/digital-learning-lab/dll-docker
     DOCKER_FILE_PATH: .
@@ -10,7 +11,7 @@ variables:
     before_script:  &before_script_definition
         - cp ./docker/docker-compose.reviews ./docker/docker-compose.yml
 #        - docker-compose -p ${CI_PROJECT_PATH_SLUG}-${CI_ENVIRONMENT_SLUG} -f ./docker/docker-compose.yml config
-#        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
+        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
 #        - docker pull ${BASE_IMAGE}
         - mkdir ./dll/media
         - mkdir ./dll/media/inhalte
@@ -25,6 +26,7 @@ variables:
 stages:
 #    - tests
     - review
+    - register
 
 
 start_review:
@@ -73,3 +75,18 @@ stop_review:
         - floki_development
     except:
         - master
+
+
+register_images:
+    stage: register
+    before_script: *before_script_definition
+    script:
+        - docker build --no-cache -t ${CONTAINER_STAGING_IMAGE} ${DOCKER_FILE_PATH}
+        - docker push ${CONTAINER_STAGING_IMAGE}
+        - docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE} ${DOCKER_FILE_PATH}
+        - docker push ${CONTAINER_STAGING_SOLR_IMAGE}
+    tags:
+        - floki_build
+    only:
+        - master
+    when: manual
