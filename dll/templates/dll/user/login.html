@@ -15,10 +15,10 @@
       <form method="post">
         {% csrf_token %}
         {{ form|crispy }}
-        <button class="button button--primary mr-2" type="submit">Absenden</button>
-        <a class="button button--submit" href="{% url 'user:password_reset' %}">Zurücksetzen</a>
+        <button class="button button--primary mr-2" type="submit">Einloggen</button>
+        <a class="button button--submit" href="{% url 'user:signup' %}">Registrieren</a>
       </form>
-      Wenn Sie noch nicht als Benutzer_in registriert sind, können Sie sich <a href="{% url 'user:signup' %}">hier</a> registrieren.
+      <a href="{% url 'user:password_reset' %}">Passwort vergessen?</a>
     </div>
   </div>
 {% endblock %}
