@@ -17,7 +17,7 @@
           </button>
         </div>
         <div class="alert alert-danger mt-1" v-if="!link.validUrl">
-          Bitte geben Sie eine valide URL ein. Die URL muss mit http:// bzw. http:// beginnen.
+          Bitte geben Sie eine valide URL ein. Die URL muss mit http:// bzw. https:// beginnen.
         </div>
       </div>
     </div>

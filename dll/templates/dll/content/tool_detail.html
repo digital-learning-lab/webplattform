@@ -96,4 +96,9 @@
       {% include 'dll/content/includes/tools.html' with headline='Ähnliche Tools' %}
     </div>
   {% endif %}
+  {% if object.related_trends %}
+    <div class="tab-pane fade" id="trends" role="tabpanel" aria-labelledby="trends-tab">
+      {% include 'dll/content/includes/trends.html' with headline='Trends' %}
+    </div>
+  {% endif %}
 {% endblock %}

@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="alert alert-danger mt-1" v-if="!internalLink.validUrl">
-      Bitte geben Sie eine valide URL ein. Die URL muss mit http:// bzw. http:// beginnen.
+      Bitte geben Sie eine valide URL ein. Die URL muss mit http:// bzw. https:// beginnen.
     </div>
     <div class="alert alert-danger mt-1" v-if="incomplete">
       Bitte geben Sie sowohl eine Bezeichnung (z.B. Webseite X) und eine URL an.
