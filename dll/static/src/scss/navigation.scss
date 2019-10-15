@@ -121,3 +121,8 @@
     width: 400px;
   }
 }
+@media (max-height: 689px) {
+  .navigation {
+    overflow: scroll;
+  }
+}
