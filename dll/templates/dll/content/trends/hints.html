@@ -51,9 +51,9 @@
 </div>
 -->
 
-<h2>Anlagen / Weiterführende Links</h2>
-{% include 'dll/content/includes/links.html' with literature_title='Weiterführende Literatur und Links' video_title='Medialinks' %}
-
+{% if object.has_tutorial_links %}
+  <h2>Anlagen / Weiterführende Links</h2>
+  {% include 'dll/content/includes/links.html' with literature_title='Weiterführende Literatur und Links' video_title='Medialinks' %}
 {% endif %}
 
 
