@@ -77,6 +77,14 @@
     </a>
   </li>
   {% endif %}
+  {% if object.related_trends %}
+    <li class="sidebar__nav-item">
+      <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="trends-tab" data-toggle="pill" href="#trends" role="tab" aria-controls="trends" aria-selected="true">
+        Trends
+        <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+      </a>
+    </li>
+  {% endif %}
 {% endblock %}
 
 {% block tab_contents %}
