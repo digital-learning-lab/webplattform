@@ -13,12 +13,21 @@
         <span class="fas fa-at"></span>
         <ul class="list-unstyled">
           {% for url in object.urls %}
-
+            <a target="_blank" href="{{ object.url.url }}">{{ object.url.name }}</a>
           {% endfor %}
         </ul>
       </div>
     </div>
   {% endif %}
+
+  {% if object.url %}
+    <div class="col">
+      <div class="content-info__link">
+        <span class="fas fa-at"></span>
+        <a target="_blank" href="{{ object.url.url }}">{{ object.url.name }}</a>
+      </div>
+    </div>
+  {% endif %}  
 
   {{ block.super }}
 

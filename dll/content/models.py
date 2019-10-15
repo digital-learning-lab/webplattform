@@ -481,7 +481,7 @@ class Trend(Content):
     )
 
     language = models.CharField(_("Sprache"), max_length=10, choices=LANGUAGE_CHOICHES, blank=True, null=True)
-    licence = models.IntegerField(_('Lizenz <a href="http://www.cc-your-edu.de/die-cc-idee/die-cc-lizenzen/" target="_blank">Erklärung aller CC-Lizenzen</a>'), choices=LICENCE_CHOICES, blank=True, null=True)
+    licence = models.IntegerField(_("Lizenz"), choices=LICENCE_CHOICES, blank=True, null=True)
     category = models.IntegerField(_("Kategorie"), choices=CATEGORY_CHOICES, blank=True, null=True)
     target_group = ArrayField(models.CharField(max_length=200), verbose_name=_("Zielgruppe"), default=list, null=True,
                               blank=True)
