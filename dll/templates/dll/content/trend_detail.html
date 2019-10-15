@@ -6,31 +6,22 @@
 
   {# TODO ARRAYFIELD publisher #}
 
-  {% if object.url %}
+  {% if object.textual_links %}
     {# TODO ARRAYFIELD #}
     <div class="col">
       <div class="content-info__link">
         <span class="fas fa-at"></span>
         <ul class="list-unstyled">
-          {% for url in object.urls %}
-            <a target="_blank" href="{{ object.url.url }}">{{ object.url.name }}</a>
+          {% for link in object.textual_links %}
+            <a target="_blank" href="{{ link.url }}">{{ link.name }}</a>
           {% endfor %}
         </ul>
       </div>
     </div>
   {% endif %}
 
-  {% if object.url %}
-    <div class="col">
-      <div class="content-info__link">
-        <span class="fas fa-at"></span>
-        <a target="_blank" href="{{ object.url.url }}">{{ object.url.name }}</a>
-      </div>
-    </div>
-  {% endif %}  
-
   {{ block.super }}
-
+  
   {% if 'tuhh' in object.json_data.from_import %}
     <div class="col">
       <img class="content-info__partner-logo" src="{% static 'img/partners/tuhh_logo.svg' %}" alt="Logo TUHH">
