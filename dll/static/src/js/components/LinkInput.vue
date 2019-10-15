@@ -7,7 +7,7 @@
         <input type="text" class="form-control mr-3" :class="{'form__field--error': error}" :id="id" placeholder="Linktext" v-model="internalLink.name" :readonly="readonly">
         <input type="text" class="form-control mr-3" :class="{'form__field--error': !internalLink.validUrl || error}" :id="id" placeholder="https://example.org" v-model="internalLink.url" :readonly="readonly" @blur="checkLinkValid(internalLink)">
         <select class="form-control mr-3" name="types" v-model="internalLink.type" v-if="types">
-          <option value="video">Video</option>
+          <option value="video">Video / Audio</option>
           <option value="href">Text</option>
         </select>
       </div>
