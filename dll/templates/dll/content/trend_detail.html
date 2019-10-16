@@ -6,18 +6,6 @@
 
   {# TODO ARRAYFIELD publisher #}
 
-  {% if object.textual_links %}
-    {# TODO ARRAYFIELD #}
-    <div class="col">
-      <div class="content-info__link">
-        <span class="fas fa-at"></span>
-          {% for link in object.textual_links %}
-            <a target="_blank" href="{{ link.url }}">{{ link.name }}</a>
-          {% endfor %}
-      </div>
-    </div>
-  {% endif %}
-
   {{ block.super }}
   
   {% if 'tuhh' in object.json_data.from_import %}
