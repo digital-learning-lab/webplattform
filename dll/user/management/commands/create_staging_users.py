@@ -6,41 +6,11 @@ from dll.user.models import DllUser
 
 USERS = [
     {
-        'username': 'Robert Stein',
-        'email': 'robert@blueshoe.de',
+        'username': 'admin',
+        'email': 'admin@tuhh.de',
         'password': 'test1234!',
         'is_staff': True,
         'is_superuser': True,
-        'is_active': True
-    },
-    {
-        'username': 'Michael Heinemann',
-        'email': 'michael.heinemann@tuhh.de',
-        'password': 'test1234!',
-        'is_staff': True,
-        'is_superuser': True,
-        'is_active': True
-    },
-    {
-        'username': 'Ronny Röwert',
-        'email': 'ronny.roewert@tuhh.de',
-        'password': 'test1234!',
-        'is_staff': True,
-        'is_superuser': True,
-        'is_active': True
-    },
-    {
-        'username': 'Thorsten Puderbach',
-        'email': 'thorsten.puderbach@bsb.hamburg.de',
-        'password': 'test1234!',
-        'is_staff': True,
-        'is_superuser': True,
-        'is_active': True
-    },
-    {
-        'username': 'kmk',
-        'email': 'test@kmk.de',
-        'password': 'test1234!',
         'is_active': True
     },
 ]
