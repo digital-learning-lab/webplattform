@@ -5,6 +5,17 @@
 {% block content_additional_information %}
 
   {# TODO ARRAYFIELD publisher #}
+  {% if object.textual_links %}
+    {# TODO ARRAYFIELD #}
+    <div class="col">
+      <div class="content-info_link">
+        <span class="fas fa-at"></span>
+          {% for link in object.textual_links %}
+            <a target="_blank" href="{{ link.url }}">{{ link.name }}</a>
+          {% endfor %}
+      </div>
+    </div>
+  {% endif %}
 
   {{ block.super }}
   
