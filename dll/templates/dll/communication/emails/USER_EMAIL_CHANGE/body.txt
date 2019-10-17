@@ -1,7 +1,7 @@
 {% autoescape off %}
-Hi {{ full_name }},
+Guten Tag {{ full_name }},
 
-Please click on the link below to confirm your email:
+bitte bestätigen Sie Ihre Mailadresse unter nachfolgendem Link:
 
 {{ confirmation_url }}
 {% endautoescape %}
