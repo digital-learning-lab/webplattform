@@ -7,14 +7,13 @@
         <input type="text" class="form-control mr-3" :class="{'form__field--error': error}" :id="id" placeholder="Linktext" v-model="internalLink.name" :readonly="readonly">
         <input type="text" class="form-control mr-3" :class="{'form__field--error': !internalLink.validUrl || error}" :id="id" placeholder="https://example.org" v-model="internalLink.url" :readonly="readonly" @blur="checkLinkValid(internalLink)">
         <select class="form-control mr-3" name="types" v-model="internalLink.type" v-if="types">
-          <option value="audio">Audio</option>
-          <option value="video">Video</option>
+          <option value="video">Video / Audio</option>
           <option value="href">Text</option>
         </select>
       </div>
     </div>
     <div class="alert alert-danger mt-1" v-if="!internalLink.validUrl">
-      Bitte geben Sie eine valide URL ein. Die URL muss mit http:// bzw. http:// beginnen.
+      Bitte geben Sie eine valide URL ein. Die URL muss mit http:// bzw. https:// beginnen.
     </div>
     <div class="alert alert-danger mt-1" v-if="incomplete">
       Bitte geben Sie sowohl eine Bezeichnung (z.B. Webseite X) und eine URL an.

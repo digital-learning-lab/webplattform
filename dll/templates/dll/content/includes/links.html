@@ -7,7 +7,7 @@
       <ul class="list-unstyled">
         {% for link in object.textual_links %}
           <li>
-            <a target="_blank" href="{{ link.url }}">{{ link.name }}</a>
+            <a target="_blank" rel="noopener noreferrer" href="{{ link.url }}">{{ link.name }}</a>
           </li>
         {% endfor %}
       </ul>
@@ -23,7 +23,7 @@
       <ul class="list-unstyled">
         {% for link in object.video_links %}
           <li>
-            <a target="_blank" href="{{ link.url }}">{{ link.name }}</a>
+            <a target="_blank" rel="noopener noreferrer" href="{{ link.url }}">{{ link.name }}</a>
           </li>
         {% endfor %}
       </ul>

@@ -7,7 +7,7 @@
     <div class="col">
       <div class="content-info__link">
         <span class="fas fa-at"></span>
-        <a target="_blank" href="{{ object.url.url }}">{{ object.url.name }}</a>
+        <a target="_blank" rel="noopener noreferrer" href="{{ object.url.url }}">{{ object.url.name }}</a>
       </div>
     </div>
   {% endif %}
@@ -77,6 +77,14 @@
     </a>
   </li>
   {% endif %}
+  {% if object.related_trends %}
+    <li class="sidebar__nav-item">
+      <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="trends-tab" data-toggle="pill" href="#trends" role="tab" aria-controls="trends" aria-selected="true">
+        Trends
+        <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+      </a>
+    </li>
+  {% endif %}
 {% endblock %}
 
 {% block tab_contents %}
@@ -94,6 +102,11 @@
   {% if object.related_tools %}
     <div class="tab-pane fade" id="similar-tools" role="tabpanel" aria-labelledby="similar-tools-tab">
       {% include 'dll/content/includes/tools.html' with headline='Ähnliche Tools' %}
+    </div>
+  {% endif %}
+  {% if object.related_trends %}
+    <div class="tab-pane fade" id="trends" role="tabpanel" aria-labelledby="trends-tab">
+      {% include 'dll/content/includes/trends.html' with headline='Trends' %}
     </div>
   {% endif %}
 {% endblock %}

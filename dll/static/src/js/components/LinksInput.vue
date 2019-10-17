@@ -8,8 +8,7 @@
           <input type="text" class="form-control mr-3" :id="id" :placeholder="namePlaceholder" v-model="link.name" :readonly="readonly">
           <input type="text" class="form-control mr-3" :class="{'form__field--error': !link.validUrl}" :id="id" :placeholder="linkPlaceholder" v-model="link.url" :readonly="readonly" @blur="checkLinkValid(link)">
           <select class="form-control mr-3" name="types" v-model="link.type" v-if="types">
-            <option value="audio">Audio</option>
-            <option value="video">Video</option>
+            <option value="video">Video / Audio</option>
             <option value="href">Text</option>
           </select>
           <button class="button--danger button--smallSquare" @click="removeLink(link)" type="button" v-if="!readonly">
@@ -17,7 +16,7 @@
           </button>
         </div>
         <div class="alert alert-danger mt-1" v-if="!link.validUrl">
-          Bitte geben Sie eine valide URL ein. Die URL muss mit http:// bzw. http:// beginnen.
+          Bitte geben Sie eine valide URL ein. Die URL muss mit http:// bzw. https:// beginnen.
         </div>
       </div>
     </div>

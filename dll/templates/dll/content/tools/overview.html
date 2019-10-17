@@ -41,6 +41,21 @@
   </div>
 {% endif %}
 
+{% if object.operating_systems.all|length > 0 %}
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Betriebssystem
+    </div>
+    <div class="information-area__body">
+      <ul class="list-unstyled">
+        {% for app in object.operating_systems.all %}
+          <li>{{ app.name }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endif %}
+
 {% if object.type %}
   <div class="information-area information-area--{{ object.type }}">
     <div class="information-area__title information-area__title">

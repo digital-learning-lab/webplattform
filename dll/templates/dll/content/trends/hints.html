@@ -35,17 +35,10 @@
   </div>
 {% endif %}
 
+
 {% if object.has_tutorial_links %}
-<div class="information-area information-area--{{ object.type }}">
-  <div class="information-area__title information-area__title">
-    Anlagen / Weiterführende Links
-  </div>
-  <div class="information-area__body">
-    <ul class="list-unstyled">
-      {% for link in object.content_links.all %}
-        <li><a target="_blank" href="{{ link.url }}">{{ link.name }}</a></li>
-      {% endfor %}
-    </ul>
-  </div>
-</div>
+  <h2>Anlagen / Weiterführende Links</h2>
+  {% include 'dll/content/includes/links.html' with literature_title='Weiterführende Literatur und Links' video_title='Medialinks' %}
 {% endif %}
+
+

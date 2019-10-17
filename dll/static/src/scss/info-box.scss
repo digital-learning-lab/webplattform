@@ -17,7 +17,11 @@ $info-box__left-spacing: 1.5rem;
   font-weight: $font-weight-semi-bold;
   padding: 0.5rem 0;
   text-align: center;
-
+}
+.info-box__subhead{
+  font-weight: $font-weight-semi-bold;
+  padding: 1.25rem $info-box__left-spacing;
+  text-align: left;
 }
 .info-box__image-container {
   display: none;
@@ -25,7 +29,7 @@ $info-box__left-spacing: 1.5rem;
   overflow: hidden;
 }
 .info-box__image {
-  max-width: 100%;
+  width: 100%;
 }
 .info-box__body {
   font-weight: $font-weight-light;

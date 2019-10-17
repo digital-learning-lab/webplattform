@@ -13,21 +13,35 @@
     </div>
   </section>
 
-
-  <section class="mb-5">
-    <div class="row justify-content-center no-gutters">
-      <div class="col col-12 col-md-10 col-lg-9 col-xl-8">
-        <div class="news-alert">
-          <h3 class="news-alert__headline">Neue Fortbildung zum dll</h3>
-          <p class="news-alert__body">
-            Sie möchten Ihre Kompetenzen im Umgang mit dem dll erweitern? <br>
-            Fobizz bietet Ihnen eine kostenlose Fortbildung mit abschließendem Zertifikat. <br>
-            Zur Fortbildung gelangen Sie <a href="{{ training_trend.get_absolute_url }}">hier</a>.
-          </p>
+<section class="mb-5">
+  <div class="row no-gutters justify-content-center">
+    <div class="col-md-5 col-lg-5 col-xl-4">
+      <article class="news-box news-box--news">
+        <div class="news-box__head news-box__head--news">NEU</div>
+        <h3 class="news-box__subhead">Einreichung eigener Unterrichtskonzepte leicht gemacht</h3>
+        <div class="news-box__body">
+          Sie möchten andere Lehrkräfte mit Ihren Unterrichtsimpulsen inspirieren?
         </div>
-      </div>
+        <a href="{% url 'user:login' %}" class="news-box__link">
+            Hier geht es zum Login-Bereich
+        </a>
+      </article>
     </div>
-  </section>
+    
+    <div class="col-md-5 col-lg-4 col-xl-4">
+      <article class="news-box">
+        <div class="news-box__head">Fortbildung</div>
+        <h3 class="news-box__subhead">Kostenlose Online-Fortbildung zum digital.learning.lab</h3>
+        <div class="news-box__body">
+          Sie möchten Ihre Kompetenzen im Umang mit dem dll erweitern? Fobizz bietet Ihnen dafür eine kostenlose Online-Fortbildung mit abschließendem Zertifikat.
+        </div>
+        <a href="{{ training_trend.get_absolute_url }}" class="news-box__link">
+          Zur Fortbildung gelangen Sie hier
+        </a>
+      </article>
+    </div>
+  </div>
+</section>
 
   <section class="mb-5" id="dll-aufbau">
     <div class="row no-gutters justify-content-center">
@@ -90,7 +104,7 @@
     <div class="row no-gutters justify-content-center">
       <div class="col col-12 col-md-10 col-lg-9 col-xl-8">
         <div class="section-info">
-          <h3 class="section-info__headline">Vorgeschlagene Uploads</h3>
+          <h3 class="section-info__headline">Vorgeschlagene Inhalte</h3>
           <div class="section-info__body">
             <div class="row">
               {% for content in contents %}
@@ -114,28 +128,28 @@
             <div class="row align-items-center justify-content-around">
               <div class="col col-12 col-sm-6 col-lg-2 mb-5">
                 <div class="partner-logo">
-                  <a href="https://www.itbh-hh.de/" class="partner-logo__link" target="_blank">
+                  <a href="https://www.itbh-hh.de/" class="partner-logo__link" target="_blank" rel="noopener noreferrer">
                     <img src="{% static 'img/partners/ITBH_Logo_cmyk.svg' %}" alt="" class="partner-logo__image">
                   </a>
                 </div>
               </div>
               <div class="col col-12 col-sm-6 col-lg-3 mb-5">
                 <div class="partner-logo">
-                  <a href="https://www.tuhh.de/" class="partner-logo__link" target="_blank">
+                  <a href="https://www.tuhh.de/" class="partner-logo__link" target="_blank" rel="noopener noreferrer">
                     <img src="{% static 'img/partners/tuhh_logo.svg' %}" alt="" class="partner-logo__image">
                   </a>
                 </div>
               </div>
               <div class="col col-12 col-sm-6 col-lg-4 mb-5">
                 <div class="partner-logo">
-                  <a href="https://www.hamburg.de/bsb/wir-ueber-uns/" class="partner-logo__link" target="_blank">
+                  <a href="https://www.hamburg.de/bsb/wir-ueber-uns/" class="partner-logo__link" target="_blank" rel="noopener noreferrer">
                     <img src="{% static 'img/partners/Logo_BSB.jpg' %}" srcset="{% static 'img/partners/Logo_BSB.jpg' %} 1x, {% static 'img/partners/Logo_BSB__large.jpg' %} 2x" alt="" class="partner-logo__image">
                   </a>
                 </div>
               </div>
               <div class="col col-12 col-sm-6 col-lg-3 mb-5">
                 <div class="partner-logo">
-                  <a href="https://www.joachim-herz-stiftung.de/" class="partner-logo__link" target="_blank">
+                  <a href="https://www.joachim-herz-stiftung.de/" class="partner-logo__link" target="_blank" rel="noopener noreferrer">
                     <img src="{% static 'img/partners/JHS_Logo_RGB.png' %}" alt="" class="partner-logo__image">
                   </a>
                 </div>

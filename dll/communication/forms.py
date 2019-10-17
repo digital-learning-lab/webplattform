@@ -11,9 +11,6 @@ CONTACT_OPTIONS = {
     '1': {"email": settings.CONTACT_EMAIL_DLL,
           "event_type_code": "CONTACT_DLL",
           "subject_verbose": _("Anregungen zu Tools, Trends und zum dll allgemein | E-Mail an die TUHH")},
-    '2': {"email": settings.CONTACT_EMAIL_BSB,
-          "event_type_code": "CONTACT_BSB",
-          "subject_verbose": _("Einreichung eigener Unterrichtsbausteine | E-Mail an die BSB")},
 }
 
 

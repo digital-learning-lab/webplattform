@@ -5,23 +5,20 @@
 {% block content_additional_information %}
 
   {# TODO ARRAYFIELD publisher #}
-
-  {% if object.url %}
+  {% if object.textual_links %}
     {# TODO ARRAYFIELD #}
     <div class="col">
-      <div class="content-info__link">
+      <div class="content-info_link">
         <span class="fas fa-at"></span>
-        <ul class="list-unstyled">
-          {% for url in object.urls %}
-
+          {% for link in object.textual_links %}
+            <a target="_blank" rel="noopener noreferrer" href="{{ link.url }}">{{ link.name }}</a>
           {% endfor %}
-        </ul>
       </div>
     </div>
   {% endif %}
 
   {{ block.super }}
-
+  
   {% if 'tuhh' in object.json_data.from_import %}
     <div class="col">
       <img class="content-info__partner-logo" src="{% static 'img/partners/tuhh_logo.svg' %}" alt="Logo TUHH">
@@ -66,7 +63,7 @@
   {% if object.licence %}
     <li class="sidebar__information-item">
       <span class="sidebar__information-icon fab fa-creative-commons"></span>
-      <a href="https://creativecommons.org/licenses/" target="_blank">{{ object.get_licence_display }}</a>
+      <a href="https://creativecommons.org/licenses/" target="_blank" rel="noopener noreferrer">{{ object.get_licence_display }}</a>
     </li>
   {% endif %}
 {% endblock %}
