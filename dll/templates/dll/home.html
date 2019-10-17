@@ -16,26 +16,26 @@
 <section class="mb-5">
   <div class="row no-gutters justify-content-center">
     <div class="col-md-5 col-lg-5 col-xl-4">
-      <article class="info-box">
-        <div class="info-box__head-news">NEU</div>
-        <h3>Einreichung eigener Unterrichtskonzepte leicht gemacht</h3>
-        <div class="info-box__body">
+      <article class="news-box news-box--news">
+        <div class="news-box__head news-box__head--news">NEU</div>
+        <h3 class="news-box__subhead">Einreichung eigener Unterrichtskonzepte leicht gemacht</h3>
+        <div class="news-box__body">
           Sie möchten andere Lehrkräfte mit Ihren Unterrichtsimpulsen inspirieren?
         </div>
-        <a href="{% url 'user:login' %}" class="info-box__link">
+        <a href="{% url 'user:login' %}" class="news-box__link">
             Hier geht es zum Login-Bereich
         </a>
       </article>
     </div>
     
     <div class="col-md-5 col-lg-4 col-xl-4">
-      <article class="info-box">
-        <div class="info-box__head">Fortbildung</div>
-        <h3>Kostenlose Online-Fortbildung zum digital.learning.lab</h3>
-        <div class="info-box__body">
+      <article class="news-box">
+        <div class="news-box__head">Fortbildung</div>
+        <h3 class="news-box__subhead">Kostenlose Online-Fortbildung zum digital.learning.lab</h3>
+        <div class="news-box__body">
           Sie möchten Ihre Kompetenzen im Umang mit dem dll erweitern? Fobizz bietet Ihnen dafür eine kostenlose Online-Fortbildung mit abschließendem Zertifikat.
         </div>
-        <a href="{{ training_trend.get_absolute_url }}" class="info-box__link">
+        <a href="{{ training_trend.get_absolute_url }}" class="news-box__link">
           Zur Fortbildung gelangen Sie hier
         </a>
       </article>

@@ -1,7 +1,6 @@
 
 $info-box__border-color: $color--daintree;
 $info-box__head__background-color: $color--daintree;
-$info-box__head-news__background-color: $color--smalt-blue;
 $info-box__head__color: rgba(255, 255, 255, 1);
 $info-box__left-spacing: 1.5rem;
 
@@ -18,10 +17,11 @@ $info-box__left-spacing: 1.5rem;
   font-weight: $font-weight-semi-bold;
   padding: 0.5rem 0;
   text-align: center;
-
-  &-news{
-    background-color: $info-box__head__background-color;
-  }
+}
+.info-box__subhead{
+  font-weight: $font-weight-semi-bold;
+  padding: 1.25rem $info-box__left-spacing;
+  text-align: left;
 }
 .info-box__image-container {
   display: none;
