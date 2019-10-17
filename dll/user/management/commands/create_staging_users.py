@@ -7,7 +7,7 @@ from dll.user.models import DllUser
 USERS = [
     {
         'username': 'admin',
-        'email': 'digital.learning.lab@tuhh.de',
+        'email': 'admin@tuhh.de',
         'password': 'test1234!',
         'is_staff': True,
         'is_superuser': True,
