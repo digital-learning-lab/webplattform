@@ -11,7 +11,7 @@
       <div class="content-info_link">
         <span class="fas fa-at"></span>
           {% for link in object.textual_links %}
-            <a target="_blank" href="{{ link.url }}">{{ link.name }}</a>
+            <a target="_blank" rel="noopener noreferrer" href="{{ link.url }}">{{ link.name }}</a>
           {% endfor %}
       </div>
     </div>
@@ -63,7 +63,7 @@
   {% if object.licence %}
     <li class="sidebar__information-item">
       <span class="sidebar__information-icon fab fa-creative-commons"></span>
-      <a href="https://creativecommons.org/licenses/" target="_blank">{{ object.get_licence_display }}</a>
+      <a href="https://creativecommons.org/licenses/" target="_blank" rel="noopener noreferrer">{{ object.get_licence_display }}</a>
     </li>
   {% endif %}
 {% endblock %}
