@@ -13,19 +13,33 @@
     </div>
   </section>
 
+<section class="container">
+  <div class="row justify-content-between">
 
-  <section class="mb-5">
-    <div class="row justify-content-center no-gutters">
-      <div class="col col-12 col-md-10 col-lg-9 col-xl-8">
-        <div class="news-alert">
-          <h3 class="news-alert__headline">Kostenlose Online-Fortbildung zum digital.learning.lab</h3>
-          <p class="news-alert__body">
-            Sie möchten mehr zur digitalen Unterrichtsgestaltung mit Hilfe des digital.learning.lab erfahren? Fobizz bietet Ihnen dafür eine kostenlose <a href="{{ training_trend.get_absolute_url }}">Online-Fortbildung mit Zertifikat</a>.
-          </p>
+    <article class="info-box col-md-4">
+      <div class="info-box__head">NEU</div>
+        <h3>Einreichung eigener Unterrichtskonzepte leicht gemacht</h3>
+        <div class="info-box__body">
+          Sie möchten andere Lehrkräfte mit Ihren Unterrichtsimpulsen inspirieren?
         </div>
-      </div>
-    </div>
-  </section>
+        <a href="{% url 'user:login' %}" class="info-box__link">
+          Hier geht es zum Login-Bereich
+        </a>
+    </article>
+
+    <article class="info-box col-md-4  offset-md-4">
+      <div class="info-box__head">Fortbildung</div>
+        <h3>Kostenlose Online-Fortbildung zum digital.learning.lab</h3>
+        <div class="info-box__body">
+          Sie möchten Ihre Kompetenzen im Umang mit dem dll erweitern? Fobizz bietet Ihnen dafür eine kostenlose Online-Fortbildung mit abschließendem Zertifikat.
+        </div>
+        <a href="{{ training_trend.get_absolute_url }}" class="info-box__link">
+          Zur Fortbildung gelangen Sie hier
+        </a>
+    </article>
+  
+  </div>
+</section>
 
   <section class="mb-5" id="dll-aufbau">
     <div class="row no-gutters justify-content-center">
