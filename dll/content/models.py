@@ -575,6 +575,8 @@ class HelpText(TimeStampedModel):
             ('teaching_modules', 'Verwandte Unterrichtsbausteine'),
             ('additional_tools', 'Andere Tools'),
         ]
+        if self.content_type.model == 'tool':
+            EXTRA_FIELDS.append(('url', 'Webseite'))
         fields = self.get_fields()
         choices = []
 

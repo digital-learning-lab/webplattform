@@ -4,9 +4,9 @@ export const competences = {
       competences: [
         'suchen-verarbeiten-aufbewahren',
         'kommunizieren-kooperieren',
-        'produzieren-prasentieren',
-        'schutzen-sicher-agieren',
-        'problemlosen-handeln',
+        'produzieren-praesentieren',
+        'schuetzen-sicher-agieren',
+        'problemloesen-handeln',
         'analysieren-reflektieren'
       ]
     }
