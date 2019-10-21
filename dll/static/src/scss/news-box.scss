@@ -26,7 +26,7 @@ $news-box__left-spacing: 1.5rem;
   }
 .news-box__subhead{
   font-weight: $font-weight-semi-bold;
-  padding: 1.25rem $news-box__left-spacing;
+  padding: 1.25rem $news-box__left-spacing 0 $news-box__left-spacing;
   text-align: left;
 }
 .news-box__image-container {
