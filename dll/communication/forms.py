@@ -11,6 +11,12 @@ CONTACT_OPTIONS = {
     '1': {"email": settings.CONTACT_EMAIL_DLL,
           "event_type_code": "CONTACT_DLL",
           "subject_verbose": _("Anregungen zu Tools, Trends und zum dll allgemein | E-Mail an die TUHH")},
+    '2': {"email": settings.CONTACT_EMAIL_DLL,
+          "event_type_code": "CONTACT_DLL",
+          "subject_verbose": _("Fragen/Probleme zum Login und Einreichungsprozess | E-Mail an die TUHH")},
+    '3': {"email": settings.CONTACT_EMAIL_DLL,
+          "event_type_code": "CONTACT_DLL",
+          "subject_verbose": _("Allgemeines Anliegen | E-Mail an die TUHH")},
 }
 
 
