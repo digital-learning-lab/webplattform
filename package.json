@@ -12,6 +12,12 @@
     "type": "git",
     "url": "git@box.blueshoe.de:RStein/dll-web.git"
   },
+  "browserslist": [
+    "last 1 version",
+    "> 1%",
+    "maintained node versions",
+    "not dead"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
