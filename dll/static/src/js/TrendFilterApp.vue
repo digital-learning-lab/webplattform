@@ -21,8 +21,6 @@
                 <option id="language-0" value="" name="language" selected>--------</option>
                 <option id="language-1" value="german" name="language">Deutsch</option>
                 <option id="language-2" value="english" name="language">Englisch</option>
-                <option id="language-3" value="french" name="language">Französisch</option>
-                <option id="language-4" value="russian" name="language">Russisch</option>
             </select>
           </div>
           <div>

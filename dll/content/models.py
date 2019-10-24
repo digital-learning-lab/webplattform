@@ -56,7 +56,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
                                         verbose_name=_("Kollaborateure"), blank=True)
     image = FilerImageField(on_delete=models.SET_NULL, null=True, verbose_name=_('Anzeigebild'))
     teaser = models.TextField(max_length=140, verbose_name=_("Teaser"), null=True, blank=True)
-    learning_goals = ArrayField(models.CharField(max_length=200), verbose_name=_("Lernziele"), default=list, null=True,
+    learning_goals = ArrayField(models.CharField(max_length=400), verbose_name=_("Lernziele"), default=list, null=True,
                                 blank=True)
     related_content = models.ManyToManyField('self', verbose_name=_("Verwandte Tools/Trends/Unterrichtsbausteine"),
                                              blank=True)
@@ -331,7 +331,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
 
 class TeachingModule(Content):
     description = models.TextField(_("Beschreibung"), null=True, blank=True)
-    subject_of_tuition = ArrayField(models.CharField(max_length=200), verbose_name=_("Unterichtsgegenstand"),
+    subject_of_tuition = ArrayField(models.CharField(max_length=400), verbose_name=_("Unterichtsgegenstand"),
                                     default=list, null=True, blank=True)
     educational_plan_reference = models.TextField(_("Bildungsplanbezug"), null=True, blank=True)
     school_class = IntegerRangeField(verbose_name=_("Jahrgangsstufe"), null=True, blank=True)
@@ -341,7 +341,7 @@ class TeachingModule(Content):
                            blank=True)
     state = models.CharField(_("Bundesland"), max_length=22, choices=GERMAN_STATES, null=True, blank=True)
     differentiating_attribute = models.TextField(_("Differenzierung"), max_length=700, null=True, blank=True)
-    expertise = ArrayField(models.CharField(max_length=200), verbose_name=_("Fachkompetenzen"), default=list, null=True,
+    expertise = ArrayField(models.CharField(max_length=400), verbose_name=_("Fachkompetenzen"), default=list, null=True,
                            blank=True)
     subjects = models.ManyToManyField('Subject', verbose_name=_("Unterrichtsfach"), blank=True)
     school_types = models.ManyToManyField('SchoolType', verbose_name=_("Schulform"), blank=True)
