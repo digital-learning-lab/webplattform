@@ -22,9 +22,15 @@
         <div class="news-box__body">
           Inspirieren auch Sie deutschlandweit Kolleginnen und Kollegen anderer Schulen mit Ihren digitalen Unterrichtsideen. Über den Login-Bereich können Sie eigene Unterrichtsimpulse erstellen.
         </div>
-        <a href="{% url 'user:login' %}" class="news-box__link">
-            Hier geht es zum Login-Bereich
-        </a>
+        {% if request.user.is_authenticated %}
+          <a href="{% url 'user-content-overview' %}" class="news-box__link">
+              Hier geht es zu Ihren Inhalten
+          </a>
+        {% else %}
+          <a href="{% url 'user:login' %}" class="news-box__link">
+              Hier geht es zum Login-Bereich
+          </a>
+        {% endif %}
       </article>
     </div>
     

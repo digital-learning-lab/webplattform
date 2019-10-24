@@ -5,7 +5,7 @@
     <span class="sidebar__information-icon icon-subject"></span>
     <ul class="list-unstyled">
       {% for file in object.content_files %}
-        <li><a href="{{ file.file.url }}">{{ file.title }}</a></li>
+        <li><a href="{{ file.file.url }}" target="_blank" >{{ file.title }}</a></li>
       {% endfor %}
     </ul>
   </li>
