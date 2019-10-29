@@ -331,7 +331,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
 
 class TeachingModule(Content):
     description = models.TextField(_("Beschreibung"), null=True, blank=True)
-    subject_of_tuition = ArrayField(models.CharField(max_length=1800), verbose_name=_("Unterichtsgegenstand"),
+    subject_of_tuition = ArrayField(models.CharField(max_length=2000), verbose_name=_("Unterichtsgegenstand"),
                                     default=list, null=True, blank=True)
     educational_plan_reference = models.TextField(_("Bildungsplanbezug"), null=True, blank=True)
     school_class = IntegerRangeField(verbose_name=_("Jahrgangsstufe"), null=True, blank=True)
