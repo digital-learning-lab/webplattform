@@ -56,7 +56,7 @@
   {% if object.publisher_date %}
     <li class="sidebar__information-item">
       <span class="sidebar__information-icon icon-release-date"></span>
-      {{ object.publisher_date }}
+      {{ object.publisher_date|date:"Y" }}
     </li>
   {% endif %}
 
