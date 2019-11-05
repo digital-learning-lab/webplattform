@@ -6,7 +6,7 @@ from django.contrib.flatpages.models import FlatPage
 from django.http import JsonResponse
 
 from dll.content.forms import FlatPageAdminForm, HelpTextAdminForm, HelpTextFieldForm
-from .models import TeachingModule, Competence, SubCompetence, Trend, Tool, HelpText, HelpTextField
+from .models import TeachingModule, Competence, SubCompetence, Subject, SchoolType, Trend, Tool, HelpText, HelpTextField
 
 admin.site.unregister(FlatPage)
 
@@ -74,3 +74,6 @@ class FlatPageAdmin(FlatPageAdmin):
 
 admin.site.register(Competence)
 admin.site.register(SubCompetence)
+admin.site.register(Subject)
+admin.site.register(SchoolType)
+
