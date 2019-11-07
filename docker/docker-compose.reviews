@@ -41,7 +41,7 @@ services:
       - EMAIL_USE_TLS=False
       - EMAIL_SENDER=digital.learning.lab@tuhh.de
       - EMAIL_RECEIVER_DLL=digital.learning.lab@tuhh.de
-      - EMAIL_RECEIVER_BSB=digital.learning.lab@tuhh.de
+      - EMAIL_RECEIVER_BSB=thorsten.puderbach@bsb.hamburg.de
 
       - GOOGLE_RECAPTCHA_WEBSITE_KEY=6Ld4o7UUAAAAAJtCYsBxmfyr2sA3HABsP_rsbEd0
       - GOOGLE_RECAPTCHA_SECRET_KEY=6Ld4o7UUAAAAAGLcWGPoJcw0hXIhCY7B9vUAPzl2
