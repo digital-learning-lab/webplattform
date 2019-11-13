@@ -33,7 +33,11 @@ DEBUG = env.bool('DJANGO_DEBUG', False)
 ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', ['*'])
 
 # DJANGO_ADMINS=John:john@admin.com,Jane:jane@admin.com
-ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS', [])]
+# ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS', [])]
+ADMINS = (
+    ('Robert Stein', 'robert@blueshoe.de'),
+    ('Michael Heinemann', 'michael.heinemann@tuhh.de'),
+)
 
 
 # Application definition
@@ -200,6 +204,11 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
         },
+        'mail_admins': {
+        'level': 'ERROR',
+        'class': 'django.utils.log.AdminEmailHandler',
+        'include_html': True,
+    }
     },
     'loggers': {
         'dll': {
