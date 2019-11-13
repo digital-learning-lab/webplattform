@@ -211,8 +211,12 @@ LOGGING = {
     }
     },
     'loggers': {
+        'django': {
+            'handlers': ['console', 'mail_admins'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'ERROR'),
+        },
         'dll': {
-            'handlers': ['console'],
+            'handlers': ['console', 'mail_admins'],
             'level': os.getenv('DJANGO_LOG_LEVEL', 'WARNING'),
         },
     },
