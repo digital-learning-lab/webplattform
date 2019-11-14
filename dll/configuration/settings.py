@@ -284,6 +284,7 @@ LOCALE_PATHS = [
 
 
 DEFAULT_FROM_EMAIL = 'digital.learning.lab@tuhh.de'
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 # Host for sending e-mail.
 EMAIL_HOST = os.getenv('EMAIL_HOST', None)
