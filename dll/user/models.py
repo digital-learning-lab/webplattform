@@ -62,7 +62,7 @@ class DllUser(TimeStampedModel, AbstractUser):
         editable=False
     )
 
-    slug = DllSlugField(populate_from='username')
+    slug = DllSlugField(populate_from='full_name')
     json_data = JSONField(default=dict)  # see README for details
 
     USERNAME_FIELD = 'email'
