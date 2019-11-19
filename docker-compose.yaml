@@ -30,8 +30,8 @@ services:
       - EMAIL_SENDER=digital.learning.lab@tuhh.de
       - EMAIL_RECEIVER_DLL=dll@blueshoe.de
       - EMAIL_RECEIVER_BSB=dll@blueshoe.de
-      - GOOGLE_RECAPTCHA_WEBSITE_KEY=6Lfn5cAUAAAAAHsvEE8xTC7sbg5Qxj7cxbfcIZPG
-      - GOOGLE_RECAPTCHA_SECRET_KEY=6Lfn5cAUAAAAABfjxZxVN8tOP65klatpOZC2awny
+      - GOOGLE_RECAPTCHA_WEBSITE_KEY=6Le0P8MUAAAAAD7sqvNRhIjrqW6iB33K7KUfNkBg
+      - GOOGLE_RECAPTCHA_SECRET_KEY=6Le0P8MUAAAAAPB0eDq-KKwc5yCIJxfMQpsdicFC
     volumes:
       - .:/code
     user: "1000:1000"
