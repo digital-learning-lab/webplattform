@@ -17,10 +17,6 @@ from environs import Env
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
-sentry_sdk.init(
-    dsn="https://8bdb4258b2e34638bef1a24254b9a7bc@sentry.blueshoe.de/33",
-    integrations=[DjangoIntegration()]
-)
 
 env = Env()
 logger = logging.getLogger('dll.settings')
@@ -47,6 +43,12 @@ ADMINS = (
     ('Robert Stein', 'robert@blueshoe.de'),
     ('Michael Heinemann', 'michael.heinemann@tuhh.de'),
 )
+
+if not DEBUG:
+    sentry_sdk.init(
+        dsn="https://8bdb4258b2e34638bef1a24254b9a7bc@sentry.blueshoe.de/33",
+        integrations=[DjangoIntegration()]
+    )
 
 
 # Application definition
