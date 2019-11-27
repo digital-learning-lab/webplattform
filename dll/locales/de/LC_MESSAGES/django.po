@@ -60,7 +60,7 @@ msgstr ""
 
 #: dll/communication/models.py:40
 msgid "'{type:s}' event for user #{number:s}"
-msgstr ""
+msgstr "'{type:s}' Ereignis für Nutzer #{number:s}"
 
 #: dll/communication/models.py:51
 msgid "Code, mit dem dieses Ereignis programmgesteuert gesucht werden kann."
@@ -76,19 +76,19 @@ msgstr ""
 
 #: dll/communication/models.py:63
 msgid "Email Subject Template"
-msgstr ""
+msgstr "Email Betreff Template"
 
 #: dll/communication/models.py:65
 msgid "Email Body Template"
-msgstr ""
+msgstr "Email Text Template"
 
 #: dll/communication/models.py:67
 msgid "Email Body HTML Template"
-msgstr ""
+msgstr "Email Text HTML Template"
 
 #: dll/communication/models.py:68
 msgid "HTML template"
-msgstr ""
+msgstr "HTML Template"
 
 #: dll/communication/models.py:78
 msgid "Art des Kommunikations-Ereignis"
@@ -157,17 +157,18 @@ msgstr ""
 #: dll/content/fields.py:14
 #, python-brace-format
 msgid "Got unexpected keys \"{unexpected}\"."
-msgstr ""
+msgstr "Unerwartete Eingabe: \"{unexpected}\"."
 
 #: dll/content/fields.py:15
 #, python-brace-format
 msgid ""
 "Bounds flags \"{bounds}\" not valid. Valid bounds are \"{valid_bounds}\"."
 msgstr ""
+"Die Grenzen \"{bounds}\" sind ungültig. Gültige Grenzen sind \"{valid_bounds}\"."
 
 #: dll/content/fields.py:16
 msgid "Range may not be empty."
-msgstr ""
+msgstr "Dieses Feld dard nicht leer sein."
 
 #: dll/content/models.py:38
 msgid "CC0"
@@ -585,7 +586,7 @@ msgstr "Eingereicht"
 
 #: dll/content/serializers.py:237
 msgid "A content with this name already exists."
-msgstr ""
+msgstr "Ein Inhalt mit diesem Namen existiert bereits."
 
 #: dll/general/models.py:129
 msgid "Koauthorenschaftsanfrage"
