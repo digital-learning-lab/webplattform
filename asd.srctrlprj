@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<config>
+    <source_groups>
+        <source_group_5ddbf979-6465-421d-a317-a907c5087982>
+            <name>Python Source Group</name>
+            <python_environment_path>/home/michael/.virtualenvs/dll_blue/bin/python</python_environment_path>
+            <source_extensions>
+                <source_extension>.py</source_extension>
+            </source_extensions>
+            <status>enabled</status>
+            <type>Python Source Group</type>
+        </source_group_5ddbf979-6465-421d-a317-a907c5087982>
+    </source_groups>
+    <version>8</version>
+</config>
