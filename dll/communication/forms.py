@@ -24,7 +24,7 @@ class ContactForm(forms.Form):
     from_email = forms.EmailField()
     _choices = ((i, CONTACT_OPTIONS[i]['subject_verbose']) for i in CONTACT_OPTIONS.keys())
     subject = forms.ChoiceField(choices=_choices)
-    message = forms.CharField()
+    message = forms.CharField(max_length=700)
 
     def send_emails(self, user):
         context = {

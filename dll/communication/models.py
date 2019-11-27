@@ -143,6 +143,10 @@ class NewsletterSubscrption(TimeStampedModel):
     def deactivate(self):
         self.delete()
 
+    class Meta:
+        verbose_name = _('Newsletter Subscription')
+        verbose_name_plural = _('Newsletter Subscriptions')
+
 
 class CoAuthorshipInvitation(TimeStampedModel):
     by = models.ForeignKey(DllUser, on_delete=models.CASCADE, verbose_name=_("Einladung von"),

@@ -9,9 +9,9 @@
     mit dem Kontaktformular können Sie uns auch direkt an digital.learning.lab@tuhh.de schreiben.</p>
   <p>Wir freuen uns auf Ihre Nachricht.</p>
   <div class="row">
-    <form method="post" class="col col-12 col-lg-8" onsubmit="submitWithReCaptcha()">
+    <form method="post" class="col col-12 col-lg-8">
       {% csrf_token %}
-      <input type="hidden" name="g-recaptcha-response" value="token">
+{#      <input type="hidden" name="g-recaptcha-response" value="token">#}
       <div class="form-group">
         <label for="id_from_email">Ihre E-Mail-Adresse*:</label>
         <input class="form-control" type="email" name="from_email" required="" id="id_from_email">
@@ -27,7 +27,12 @@
       </div>
       <div class="form-group">
         <label for="id_message">Ihre Mitteilung*:</label>
-        <textarea class="form-control" name="message" required="" cols="40" rows="10" id="id_message"></textarea>
+        <textarea class="form-control{% if form.message.errors %} is-invalid{% endif %}" name="message" required="" cols="40" rows="10" id="id_message"></textarea>
+        {% if form.message.errors %}
+            <div class="invalid-feedback">
+              {{ form.message.errors }}
+            </div>
+        {% endif %}
       </div>
       <button class="button button--primary" type="submit">
         Absenden
