@@ -426,8 +426,12 @@ class AuthorSearchView(ListAPIView):
         DjangoFilterBackend,
         filters.SearchFilter
     ]
-    search_fields = ['username']
+    search_fields = ['username', 'first_name', 'last_name']
     pagination_class = DropdownSmallPagination
+
+    def get_queryset(self):
+        qs = super(AuthorSearchView, self).get_queryset()
+        return qs.exclude(pk=self.request.user.pk)
 
 
 class CompetencesSearchView(ListAPIView):
