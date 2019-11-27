@@ -94,6 +94,15 @@ class UserPasswordChangeForm(PasswordChangeForm):
         self.instance = kwargs.pop('instance')
         super(UserPasswordChangeForm, self).__init__(self.instance, **kwargs)
 
+    def clean_new_password2(self):
+        password2 = super(UserPasswordChangeForm, self).clean_new_password2()
+        if password2 == self.cleaned_data.get('old_password'):
+            raise forms.ValidationError(
+                _('Old and new password must be different. Please use another new password.'),
+                code='password_not_changed',
+            )
+        return password2
+
 
 class UserAccountDeleteForm(forms.Form):
     conditions = forms.BooleanField(widget=forms.CheckboxInput,

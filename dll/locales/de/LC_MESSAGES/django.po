@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-27 11:07+0100\n"
+"POT-Creation-Date: 2019-11-27 11:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -612,7 +612,13 @@ msgstr ""
 msgid "Beigetreten"
 msgstr ""
 
-#: dll/user/forms.py:100
+#: dll/user/forms.py:101
+msgid ""
+"Old and new password must be different. Please use another new password."
+msgstr ""
+"Das alte und neue Passwort müssen unterschiedlich sein. Bitte wählen Sie ein anderes neues Passwort."
+
+#: dll/user/forms.py:109
 msgid "Ich habe die Bedingungen gelesen und akzeptiere sie."
 msgstr ""
 
