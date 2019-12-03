@@ -27,7 +27,7 @@
       </div>
       <div class="form-group">
         <label for="id_message">Ihre Mitteilung*:</label>
-        <textarea class="form-control{% if form.message.errors %} is-invalid{% endif %}" name="message" required="" cols="40" rows="10" id="id_message" maxlength="{{ form.fields.message.max_length }}">{{ form.message.value }}</textarea>
+        <textarea class="form-control{% if form.message.errors %} is-invalid{% endif %}" name="message" required="" cols="40" rows="10" id="id_message" maxlength="{{ form.fields.message.max_length }}">{{ form.message.value|default:'' }}</textarea>
         {% if form.message.errors %}
             <div class="invalid-feedback">
               {{ form.message.errors }}
