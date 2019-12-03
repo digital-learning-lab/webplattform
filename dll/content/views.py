@@ -295,7 +295,6 @@ class ContentDataFilterView(ListAPIView):
         qs = qs.published()
 
         competences = self.request.GET.getlist('competences[]', [])
-        print(competences)
         if competences:
             qs = qs.filter(competences__pk__in=competences)
 

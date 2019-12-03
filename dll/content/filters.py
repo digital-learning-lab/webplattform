@@ -26,8 +26,8 @@ class SortingFilter(BaseFilterBackend):
         if sorting == 'az':
             return queryset.order_by('name')
         elif sorting == 'latest':
-            return queryset.order_by('modified')
+            return queryset.order_by('created')
         elif sorting == '-latest':
-            return queryset.order_by('-modified')
+            return queryset.order_by('-created')
         else:
             return queryset.order_by('-name')
