@@ -14,7 +14,7 @@
 {#      <input type="hidden" name="g-recaptcha-response" value="token">#}
       <div class="form-group">
         <label for="id_from_email">Ihre E-Mail-Adresse*:</label>
-        <input class="form-control" type="email" name="from_email" required="" id="id_from_email" value="{{ form.from_email.value }}">
+        <input class="form-control" type="email" name="from_email" required="" id="id_from_email" value="{{ form.from_email.value|default:'' }}">
       </div>
       <div class="form-group">
         <label for="id_subject">Der Grund für Ihre Kontaktaufnahme*:</label>
