@@ -33,7 +33,7 @@
   {% if object.school_class %}
     <li class="sidebar__information-item">
       <span class="sidebar__information-icon icon-level"></span>
-      Stufe {{ object.school_class.lower }} - {{ object.school_class.upper }}
+      Stufe {% if object.school_class.lower %}{{ object.school_class.lower }}{% endif %}{% if object.school_class.lower and object.school_class.upper %} - {% endif %}{% if object.school_class.upper %}{{ object.school_class.upper }}{% endif %}
     </li>
   {% endif %}
   {% if object.estimated_time %}
