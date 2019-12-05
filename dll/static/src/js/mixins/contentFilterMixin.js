@@ -18,7 +18,7 @@ export const contentFilter = {
       dataUrl: null,
       contents: [],
       loading: true,
-      sortBy: 'latest',
+      sortBy: '-latest',
       searchTerm: '',
       competences: []
     }

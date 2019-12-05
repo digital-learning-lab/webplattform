@@ -7,8 +7,8 @@
 
           <h3 class="form-subhead">Sortierung</h3>
           <select name="sortby" id="sortby-select" v-model="sortBy" @change="updateContents" class="form-control">
-            <option value="latest" selected>Neustes zuerst</option>
-            <option value="-latest">Ältestes zuerst</option>
+            <option value="-latest">Neustes zuerst</option>
+            <option value="latest">Ältestes zuerst</option>
             <option value="az">A-Z</option>
             <option value="za">Z-A</option>
           </select>
