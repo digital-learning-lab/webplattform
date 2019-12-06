@@ -18,31 +18,19 @@ export const contentFilter = {
       dataUrl: null,
       contents: [],
       loading: true,
-      sortBy: 'latest',
+      sortBy: '-latest',
       searchTerm: '',
       competences: []
     }
   },
   methods: {
-    sortContents (a, b) {
-      const nameA = a.name.toUpperCase();
-      const nameB = b.name.toUpperCase();
-
-      let comparison = 0;
-      if (nameA > nameB) {
-        comparison = 1;
-      } else if (nameA < nameB) {
-        comparison = -1;
-      }
-
-      return this.sortBy === 'az' ? comparison : -comparison;
-    },
     getQueryParams () {
       return {}
     },
     updateContents (page) {
       this.loading = true
-      if (!page) {
+      if (!page || typeof page === 'object') {
+        // Reset page to 1 if there is no page given or page object is an event (object)
         this.currentPage = 1
       }
       axios.get(this.dataUrl, {

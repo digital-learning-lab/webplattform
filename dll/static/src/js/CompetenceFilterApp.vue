@@ -104,19 +104,6 @@
       nextPage () {
         this.updateContents(++this.currentPage)
       },
-      sortContents (a, b) {
-        const nameA = a.name.toUpperCase();
-        const nameB = b.name.toUpperCase();
-
-        let comparison = 0;
-        if (nameA > nameB) {
-          comparison = 1;
-        } else if (nameA < nameB) {
-          comparison = -1;
-        }
-
-        return this.sortBy === 'az' ? comparison : -comparison;
-      },
       updateContents (page) {
         this.loading = true
         axios.get(this.resource, {
@@ -149,20 +136,6 @@
     computed: {
       window () {
         return window
-      },
-      sortedAndFilteredContents () {
-        let filteredContents = this.contents.filter((content) => {
-          if (content.type === 'teaching-module') {
-            return this.showTeachingModules
-          }
-          if (content.type === 'trend') {
-            return this.showTrends
-          }
-          if (content.type === 'tool') {
-            return this.showTools
-          }
-        })
-        return filteredContents.sort(this.sortContents)
       },
       pages () {
         if (this.pagination.count) {

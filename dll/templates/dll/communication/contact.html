@@ -14,20 +14,20 @@
 {#      <input type="hidden" name="g-recaptcha-response" value="token">#}
       <div class="form-group">
         <label for="id_from_email">Ihre E-Mail-Adresse*:</label>
-        <input class="form-control" type="email" name="from_email" required="" id="id_from_email">
+        <input class="form-control" type="email" name="from_email" required="" id="id_from_email" value="{{ form.from_email.value|default:'' }}">
       </div>
       <div class="form-group">
         <label for="id_subject">Der Grund für Ihre Kontaktaufnahme*:</label>
         <select class="form-control" name="subject" required="" id="id_subject">
           <option value="" selected="">Bitte wählen Sie</option>
             {% for id, verbose in form.fields.subject.choices %}
-                <option value={{ id }}>{{ verbose }}</option>
+                <option value={{ id }}{% if form.subject.value == id %} selected{% endif %}>{{ verbose }}</option>
             {% endfor %}
         </select>
       </div>
       <div class="form-group">
         <label for="id_message">Ihre Mitteilung*:</label>
-        <textarea class="form-control{% if form.message.errors %} is-invalid{% endif %}" name="message" required="" cols="40" rows="10" id="id_message"></textarea>
+        <textarea class="form-control{% if form.message.errors %} is-invalid{% endif %}" name="message" required="" cols="40" rows="10" id="id_message" maxlength="{{ form.fields.message.max_length }}">{{ form.message.value|default:'' }}</textarea>
         {% if form.message.errors %}
             <div class="invalid-feedback">
               {{ form.message.errors }}

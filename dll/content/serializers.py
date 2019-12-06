@@ -1,4 +1,3 @@
-import json
 import logging
 
 from django.conf import settings
@@ -6,7 +5,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
-from easy_thumbnails.files import get_thumbnailer
 from psycopg2._range import NumericRange
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
@@ -246,7 +244,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         return res
 
     def get_content_files(self, obj):
-        return  [{'title': file.title, 'url': file.file.url, 'id': file.id} for file in obj.content_files.all()]
+        return [{'title': file.title, 'url': file.file.url, 'id': file.id} for file in obj.content_files.all()]
 
     def get_pending_co_authors(self, obj):
         return [invite.to.full_name for invite in obj.invitations.filter(accepted__isnull=True)]
@@ -396,7 +394,6 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
             tool_instance.save()
             ToolLink.objects.create(tool=tool_instance, url=tool['url'])
 
-
         instance = super().update(instance, validated_data)
         return instance
 
@@ -443,8 +440,6 @@ class ToolSerializer(BaseContentSubclassSerializer):
         instance = super(ToolSerializer, self).update(instance, validated_data)
         return instance
 
-
-
     class Meta:
         model = Tool
         fields = '__all__'
@@ -467,8 +462,8 @@ class TrendSerializer(BaseContentSubclassSerializer):
 
 class TeachingModuleSerializer(BaseContentSubclassSerializer):
     subjects = DllM2MField(allow_null=True, many=True, queryset=Subject.objects.all())
-    school_types = DllM2MField(allow_null=True, many=True, queryset=Subject.objects.all())
-    school_class = RangeField(NumericRange, child=IntegerField(), required=False, allow_null=True)
+    school_types = DllM2MField(allow_null=True, many=True, queryset=SchoolType.objects.all())
+    school_class = RangeField(NumericRange, child=IntegerField(allow_null=True), required=False, allow_null=True)
 
     def get_array_fields(self):
         fields = super(TeachingModuleSerializer, self).get_array_fields()
