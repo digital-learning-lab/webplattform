@@ -16,7 +16,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView
 from rest_framework.generics import ListAPIView
 
-from dll.communication.models import CoAuthorshipInvitation
+from dll.communication.models import CoAuthorshipInvitation, NewsletterSubscrption
 from dll.communication.tasks import send_mail
 from .forms import UserProfileForm, UserEmailsForm, UserPasswordChangeForm, UserAccountDeleteForm
 from dll.content.models import Content, TeachingModule, Tool, Trend, Review
@@ -27,7 +27,7 @@ from dll.content.views import BreadcrumbMixin
 from dll.user.models import EmailChangeRequest
 from dll.user.tokens import account_activation_token, email_confirmation_token
 from .forms import SignUpForm
-
+from ..communication.tokens import newsletter_confirm_token
 
 USER_MODEL = get_user_model()
 
@@ -215,6 +215,20 @@ class SignUpView(FormView):
             email=user.email,
             ctx=context
         )
+
+        if form.cleaned_data["newsletter_registration"]:
+            try:
+                NewsletterSubscrption.objects.get(email=form.cleaned_data['email'])
+            except NewsletterSubscrption.DoesNotExist:
+                subscription, created = NewsletterSubscrption.objects.update_or_create(
+                    email=form.cleaned_data['email']
+                )
+                token = reverse('communication:newsletter-confirm', kwargs={
+                    'nl_id_b64': urlsafe_base64_encode(force_bytes(subscription.pk)),
+                    'token': newsletter_confirm_token.make_token(subscription)
+                })
+                token = self.request.build_absolute_uri(token)
+                form.send_registration_email(token)
 
         return HttpResponseRedirect(self.get_success_url())
 
