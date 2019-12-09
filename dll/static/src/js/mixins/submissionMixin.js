@@ -210,7 +210,8 @@ export const submissionMixin = {
           }
         })
       }
-
+      this.errors = []
+      this.errorFields = []
       return axiosInstance.put('/api/inhalt-bearbeiten/' + this.data.slug + '/', {
         ...this.data,
         resourcetype: this.resourceType
@@ -225,8 +226,12 @@ export const submissionMixin = {
       }).catch(err => {
         this.loading = false
         if (err.response.status === 400) {
-          for (let i = 0; i < err.response.data.length; i++) {
-            this.errors.push(err.response.data[i])
+          for (let field in err.response.data) {
+            for (let i = 0; i < err.response.data[field].length; i++) {
+              this.errors.push(err.response.data[field][i])
+              this.errorFields.push(field)
+              console.log(field)
+            }
           }
         }
       })
