@@ -61,7 +61,7 @@
       <div class="row" v-else>
         <div class="col">
           <h2>Ihre Suchanfrage ergab keine Treffer.</h2>
-          <p>Bitte versuchen Sie es mit einer anderen Auswahl.</p>
+          <p>Bitte versuchen Sie es mit anderen Suchbegriffen oder schauen Sie gern auf anderen Datenbanken für freie Unterrichtsmaterialien wie <a href="https://oerhoernchen.de/suche" target="_blank" rel="noopener noreferrer">OERhörchen</a>.</p>
         </div>
       </div>
     </div>
