@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-09 15:54+0100\n"
+"POT-Creation-Date: 2019-12-09 16:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,7 +66,7 @@ msgstr "'{type:s}' Ereignis für Nutzer #{number:s}"
 msgid "Code, mit dem dieses Ereignis programmgesteuert gesucht werden kann."
 msgstr ""
 
-#: dll/communication/models.py:55 dll/user/forms.py:59
+#: dll/communication/models.py:55 dll/user/forms.py:63
 msgid "Name"
 msgstr ""
 
@@ -115,7 +115,7 @@ msgid "Einladung an"
 msgstr ""
 
 #: dll/communication/models.py:157 dll/content/models.py:415
-#: dll/user/forms.py:61
+#: dll/user/forms.py:65
 msgid "Status"
 msgstr ""
 
@@ -565,31 +565,31 @@ msgstr ""
 msgid "Anwendungen"
 msgstr ""
 
-#: dll/content/serializers.py:78
+#: dll/content/serializers.py:76
 msgid "Draft"
 msgstr "Entwurf"
 
-#: dll/content/serializers.py:82
+#: dll/content/serializers.py:80
 msgid "Approved - Resubmission declined."
 msgstr "Freigegeben - Neue Einreichung abgelehnt."
 
-#: dll/content/serializers.py:84
+#: dll/content/serializers.py:82
 msgid "Approved - Resubmission pending."
 msgstr "Freigegeben - Neue Einreichung ausstehend."
 
-#: dll/content/serializers.py:85
+#: dll/content/serializers.py:83
 msgid "Approved"
 msgstr "Freigegeben"
 
-#: dll/content/serializers.py:88
+#: dll/content/serializers.py:86
 msgid "Declined"
 msgstr "Abgelehnt"
 
-#: dll/content/serializers.py:91
+#: dll/content/serializers.py:89
 msgid "Submitted"
 msgstr "Eingereicht"
 
-#: dll/content/serializers.py:237
+#: dll/content/serializers.py:235
 msgid "A content with this name already exists."
 msgstr "Ein Inhalt mit diesem Namen existiert bereits."
 
@@ -619,22 +619,26 @@ msgstr ""
 msgid "Important"
 msgstr ""
 
-#: dll/user/forms.py:60
+#: dll/user/forms.py:27
+msgid "Sign up for newsletter"
+msgstr "Für Newsletter anmelden"
+
+#: dll/user/forms.py:64
 msgid "E-Mail"
 msgstr ""
 
-#: dll/user/forms.py:62
+#: dll/user/forms.py:66
 msgid "Beigetreten"
 msgstr ""
 
-#: dll/user/forms.py:101
+#: dll/user/forms.py:105
 msgid ""
 "Old and new password must be different. Please use another new password."
 msgstr ""
 "Das alte und neue Passwort müssen unterschiedlich sein. Bitte wählen Sie ein "
 "anderes neues Passwort."
 
-#: dll/user/forms.py:109
+#: dll/user/forms.py:113
 msgid "Ich habe die Bedingungen gelesen und akzeptiere sie."
 msgstr ""
 
