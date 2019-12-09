@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-09 15:11+0100\n"
+"POT-Creation-Date: 2019-12-09 15:54+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -148,6 +148,10 @@ msgstr ""
 #: dll/communication/views.py:178
 msgid "Die Einladung ist verfallen"
 msgstr ""
+
+#: dll/content/admin.py:43
+msgid "Deleted all tools without a name."
+msgstr "Es wurden alle Tools ohne Namen entfernt."
 
 #: dll/content/fields.py:13
 #, python-brace-format
@@ -591,7 +595,13 @@ msgstr "Ein Inhalt mit diesem Namen existiert bereits."
 
 #: dll/content/serializers.py:400
 msgid "All additional tools must contain a name and an URL."
-msgstr "Alle Angaben im Feld \"Andere Tools\" müssen einen Namen und eine URL enthalten."
+msgstr ""
+"Alle Angaben im Feld \"Andere Tools\" müssen einen Namen und eine URL "
+"enthalten."
+
+#: dll/content/templates/admin/content/change_list.html:5
+msgid "Remove Tools without name"
+msgstr "Tools ohne Namen entfernen"
 
 #: dll/general/models.py:129
 msgid "Koauthorenschaftsanfrage"
