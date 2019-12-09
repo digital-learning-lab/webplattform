@@ -386,14 +386,16 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
 
         additional_tools = validated_data.pop('get_additional_tools', [])
         for tool in additional_tools:
-            tool_instance = Tool.objects.create(
+            if tool.get('name') and tool.get('url'):
+                tool_instance = Tool.objects.create(
                 name=tool['name'],
                 author=instance.author
-            )
-            tool_instance.related_content.add(instance)
-            tool_instance.save()
-            ToolLink.objects.create(tool=tool_instance, url=tool['url'])
-
+                )
+                tool_instance.related_content.add(instance)
+                tool_instance.save()
+                ToolLink.objects.create(tool=tool_instance, url=tool['url'])
+            else:
+                raise ValidationError({'additional_tools': [_('All additional tools must contain a name and an URL.')]})
         instance = super().update(instance, validated_data)
         return instance
 
