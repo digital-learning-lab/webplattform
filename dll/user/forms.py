@@ -4,15 +4,13 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
 from django import forms
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
+from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
-from django.contrib.auth.forms import UserCreationForm, SetPasswordForm, PasswordChangeForm
-from django.urls import reverse_lazy, reverse
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
 
-from dll.user.tokens import email_confirmation_token
 from .models import DllUser
-from django.utils.translation import ugettext_lazy as _
+
+from ..communication.tasks import send_mail
 
 
 class EditUserForm(forms.ModelForm):
@@ -23,6 +21,10 @@ class EditUserForm(forms.ModelForm):
 
 class SignUpForm(UserCreationForm):
     terms_accepted = forms.BooleanField(required=True)
+    newsletter_registration = forms.BooleanField(
+        label='Ja, ich möchte den Newsletter des digital.learning.labs erhalten.',
+        required=False
+    )
 
     def __init__(self, *args, **kwargs):
         super(SignUpForm, self).__init__(*args, **kwargs)
@@ -37,12 +39,23 @@ class SignUpForm(UserCreationForm):
         self.fields['last_name'].required = True
         self.fields['email'].required = True
 
+    def send_registration_email(self, token):
+        context = {
+            'token': token,
+        }
+        send_mail.delay(
+            event_type_code='NEWSLETTER_CONFIRM',
+            ctx=context,
+            email=self.cleaned_data['email']
+        )
+
     class Meta:
         model = DllUser
         fields = (
             'first_name',
             'last_name',
             'email',
+            'newsletter_registration',
             'terms_accepted',
             'password1',
             'password2',

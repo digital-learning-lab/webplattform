@@ -1,9 +1,14 @@
-from django.contrib import admin
+from functools import update_wrapper
 
-# Register your models here.
+from django.contrib import admin, messages
+
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
+from django.core.management import call_command
 from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.utils.translation import ugettext_lazy as _
+from django.urls import path
 
 from dll.content.forms import FlatPageAdminForm, HelpTextAdminForm, HelpTextFieldForm
 from .models import TeachingModule, Competence, OperatingSystem, SubCompetence, Subject, SchoolType, Trend, Tool, ToolApplication, HelpText, HelpTextField
@@ -11,9 +16,32 @@ from .models import TeachingModule, Competence, OperatingSystem, SubCompetence, 
 admin.site.unregister(FlatPage)
 
 
-@admin.register(TeachingModule, Trend, Tool)
+@admin.register(TeachingModule, Trend)
 class ContentAdmin(admin.ModelAdmin):
     exclude = ('json_data',)
+
+
+@admin.register(Tool)
+class ToolAdmin(admin.ModelAdmin):
+
+    def get_urls(self):
+        urls = super(ToolAdmin, self).get_urls()
+
+        def wrap(view):
+            def wrapper(*args, **kwargs):
+                return self.admin_site.admin_view(view)(*args, **kwargs)
+            wrapper.model_admin = self
+            return update_wrapper(wrapper, view)
+
+        custom_urls = [
+            path('remove-tools-without-name', wrap(self._remove_tools_without_name), name="cleanup_tools"),
+        ]
+        return urls + custom_urls
+
+    def _remove_tools_without_name(self, request):
+        call_command('cleanup_broken_tools')
+        messages.add_message(request, messages.INFO, _('Deleted all tools without a name.'))
+        return redirect('admin:content_tool_changelist')
 
 
 class HelpTextFieldInline(admin.TabularInline):

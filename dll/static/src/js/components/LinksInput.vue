@@ -45,6 +45,11 @@
         default: '',
         required: true
       },
+      error: {
+        type: Boolean,
+        default: false,
+        required: false
+      },
       required: {
         type: Boolean,
         default: false,
@@ -143,6 +148,12 @@
           }
         } else {
           this.internalLinks = []
+        }
+      },
+      error () {
+        for (let i = 0; i < this.internalLinks.length; i++) {
+          console.log('checking link')
+          this.checkLinkValid(this.internalLinks[i])
         }
       }
     }

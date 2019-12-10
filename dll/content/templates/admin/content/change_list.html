@@ -1,0 +1,7 @@
+{% extends "admin/change_list.html" %}
+{% load admin_list i18n %}
+
+{% block object-tools-items %}
+  <li><a href="{% url 'admin:cleanup_tools' %}">{% trans 'Remove Tools without name' %}</a></li>
+  {% change_list_object_tools %}
+{% endblock %}

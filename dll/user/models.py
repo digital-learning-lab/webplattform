@@ -70,6 +70,10 @@ class DllUser(TimeStampedModel, AbstractUser):
     REQUIRED_FIELDS = ['first_name', 'last_name']
     objects = DllUserManager()
 
+    class Meta:
+        verbose_name = _('User')
+        verbose_name_plural = _('Users')
+
     def __str__(self):
         return f'{self.username} - {self.full_name} - ({self.email})'
 
