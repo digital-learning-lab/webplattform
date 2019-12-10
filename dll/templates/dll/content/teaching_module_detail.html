@@ -61,7 +61,7 @@
     </li>
   {% endif %}
 
-  {% if object.licence %}
+  {% if object.licence != None %}
     <li class="sidebar__information-item">
       <span class="sidebar__information-icon fab fa-creative-commons"></span>
       {{ object.get_licence_display }}
