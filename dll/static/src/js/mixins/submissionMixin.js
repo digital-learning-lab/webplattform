@@ -50,13 +50,13 @@ export const submissionMixin = {
       ],
       licenseOptions: [
         {value: null, label:'----------'},
-        {value: 1, label:'CC0'},
-        {value: 2, label:'CC BY'},
-        {value: 5, label:'CC BY-NC'},
-        {value: 7, label:'CC BY-NC-ND'},
-        {value: 6, label:'CC BY-NC-SA'},
-        {value: 4, label:'CC BY-ND'},
-        {value: 3, label:'CC BY-SA'}
+        {value: 0, label:'CC0'},
+        {value: 1, label:'CC BY'},
+        {value: 3, label:'CC BY-NC'},
+        {value: 4, label:'CC BY-NC-ND'},
+        {value: 5, label:'CC BY-NC-SA'},
+        {value: 6, label:'CC BY-ND'},
+        {value: 7, label:'CC BY-SA'}
       ],
       errorFields: []
     }
