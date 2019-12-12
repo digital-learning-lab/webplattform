@@ -1,5 +1,10 @@
 <template>
   <app-content-submission-form :errors="errors" :mode="mode" :loading="loading" :saved="saved" @update="updateContent" @create="createContent" @preview="goToPreview" @delete-warning="showDeleteWarning" :data="data" @delete="deleteContent" @submit="submitContent" @update-review="updateReview" @approve-review="approveContent" @decline-review="declineContent" :can-delete="canDelete">
+      <div class="form-group" v-if="reviewValue.feedback && !review">
+        <label>Feeback:</label> <br>
+        {{ reviewValue.feedback }}
+      </div>
+      <app-text-area id="feedback" v-if="review" :review="false" label="Feedback" :required="false" :value.sync="reviewValue.feedback" :rows="3" :help-text="getHelpText('feedback')"></app-text-area>
       <app-text-input id="author" :readonly="true" label="Autor_in" :value.sync="data.author" :required="true"></app-text-input>
       <app-text-input id="title" :readonly="readonly" :review="review" label="Titel des Tools" :value.sync="data.name" :review-value.sync="reviewValue.name" :error="errorFields.includes('name')" :required="true" :character-counter="true" :maximal-chars="140" :help-text="getHelpText('name')"></app-text-input>
     <div v-if="mode === 'edit' || mode === 'review'">
