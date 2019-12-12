@@ -58,23 +58,23 @@ hr {
   border: 1px dashed gray;
 }
 
-a[href*="//"]:not([href*=localhost]):after,
-a.link--external:after {
-    font-family: 'dll_icons' !important;
-    speak: none;
+a[rel=external]:after {
+  font-family: "Font Awesome 5 Free";
+  speak: none;
   font-style: normal;
-  font-weight: normal;
   font-variant: normal;
   text-transform: none;
   line-height: 1;
-
+  font-size: 0.8rem;
+  margin-left: 5px;
+  display: inline-block;
+  vertical-align: middle;
+  font-weight: 600!important;
   /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-a[href*="//"]:not([href*=localhost]):after,
-a.link--external:after {
-    content: "\e918";
+  content: "\f35d";
+
 }
 
 @media (min-width: 992px) {
