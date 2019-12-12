@@ -574,6 +574,7 @@ class HelpText(TimeStampedModel):
             ('trends', 'Verwandte Trends'),
             ('teaching_modules', 'Verwandte Unterrichtsbausteine'),
             ('additional_tools', 'Andere Tools'),
+            ('feedback', 'Feedback')
         ]
         if self.content_type.model == 'tool':
             EXTRA_FIELDS.append(('url', 'Webseite'))
