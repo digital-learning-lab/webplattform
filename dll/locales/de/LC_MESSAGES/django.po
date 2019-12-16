@@ -372,18 +372,24 @@ msgid ""
 "Personenbezogene Daten wie z.B. Logins werden geschützt auf dem Server "
 "abgelegt. Es greift die EU-Datenschutz-Grundverordnung."
 msgstr ""
+"Personenbezogene Daten wie z.B. Logins werden geschützt auf dem Server "
+"abgelegt. Es entspricht der EU-Datenschutz-Grundverordnung."
 
 #: dll/content/models.py:408
 msgid ""
 "Personenbezogene Daten werden erhoben. Dritte haben Zugriff auf diese Daten. "
-"Es greift die EU-Datenschutz-Grundverordnung."
+"Es entspricht EU-Datenschutz-Grundverordnung."
 msgstr ""
+"Personenbezogene Daten werden erhoben. Dritte haben Zugriff auf diese Daten. "
+"Es entspricht EU-Datenschutz-Grundverordnung."
 
 #: dll/content/models.py:410
 msgid ""
 "Personenbezogene Daten werden erhoben. Es greift NICHT die EU-Datenschutz-"
 "Grundverordnung."
 msgstr ""
+"Personenbezogene Daten werden erhoben. Es entspricht nicht der EU-Datenschutz-"
+"Grundverordnung."
 
 #: dll/content/models.py:413 dll/content/models.py:739
 msgid "Betriebssystem"
