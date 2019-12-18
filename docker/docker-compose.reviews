@@ -97,8 +97,6 @@ services:
     labels:
       ONLINE_JOURNALCTL: 'true'
       ONLINE_JOURNALCTL_TOKEN: '${ONLINE_JOURNALCTL_TOKEN}'
-    ports:
-      - "8983:8983"
 networks:
   default:
     name: '${CI_PROJECT_ID}-${CI_ENVIRONMENT_SLUG}-${CI_PIPELINE_ID}'
