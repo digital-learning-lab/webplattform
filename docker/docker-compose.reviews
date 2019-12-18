@@ -29,7 +29,7 @@ services:
       - CELERY_TASK_ALWAYS_EAGER=False
       - ADMIN_USER=admin
       - ADMIN_EMAIL=michael.heinemann@tuhh.de
-      - ADMIN_PASSWORD=cgPPDMTCAVBgJnBUrucji
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
 
       - DATABASE_NAME=dll_db
       - DATABASE_HOST=db
