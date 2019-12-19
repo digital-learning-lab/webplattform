@@ -220,7 +220,7 @@ msgid "Titel des Tools/Trends/Unterrichtsbausteins"
 msgstr ""
 
 #: dll/content/models.py:54
-msgid "Autor"
+msgid "Autor_in"
 msgstr ""
 
 #: dll/content/models.py:56
