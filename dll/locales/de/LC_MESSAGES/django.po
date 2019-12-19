@@ -669,15 +669,15 @@ msgid "Datum der Registrierungsbestätigung"
 msgstr ""
 
 #: dll/user/models.py:113
-msgid "Administrator"
+msgid "Administrator_in"
 msgstr ""
 
 #: dll/user/models.py:115
-msgid "Reviewer"
+msgid "Reviewer_in"
 msgstr ""
 
 #: dll/user/models.py:117
-msgid "Author"
+msgid "Autor_in"
 msgstr ""
 
 #: dll/user/views.py:327
