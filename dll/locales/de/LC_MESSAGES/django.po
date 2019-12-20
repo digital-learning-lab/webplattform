@@ -220,8 +220,8 @@ msgid "Titel des Tools/Trends/Unterrichtsbausteins"
 msgstr ""
 
 #: dll/content/models.py:54
-msgid "Autor_in"
-msgstr ""
+msgid "Autor"
+msgstr "Autor_in"
 
 #: dll/content/models.py:56
 msgid "Kollaborateure"
@@ -669,16 +669,16 @@ msgid "Datum der Registrierungsbestätigung"
 msgstr ""
 
 #: dll/user/models.py:113
-msgid "Administrator_in"
-msgstr ""
+msgid "Administrator"
+msgstr "Administrator_in"
 
 #: dll/user/models.py:115
-msgid "Reviewer_in"
-msgstr ""
+msgid "Reviewer"
+msgstr "Reviewer_in"
 
 #: dll/user/models.py:117
-msgid "Autor_in"
-msgstr ""
+msgid "Author"
+msgstr "Autor_in"
 
 #: dll/user/views.py:327
 msgid "Mein Profil"
