@@ -1,7 +1,7 @@
 <template>
   <app-content-submission-form :errors="errors" :mode="mode" :loading="loading" :saved="saved" @update="updateContent" @create="createContent" @preview="goToPreview" @delete-warning="showDeleteWarning" :data="data" @delete="deleteContent" @submit="submitContent" @update-review="updateReview" @approve-review="approveContent" @decline-review="declineContent" :can-delete="canDelete">
     <div class="form-group" v-if="reviewValue.feedback && !review">
-        <label>Feeback:</label> <br>
+        <label>Feedback:</label> <br>
         {{ reviewValue.feedback }}
       </div>
       <app-text-area id="feedback" v-if="review" :review="false" label="Feedback" :required="false" :value.sync="reviewValue.feedback" :rows="3" :help-text="getHelpText('feedback')"></app-text-area>
