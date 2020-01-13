@@ -2,7 +2,7 @@
   <div class="form-group">
     <label :for="id">{{ label }}:<span v-if="required">*</span></label>
     <div class="d-flex">
-    <v-select v-model="inputValue" :options="calcOptions" :class="{'form__field--error': error}" @search="fetchOptions" :multiple="multiple" :disabled="disabled || readonly"></v-select>
+    <v-select v-model="inputValue" :options="calcOptions" :class="{'form__field--error': error}" @search="fetchOptions" :multiple="multiple" :disabled="disabled || readonly" :filterable="false"></v-select>
       <button class="button--neutral button--smallSquare button--help ml-1" type="button" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText"></button>
     </div>
     <app-review-input :mode="review ? 'review' : 'edit'" :id="'id'+-review" :name="label" :reviewValue.sync="ownReviewValue"></app-review-input>
