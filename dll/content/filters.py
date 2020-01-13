@@ -12,7 +12,7 @@ class SolrTagFilter(BaseFilterBackend):
             q = AutoQuery(request.GET.get('q', ''))
             sqs = SearchQuerySet().filter(SQ(tags=q) | SQ(name=q) | SQ(teaser=q) | SQ(subjects=q) |
                                           SQ(operating_systems=q))
-            sqs.query.boost_fields = {'tags': 2, 'name': 1.5}
+            sqs.query.boost_fields = {'tags': 2, 'name': 3}
             pks = list(set(sqs.values_list('pk', flat=True)))
             return queryset.filter(pk__in=pks)
         else:
