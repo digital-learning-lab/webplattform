@@ -27,3 +27,4 @@ redis
 pysolr
 django-haystack
 django-select2
+django-better-admin-arrayfield

@@ -10,15 +10,23 @@ from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.urls import path
 
+from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
+
 from dll.content.forms import FlatPageAdminForm, HelpTextAdminForm, HelpTextFieldForm
-from .models import TeachingModule, Competence, OperatingSystem, SubCompetence, Subject, SchoolType, Trend, Tool, ToolApplication, HelpText, HelpTextField
+from .models import TeachingModule, Competence, OperatingSystem, SubCompetence, Subject, SchoolType, Trend, Tool, \
+    ToolApplication, HelpText, HelpTextField, ContentLink
 
 admin.site.unregister(FlatPage)
 
 
+class ContentLinkInlineAdmin(admin.StackedInline):
+    model = ContentLink
+
+
 @admin.register(TeachingModule, Trend)
-class ContentAdmin(admin.ModelAdmin):
-    exclude = ('json_data',)
+class ContentAdmin(admin.ModelAdmin, DynamicArrayMixin):
+    exclude = ('json_data', 'tags')
+    inlines = [ContentLinkInlineAdmin]
 
 
 @admin.register(Tool)

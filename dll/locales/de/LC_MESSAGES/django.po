@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-09 16:40+0100\n"
+"POT-Creation-Date: 2020-01-13 15:36+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,7 +114,7 @@ msgstr ""
 msgid "Einladung an"
 msgstr ""
 
-#: dll/communication/models.py:157 dll/content/models.py:415
+#: dll/communication/models.py:157 dll/content/models.py:418
 #: dll/user/forms.py:65
 msgid "Status"
 msgstr ""
@@ -175,199 +175,199 @@ msgstr ""
 msgid "Range may not be empty."
 msgstr "Dieses Feld dard nicht leer sein."
 
-#: dll/content/models.py:38
+#: dll/content/models.py:41
 msgid "CC0"
 msgstr ""
 
-#: dll/content/models.py:39
+#: dll/content/models.py:42
 msgid "CC BY"
 msgstr ""
 
-#: dll/content/models.py:40
+#: dll/content/models.py:43
 msgid "CC BY 4.0"
 msgstr ""
 
-#: dll/content/models.py:41
+#: dll/content/models.py:44
 msgid "CC BY-NC"
 msgstr ""
 
-#: dll/content/models.py:42
+#: dll/content/models.py:45
 msgid "CC BY-NC-ND"
 msgstr ""
 
-#: dll/content/models.py:43
+#: dll/content/models.py:46
 msgid "CC BY-NC-SA"
 msgstr ""
 
-#: dll/content/models.py:44
+#: dll/content/models.py:47
 msgid "CC BY-ND"
 msgstr ""
 
-#: dll/content/models.py:45
+#: dll/content/models.py:48
 msgid "CC BY-SA"
 msgstr ""
 
-#: dll/content/models.py:46
+#: dll/content/models.py:49
 msgid "CC BY-SA 4.0"
 msgstr ""
 
-#: dll/content/models.py:47
+#: dll/content/models.py:50
 msgid "urheberrechtlich geschützt"
 msgstr ""
 
-#: dll/content/models.py:52
+#: dll/content/models.py:55
 msgid "Titel des Tools/Trends/Unterrichtsbausteins"
 msgstr ""
 
-#: dll/content/models.py:54
+#: dll/content/models.py:57
 msgid "Autor"
 msgstr "Autor_in"
 
-#: dll/content/models.py:56
+#: dll/content/models.py:59
 msgid "Kollaborateure"
 msgstr ""
 
-#: dll/content/models.py:57
+#: dll/content/models.py:60
 msgid "Anzeigebild"
 msgstr ""
 
-#: dll/content/models.py:58
+#: dll/content/models.py:61
 msgid "Teaser"
 msgstr ""
 
-#: dll/content/models.py:59
+#: dll/content/models.py:62
 msgid "Lernziele"
 msgstr ""
 
-#: dll/content/models.py:61
+#: dll/content/models.py:64
 msgid "Verwandte Tools/Trends/Unterrichtsbausteine"
 msgstr ""
 
-#: dll/content/models.py:66
+#: dll/content/models.py:69
 msgid "Hinweise/Anmerkungen/Hintergrund"
 msgstr ""
 
-#: dll/content/models.py:67 dll/content/models.py:807
+#: dll/content/models.py:70 dll/content/models.py:810
 msgid "Kompetenzen"
 msgstr ""
 
-#: dll/content/models.py:68 dll/content/models.py:931
+#: dll/content/models.py:71 dll/content/models.py:934
 msgid "Subkompetenzen"
 msgstr ""
 
-#: dll/content/models.py:73
+#: dll/content/models.py:76
 msgid "Ex-Autoren"
 msgstr ""
 
-#: dll/content/models.py:79
+#: dll/content/models.py:82
 msgid "Tags"
 msgstr ""
 
-#: dll/content/models.py:328
+#: dll/content/models.py:331
 msgid "Inhalt"
 msgstr ""
 
-#: dll/content/models.py:329
+#: dll/content/models.py:332
 msgid "Inhalte"
 msgstr ""
 
-#: dll/content/models.py:333 dll/content/models.py:421
+#: dll/content/models.py:336 dll/content/models.py:424
 msgid "Beschreibung"
 msgstr ""
 
-#: dll/content/models.py:334
+#: dll/content/models.py:337
 msgid "Unterichtsgegenstand"
 msgstr ""
 
-#: dll/content/models.py:336
+#: dll/content/models.py:339
 msgid "Bildungsplanbezug"
 msgstr ""
 
-#: dll/content/models.py:337
+#: dll/content/models.py:340
 msgid "Jahrgangsstufe"
 msgstr ""
 
-#: dll/content/models.py:339
+#: dll/content/models.py:342
 msgid "Zeitumfang"
 msgstr ""
 
-#: dll/content/models.py:340
+#: dll/content/models.py:343
 msgid "Ausstattung"
 msgstr ""
 
-#: dll/content/models.py:342
+#: dll/content/models.py:345
 msgid "Bundesland"
 msgstr ""
 
-#: dll/content/models.py:343
+#: dll/content/models.py:346
 msgid "Differenzierung"
 msgstr ""
 
-#: dll/content/models.py:344
+#: dll/content/models.py:347
 msgid "Fachkompetenzen"
 msgstr ""
 
-#: dll/content/models.py:346 dll/content/models.py:979
+#: dll/content/models.py:349 dll/content/models.py:982
 msgid "Unterrichtsfach"
 msgstr ""
 
-#: dll/content/models.py:347 dll/content/models.py:991
+#: dll/content/models.py:350 dll/content/models.py:994
 msgid "Schulform"
 msgstr ""
 
-#: dll/content/models.py:348 dll/content/models.py:484
+#: dll/content/models.py:351 dll/content/models.py:487
 msgid "Lizenz"
 msgstr ""
 
-#: dll/content/models.py:351
+#: dll/content/models.py:354
 msgid "Unterrichtsbaustein"
 msgstr ""
 
-#: dll/content/models.py:352
+#: dll/content/models.py:355
 msgid "Unterrichtsbausteine"
 msgstr ""
 
-#: dll/content/models.py:390
+#: dll/content/models.py:393
 msgid "Online"
 msgstr ""
 
-#: dll/content/models.py:391
+#: dll/content/models.py:394
 msgid "Offline"
 msgstr ""
 
-#: dll/content/models.py:392
+#: dll/content/models.py:395
 msgid "Online & Offline"
 msgstr ""
 
-#: dll/content/models.py:396
+#: dll/content/models.py:399
 msgid "Ohne Altersbeschränkung"
 msgstr ""
 
-#: dll/content/models.py:397
+#: dll/content/models.py:400
 msgid "Ab 6 Jahren"
 msgstr ""
 
-#: dll/content/models.py:398
+#: dll/content/models.py:401
 msgid "Ab 12 Jahren"
 msgstr ""
 
-#: dll/content/models.py:399
+#: dll/content/models.py:402
 msgid "Ab 16 Jahren"
 msgstr ""
 
-#: dll/content/models.py:400
+#: dll/content/models.py:403
 msgid "Ab 18 Jahren"
 msgstr ""
 
-#: dll/content/models.py:404
+#: dll/content/models.py:407
 msgid "Unbekannt"
 msgstr ""
 
-#: dll/content/models.py:405
+#: dll/content/models.py:408
 msgid "Es werden keinerlei Daten erhoben"
 msgstr ""
 
-#: dll/content/models.py:406
+#: dll/content/models.py:409
 msgid ""
 "Personenbezogene Daten wie z.B. Logins werden geschützt auf dem Server "
 "abgelegt. Es greift die EU-Datenschutz-Grundverordnung."
@@ -375,7 +375,7 @@ msgstr ""
 "Personenbezogene Daten wie z.B. Logins werden geschützt auf dem Server "
 "abgelegt. Es entspricht der EU-Datenschutz-Grundverordnung."
 
-#: dll/content/models.py:408
+#: dll/content/models.py:411
 msgid ""
 "Personenbezogene Daten werden erhoben. Dritte haben Zugriff auf diese Daten. "
 "Es entspricht EU-Datenschutz-Grundverordnung."
@@ -383,7 +383,7 @@ msgstr ""
 "Personenbezogene Daten werden erhoben. Dritte haben Zugriff auf diese Daten. "
 "Es entspricht EU-Datenschutz-Grundverordnung."
 
-#: dll/content/models.py:410
+#: dll/content/models.py:413
 msgid ""
 "Personenbezogene Daten werden erhoben. Es greift NICHT die EU-Datenschutz-"
 "Grundverordnung."
@@ -391,183 +391,183 @@ msgstr ""
 "Personenbezogene Daten werden erhoben. Es entspricht nicht der EU-Datenschutz-"
 "Grundverordnung."
 
-#: dll/content/models.py:413 dll/content/models.py:739
+#: dll/content/models.py:416 dll/content/models.py:742
 msgid "Betriebssystem"
 msgstr ""
 
-#: dll/content/models.py:414 dll/content/models.py:1010
+#: dll/content/models.py:417 dll/content/models.py:1013
 msgid "Anwendung"
 msgstr ""
 
-#: dll/content/models.py:417
+#: dll/content/models.py:420
 msgid "Altersfreigabe"
 msgstr ""
 
-#: dll/content/models.py:418
+#: dll/content/models.py:421
 msgid "Pro"
 msgstr ""
 
-#: dll/content/models.py:419
+#: dll/content/models.py:422
 msgid "Kontra"
 msgstr ""
 
-#: dll/content/models.py:420
+#: dll/content/models.py:423
 msgid "Datenschutz"
 msgstr ""
 
-#: dll/content/models.py:422
+#: dll/content/models.py:425
 msgid "Nutzung"
 msgstr ""
 
-#: dll/content/models.py:425
+#: dll/content/models.py:428
 msgid "Tool"
 msgstr ""
 
-#: dll/content/models.py:426
+#: dll/content/models.py:429
 msgid "Tools"
 msgstr ""
 
-#: dll/content/models.py:471
+#: dll/content/models.py:474
 msgid "Deutsch"
 msgstr ""
 
-#: dll/content/models.py:472
+#: dll/content/models.py:475
 msgid "Englisch"
 msgstr ""
 
-#: dll/content/models.py:476
+#: dll/content/models.py:479
 msgid "Keine Angaben"
 msgstr ""
 
-#: dll/content/models.py:477
+#: dll/content/models.py:480
 msgid "Forschung"
 msgstr ""
 
-#: dll/content/models.py:478
+#: dll/content/models.py:481
 msgid "Portal"
 msgstr ""
 
-#: dll/content/models.py:479
+#: dll/content/models.py:482
 msgid "Praxisbeispiel"
 msgstr ""
 
-#: dll/content/models.py:480
+#: dll/content/models.py:483
 msgid "Veröffentlichung"
 msgstr ""
 
-#: dll/content/models.py:483
+#: dll/content/models.py:486
 msgid "Sprache"
 msgstr ""
 
-#: dll/content/models.py:485
+#: dll/content/models.py:488
 msgid "Kategorie"
 msgstr ""
 
-#: dll/content/models.py:486
+#: dll/content/models.py:489
 msgid "Zielgruppe"
 msgstr ""
 
-#: dll/content/models.py:488
+#: dll/content/models.py:491
 msgid "Herausgeber"
 msgstr ""
 
-#: dll/content/models.py:490
+#: dll/content/models.py:493
 msgid "Datum der Veröffentlichung"
 msgstr ""
 
-#: dll/content/models.py:491
+#: dll/content/models.py:494
 msgid "Zentrale Inhalte"
 msgstr ""
 
-#: dll/content/models.py:492
+#: dll/content/models.py:495
 msgid "Zitierhinweis"
 msgstr ""
 
-#: dll/content/models.py:495
+#: dll/content/models.py:498
 msgid "Trend"
 msgstr ""
 
-#: dll/content/models.py:496
+#: dll/content/models.py:499
 msgid "Trends"
 msgstr ""
 
-#: dll/content/models.py:603
+#: dll/content/models.py:606
 msgid "Hilfetext für "
 msgstr ""
 
-#: dll/content/models.py:615
+#: dll/content/models.py:618
 msgid "Hilfetext für"
 msgstr ""
 
-#: dll/content/models.py:621
+#: dll/content/models.py:624
 msgid "Neu"
 msgstr ""
 
-#: dll/content/models.py:622
+#: dll/content/models.py:625
 msgid "In Bearbeitung"
 msgstr ""
 
-#: dll/content/models.py:623
+#: dll/content/models.py:626
 msgid "Akzeptiert"
 msgstr ""
 
-#: dll/content/models.py:624
+#: dll/content/models.py:627
 msgid "Abgelehnt"
 msgstr ""
 
-#: dll/content/models.py:740
+#: dll/content/models.py:743
 msgid "Betriebssysteme"
 msgstr ""
 
-#: dll/content/models.py:806
+#: dll/content/models.py:809
 msgid "Kompetenz"
 msgstr ""
 
-#: dll/content/models.py:930
+#: dll/content/models.py:933
 msgid "Subkompetenz"
 msgstr ""
 
-#: dll/content/models.py:936
+#: dll/content/models.py:939
 msgid "Audio"
 msgstr ""
 
-#: dll/content/models.py:937
+#: dll/content/models.py:940
 msgid "Video"
 msgstr ""
 
-#: dll/content/models.py:938
+#: dll/content/models.py:941
 msgid "Webseite"
 msgstr ""
 
-#: dll/content/models.py:939
+#: dll/content/models.py:942
 msgid "Literatur"
 msgstr ""
 
-#: dll/content/models.py:980
+#: dll/content/models.py:983
 msgid "Unterrichtsfächer"
 msgstr ""
 
-#: dll/content/models.py:992
+#: dll/content/models.py:995
 msgid "Schulformen"
 msgstr ""
 
-#: dll/content/models.py:997
+#: dll/content/models.py:1000
 msgid "App"
 msgstr ""
 
-#: dll/content/models.py:998
+#: dll/content/models.py:1001
 msgid "Website"
 msgstr ""
 
-#: dll/content/models.py:999
+#: dll/content/models.py:1002
 msgid "Programm"
 msgstr ""
 
-#: dll/content/models.py:1000
+#: dll/content/models.py:1003
 msgid "Browser-Add-on"
 msgstr ""
 
-#: dll/content/models.py:1011
+#: dll/content/models.py:1014
 msgid "Anwendungen"
 msgstr ""
 
@@ -620,6 +620,10 @@ msgstr ""
 #: dll/general/models.py:131
 msgid "DLL Kontaktanfrage"
 msgstr ""
+
+#: dll/templates/django_better_admin_arrayfield/forms/widgets/dynamic_array.html:15
+msgid "Add another"
+msgstr "Weitere hinzufügen"
 
 #: dll/templates/dll/includes/messages.html:6
 msgid "Important"
