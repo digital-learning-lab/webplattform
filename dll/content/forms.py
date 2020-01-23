@@ -5,7 +5,6 @@ from ckeditor.widgets import CKEditorWidget
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.flatpages.forms import FlatpageForm
-from django.forms import Select
 from django_select2.forms import HeavySelect2Widget
 from dll.content.models import HelpText, HelpTextField
 

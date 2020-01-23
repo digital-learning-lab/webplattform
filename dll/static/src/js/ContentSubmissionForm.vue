@@ -1,7 +1,7 @@
 <template>
   <form class="mb-4">
     <div class="alert alert-success" v-if="data.submitted && mode !== 'review'">
-      Der Inhalt wurde eingereicht und wird in nun von einem Mitarbeiter geprüft.
+      Der Inhalt wurde eingereicht und wird nun von Mitarbeiter_innen geprüft.
     </div>
     <div class="alert alert-primary" v-if="saved">
       Ihre Änderungen wurden gespeichert.

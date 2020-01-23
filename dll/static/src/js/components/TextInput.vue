@@ -80,7 +80,7 @@
     },
     computed: {
       charactersLeft () {
-        return this.maximalChars - this.value.length
+        return this.value ? this.maximalChars - this.value.length : this.maximalChars
       }
     },
     data () {

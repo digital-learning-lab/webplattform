@@ -4,7 +4,8 @@
     <button class="button--neutral button--smallSquare button--help ml-1 float-right" type="button" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText"></button>
     <div class="form__list-inputs">
       <div class="d-flex align-items-baseline mb-2" v-for="item in list">
-        <input type="text" class="form-control mr-3 form__list-input" :id="id" :placeholder="placeholder" v-model="item.text" @input="emitUpdate" :readonly="readonly">
+        <input type="text" class="form-control mr-3 form__list-input" :id="id" :placeholder="placeholder" v-model="item.text" @input="emitUpdate" :readonly="readonly" v-if="!textarea">
+        <textarea type="text" class="form-control mr-3" :id="id" :placeholder="placeholder" v-model="item.text" @input="emitUpdate" :readonly="readonly" v-else></textarea>
         <button class="button--danger button--smallSquare" @click="removeItem(item)" type="button" v-if="!readonly">
           <span class="fas fa-times"></span>
         </button>
@@ -71,6 +72,11 @@
         type: Number,
         default: 0,
         required: false
+      },
+      textarea: {
+        type: Boolean,
+        default: false,
+        required: false
       }
     },
     data () {
@@ -79,7 +85,7 @@
       }
     },
     created () {
-      this.list = this.initial.map(x => { return {text: x}})
+      this.list = this.initial ? this.initial.map(x => { return {text: x}}) : []
       if (!this.list.length) {
         let i = 0;
         while (i < this.min) {

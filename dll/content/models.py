@@ -4,15 +4,19 @@ import os
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.postgres.fields import IntegerRangeField, JSONField, ArrayField
+from django.contrib.postgres.fields import IntegerRangeField, JSONField
 from django.contrib.sites.models import Site
 from django.core.files import File
 from django.db import models
 from django.db.models import Q
-from django.dispatch import receiver
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
+
+
+from django_better_admin_arrayfield.models.fields import ArrayField
+from django_extensions.db.fields import CreationDateTimeField
 from django_extensions.db.models import TimeStampedModel
 from easy_thumbnails.files import get_thumbnailer
 from filer.fields.file import FilerFileField
@@ -50,11 +54,26 @@ LICENCE_CHOICES = (
 
 class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     name = models.CharField(_("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200)
+
+    # Since Django automatically overrides `editable` to false when `auto_add_now` is set the following workaround is
+    # applied.
+    created = CreationDateTimeField(
+        _('created'),
+        editable=True,
+        auto_now_add=False,
+        default=timezone.now(),
+        null=True
+    )
     slug = DllSlugField(populate_from='name', overwrite=True, allow_duplicates=True)
     author = models.ForeignKey(DllUser, on_delete=models.SET_NULL, verbose_name=_("Autor"), null=True)
     co_authors = models.ManyToManyField(DllUser, related_name='collaborative_content',
                                         verbose_name=_("Kollaborateure"), blank=True)
-    image = FilerImageField(on_delete=models.SET_NULL, null=True, verbose_name=_('Anzeigebild'))
+    image = FilerImageField(
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name=_('Anzeigebild'),
+        blank=True
+    )
     teaser = models.TextField(max_length=140, verbose_name=_("Teaser"), null=True, blank=True)
     learning_goals = ArrayField(models.CharField(max_length=850), verbose_name=_("Lernziele"), default=list, null=True,
                                 blank=True)
@@ -331,8 +350,12 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
 
 class TeachingModule(Content):
     description = models.TextField(_("Beschreibung"), null=True, blank=True)
-    subject_of_tuition = ArrayField(models.CharField(max_length=2000), verbose_name=_("Unterichtsgegenstand"),
-                                    default=list, null=True, blank=True)
+    subject_of_tuition = models.TextField(
+        verbose_name=_("Unterichtsgegenstand"),
+        max_length=2000,
+        null=True,
+        blank=True
+    )
     educational_plan_reference = models.TextField(_("Bildungsplanbezug"), null=True, blank=True)
     school_class = IntegerRangeField(verbose_name=_("Jahrgangsstufe"), null=True, blank=True)
     # estimated time e.g. Doppelstunde,unterrichtsbegleitend
@@ -934,10 +957,8 @@ class SubCompetence(TimeStampedModel):
 
 class ContentLink(TimeStampedModel):
     TYPE_CHOICES = (
-        ('audio', _('Audio')),
         ('video', _('Video')),
-        ('href', _('Webseite')),
-        ('literature', _('Literatur')),
+        ('literature', _('Text')),
     )
 
     url = models.URLField(max_length=2083)
@@ -948,6 +969,9 @@ class ContentLink(TimeStampedModel):
         on_delete=models.CASCADE,
         null=True  # null=True because can be a one2one relation to e.g. Tool
     )
+
+    def __str__(self):
+        return '{} - {}'.format(self.name, self.url)
 
 
 
