@@ -2,9 +2,9 @@ import json
 import random
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponse
-from django.shortcuts import render
-from django.template import Context
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
@@ -19,7 +19,7 @@ from rest_framework import viewsets, filters, mixins, status
 from rest_framework.generics import ListAPIView, GenericAPIView, DestroyAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import FileUploadParser
-from rest_framework.permissions import DjangoObjectPermissions
+from rest_framework.permissions import DjangoObjectPermissions, BasePermission
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
@@ -32,6 +32,20 @@ from dll.content.serializers import AuthorSerializer, CompetenceSerializer, SubC
 from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
 from .serializers import ContentListSerializer, ContentPolymorphicSerializer
+
+
+class ReviewerPermission(BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        return user.is_superuser or user.is_reviewer
+
+
+class ReviewerMixin(GenericAPIView):
+
+    def get_permissions(self):
+        permission = super(ReviewerMixin, self).get_permissions()
+        permission.append(ReviewerPermission())
+        return permission
 
 
 class BreadcrumbMixin(ContextMixin):
@@ -272,6 +286,39 @@ class DeclineContentView(BaseActionReviewView):
         return JsonResponse(self.get_serializer(instance=obj).data)
 
 
+class AssignReviewerView(ReviewerMixin, GenericAPIView):
+    queryset = Content.objects.drafts()
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'slug'
+    serializer_class = ContentListSerializer
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        to_be_assigned_user_id = request.data.get('user')
+        if to_be_assigned_user_id:
+            to_be_assigned_user = get_object_or_404(DllUser, pk=to_be_assigned_user_id)
+            obj.assign_reviewer(by_user=request.user, to_be_assigned_user=to_be_assigned_user)
+        else:
+            obj.assign_reviewer(by_user=request.user, to_be_assigned_user=request.user)
+        return JsonResponse({}, status=200)
+
+
+class UnassignReviewerView(ReviewerMixin, GenericAPIView):
+    queryset = Content.objects.drafts()
+    lookup_field = 'slug'
+    lookup_url_kwarg = 'slug'
+    serializer_class = ContentListSerializer
+
+    def post(self, request, *args, **kwargs):
+        obj = self.get_object()
+        to_be_unassigned_user = self.request.POST.get('user')
+        if to_be_unassigned_user:
+            obj.unassign_reviewer(by_user=request.user, to_be_unassigned_user=to_be_unassigned_user)
+        else:
+            obj.unassign_reviewer(by_user=request.user, to_be_unassigned_user=request.user)
+        return JsonResponse({}, status=200)
+
+
 class CompetenceFilterView(DetailView):
     model = Competence
     template_name = 'dll/filter/competence.html'
@@ -431,6 +478,20 @@ class AuthorSearchView(ListAPIView):
     def get_queryset(self):
         qs = super(AuthorSearchView, self).get_queryset()
         return qs.exclude(pk=self.request.user.pk)
+
+
+class ReviewerSearchView(ReviewerMixin, ListAPIView):
+    queryset = DllUser.objects.all()
+    serializer_class = AuthorSerializer
+    filter_backends = [
+        DjangoFilterBackend,
+        filters.SearchFilter
+    ]
+    search_fields = ['username', 'first_name', 'last_name']
+
+    def get_queryset(self):
+        qs = super(ReviewerSearchView, self).get_queryset()
+        return qs.filter(Q(is_superuser=True) | Q(groups__name__in=['BSB-Reviewer', 'TUHH-Reviewer']))
 
 
 class CompetencesSearchView(ListAPIView):

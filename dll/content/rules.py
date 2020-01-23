@@ -31,7 +31,7 @@ def content_review_in_progress(user, obj: Content):
 is_authenticated = rules.is_authenticated
 is_bsb_reviewer = rules.is_group_member('BSB-Reviewer')
 is_tuhh_reviewer = rules.is_group_member('TUHH-Reviewer')
-
+can_assign_reviewer = rules.is_superuser
 
 def check_content_for_review(user, content: Content):
     if is_bsb_reviewer(user) and isinstance(content, TeachingModule):
@@ -75,3 +75,6 @@ rules.add_perm('content.delete_trend', is_author)
 rules.add_perm('content.delete_teachingmodule', is_author)
 
 rules.add_perm('content.change_review', can_review & review_in_progress)
+
+rules.add_perm('content.assign_reviewer', can_assign_reviewer)
+rules.add_perm('content.claim_review', can_review)
