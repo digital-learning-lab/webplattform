@@ -1,8 +1,7 @@
 import $ from 'jquery'
 
 window.submitWithReCaptcha = function() {
-    let form = $(event.target);
-    event.preventDefault();
+    let form = $(this);
     grecaptcha.ready(function () {
         grecaptcha.execute(websiteKey, {action: 'generate_link'}).then(function (token) {
             $('[name="g-recaptcha-response"]').val(token);
