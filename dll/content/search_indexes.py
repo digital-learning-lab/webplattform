@@ -11,7 +11,7 @@ class ContentIndex(indexes.SearchIndex):
     url = indexes.CharField()
     tags = indexes.MultiValueField()
     authors = indexes.MultiValueField()
-    published = indexes.DateTimeField(model_attr='created')
+    published = indexes.DateTimeField(model_attr='created', null=True)
 
     def get_model(self):
         return Content

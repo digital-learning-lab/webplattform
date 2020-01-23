@@ -61,7 +61,8 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         _('created'),
         editable=True,
         auto_now_add=False,
-        default=timezone.now()
+        default=timezone.now(),
+        null=True
     )
     slug = DllSlugField(populate_from='name', overwrite=True, allow_duplicates=True)
     author = models.ForeignKey(DllUser, on_delete=models.SET_NULL, verbose_name=_("Autor"), null=True)
