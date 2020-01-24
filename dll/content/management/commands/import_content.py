@@ -563,7 +563,7 @@ class Command(BaseCommand):
                         'estimated_time': ' '.join(self._parse_semicolon_separated_values(data['zeitumfang'])),
                         'equipment': self._parse_semicolon_separated_values(data['ausstattung']),
                         'school_class': class_range,
-                        'subject_of_tuition': self._parse_semicolon_separated_values(data['unterrichtsgeg']),
+                        'subject_of_tuition': ' '.join(self._parse_semicolon_separated_values(data['unterrichtsgeg'])),
                         'description': data['beschreibung'],
                         'educational_plan_reference': data['bildungsplanbezug'],
                         'state': state,
