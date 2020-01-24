@@ -959,6 +959,7 @@ class ContentLink(TimeStampedModel):
     TYPE_CHOICES = (
         ('video', _('Video')),
         ('literature', _('Text')),
+        ('href', _('Text')),
     )
 
     url = models.URLField(max_length=2083)
