@@ -31,6 +31,7 @@ class ContentAdmin(admin.ModelAdmin, DynamicArrayMixin):
 
 @admin.register(Tool)
 class ToolAdmin(admin.ModelAdmin):
+    exclude = ('json_data', 'tags')
 
     def get_urls(self):
         urls = super(ToolAdmin, self).get_urls()
