@@ -31,7 +31,11 @@ def content_review_in_progress(user, obj: Content):
 is_authenticated = rules.is_authenticated
 is_bsb_reviewer = rules.is_group_member('BSB-Reviewer')
 is_tuhh_reviewer = rules.is_group_member('TUHH-Reviewer')
-can_assign_reviewer = rules.is_superuser
+
+
+def can_assign_reviewer(user, content: Content):
+    return is_bsb_reviewer(user) or is_tuhh_reviewer(user)
+
 
 def check_content_for_review(user, content: Content):
     if is_bsb_reviewer(user) and isinstance(content, TeachingModule):
