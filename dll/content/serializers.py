@@ -230,7 +230,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     def validate_name(self, data):
         """Make sure the slug of this name will be unique too."""
         expected_slug = custom_slugify(data)
-        if Content.objects.drafts().filter(slug=expected_slug).count() > 1 or \
+        if (self.instance is None and Content.objects.drafts().filter(slug=expected_slug).count() >= 1) or \
                 Content.objects.published().filter(slug=expected_slug).count() > 1:
             raise ValidationError(_('A content with this name already exists.'))
         return data
