@@ -16,7 +16,8 @@
   <script>
   window.dllData = {
     retrieveUrl: '/api/review-inhalte',
-    mode: 'review'
+    mode: 'review',
+    csrfToken: '{{ csrf_token }}'
   }
   </script>
 {% endblock %}

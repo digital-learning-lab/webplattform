@@ -33,6 +33,10 @@ is_bsb_reviewer = rules.is_group_member('BSB-Reviewer')
 is_tuhh_reviewer = rules.is_group_member('TUHH-Reviewer')
 
 
+def can_assign_reviewer(user, content: Content):
+    return is_bsb_reviewer(user) or is_tuhh_reviewer(user)
+
+
 def check_content_for_review(user, content: Content):
     if is_bsb_reviewer(user) and isinstance(content, TeachingModule):
         return True
@@ -75,3 +79,6 @@ rules.add_perm('content.delete_trend', is_author)
 rules.add_perm('content.delete_teachingmodule', is_author)
 
 rules.add_perm('content.change_review', can_review & review_in_progress)
+
+rules.add_perm('content.assign_reviewer', can_assign_reviewer)
+rules.add_perm('content.claim_review', can_review)

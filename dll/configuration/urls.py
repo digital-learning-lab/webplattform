@@ -26,9 +26,10 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     TeachingModuleDataFilterView, ToolDataFilterView, TrendFilterView, ToolFilterView, TrendDataFilterView, \
     PublishedContentViewSet, DraftsContentViewSet, AuthorSearchView, SchoolTypesSearchView, StateSearchView, \
     CompetencesSearchView, SubCompetencesSearchView, SubjectSearchView, FileUploadView, ToolApplicationSearchView, \
-    OperatingSystemSearchView, ReviewViewSet,  ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
+    OperatingSystemSearchView, ReviewViewSet, ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
     TrendDetailPreviewView, SubmitContentView, ApproveContentView, DeclineContentView, \
-    search_view, HelpTextFieldChoices, ImageUploadView, DeleteContentFileView
+    search_view, HelpTextFieldChoices, ImageUploadView, DeleteContentFileView, AssignReviewerView, UnassignReviewerView, \
+    ReviewerSearchView
 from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
     UserContentView, MyReviewsView, ReviewTeachingModuleView, ReviewToolView, ReviewTrendView, PendingReviewContentView, \
     UserInvitationView
@@ -84,6 +85,7 @@ urlpatterns = [
     path('api/tools', ToolDataFilterView.as_view(), name='tools-data-filter'),
     path('api/trends', TrendDataFilterView.as_view(), name='trends-data-filter'),
     path('api/authors', AuthorSearchView.as_view(), name='author-search'),
+    path('api/reviewers', ReviewerSearchView.as_view(), name='reviewer-search'),
     path('api/schoolTypes', SchoolTypesSearchView.as_view(), name='school-type-search'),
     path('api/states', StateSearchView.as_view(), name='state-search'),
     path('api/subjects', SubjectSearchView.as_view(), name='subject-search'),
@@ -106,6 +108,10 @@ urlpatterns = [
          name='approve-content'),
     path('api/review/<slug:slug>/decline', DeclineContentView.as_view(),
          name='decline-content'),
+    path('api/review/<slug:slug>/assign', AssignReviewerView.as_view(),
+         name='assign-reviewer'),
+    path('api/review/<slug:slug>/unassign', UnassignReviewerView.as_view(),
+         name='unassign-reviewer'),
     path('select2/admin_help_fields', HelpTextFieldChoices.as_view(), name='admin-help-text-choices'),
     path('suche', search_view, name='search')
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

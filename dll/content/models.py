@@ -160,6 +160,51 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
             return self.ex_authors.split(', ')
         return []
 
+    @property
+    def has_assigned_reviewer(self):
+        return self.review and self.review.assigned_reviewer != None
+
+    def assign_reviewer(self, by_user: DllUser, to_be_assigned_user: DllUser):
+        if not self.review:
+            raise AssertionError('This content has not been submitted to review.')
+        if self.review.status == Review.ACCEPTED or self.review.status == Review.DECLINED:
+            raise AssertionError('Review for this content is already finished.')
+        if by_user != to_be_assigned_user:
+            if by_user.has_perm('content.assign_reviewer'):
+                review = self.review
+                review.assigned_reviewer = to_be_assigned_user
+                review.save()
+            else:
+                raise AssertionError('User #{} is not allowed to assign reviewer.'.format(by_user.id))
+        else:
+            if by_user.has_perm('content.claim_review', self.review):
+                review = self.review
+                review.assigned_reviewer = to_be_assigned_user
+                review.save()
+            else:
+                raise AssertionError('User #{} is not allowed to claim review'.format(by_user.id))
+
+    def unassign_reviewer(self, by_user: DllUser, to_be_unassigned_user: DllUser):
+        if not self.review:
+            raise AssertionError('This content has not been submitted to review.')
+        if self.review.status == Review.ACCEPTED or self.review.status == Review.DECLINED:
+            raise AssertionError('Review for this content is already finished.')
+        if by_user != to_be_unassigned_user:
+            if by_user.has_perm('content.assign_reviewer'):
+                review = self.review
+                review.assigned_reviewer = None
+                review.save()
+            else:
+                raise AssertionError('User #{} is not allowed to unassign reviewer.'.format(by_user.id))
+        else:
+            if by_user.has_perm('content.claim_review', self.review):
+                review = self.review
+                review.assigned_reviewer = None
+                review.save()
+            else:
+                raise AssertionError('User #{} is not allowed to unclaim review'.format(by_user.id))
+
+
     def submit_for_review(self, by_user: DllUser=None):
         if self.review:
             # content was declined and now resubmitted
@@ -341,6 +386,12 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     @cached_property
     def related_trends(self):
         return Trend.objects.filter(related_content__in=[self.pk])
+
+    def get_assign_reviewer_url(self):
+        return reverse('assign-reviewer', kwargs={'slug': self.slug})
+
+    def get_unassign_reviewer_url(self):
+        return reverse('unassign-reviewer', kwargs={'slug': self.slug})
 
     class Meta(RulesModelBaseMixin, PublisherModel.Meta):
         ordering = ['slug']
@@ -655,6 +706,13 @@ class Review(TimeStampedModel):
     submitted_by = models.ForeignKey(
         DllUser, on_delete=models.SET(get_default_tuhh_user),
         related_name='submitted_reviews',
+        null=True
+    )
+    assigned_reviewer = models.ForeignKey(
+        verbose_name=_('Assigned Reviewer'),
+        to=DllUser,
+        on_delete=models.SET_NULL,
+        related_name='assigned_reviews',
         null=True
     )
     accepted_by = models.ForeignKey(

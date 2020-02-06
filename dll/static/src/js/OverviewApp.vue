@@ -34,7 +34,7 @@
 
     <div class="content-box" :class="'content-box--' + content.type" v-for="content in contents">
       <div class="row">
-        <div class="col">
+        <div class="col-sm-6">
           <div class="content-box__type">{{ content.type_verbose }} ({{ content.status }})</div>
           <div class="content-box__title">{{ content.name }}</div>
           <div class="content-box__author">
@@ -49,8 +49,23 @@
             </ul>
           </div>
         </div>
+        <div class="col" v-if="mode === 'review' && content.reviewer">
+          <span class="font-weight-bold">Reviewer:</span> {{ content.reviewer }} <br>
+          <a v-if="content.can_unassign || content.can_assign" href="#" @click="unassign(content)">Reviewer entfernen</a>
+        </div>
         <div class="col">
           <ul class="content-box__actions">
+            <li class="content-box__action" v-if="mode === 'review' && content.can_assign && !content.reviewer">
+              <div style="width: 250px;">
+                Reviewer zuweisen:
+                <v-select :options="reviewers" label="username" :multiple="false" @input="claimReview(content)" v-model="content.reviewer_pk" :reduce="reduceReviewer"/>
+              </div>
+            </li>
+            <li class="content-box__action" v-if="mode === 'review' && !content.has_assigned_reviewer">
+              <a class="content-box__link" v-if="content.can_claim" href="#" @click="claimReview(content)">
+                Reviewer werden
+              </a>
+            </li>
             <li class="content-box__action">
               <a class="content-box__link content-box__link--preview" :href="content.preview_url">
                 <span class="far fa-eye"></span>
@@ -109,10 +124,12 @@
 </template>
 
 <script>
+  import vSelect from 'vue-select'
   import { debounce } from 'lodash'
   import axios from 'axios'
   import Pagination from './components/Pagination.vue'
   import { paginationMixin } from './mixins/paginationMixin'
+  import { axiosMixin } from './mixins/axiosMixin'
 
   export default {
     name: 'OverviewApp',
@@ -124,13 +141,15 @@
         status: null,
         retrieveUrl: null,
         mode: null,
-        invitationContents: []
+        invitationContents: [],
+        reviewers: []
       }
     },
     components: {
-      'AppPagination': Pagination
+      'AppPagination': Pagination,
+      'v-select': vSelect,
     },
-    mixins: [paginationMixin],
+    mixins: [paginationMixin, axiosMixin],
     computed: {
       params () {
         return {
@@ -155,6 +174,34 @@
         .catch(err => {
           console.log(err)
         })
+        .catch(err => {
+          console.log(err)
+        })
+      },
+      reduceReviewer (option) {
+        return option.pk
+      },
+      claimReview (content) {
+        let data = {}
+        if (content.reviewer_pk) {
+          data['user'] = content.reviewer_pk
+        }
+        this.getAxiosInstance().post(content.assign_reviewer_url, data)
+        .then(res => {
+          this.updateContents(this.currentPage)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+      },
+      unassign (content) {
+        this.getAxiosInstance().post(content.unassign_reviewer_url, {})
+        .then(res => {
+          this.updateContents(this.currentPage)
+        })
+        .catch(err => {
+          console.log(err)
+        })
       }
     },
     created () {
@@ -168,6 +215,10 @@
       axios.get('/api/meine-einladungen')
         .then(res => {
           this.invitationContents = res.data.results
+        })
+      axios.get('/api/reviewers')
+        .then(res => {
+          this.reviewers = res.data.results
         })
     }
   }
