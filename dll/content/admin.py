@@ -1,3 +1,4 @@
+import csv
 from functools import update_wrapper
 
 from django.contrib import admin, messages
@@ -5,7 +6,7 @@ from django.contrib import admin, messages
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
 from django.core.management import call_command
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect
 from django.utils.translation import ugettext_lazy as _
 from django.urls import path
@@ -19,14 +20,77 @@ from .models import TeachingModule, Competence, OperatingSystem, SubCompetence, 
 admin.site.unregister(FlatPage)
 
 
+class PublishedFilter(admin.SimpleListFilter):
+    title = 'Veröffentlicht'
+    parameter_name = 'publisher_is_draft'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('y', _('Yes')),
+            ('n', _('No')),
+        )
+
+    def queryset(self, request, queryset):
+        if self.value() == 'y':
+            return queryset.published()
+        if self.value() == 'n':
+            return queryset.drafts()
+
+
 class ContentLinkInlineAdmin(admin.StackedInline):
     model = ContentLink
 
 
-@admin.register(TeachingModule, Trend)
+@admin.register(Trend)
 class ContentAdmin(admin.ModelAdmin, DynamicArrayMixin):
     exclude = ('json_data', 'tags')
     inlines = [ContentLinkInlineAdmin]
+
+
+@admin.register(TeachingModule)
+class TeachingModuleAdmin(ContentAdmin):
+    actions = ['export_csv']
+    list_filter = (PublishedFilter,)
+
+    def export_csv(self, request, queryset):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="unterrichtsbausteine.csv"'
+
+        writer = csv.writer(response)
+
+        writer.writerow([
+            'Titel',
+            'Autor_in',
+            'Hochladedatum',
+            'KMK - Kompetenz',
+            'mind. Unterrichtsstufe',
+            'max. Unterrichtsstufe ',
+            'Zeitaufwand',
+            'Schulform',
+            'Bildungsplanbezug',
+            'Verlinkte Tools',
+            'Verlinkte Trends'
+        ])
+
+        for tm in queryset:
+            writer.writerow([
+                tm.name,
+                tm.author.full_name,
+                tm.created.strftime('%d.%m.%Y'),
+                ', '.join([c.name for c in tm.competences.all()]),
+                tm.school_class.lower if tm.school_class else '',
+                tm.school_class.upper if tm.school_class else '',
+                tm.estimated_time,
+                ', '.join([t.name for t in tm.school_types.all()]),
+                tm.educational_plan_reference,
+                ', '.join([t.name for t in tm.related_tools.all()]),
+                ', '.join([t.name for t in tm.related_trends.all()]),
+            ])
+
+        return response
+
+    export_csv.short_description = "Unterrichtsbausteine als CSV exportieren"
+
 
 
 @admin.register(Tool)
