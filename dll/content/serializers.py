@@ -16,6 +16,7 @@ from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
 from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication, \
     HelpText, Content, Tool, Trend, TeachingModule, ContentLink, Review, ToolLink
+from dll.general.models import DllSlugField
 from dll.general.utils import custom_slugify
 from dll.user.models import DllUser
 
@@ -229,7 +230,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
 
     def validate_name(self, data):
         """Make sure the slug of this name will be unique too."""
-        expected_slug = custom_slugify(data)
+        expected_slug = custom_slugify(data)[:50]  # corresponds to DllSlugField max_length
         if (self.instance is None and Content.objects.drafts().filter(slug=expected_slug).count() >= 1) or \
                 Content.objects.published().filter(slug=expected_slug).count() > 1:
             raise ValidationError(_('A content with this name already exists.'))
