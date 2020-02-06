@@ -108,13 +108,50 @@ class ContentListInvitationSerializer(ContentListInternalSerializer):
 
 class ContentListInternalReviewSerializer(ContentListInternalSerializer):
     review_url = SerializerMethodField(allow_null=True)
+    assign_reviewer_url = SerializerMethodField(allow_null=True)
+    unassign_reviewer_url = SerializerMethodField(allow_null=True)
+
+    has_assigned_reviewer = serializers.SerializerMethodField(allow_null=True)
+    reviewer = serializers.SerializerMethodField(allow_null=True)
+    can_unassign = serializers.SerializerMethodField(allow_null=False)
+    can_assign = serializers.SerializerMethodField(allow_null=False)
+    can_claim = serializers.SerializerMethodField(allow_null=False)
 
     def get_review_url(self, obj):
         return obj.get_review_url()
 
+    def get_has_assigned_reviewer(self, obj):
+        return obj.has_assigned_reviewer
+
+    def get_assign_reviewer_url(self, obj):
+        return obj.get_assign_reviewer_url()
+
+    def get_unassign_reviewer_url(self, obj):
+        return obj.get_unassign_reviewer_url()
+
+    def get_can_unassign(self, obj):
+        user = self.context.get('request').user
+        return user and obj.review and obj.review.assigned_reviewer and obj.review.assigned_reviewer == user
+
+    def get_can_assign(self, obj):
+        """Provides information whether current user can assign others as reviewers."""
+        user = self.context.get('request').user
+        return user.has_perm('content.assign_reviewer')
+
+    def get_can_claim(self, obj):
+        """Provides information whether current user can assign others as reviewers."""
+        user = self.context.get('request').user
+        return user.has_perm('content.claim_review', obj.review)
+
+    def get_reviewer(self, obj):
+        if obj.review and obj.review.assigned_reviewer:
+            return obj.review.assigned_reviewer.full_name
+        return None
+
     class Meta(ContentListInternalSerializer.Meta):
-        fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created',
-                  'co_authors', 'preview_url', 'edit_url', 'author', 'status', 'review_url']
+        fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created', 'reviewer',
+                  'co_authors', 'preview_url', 'edit_url', 'author', 'status', 'review_url', 'has_assigned_reviewer',
+                  'assign_reviewer_url', 'can_unassign', 'unassign_reviewer_url', 'can_assign', 'can_claim']
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -230,7 +267,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     def validate_name(self, data):
         """Make sure the slug of this name will be unique too."""
         expected_slug = custom_slugify(data)
-        if Content.objects.drafts().filter(slug=expected_slug).count() > 1 or \
+        if (self.instance is None and Content.objects.drafts().filter(slug=expected_slug).count() >= 1) or \
                 Content.objects.published().filter(slug=expected_slug).count() > 1:
             raise ValidationError(_('A content with this name already exists.'))
         return data

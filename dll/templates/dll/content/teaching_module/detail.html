@@ -5,9 +5,7 @@
     Informationen zum Unterrichtsgegenstand
   </div>
   <div class="information-area__body">
-    {% for subject in object.subject_of_tuition %}
-      {{ subject }} <br>
-    {% endfor %}
+    {{ object.subject_of_tuition|linebreaksbr }}
   </div>
 </div>
 {% endif %}
