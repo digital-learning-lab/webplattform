@@ -87,7 +87,7 @@
         currentPage: 1,
         pagination: {
           count: 0,
-          perPage: 10,
+          perPage: 20,
           next: null,
           prev: null
         }
@@ -122,7 +122,7 @@
             this.contents = response.data.results
             this.pagination = {
               count: response.data.count,
-              perPage: 10,
+              perPage: 20,
               next: response.data.next,
               prev: response.data.previous
             }

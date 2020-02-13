@@ -57,6 +57,7 @@ start_review:
         - floki_development
     except:
         - master
+        - /^DLL-.*$/
 
 stop_review:
     stage: review
