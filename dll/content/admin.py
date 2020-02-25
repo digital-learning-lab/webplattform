@@ -76,7 +76,7 @@ class TeachingModuleAdmin(ContentAdmin):
             writer.writerow([
                 tm.name,
                 tm.author.full_name,
-                tm.created.strftime('%d.%m.%Y'),
+                tm.created.strftime('%d.%m.%Y') if tm.created else '',
                 ', '.join([c.name for c in tm.competences.all()]),
                 tm.school_class.lower if tm.school_class else '',
                 tm.school_class.upper if tm.school_class else '',
