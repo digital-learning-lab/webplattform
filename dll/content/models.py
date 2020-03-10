@@ -116,6 +116,9 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         else:
             return f"{self.name} ({self.__class__.__name__})"
 
+    def meta(self):
+        return self._meta
+
     def get_additional_tools(self):
         tools = self.related_content.all().instance_of(Tool)
         return tools.filter(publisher_linked__isnull=True, publisher_is_draft=True)
