@@ -1,6 +1,6 @@
-import csv
 from functools import update_wrapper
 
+import xlsxwriter
 from django.contrib import admin, messages
 
 from django.contrib.flatpages.admin import FlatPageAdmin
@@ -8,6 +8,7 @@ from django.contrib.flatpages.models import FlatPage
 from django.core.management import call_command
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import redirect
+from django.utils.six import BytesIO
 from django.utils.translation import ugettext_lazy as _
 from django.urls import path
 
@@ -49,16 +50,16 @@ class ContentAdmin(admin.ModelAdmin, DynamicArrayMixin):
 
 @admin.register(TeachingModule)
 class TeachingModuleAdmin(ContentAdmin):
-    actions = ['export_csv']
+    actions = ['export_xlsx']
     list_filter = (PublishedFilter,)
 
-    def export_csv(self, request, queryset):
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="unterrichtsbausteine.csv"'
+    def export_xlsx(self, request, queryset):
 
-        writer = csv.writer(response)
+        output = BytesIO()
+        workbook = xlsxwriter.Workbook(output)
+        worksheet = workbook.add_worksheet()
 
-        writer.writerow([
+        worksheet.write_row(0, 0, [
             'Titel',
             'Autor_in',
             'Hochladedatum',
@@ -71,12 +72,12 @@ class TeachingModuleAdmin(ContentAdmin):
             'Verlinkte Tools',
             'Verlinkte Trends'
         ])
-
+        counter = 1
         for tm in queryset:
-            writer.writerow([
+            worksheet.write_row(counter, 0, [
                 tm.name,
                 tm.author.full_name,
-                tm.created.strftime('%d.%m.%Y'),
+                tm.created.strftime('%d.%m.%Y') if tm.created else '',
                 ', '.join([c.name for c in tm.competences.all()]),
                 tm.school_class.lower if tm.school_class else '',
                 tm.school_class.upper if tm.school_class else '',
@@ -86,10 +87,20 @@ class TeachingModuleAdmin(ContentAdmin):
                 ', '.join([t.name for t in tm.related_tools.all()]),
                 ', '.join([t.name for t in tm.related_trends.all()]),
             ])
+            counter += 1
+
+        workbook.close()
+        output.seek(0)
+
+        response = HttpResponse(
+            output,
+            content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+        response['Content-Disposition'] = 'attachment; filename=unterrichtsbausteine.xlsx'
 
         return response
 
-    export_csv.short_description = "Unterrichtsbausteine als CSV exportieren"
+    export_xlsx.short_description = "Unterrichtsbausteine als XLSX exportieren"
 
 
 

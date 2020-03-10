@@ -4,7 +4,7 @@ export const paginationMixin = {
     return {
       pagination: {
         count: 0,
-        perPage: 10,
+        perPage: 20,
         next: null,
         prev: null
       },
@@ -25,7 +25,7 @@ export const paginationMixin = {
     updatePagination (response) {
       this.pagination = {
         count: response.data.count,
-        perPage: 10,
+        perPage: 20,
         next: response.data.next,
         prev: response.data.previous
       }

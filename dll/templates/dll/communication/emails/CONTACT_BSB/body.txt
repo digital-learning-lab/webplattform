@@ -1,2 +1,3 @@
-Contact BSB body
+E-Mail Absender: {{ email }}
+Betreff: {{ subject }}
 {{ message }}
