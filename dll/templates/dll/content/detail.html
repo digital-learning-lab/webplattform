@@ -1,6 +1,8 @@
 {% extends 'dll/base.html' %}
 {% load thumbnail %}
 
+{%  block title %}{{ object.meta.verbose_name }} | {{ object.name }}{% endblock %}
+
 {% block json_ld %}{{ block.super }}{% if object.type == 'teaching-module' %}
   <script type='application/ld+json'>
     {
