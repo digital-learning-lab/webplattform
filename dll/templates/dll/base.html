@@ -26,7 +26,6 @@
   <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/icons/favicon-16x16.png' %}">
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="msapplication-TileImage" content="{% static 'img/icons/favicon/ms-icon-144x144.png' %}">
-  {#TODO add real search URL#}
   <script type="text/javascript">
     var _paq = _paq || [];
     /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
@@ -47,13 +46,10 @@
         "name": "digital.learning.lab",
         "alternateName": "DLL",
         "url": "{{ request.scheme }}://{{ request.META.HTTP_HOST }}",
-        "sameAs": [
-            "https://www.youtube.com/user/OfaBambergGmbH"
-        ],
         "potentialAction": {
             "@type": "SearchAction",
-            "target": "{{ request.scheme }}://{{ request.META.HTTP_HOST }}",
-            "query-input": "required name=search_term_string"
+            "target": "{{ request.scheme }}://{{ request.META.HTTP_HOST }}/suche?q={q}",
+            "query-input": "required name=q"
         }
     }
   </script>
