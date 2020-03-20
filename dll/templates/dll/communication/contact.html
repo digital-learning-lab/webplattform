@@ -9,7 +9,7 @@
     mit dem Kontaktformular können Sie uns auch direkt an digital.learning.lab@tuhh.de schreiben.</p>
   <p>Wir freuen uns auf Ihre Nachricht.</p>
   <div class="row">
-    <form method="post" class="col col-12 col-lg-8" onsubmit="submitWithReCaptcha()">
+    <form method="post" class="col col-12 col-lg-8 js-contactForm" onsubmit="submitWithReCaptcha()">
       {% csrf_token %}
       <input type="hidden" name="g-recaptcha-response" value="token">
       <div class="form-group">
