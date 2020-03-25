@@ -69,6 +69,8 @@ class TeachingModuleAdmin(ContentAdmin):
             'Zeitaufwand',
             'Schulform',
             'Bildungsplanbezug',
+            'Bundesland',
+            'Unterrichtsfach',
             'Verlinkte Tools',
             'Verlinkte Trends'
         ])
@@ -84,6 +86,8 @@ class TeachingModuleAdmin(ContentAdmin):
                 tm.estimated_time,
                 ', '.join([t.name for t in tm.school_types.all()]),
                 tm.educational_plan_reference,
+                tm.state,
+                ', '.join([s.name for s in tm.subjects.all()]),
                 ', '.join([t.name for t in tm.related_tools.all()]),
                 ', '.join([t.name for t in tm.related_trends.all()]),
             ])
