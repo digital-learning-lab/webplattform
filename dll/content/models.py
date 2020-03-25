@@ -747,7 +747,7 @@ class Review(TimeStampedModel):
             self.is_active = False
             self.accepted_by = by_user
             self.save()
-            self.content.publish()
+            self.content.get_real_instance().publish()
             self.send_review_accepted_mail()
 
     def decline(self, by_user: DllUser):
