@@ -747,7 +747,7 @@ class Review(TimeStampedModel):
             self.is_active = False
             self.accepted_by = by_user
             self.save()
-            self.content.publish()
+            self.content.get_real_instance().publish()
             self.send_review_accepted_mail()
 
     def decline(self, by_user: DllUser):
@@ -1053,6 +1053,9 @@ class ContentFile(TimeStampedModel):
     file = FilerFileField(on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     content = models.ForeignKey('Content', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
 
 
 class Subject(TimeStampedModel):
