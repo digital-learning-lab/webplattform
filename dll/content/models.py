@@ -1054,6 +1054,9 @@ class ContentFile(TimeStampedModel):
     title = models.CharField(max_length=100)
     content = models.ForeignKey('Content', on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.title
+
 
 class Subject(TimeStampedModel):
     name = models.CharField(max_length=50, unique=True)

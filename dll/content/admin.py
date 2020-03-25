@@ -16,7 +16,7 @@ from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 from dll.content.forms import FlatPageAdminForm, HelpTextAdminForm, HelpTextFieldForm
 from .models import TeachingModule, Competence, OperatingSystem, SubCompetence, Subject, SchoolType, Trend, Tool, \
-    ToolApplication, HelpText, HelpTextField, ContentLink
+    ToolApplication, HelpText, HelpTextField, ContentLink, ContentFile
 
 admin.site.unregister(FlatPage)
 
@@ -42,10 +42,14 @@ class ContentLinkInlineAdmin(admin.StackedInline):
     model = ContentLink
 
 
+class ContentFileInlineAdmin(admin.StackedInline):
+    model = ContentFile
+
+
 @admin.register(Trend)
 class ContentAdmin(admin.ModelAdmin, DynamicArrayMixin):
     exclude = ('json_data', 'tags')
-    inlines = [ContentLinkInlineAdmin]
+    inlines = [ContentLinkInlineAdmin, ContentFileInlineAdmin]
 
 
 @admin.register(TeachingModule)
