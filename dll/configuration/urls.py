@@ -29,7 +29,7 @@ from dll.content.views import HomePageView, ImprintView, DataPrivacyView, Struct
     OperatingSystemSearchView, ReviewViewSet, ToolDetailPreviewView, TeachingModuleDetailPreviewView, \
     TrendDetailPreviewView, SubmitContentView, ApproveContentView, DeclineContentView, \
     search_view, HelpTextFieldChoices, ImageUploadView, DeleteContentFileView, AssignReviewerView, UnassignReviewerView, \
-    ReviewerSearchView
+    ReviewerSearchView, TeachingModulesFeed, ToolsFeed, TrendsFeed
 from dll.user.views import MyContentView, CreateEditTeachingModuleView, CreateEditToolView, CreateEditTrendView, \
     UserContentView, MyReviewsView, ReviewTeachingModuleView, ReviewToolView, ReviewTrendView, PendingReviewContentView, \
     UserInvitationView
@@ -49,6 +49,9 @@ urlpatterns = [
     path('entwicklung', DevelopmentView.as_view(), name='development'),
     path('faq', views.flatpage, {'url': '/faq/'}, name='faq'),
     path('terms', views.flatpage, {'url': '/terms/'}, name='terms'),
+    path('tools/rss', ToolsFeed(), name='tools-feed'),
+    path('unterrichtsbausteine/rss', TeachingModulesFeed(), name='teaching-modules-feed'),
+    path('trends/rss', TrendsFeed(), name='trends-feed'),
     path('tools/<slug:slug>', ToolDetailView.as_view(), name='tool-detail'),
     path('tools/<slug:slug>/vorschau', ToolDetailPreviewView.as_view(), name='tool-detail-preview'),
     path('trends/<slug:slug>', TrendDetailView.as_view(), name='trend-detail'),

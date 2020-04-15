@@ -1,6 +1,7 @@
 import json
 import random
 
+from django.contrib.syndication.views import Feed
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponse
@@ -672,6 +673,51 @@ class DeleteContentFileView(DestroyAPIView):
             raise Http404
 
         return content_file
+
+
+class ContentFeed(Feed):
+    model = None
+
+    def item_title(self, item):
+        return item.name
+
+    def item_description(self, item):
+        return item.teaser
+
+    def item_author_name(self, item):
+        return str(item.author.full_name)
+
+    def item_pubdate(self, item):
+        return item.created
+
+    def item_updateddate(self, item):
+        return item.modified
+
+    def items(self):
+        if not self.model:
+            raise NotImplementedError
+        return self.model.objects.published()
+
+
+class TrendsFeed(ContentFeed):
+    model = Trend
+    title = "Trends Feed"
+    link = reverse_lazy('tools-feed')
+    description = "DLL Trend Updates"
+
+
+class ToolsFeed(ContentFeed):
+    model = Tool
+    title = "Tools Feed"
+    link = reverse_lazy('trends-feed')
+    description = "DLL Tool Updates"
+
+
+class TeachingModulesFeed(ContentFeed):
+    model = TeachingModule
+    title = "TeachingModules Feed"
+    link = reverse_lazy('teaching-modules-feed')
+    description = "DLL TeachingModule Updates"
 
 
 def search_view(request):
