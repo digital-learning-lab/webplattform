@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404
+from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
@@ -349,8 +350,19 @@ class ContentDataFilterView(ListAPIView):
         return qs
 
 
-class TeachingModuleFilterView(TemplateView):
+class BaseFilterView(TemplateView):
+    rss_feed_url = None
+    def get_context_data(self, **kwargs):
+        ctx = super(BaseFilterView, self).get_context_data(**kwargs)
+        if self.rss_feed_url:
+            site = get_current_site(self.request)
+            ctx['rss_feed_url'] = f'{self.request.scheme}://{site.domain}{self.rss_feed_url}'
+        return ctx
+
+
+class TeachingModuleFilterView(BaseFilterView):
     template_name = 'dll/filter/teaching_modules.html'
+    rss_feed_url = reverse_lazy('teaching-modules-feed')
 
     def get_context_data(self, **kwargs):
         ctx = super(TeachingModuleFilterView, self).get_context_data(**kwargs)
@@ -411,8 +423,9 @@ class TeachingModuleDataFilterView(ContentDataFilterView):
         return qs.distinct()
 
 
-class ToolFilterView(TemplateView):
+class ToolFilterView(BaseFilterView):
     template_name = 'dll/filter/tools.html'
+    rss_feed_url = reverse_lazy('tools-feed')
 
 
 class ToolDataFilterView(ContentDataFilterView):
@@ -436,8 +449,9 @@ class ToolDataFilterView(ContentDataFilterView):
         return qs.distinct()
 
 
-class TrendFilterView(TemplateView):
+class TrendFilterView(BaseFilterView):
     template_name = 'dll/filter/trends.html'
+    rss_feed_url = reverse_lazy('trends-feed')
 
 
 class TrendDataFilterView(ContentDataFilterView):

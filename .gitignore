@@ -11,6 +11,7 @@ local_settings.py
 db.sqlite3
 media
 /static
+.idea
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
 # in your Git repository. Update and uncomment the following line accordingly.
@@ -230,3 +231,4 @@ typings/
 # Optional npm cache directory
 .npm
 ore.io/api/node,linux,macos,python,django,pycharm
+/.idea/.gitignore
