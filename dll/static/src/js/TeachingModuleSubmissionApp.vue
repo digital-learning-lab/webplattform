@@ -1,5 +1,10 @@
 <template>
   <app-content-submission-form :errors="errors" :mode="mode" :loading="loading" :saved="saved" @update="updateContent" @create="createContent" @preview="goToPreview" @delete-warning="showDeleteWarning" :data="data" @delete="deleteContent" @submit="submitContent" @update-review="updateReview" @approve-review="approveContent" @decline-review="declineContent" :can-delete="canDelete">
+    <template v-slot:progress>
+      <app-form-progress :steps="[1,2]" :active="0"/>
+    </template>
+
+
       <div class="form-group" v-if="reviewValue.feedback && !review">
         <label>Feedback:</label> <br>
         {{ reviewValue.feedback }}
@@ -43,13 +48,15 @@
   import { submissionMixin } from './mixins/submissionMixin'
   import ContentSubmissionForm from './ContentSubmissionForm.vue'
   import Dropzone from './components/Dropzone.vue'
+  import FormProgress from './components/FormProgress'
 
   export default {
     name: 'TeachingModuleSubmissionApp',
     mixins: [submissionMixin],
     components: {
       'AppContentSubmissionForm': ContentSubmissionForm,
-      'AppDropzone': Dropzone
+      'AppDropzone': Dropzone,
+      'AppFormProgress': FormProgress
     },
     data () {
       return {

@@ -1,5 +1,6 @@
 <template>
   <form class="mb-4">
+    <slot name="progress"></slot>
     <div class="alert alert-success" v-if="data.submitted && mode !== 'review'">
       Der Inhalt wurde eingereicht und wird nun von Mitarbeiter_innen geprüft.
     </div>
