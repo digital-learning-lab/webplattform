@@ -22,10 +22,10 @@ django-filter==2.2.0
 sentry-sdk==0.13.2
 django-rest-polymorphic
 XlsxWriter==1.2.8
-rules
-celery
-redis
-pysolr
-django-haystack
-django-select2
-django-better-admin-arrayfield
+rules<3
+celery<5
+redis<4
+pysolr<4
+django-haystack<3
+django-select2<8
+django-better-admin-arrayfield<2

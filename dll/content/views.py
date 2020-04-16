@@ -1,10 +1,12 @@
 import json
 import random
 
+from django.contrib.syndication.views import Feed
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404
+from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
@@ -348,8 +350,19 @@ class ContentDataFilterView(ListAPIView):
         return qs
 
 
-class TeachingModuleFilterView(TemplateView):
+class BaseFilterView(TemplateView):
+    rss_feed_url = None
+    def get_context_data(self, **kwargs):
+        ctx = super(BaseFilterView, self).get_context_data(**kwargs)
+        if self.rss_feed_url:
+            site = get_current_site(self.request)
+            ctx['rss_feed_url'] = f'{self.request.scheme}://{site.domain}{self.rss_feed_url}'
+        return ctx
+
+
+class TeachingModuleFilterView(BaseFilterView):
     template_name = 'dll/filter/teaching_modules.html'
+    rss_feed_url = reverse_lazy('teaching-modules-feed')
 
     def get_context_data(self, **kwargs):
         ctx = super(TeachingModuleFilterView, self).get_context_data(**kwargs)
@@ -410,8 +423,9 @@ class TeachingModuleDataFilterView(ContentDataFilterView):
         return qs.distinct()
 
 
-class ToolFilterView(TemplateView):
+class ToolFilterView(BaseFilterView):
     template_name = 'dll/filter/tools.html'
+    rss_feed_url = reverse_lazy('tools-feed')
 
 
 class ToolDataFilterView(ContentDataFilterView):
@@ -435,8 +449,9 @@ class ToolDataFilterView(ContentDataFilterView):
         return qs.distinct()
 
 
-class TrendFilterView(TemplateView):
+class TrendFilterView(BaseFilterView):
     template_name = 'dll/filter/trends.html'
+    rss_feed_url = reverse_lazy('trends-feed')
 
 
 class TrendDataFilterView(ContentDataFilterView):
@@ -672,6 +687,51 @@ class DeleteContentFileView(DestroyAPIView):
             raise Http404
 
         return content_file
+
+
+class ContentFeed(Feed):
+    model = None
+
+    def item_title(self, item):
+        return item.name
+
+    def item_description(self, item):
+        return item.teaser
+
+    def item_author_name(self, item):
+        return str(item.author.full_name)
+
+    def item_pubdate(self, item):
+        return item.created
+
+    def item_updateddate(self, item):
+        return item.modified
+
+    def items(self):
+        if not self.model:
+            raise NotImplementedError
+        return self.model.objects.published()
+
+
+class TrendsFeed(ContentFeed):
+    model = Trend
+    title = "Trends Feed"
+    link = reverse_lazy('tools-feed')
+    description = "DLL Trend Updates"
+
+
+class ToolsFeed(ContentFeed):
+    model = Tool
+    title = "Tools Feed"
+    link = reverse_lazy('trends-feed')
+    description = "DLL Tool Updates"
+
+
+class TeachingModulesFeed(ContentFeed):
+    model = TeachingModule
+    title = "Unterrichtsbausteine Feed"
+    link = reverse_lazy('teaching-modules-feed')
+    description = "DLL TeachingModule Updates"
 
 
 def search_view(request):
