@@ -715,7 +715,7 @@ class ToolsFeed(ContentFeed):
 
 class TeachingModulesFeed(ContentFeed):
     model = TeachingModule
-    title = "TeachingModules Feed"
+    title = "Unterrichtsbausteine Feed"
     link = reverse_lazy('teaching-modules-feed')
     description = "DLL TeachingModule Updates"
 
