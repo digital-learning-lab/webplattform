@@ -18,6 +18,7 @@ from django.utils.translation import ugettext_lazy as _
 from django_better_admin_arrayfield.models.fields import ArrayField
 from django_extensions.db.fields import CreationDateTimeField
 from django_extensions.db.models import TimeStampedModel
+from easy_thumbnails.exceptions import InvalidImageFormatError
 from easy_thumbnails.files import get_thumbnailer
 from filer.fields.file import FilerFileField
 from filer.fields.image import FilerImageField
@@ -356,9 +357,12 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
 
     def get_image(self):
         if self.image is not None:
-            thumbnailer = get_thumbnailer(self.image)
-            thumb = thumbnailer.get_thumbnail({'size': (300,300), 'crop': True})
-            return str(thumb)
+            try:
+                thumbnailer = get_thumbnailer(self.image)
+                thumb = thumbnailer.get_thumbnail({'size': (300,300), 'crop': True})
+                return str(thumb)
+            except InvalidImageFormatError:
+                return None
         else:
             return None
 
