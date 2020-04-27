@@ -1,6 +1,6 @@
 <template>
   <app-content-submission-form :errors="errors" :mode="mode" :loading="loading" :saved="saved" @update="updateContent" @create="createContent" @preview="goToPreview" @delete-warning="showDeleteWarning" :data="data" @delete="deleteContent" @submit="submitContent" @update-review="updateReview" @approve-review="approveContent" @decline-review="declineContent" :can-delete="canDelete">
-    <template v-slot:progress>
+    <template v-slot:progress v-if="mode === 'edit'">
       <app-form-progress class="mt-5" :steps="steps" :active="stepIndex" @set-index="setIndex"/>
     </template>
 
