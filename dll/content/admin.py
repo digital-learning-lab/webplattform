@@ -16,7 +16,7 @@ from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 from dll.content.forms import FlatPageAdminForm, HelpTextAdminForm, HelpTextFieldForm
 from .models import TeachingModule, Competence, OperatingSystem, SubCompetence, Subject, SchoolType, Trend, Tool, \
-    ToolApplication, HelpText, HelpTextField, ContentLink, ContentFile
+    ToolApplication, HelpText, HelpTextField, ContentLink, ContentFile, Content
 
 admin.site.unregister(FlatPage)
 
@@ -42,14 +42,10 @@ class ContentLinkInlineAdmin(admin.StackedInline):
     model = ContentLink
 
 
-class ContentFileInlineAdmin(admin.StackedInline):
-    model = ContentFile
-
-
 @admin.register(Trend)
 class ContentAdmin(admin.ModelAdmin, DynamicArrayMixin):
     exclude = ('json_data', 'tags')
-    inlines = [ContentLinkInlineAdmin, ContentFileInlineAdmin]
+    inlines = [ContentLinkInlineAdmin]
 
 
 @admin.register(TeachingModule)
@@ -73,8 +69,6 @@ class TeachingModuleAdmin(ContentAdmin):
             'Zeitaufwand',
             'Schulform',
             'Bildungsplanbezug',
-            'Bundesland',
-            'Unterrichtsfach',
             'Verlinkte Tools',
             'Verlinkte Trends'
         ])
@@ -90,8 +84,6 @@ class TeachingModuleAdmin(ContentAdmin):
                 tm.estimated_time,
                 ', '.join([t.name for t in tm.school_types.all()]),
                 tm.educational_plan_reference,
-                tm.state,
-                ', '.join([s.name for s in tm.subjects.all()]),
                 ', '.join([t.name for t in tm.related_tools.all()]),
                 ', '.join([t.name for t in tm.related_trends.all()]),
             ])
