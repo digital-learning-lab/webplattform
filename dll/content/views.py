@@ -710,7 +710,7 @@ class ContentFeed(Feed):
     def items(self):
         if not self.model:
             raise NotImplementedError
-        return self.model.objects.published().order_by('-created')
+        return self.model.objects.published().order_by('-created')[:50]
 
 
 class TrendsFeed(ContentFeed):
