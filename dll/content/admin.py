@@ -16,7 +16,7 @@ from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 
 from dll.content.forms import FlatPageAdminForm, HelpTextAdminForm, HelpTextFieldForm
 from .models import TeachingModule, Competence, OperatingSystem, SubCompetence, Subject, SchoolType, Trend, Tool, \
-    ToolApplication, HelpText, HelpTextField, ContentLink
+    ToolApplication, HelpText, HelpTextField, ContentLink, Content
 
 admin.site.unregister(FlatPage)
 
@@ -47,6 +47,33 @@ class ContentAdmin(admin.ModelAdmin, DynamicArrayMixin):
     exclude = ('json_data', 'tags')
     inlines = [ContentLinkInlineAdmin]
 
+    def get_urls(self):
+        urls = super(ContentAdmin, self).get_urls()
+        def wrap(view):
+            def wrapper(*args, **kwargs):
+                return self.admin_site.admin_view(view)(*args, **kwargs)
+            wrapper.model_admin = self
+            return update_wrapper(wrapper, view)
+
+        custom_urls = [
+            path('republish-content/', wrap(self._republish_content), name="republish_content"),
+        ]
+        return custom_urls + urls
+
+    def _republish_content(self, request):
+        for content in list(Content.objects.published()):
+            content_draft = content.publisher_draft
+            draft_date = content_draft.modified
+            public_date = content.modified
+            if (
+                    draft_date.year == public_date.year and
+                    draft_date.month == public_date.month and
+                    draft_date.day == public_date.day and
+                    draft_date.hour == public_date.hour and
+                    draft_date.minute == public_date.minute
+            ):
+                content_draft.publish()
+        return HttpResponse()
 
 @admin.register(TeachingModule)
 class TeachingModuleAdmin(ContentAdmin):
