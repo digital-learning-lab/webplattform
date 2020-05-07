@@ -42,7 +42,11 @@ export const queryMixin = {
         }
       }
     }
-    console.log(this.competences)
     this.inited = true
+  },
+  watch: {
+    inited (newValue) {
+      this.updateContent()
+    }
   }
 }
