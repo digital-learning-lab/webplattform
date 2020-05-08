@@ -43,10 +43,6 @@ export const queryMixin = {
       }
     }
     this.inited = true
-  },
-  watch: {
-    inited (newValue) {
-      this.updateContent()
-    }
+    this.updateContents()
   }
 }
