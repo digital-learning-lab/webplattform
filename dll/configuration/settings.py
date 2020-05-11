@@ -14,8 +14,6 @@ import logging
 import os
 from environs import Env
 
-from corsheaders.defaults import default_headers
-
 
 env = Env()
 logger = logging.getLogger('dll.settings')
@@ -76,13 +74,11 @@ INSTALLED_APPS = [
     'haystack',
     'django_better_admin_arrayfield.apps.DjangoBetterAdminArrayfieldConfig',
     'django_select2',
-    'corsheaders',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
