@@ -1,13 +1,13 @@
 <template>
   <app-content-submission-form :errors="errors" :mode="mode" :loading="loading" :saved="saved" @update="updateContent" @create="createContent" @preview="goToPreview" @delete-warning="showDeleteWarning" :data="data" @delete="deleteContent" @submit="submitContent" @update-review="updateReview" @approve-review="approveContent" @decline-review="declineContent" :can-delete="canDelete">
-    <template v-slot:progress>
+    <template v-slot:progress v-if="mode === 'edit'">
       <app-form-progress class="mt-5" :steps="steps" :active="stepIndex" @set-index="setIndex"/>
     </template>
 
     <template v-slot:buttons-top><span></span></template>
     <template v-slot:messages-top><span></span></template>
 
-    <h2 class="mt-5 mb-4">{{ currentStep }}</h2>
+    <h2 class="mt-5 mb-4">{{ currentStep.long }}</h2>
 
       <div class="form-group" v-if="reviewValue.feedback && !review">
         <label>Feedback:</label> <br>
@@ -128,11 +128,26 @@
           license: null
         },
         steps: [
-          'Allgemeine Informationen',
-          'Informationen zum schulischen Kontext',
-          'Zielsetzungen',
-          'Vorraussetzungen zum Einsatz',
-          'Weiterführende Informationen'
+          {
+            short: 'Allgemeine Informationen',
+            long: 'Allgemeine Informationen zum Unterrichtsbaustein',
+          },
+          {
+            short: 'Informationen zum schulischen Kontext',
+            long: 'Allgemeine Informationen zum schulischen Kontext des Unterrichtsbausteins',
+          },
+          {
+            short: 'Zielsetzungen',
+            long:'Zielsetzungen des Unterrichtsbausteins',
+          },
+          {
+            short: 'Vorraussetzungen zum Einsatz',
+            long: 'Voraussetzungen zum Einsatz des Unterrichtsbausteins im Unterricht'
+          },
+          {
+            short: 'Weiterführende Informationen',
+            long: 'Weiterführende Informationen zum Unterrichtsbaustein'
+          },
         ],
         stepIndex: 0,
         germanStateOptions: [

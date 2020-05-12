@@ -18,8 +18,8 @@ export const contentFilter = {
       dataUrl: null,
       contents: [],
       loading: true,
-      sortBy: '-latest',
-      searchTerm: '',
+      sorting: '-latest',
+      q: '',
       competences: []
     }
   },
@@ -28,22 +28,19 @@ export const contentFilter = {
       return {}
     },
     updateContents (page) {
+      if (!this.inited) {
+        return
+      }
       this.loading = true
       if (!page || typeof page === 'object') {
         // Reset page to 1 if there is no page given or page object is an event (object)
         this.currentPage = 1
       }
       axios.get(this.dataUrl, {
-        params: {
-          q: this.searchTerm,
-          sorting: this.sortBy,
-          competence: this.window.competenceSlug,
-          page: Number.isInteger(page) ? page : 1,
-          competences: this.competences,
-          ...this.getQueryParams()
-        }
+        params: this.getParams(page)
       })
         .then(response => {
+          this.updateQueryString()
           this.contents = response.data.results
           this.updatePagination(response)
           this.loading = false
@@ -52,6 +49,16 @@ export const contentFilter = {
           console.log(error)
           this.loading = false
         })
+    },
+    getParams (page) {
+      return {
+        q: this.q,
+        sorting: this.sorting,
+        competence: this.window.competenceSlug,
+        page: Number.isInteger(page) ? page : 1,
+        competences: this.competences,
+        ...this.getQueryParams()
+      }
     }
   },
   computed: {
@@ -64,7 +71,7 @@ export const contentFilter = {
     this.debouncedUpdate = debounce(this.updateContents, 500)
   },
   watch: {
-    searchTerm () {
+    q () {
       this.debouncedUpdate()
     },
     competences () {

@@ -6,14 +6,14 @@
           <h2>Filtern nach</h2>
 
           <h3 class="form-subhead">Sortierung</h3>
-          <select name="sortby" id="sortby-select" class="form-control" v-model="sortBy" @change="updateContents">
+          <select name="sortby" id="sortby-select" class="form-control" v-model="sorting" @change="updateContents">
             <option value="-latest">Neustes zuerst</option>
             <option value="latest">Ältestes zuerst</option>
             <option value="az">A-Z</option>
             <option value="za">Z-A</option>
           </select>
           <h3 class="form-subhead">Schlagwortsuche</h3>
-          <input type="text" v-model="searchTerm" name="searchTerm" class="form-control" @keydown="preventEnter">
+          <input type="text" v-model="q" name="searchTerm" class="form-control" @keydown="preventEnter">
           <app-competence-filter :competences.sync="competences"></app-competence-filter>
           <div>
             <h3 class="form-subhead">Sprachen</h3>
@@ -71,10 +71,11 @@
 <script>
 
   import { contentFilter } from './mixins/contentFilterMixin'
+  import { queryMixin } from './mixins/queryMixin'
 
   export default {
     name: 'TrendsFilterApp',
-    mixins: [contentFilter],
+    mixins: [contentFilter, queryMixin],
     data () {
       return {
         dataUrl: '/api/trends',

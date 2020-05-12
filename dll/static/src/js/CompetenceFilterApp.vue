@@ -8,7 +8,7 @@
           <h2>Filtern nach</h2>
 
           <h3 class="form-subhead">Sortierung</h3>
-          <select name="sortby" id="sortby-select" v-model="sortBy" @change="updateContents" class="form-control">
+          <select name="sortby" id="sortby-select" v-model="sorting" @change="updateContents" class="form-control">
             <option value="az">A-Z</option>
             <option value="za">Z-A</option>
           </select>
@@ -17,15 +17,15 @@
           <h3 class="form-subhead">Auswahl</h3>
           <ul class="list-unstyled">
             <li class="form-check">
-              <input type="checkbox" id="teaching-modules-checkbox" @change="updateContents" v-model="showTeachingModules" class="form-check-input">
+              <input type="checkbox" id="teaching-modules-checkbox" @change="updateContents" v-model="teachingModules" class="form-check-input">
               <label class="form-check-label" for="teaching-modules-checkbox">Unterrichtsbausteine</label>
             </li>
             <li class="form-check">
-              <input type="checkbox" id="tools-checkbox" @change="updateContents" v-model="showTools" class="form-check-input">
+              <input type="checkbox" id="tools-checkbox" @change="updateContents" v-model="tools" class="form-check-input">
               <label class="form-check-label" for="tools-checkbox">Tools</label>
             </li>
             <li class="form-check">
-              <input type="checkbox" id="trends-checkbox" @change="updateContents" v-model="showTrends" class="form-check-input">
+              <input type="checkbox" id="trends-checkbox" @change="updateContents" v-model="trends" class="form-check-input">
               <label class="form-check-label" for="trends-checkbox">Trends</label>
             </li>
           </ul>
@@ -62,6 +62,7 @@
   import ContentTeaser from './components/ContentTeaser.vue'
   import Pagination from './components/Pagination.vue'
   import { preventEnter } from './mixins/preventEnterMixin'
+  import { queryMixin } from './mixins/queryMixin'
 
   export default {
     name: 'CompetenceFilterApp',
@@ -69,7 +70,7 @@
       'AppContentTeaser': ContentTeaser,
       'AppPagination': Pagination
     },
-    mixins: [preventEnter],
+    mixins: [queryMixin, preventEnter],
     data () {
       return {
         contents: [],
@@ -79,11 +80,11 @@
           description: 'Um im digitalen Raum adäquat KOMMUNIZIEREN & KOOPERIEREN zu können, braucht es entsprechende Kompetenzen, digitale Werkzeuge zur angemessenen und effektiven Kommunikation einsetzen und in digitalen Umgebungen zielgerichtet kooperieren zu können. Dabei geht es vor allem darum, entsprechend der jeweiligen Situation und ausgerichtet an den Kommunikations- bzw. Kooperationspartnern die passenden Werkzeuge auszuwählen und entsprechende Umgangsregeln einzuhalten.'
         },
         loading: true,
-        sortBy: 'az',
+        sorting: 'az',
         searchTerm: '',
-        showTeachingModules: true,
-        showTrends: true,
-        showTools: true,
+        teachingModules: true,
+        trends: true,
+        tools: true,
         currentPage: 1,
         pagination: {
           count: 0,
@@ -94,6 +95,17 @@
       }
     },
     methods: {
+      getParams (page) {
+        return {
+            q: this.searchTerm,
+            sorting: this.sorting,
+            teachingModules: this.teachingModules,
+            trends: this.trends,
+            tools: this.tools,
+            competence: this.window.competenceSlug,
+            page: Number.isInteger(page) ? page : 1
+          }
+      },
       jumpTo (event, page) {
         this.currentPage = page
         this.updateContents(page)
@@ -107,17 +119,10 @@
       updateContents (page) {
         this.loading = true
         axios.get(this.resource, {
-          params: {
-            q: this.searchTerm,
-            sorting: this.sortBy,
-            teachingModules: this.showTeachingModules,
-            trends: this.showTrends,
-            tools: this.showTools,
-            competence: this.window.competenceSlug,
-            page: Number.isInteger(page) ? page : 1
-          }
+          params: this.getParams(page)
         })
           .then(response => {
+            this.updateQueryString()
             this.loading = false
             this.contents = response.data.results
             this.pagination = {
