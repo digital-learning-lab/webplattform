@@ -172,10 +172,10 @@
     },
     methods: {
       setIndex (idx) {
-        if (mode === 'edit') {
+        if (this.mode === 'edit') {
           this.updateContent()
         }
-        if (mode === 'review') {
+        if (this.mode === 'review') {
           this.updateReview()
         }
         this.stepIndex = idx
