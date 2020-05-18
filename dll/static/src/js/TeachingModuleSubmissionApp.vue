@@ -172,7 +172,12 @@
     },
     methods: {
       setIndex (idx) {
-        this.updateContent()
+        if (this.mode === 'edit') {
+          this.updateContent()
+        }
+        if (this.mode === 'review') {
+          this.updateReview()
+        }
         this.stepIndex = idx
         let ele = document.getElementById('submission-form')
         if (window.scrollY > ele.offsetTop) {
