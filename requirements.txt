@@ -29,3 +29,5 @@ pysolr<4
 django-haystack<3
 django-select2<8
 django-better-admin-arrayfield<2
+django-storages~=1.9.1
+boto3~=1.12.47

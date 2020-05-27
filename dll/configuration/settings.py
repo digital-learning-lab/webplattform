@@ -84,7 +84,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
 
 ROOT_URLCONF = 'dll.configuration.urls'
@@ -157,11 +157,32 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.2/howto/static-files/
+if env.bool('DJANGO_USE_S3', False):
+    # aws settings
+    AWS_ACCESS_KEY_ID = os.getenv('DJANGO_AWS_S3_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.getenv('DJANGO_AWS_S3_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.getenv('DJANGO_AWS_S3_BUCKET_NAME')
+    AWS_REGION = os.getenv('DJANGO_AWS_REGION', 'eu-central-1')
+    AWS_DEFAULT_ACL = None
+    AWS_S3_ENDPOINT_URL = 'https://s3-de-central.profitbricks.com'
+    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3-{AWS_REGION}-central.profitbricks.com'
+    # s3 static settings
+    STATIC_LOCATION = 'static'
+    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/'
+    STATICFILES_STORAGE = 'dll.general.storage_backends.StaticStorage'
+    # s3 public media settings
+    PUBLIC_MEDIA_LOCATION = 'media'
+    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
+    DEFAULT_FILE_STORAGE = 'dll.general.storage_backends.PublicMediaStorage'
+else:
+    # Static files (CSS, JavaScript, Images)
+    # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-STATIC_URL = os.getenv('STATIC_URL') or '/static/'
-STATIC_ROOT = os.getenv('STATIC_ROOT') or os.path.join(BASE_DIR, '..', 'static')
+    STATIC_URL = os.getenv('STATIC_URL') or '/static/'
+    STATIC_ROOT = os.getenv('STATIC_ROOT') or os.path.join(BASE_DIR, '..', 'static')
+
+    MEDIA_URL = os.getenv('MEDIA_URL') or '/media/'
+    MEDIA_ROOT = os.getenv('MEDIA_ROOT') or os.path.join(BASE_DIR, 'media')
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -182,9 +203,6 @@ WEBPACK_LOADER = {
         'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
     }
 }
-
-MEDIA_URL = os.getenv('MEDIA_URL') or '/media/'
-MEDIA_ROOT = os.getenv('MEDIA_ROOT') or os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'user.DllUser'
 AUTHENTICATION_BACKENDS = (
@@ -303,3 +321,10 @@ EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', None)
 
 
 EMAIL_SENDER = os.getenv('EMAIL_SENDER', None)
+
+# ---------------------- djangor-cors-headers --------------------
+CORS_ORIGIN_WHITELIST = env.list('CORS_ORIGIN_WHITELIST', [])
+CORS_ORIGIN_ALLOW_ALL = env.bool('CORS_ORIGIN_ALLOW_ALL', False)
+CORS_ADD_ALLOW_HEADERS = env.list('CORS_Add_ALLOW_HEADERS', [])
+if CORS_ADD_ALLOW_HEADERS:
+    CORS_ALLOW_HEADERS = list(default_headers) + CORS_ADD_ALLOW_HEADERS
