@@ -33,9 +33,13 @@
 <script>
   export default {
     name: 'CompetenceFilter',
-    data () {
-      return {
-        competences: []
+    props: {
+      competences: {
+        type: Array,
+        default: () => {
+          return []
+        },
+        required: false
       }
     },
     methods: {

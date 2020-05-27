@@ -2,6 +2,7 @@ import logging
 
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -84,7 +85,7 @@ class PublisherModel(PublisherModelBase):
             publish_obj = self.__class__.objects.get(pk=self.pk)
             publish_obj.pk = None
             publish_obj.id = None
-            publish_obj.created = None
+            publish_obj.created = timezone.now()
             publish_obj.modified = None
             publish_obj.publisher_is_draft = self.STATE_PUBLISHED
             publish_obj.save()

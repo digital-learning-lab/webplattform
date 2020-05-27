@@ -3,7 +3,7 @@
     <div class="step" :class="{'step--is-active': stepIsActive(idx + 1)}" v-for="(step, idx) in steps" @click="setIndex(idx)">
       <img :src="getStepImage(idx + 1)" alt="">
       <div class="step-text">
-        {{ step }}
+        {{ step.short }}
       </div>
     </div>
   </div>
