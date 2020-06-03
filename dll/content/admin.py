@@ -76,7 +76,7 @@ class TeachingModuleAdmin(ContentAdmin):
         for tm in queryset:
             worksheet.write_row(counter, 0, [
                 tm.name,
-                tm.author.full_name,
+                tm.author.full_name if tm.author else '',
                 tm.created.strftime('%d.%m.%Y') if tm.created else '',
                 ', '.join([c.name for c in tm.competences.all()]),
                 tm.school_class.lower if tm.school_class else '',

@@ -65,7 +65,7 @@ class ContentListInternalSerializer(ContentListSerializer):
     status = serializers.SerializerMethodField()
 
     def get_author(self, obj):
-        return str(obj.author.full_name)
+        return str(obj.author.full_name) if obj.author else ''
 
     def get_preview_url(self, obj):
         return obj.get_preview_url()
