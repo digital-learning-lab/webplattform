@@ -360,7 +360,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
             try:
                 thumbnailer = get_thumbnailer(self.image)
                 thumb = thumbnailer.get_thumbnail({'size': (300,300), 'crop': True})
-                return str(thumb)
+                return thumb.url
             except InvalidImageFormatError:
                 return None
         else:

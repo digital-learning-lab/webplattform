@@ -1,7 +1,7 @@
 <template>
   <a class="content-teaser" :class="contentClass" :href="content.url">
     <div class="content-teaser__image-container">
-      <img v-if="content.image" class="content-teaser__image" :src="'/media/' + content.image" srcset="" :alt="'Vorschaubild ' + content.name ">
+      <img v-if="content.image" class="content-teaser__image" :src="content.image" srcset="" :alt="'Vorschaubild ' + content.name ">
     </div>
     <div class="content-teaser__body">
       <div class="content-teaser__type">{{ content.type_verbose }}</div>

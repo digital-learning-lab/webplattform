@@ -16,7 +16,6 @@ from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
 from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication, \
     HelpText, Content, Tool, Trend, TeachingModule, ContentLink, Review, ToolLink
-from dll.general.models import DllSlugField
 from dll.general.utils import custom_slugify
 from dll.user.models import DllUser
 
