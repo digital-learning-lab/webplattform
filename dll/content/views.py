@@ -33,6 +33,7 @@ from dll.content.serializers import AuthorSerializer, CompetenceSerializer, SubC
     SchoolTypeSerializer, ReviewSerializer, SubjectSerializer, FileSerializer
 from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
+from .filters import ToolStatusFilter, ToolApplicationFilter, ToolOperationSystemFilter, ToolDataPrivacyFilter
 from .serializers import ContentListSerializer, ContentPolymorphicSerializer
 
 
@@ -430,23 +431,13 @@ class ToolFilterView(BaseFilterView):
 
 class ToolDataFilterView(ContentDataFilterView):
     model = Tool
+    filter_backends = [
+          ToolStatusFilter,
+          ToolApplicationFilter,
+          ToolDataPrivacyFilter,
+          ToolOperationSystemFilter,
+    ] + ContentDataFilterView.filter_backends
 
-    def get_queryset(self):
-        qs = super(ToolDataFilterView, self).get_queryset()
-
-        tool_status = self.request.GET.get('status', None)
-        applications = self.request.GET.getlist('applications[]', [])
-        operating_systems = self.request.GET.getlist('operatingSystems[]', [])
-
-        if tool_status:
-            qs = qs.filter(Tool___status=tool_status)
-
-        if applications:
-            qs = qs.filter(Tool___applications__name__in=applications)
-
-        if operating_systems:
-            qs = qs.filter(Tool___operating_systems__pk__in=operating_systems)
-        return qs.distinct()
 
 
 class TrendFilterView(BaseFilterView):
