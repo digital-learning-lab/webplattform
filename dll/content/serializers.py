@@ -243,7 +243,7 @@ class AdditionalToolsField(RelatedField):
         return str(value)
 
 
-class BaseContentSubclassSerializer(serializers.ModelSerializer):
+class   BaseContentSubclassSerializer(serializers.ModelSerializer):
     name = CharField(required=True)
     image = SerializerMethodField()
     author = AuthorSerializer(read_only=True, allow_null=True, required=False)
@@ -270,6 +270,10 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         if (self.instance is None and Content.objects.drafts().filter(slug=expected_slug).count() >= 1) or \
                 Content.objects.published().filter(slug=expected_slug).count() > 1:
             raise ValidationError(_('A content with this name already exists.'))
+        if self.instance is not None:
+            content_to_check = Content.objects.exclude(pk=self.instance.pk)
+            if content_to_check.drafts().count() >= 1 or content_to_check.published().count() >= 1:
+                raise ValidationError(_('A content with this name already exists.'))
         return data
 
     def validate_related_content(self, data):
