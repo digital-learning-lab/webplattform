@@ -16,7 +16,6 @@ from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
 from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication, \
     HelpText, Content, Tool, Trend, TeachingModule, ContentLink, Review, ToolLink
-from dll.general.models import DllSlugField
 from dll.general.utils import custom_slugify
 from dll.user.models import DllUser
 
@@ -65,7 +64,7 @@ class ContentListInternalSerializer(ContentListSerializer):
     status = serializers.SerializerMethodField()
 
     def get_author(self, obj):
-        return str(obj.author.full_name)
+        return str(obj.author.full_name) if obj.author else ''
 
     def get_preview_url(self, obj):
         return obj.get_preview_url()
@@ -244,7 +243,7 @@ class AdditionalToolsField(RelatedField):
         return str(value)
 
 
-class BaseContentSubclassSerializer(serializers.ModelSerializer):
+class   BaseContentSubclassSerializer(serializers.ModelSerializer):
     name = CharField(required=True)
     image = SerializerMethodField()
     author = AuthorSerializer(read_only=True, allow_null=True, required=False)
@@ -271,6 +270,10 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         if (self.instance is None and Content.objects.drafts().filter(slug=expected_slug).count() >= 1) or \
                 Content.objects.published().filter(slug=expected_slug).count() > 1:
             raise ValidationError(_('A content with this name already exists.'))
+        if self.instance is not None:
+            content_to_check = Content.objects.exclude(pk=self.instance.pk)
+            if content_to_check.drafts().count() >= 1 or content_to_check.published().count() >= 1:
+                raise ValidationError(_('A content with this name already exists.'))
         return data
 
     def validate_related_content(self, data):

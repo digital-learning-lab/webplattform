@@ -14,6 +14,15 @@
           </select>
           <h3 class="form-subhead">Schlagwortsuche</h3>
           <input type="text" v-model="q" name="searchTerm" class="form-control" @keydown="preventEnter">
+          <h3 class="form-subhead">Datenschutz</h3>
+          <select name="data-privacy" id="data-privacy" v-model="dataPrivacy" @change="updateContents" class="form-control">
+            <option value="" selected>--------</option>
+            <option value="0">Unbekannt</option>
+            <option value="1">Es werden keinerlei Daten erhoben</option>
+            <option value="2">Personenbezogene Daten wie z.B. Logins werden geschützt auf dem Server abgelegt. Es greift die EU-Datenschutz-Grundverordnung.</option>
+            <option value="3">Personenbezogene Daten werden erhoben. Dritte haben Zugriff auf diese Daten. Es greift die EU-Datenschutz-Grundverordnung.</option>
+            <option value="4">Personenbezogene Daten werden erhoben. Es greift NICHT die EU-Datenschutz-Grundverordnung.</option>
+          </select>
           <app-competence-filter :competences.sync="competences"></app-competence-filter>
            <div>
             <h3 class="form-subhead">Anwendung:</h3>
@@ -116,19 +125,24 @@
         dataUrl: '/api/tools',
         status: '',
         applications: [],
-        operatingSystems: []
+        operatingSystems: [],
+        dataPrivacy: null
       }
     },
     methods: {
       getQueryParams () {
         return {
           status: this.status,
+          dataPrivacy: this.dataPrivacy,
           applications: this.applications,
           operatingSystems: this.operatingSystems
         }
       }
     },
     watch: {
+      dataPrivacy () {
+        this.debouncedUpdate()
+      },
       applications () {
         this.debouncedUpdate()
       },

@@ -269,7 +269,7 @@ class UserContentView(ListAPIView):
         if search_term:
             qs = qs.filter(Q(name__icontains=search_term) | Q(teaser__icontains=search_term))
 
-        return qs
+        return qs.distinct()
 
 
 class UserInvitationView(UserContentView):

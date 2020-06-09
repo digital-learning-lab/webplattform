@@ -4,7 +4,6 @@ import 'bootstrap/js/dist/tooltip'
 import '../scss/main.scss'
 
 import './externalLinks'
-import './flower'
 import './header'
 import './navigation'
 import './detail'

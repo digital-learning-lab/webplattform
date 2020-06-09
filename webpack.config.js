@@ -96,6 +96,7 @@ if (devMode) {
 module.exports = {
   entry: {
     main: path.join(__dirname, './static/src/js/index.js'),
+    flower: path.join(__dirname, './static/src/js/flower.js'),
     filter: path.join(__dirname, './static/src/js/filter.js')
   },
   output: {
