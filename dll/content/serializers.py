@@ -271,8 +271,9 @@ class   BaseContentSubclassSerializer(serializers.ModelSerializer):
                 Content.objects.published().filter(slug=expected_slug).count() > 1:
             raise ValidationError(_('A content with this name already exists.'))
         if self.instance is not None:
-            content_to_check = Content.objects.exclude(pk=self.instance.pk)
-            if content_to_check.drafts().count() >= 1 or content_to_check.published().count() >= 1:
+            content_to_check = Content.objects.filter(slug=expected_slug).exclude(pk=self.instance.pk)
+            if (self.instance.publisher_is_draft and content_to_check.drafts().count() >= 1) or \
+               (not self.instance.publisher_is_draft and content_to_check.published().count() >= 1):
                 raise ValidationError(_('A content with this name already exists.'))
         return data
 
