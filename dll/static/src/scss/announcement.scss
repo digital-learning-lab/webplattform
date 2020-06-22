@@ -1,0 +1,11 @@
+.announcement {
+  background-color: $color--daintree;
+  color: #fff;
+  left: 0;
+  padding: 20px 15px;
+  position: fixed;
+  top: 100px;
+  text-align: center;
+  width: 100%;
+  z-index: 10000;
+}
