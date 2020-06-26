@@ -30,9 +30,9 @@
         </li>
       {% endif %}
       {% if not request.user.is_authenticated %}
-      <li class="navigation__item js-navigation__item">
-        <a href="{% url 'user:login' %}">Login</a>
-      </li>
+{#      <li class="navigation__item js-navigation__item"> #}
+{#        <a href="{% url 'user:login' %}">Login</a>#}
+{#      </li>#}
 {#      {% else %} #}
 {#        <li class="navigation__item js-navigation__item"> #}
 {#          <a href="{% url 'user:profile' %}">Mein Profil</a> #}
