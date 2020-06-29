@@ -30,23 +30,23 @@
         </li>
       {% endif %}
       {% if not request.user.is_authenticated %}
-{#      <li class="navigation__item js-navigation__item"> #}
-{#        <a href="{% url 'user:login' %}">Login</a>#}
-{#      </li>#}
-{#      {% else %} #}
-{#        <li class="navigation__item js-navigation__item"> #}
-{#          <a href="{% url 'user:profile' %}">Mein Profil</a> #}
-{#        </li> #}
-{#      {% endif %} #}
-{#      {% if request.user.is_authenticated %} #}
-{#        <li class="navigation__item js-navigation__item"> #}
-{#          <a href="{% url 'user-content-overview' %}">Meine Inhalte</a> #}
-{#        </li> #}
-{#        {% if request.user.is_reviewer %} #}
-{#          <li class="navigation__item js-navigation__item"> #}
-{#            <a href="{% url 'user-content-review' %}">Review Inhalte</a> #}
-{#          </li> #}
-{#        {% endif %} #}
+      <li class="navigation__item js-navigation__item">
+        <a href="{% url 'user:login' %}">Login</a>
+      </li>
+      {% else %}
+        <li class="navigation__item js-navigation__item">
+          <a href="{% url 'user:profile' %}">Mein Profil</a>
+        </li>
+      {% endif %}
+      {% if request.user.is_authenticated %}
+        <li class="navigation__item js-navigation__item">
+          <a href="{% url 'user-content-overview' %}">Meine Inhalte</a>
+        </li>
+        {% if request.user.is_reviewer %}
+          <li class="navigation__item js-navigation__item">
+            <a href="{% url 'user-content-review' %}">Review Inhalte</a>
+          </li>
+        {% endif %}
       {% endif %}
       <li class="navigation__item js-navigation__item">
         <a href="/#dll-aufbau"{% if request.path == '/' %}class="js-navigation-scroll"{% endif %}>Was ist das dll?</a>

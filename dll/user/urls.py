@@ -11,7 +11,7 @@ app_name = 'user'
 urlpatterns = [
     path('signup/', SignUpView.as_view(), name='signup'),
     path('signup/confirm-email', SignUpSuccessfulView.as_view(), name='signup-success'),
-    # path('login/', auth_views.LoginView.as_view(template_name='dll/user/login.html'), name='login'),
+    path('login/', auth_views.LoginView.as_view(template_name='dll/user/login.html'), name='login'),
     path('profil/', login_required(ProfileViewIndex.as_view()), name='profile'),
     path('profil/passwort-aendern/', login_required(ProfileViewChangePassword.as_view()), name='password_change'),
     path('profil/email/', login_required(ProfileViewEmails.as_view()), name='email'),
