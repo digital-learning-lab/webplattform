@@ -29,9 +29,9 @@
     methods: {
       getStepImage (idx) {
         if (this.stepIsActive(idx)) {
-          return `/static/img/forms/step_${idx}_black.svg`
+          return `https://dll-production.s3-de-central.profitbricks.com/static/img/forms/step_${idx}_black.svg`
         }
-        return `/static/img/forms/step_${idx}.svg`
+        return `https://dll-production.s3-de-central.profitbricks.com/static/img/forms/step_${idx}.svg`
       },
       stepIsActive (idx) {
         return idx <= (this.active + 1)
