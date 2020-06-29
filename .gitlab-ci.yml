@@ -82,9 +82,9 @@ register_staging_images:
     before_script:
         - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
     script:
-        - docker build --no-cache -t ${CONTAINER_STAGING_IMAGE} ${DOCKER_FILE_PATH}
+        - docker build --no-cache -t ${CONTAINER_STAGING_IMAGE}-staging ${DOCKER_FILE_PATH}
         - docker push ${CONTAINER_STAGING_IMAGE}-staging
-        - docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
+        - docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE}-staging ${DOCKER_FILE_PATH} -f Dockerfile.solr
         - docker push ${CONTAINER_STAGING_SOLR_IMAGE}-staging
     tags:
         - floki_build
