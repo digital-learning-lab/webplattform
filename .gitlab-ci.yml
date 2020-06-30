@@ -85,8 +85,8 @@ register_staging_images:
     script:
         - docker build --no-cache -t ${CONTAINER_STAGING_IMAGE}-staging ${DOCKER_FILE_PATH}
         - docker push ${CONTAINER_STAGING_IMAGE}-staging
-        - docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE}-staging ${DOCKER_FILE_PATH} -f Dockerfile.solr
-        - docker push ${CONTAINER_STAGING_SOLR_IMAGE}-staging
+        #- docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE}-staging ${DOCKER_FILE_PATH} -f Dockerfile.solr
+        #- docker push ${CONTAINER_STAGING_SOLR_IMAGE}-staging
     tags:
         - floki_build
     only:
@@ -100,8 +100,8 @@ register_images:
     script:
         - docker build --no-cache -t ${CONTAINER_STAGING_IMAGE} ${DOCKER_FILE_PATH}
         - docker push ${CONTAINER_STAGING_IMAGE}
-        - docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
-        - docker push ${CONTAINER_STAGING_SOLR_IMAGE}
+        #- docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
+        #- docker push ${CONTAINER_STAGING_SOLR_IMAGE}
     tags:
         - floki_build
     only:
@@ -116,8 +116,8 @@ register_kube_images:
     script:
         - docker build --no-cache -t ${CONTAINER_RELEASE_IMAGE} ${DOCKER_FILE_PATH}
         - docker push ${CONTAINER_RELEASE_IMAGE}
-        - docker build --no-cache -t ${CONTAINER_RELEASE_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
-        - docker push ${CONTAINER_RELEASE_SOLR_IMAGE}
+        #- docker build --no-cache -t ${CONTAINER_RELEASE_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
+        #- docker push ${CONTAINER_RELEASE_SOLR_IMAGE}
     tags:
         - floki_build
     only:
