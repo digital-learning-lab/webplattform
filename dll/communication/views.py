@@ -8,6 +8,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
 from django.views.generic import FormView, TemplateView
 
+from dll.content.models import Content
 from dll.communication.forms import ContactForm, NewsletterForm
 from dll.communication.models import NewsletterSubscrption, CoAuthorshipInvitation
 from dll.communication.tokens import newsletter_confirm_token, co_author_invitation_token
@@ -139,20 +140,19 @@ class CoAuthorInvitationConfirmView(View):
             pk = kwargs.get('pk', None)
             invitation = get_object_or_404(CoAuthorshipInvitation, to=self.request.user, content=pk,
                                            accepted__isnull=True)
-        ctx = {
+        return {
             'content': invitation.content.get_real_instance()
         }
-        return ctx
 
     def post(self, request, *args, **kwargs):
         user_response = request.POST.get('user_response', None)
         user = self.request.user
+        pk = kwargs.get('pk', None)
         try:
             if kwargs.get('inv_id_b64', None):
                 invitation_id = force_text(urlsafe_base64_decode(kwargs['inv_id_b64']))
                 invitation = CoAuthorshipInvitation.objects.get(pk=invitation_id)
             else:
-                pk = kwargs.get('pk', None)
                 invitation = get_object_or_404(CoAuthorshipInvitation, to=user, content=pk, accepted__isnull=True)
         except (TypeError, ValueError, OverflowError, CoAuthorshipInvitation.DoesNotExist):
             invitation = None
@@ -165,7 +165,8 @@ class CoAuthorInvitationConfirmView(View):
                 (co_author_invitation_token.check_token(invitation, kwargs.get('token', None)) or invitation.to == user):
             if user_response == "Yes":
                 invitation.accept()
-                return redirect('home')
+                content = get_object_or_404(Content, pk=pk)
+                return redirect(content.get_real_instance().get_edit_url())
             elif user_response == "No":
                 invitation.decline()
                 return redirect('home')
