@@ -66,7 +66,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         null=True
     )
     slug = DllSlugField(populate_from='name', overwrite=True, allow_duplicates=True)
-    author = models.ForeignKey(DllUser, on_delete=models.SET_NULL, verbose_name=_("Autor"), null=True)
+    author = models.ForeignKey(DllUser, on_delete=models.SET_NULL, verbose_name=_("Ersteller"), null=True)
     co_authors = models.ManyToManyField(DllUser, related_name='collaborative_content',
                                         verbose_name=_("Kollaborateure"), blank=True)
     image = FilerImageField(
