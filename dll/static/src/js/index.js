@@ -1,6 +1,8 @@
 import 'bootstrap/js/dist/collapse'
 import 'bootstrap/js/dist/tab'
 import 'bootstrap/js/dist/tooltip'
+import '@fortawesome/fontawesome-free/js/all.min'
+import '@fortawesome/fontawesome-free/js/solid.min'
 import '../scss/main.scss'
 
 import './externalLinks'
