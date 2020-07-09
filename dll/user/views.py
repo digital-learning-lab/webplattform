@@ -100,7 +100,7 @@ class CreateEditContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
         qs = self.model.objects.drafts()
         user = self.request.user
         if not user.is_superuser:
-            qs = qs.filter(Q(author=user) | Q(co_authors__in=[user.pk]))
+            qs = qs.filter(Q(author=user) | Q(co_authors__in=[user.pk])).distinct()
         if not getattr(self, 'object', None):
             slug = self.kwargs.get('slug', None)
             if slug:
