@@ -304,8 +304,8 @@ LOCALE_PATHS = [
     os.path.join(BASE_DIR, 'locales')
 ]
 
+DEFAULT_FROM_EMAIL = 'kontakt@digitallearninglab.de'
 
-DEFAULT_FROM_EMAIL = 'digital.learning.lab@tuhh.de'
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 
 # Host for sending e-mail.
