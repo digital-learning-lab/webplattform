@@ -163,7 +163,6 @@ if env.bool('DJANGO_USE_S3', False):
     AWS_SECRET_ACCESS_KEY = os.getenv('DJANGO_AWS_S3_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = os.getenv('DJANGO_AWS_S3_BUCKET_NAME')
     AWS_REGION = os.getenv('DJANGO_AWS_REGION', 'eu-central-1')
-    AWS_IS_GZIPPED = os.getenv()
     AWS_DEFAULT_ACL = None
     AWS_S3_ENDPOINT_URL = 'https://s3-de-central.profitbricks.com'
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3-{AWS_REGION}-central.profitbricks.com'
