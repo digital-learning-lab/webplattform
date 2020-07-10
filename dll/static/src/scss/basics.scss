@@ -58,7 +58,7 @@ hr {
   border: 1px dashed gray;
 }
 
-a[rel=external]:after {
+a[rel*=external]:after {
   font-family: "Font Awesome 5 Free";
   speak: none;
   font-style: normal;
