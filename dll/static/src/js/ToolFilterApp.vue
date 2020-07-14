@@ -115,11 +115,10 @@
 
 <script>
   import { contentFilter } from './mixins/contentFilterMixin'
-  import { queryMixin } from './mixins/queryMixin'
 
   export default {
     name: 'ToolsFilterApp',
-    mixins: [queryMixin, contentFilter],
+    mixins: [contentFilter],
     data () {
       return {
         dataUrl: '/api/tools',

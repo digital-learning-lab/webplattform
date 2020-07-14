@@ -75,11 +75,10 @@
 
 <script>
   import { contentFilter } from './mixins/contentFilterMixin'
-  import { queryMixin } from './mixins/queryMixin'
 
   export default {
     name: 'TeachingModulesFilterApp',
-    mixins: [contentFilter, queryMixin],
+    mixins: [contentFilter],
     data () {
       return {
         dataUrl: '/api/unterrichtsbausteine',

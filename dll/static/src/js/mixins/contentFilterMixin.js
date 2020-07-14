@@ -5,6 +5,7 @@ import CompetenceFilter from '../components/CompetenceFilter.vue'
 import Pagination from '../components/Pagination.vue'
 import { preventEnter } from './preventEnterMixin'
 import { paginationMixin } from './paginationMixin'
+import { queryMixin } from './queryMixin'
 
 export const contentFilter = {
   components: {
@@ -12,7 +13,7 @@ export const contentFilter = {
     'AppCompetenceFilter': CompetenceFilter,
     'AppPagination': Pagination
   },
-  mixins: [preventEnter, paginationMixin],
+  mixins: [preventEnter, paginationMixin, queryMixin],
   data () {
     return {
       dataUrl: null,
@@ -28,9 +29,6 @@ export const contentFilter = {
       return {}
     },
     updateContents (page) {
-      if (!this.inited) {
-        return
-      }
       this.loading = true
       if (!page || typeof page === 'object') {
         // Reset page to 1 if there is no page given or page object is an event (object)
@@ -67,7 +65,7 @@ export const contentFilter = {
     }
   },
   created () {
-    this.updateContents()
+    this.updateContents(this.currentPage)
     this.debouncedUpdate = debounce(this.updateContents, 500)
   },
   watch: {

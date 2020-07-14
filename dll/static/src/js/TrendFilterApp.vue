@@ -75,7 +75,7 @@
 
   export default {
     name: 'TrendsFilterApp',
-    mixins: [contentFilter, queryMixin],
+    mixins: [contentFilter],
     data () {
       return {
         dataUrl: '/api/trends',

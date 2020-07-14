@@ -4,8 +4,7 @@ const queryString = require('query-string');
 export const queryMixin = {
   data () {
     return {
-      query: {},
-      inited: false
+      query: {}
     }
   },
   methods: {
@@ -42,7 +41,5 @@ export const queryMixin = {
         }
       }
     }
-    this.inited = true
-    this.updateContents()
   }
 }

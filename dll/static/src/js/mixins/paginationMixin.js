@@ -1,3 +1,4 @@
+const queryString = require('query-string');
 
 export const paginationMixin = {
   data () {
@@ -31,5 +32,12 @@ export const paginationMixin = {
       }
     }
   },
-  updateContents (page) {}
+  created () {
+    const query = queryString.parse(location.search, {
+      parseBooleans: true
+    });
+    if (query.page) {
+      this.currentPage = parseInt(query.page)
+    }
+  }
 }
