@@ -8,8 +8,9 @@ class StaticStorage(S3Boto3Storage):
     default_acl = 'public-read'
 
     def get_object_parameters(self, name):
-        if name and '.' in name:
-            ext = name.split('.')[-1]
+        nname = self._normalize_name(self._clean_name(name))
+        if nname and '.' in nname:
+            ext = nname.split('.')[-1]
             LONG_CACHE_FILE_EXTENSIONS = \
                 ['js', 'css', 'ttf', 'woff', 'svg', 'woff2', 'png', 'jpeg', 'jpg', 'webp', 'otf']
             if ext in LONG_CACHE_FILE_EXTENSIONS:
