@@ -1,7 +1,7 @@
 import datetime
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from crispy_forms.layout import Submit, Layout, ButtonHolder, Field, Fieldset
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
@@ -118,12 +118,35 @@ class UserPasswordChangeForm(PasswordChangeForm):
 
 
 class UserAccountDeleteForm(forms.Form):
-    conditions = forms.BooleanField(widget=forms.CheckboxInput,
-                                    label=_("Ich habe die Bedingungen gelesen und akzeptiere sie."))
+    conditions = forms.BooleanField(
+        widget=forms.CheckboxInput,
+        label=_("Ich bestätige, dass ich weiterhin namentlich in meinen erstellten und bearbeiteten Inhalten gelistet "
+                "werde."),
+        required=False
+    )
 
     def __init__(self, **kwargs):
         self.instance = kwargs.pop('instance')
         super(UserAccountDeleteForm, self).__init__(**kwargs)
+        self.helper = FormHelper()
+        self.helper.layout = Layout(
+            Fieldset(
+                '',
+                'conditions',
+            ),
+            ButtonHolder(
+                Submit('submit', 'Löschen', css_class='button button--danger')
+            )
+        )
+
+    def clean_conditions(self):
+        if not self.cleaned_data['conditions']:
+            raise forms.ValidationError(
+                'Bitte bestätigen Sie den Bestand Ihrer erstellen und bearbeiteten Inhalte oder wenden Sie sich über '
+                'das Kontaktformular direkt an uns.',
+                code='keep_contents_not_accepted'
+            )
+        return self.cleaned_data
 
     def save(self):
         self.instance.delete()

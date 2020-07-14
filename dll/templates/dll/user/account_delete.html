@@ -3,12 +3,11 @@
 
 {% block content %}
     <h2>Sind Sie Sicher?</h2>
-    <p>Inhalte werden an TUHH vergeben</p>
-    <form method="post">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <a href="{% url 'user:account_delete' %}">
-            <button class="button button--danger" type="submit">Löschen</button>
-        </a>
+    <p>
+        Beim Löschen Ihres Accounts bleiben von Ihnen erstellten und bearbeiteten Inhalte bestehen. Sie werden weiterhin
+        als Autor gelistet.
+    </p>
+    <form method="post" action="{% url 'user:account_delete' %}">
+        {% crispy form %}
     </form>
 {% endblock %}

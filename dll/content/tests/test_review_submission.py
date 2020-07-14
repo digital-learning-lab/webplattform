@@ -1,4 +1,3 @@
-from django.contrib.auth.models import Group
 from django.core.files import File
 from django.test import TestCase
 from filer.models import File as FilerFile
@@ -8,7 +7,7 @@ from dll.user.models import DllUser
 
 
 # TODO write tests for Tool and Trend too
-from dll.user.utils import get_default_tuhh_user, get_bsb_reviewer_group, get_tuhh_reviewer_group
+from dll.user.utils import get_bsb_reviewer_group, get_tuhh_reviewer_group
 
 
 class BaseTestCase(TestCase):

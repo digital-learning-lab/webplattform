@@ -2,7 +2,7 @@ import rules
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser, Group
 from django.contrib.postgres.fields import JSONField, ArrayField
-from django.db import models
+from django.db import models, transaction
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
@@ -102,13 +102,18 @@ class DllUser(TimeStampedModel, AbstractUser):
                rules.is_group_member('TUHH-Reviewer')(self)
 
     def retire(self):
-        for content in self.qs_of_personal_content():
-            content.author = None
-            content.add_ex_author(self.full_name)
+        with transaction.atomic():
+            for content in self.qs_of_personal_content():
+                content.author = None
+                if content.co_authors.count():
+                    content.author = content.co_authors.first()
+                    content.co_authors.remove(content.author)
+                content.add_ex_author(self.full_name)
+                content.save()
 
-        for content in self.qs_of_coauthored_content():
-            content.co_authors.remove(self)
-            content.add_ex_author(self.full_name)
+            for content in self.qs_of_coauthored_content():
+                content.co_authors.remove(self)
+                content.add_ex_author(self.full_name)
 
     @cached_property
     def status_list(self) -> list:
