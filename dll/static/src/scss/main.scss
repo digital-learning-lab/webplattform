@@ -1,6 +1,9 @@
 @import "~bootstrap/scss/bootstrap";
 @import "vue-select/src/scss/vue-select.scss";
 @import '~vue2-dropzone/dist/vue2Dropzone.min';
+$fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
 
 @import 'variables';
 @import 'typography';

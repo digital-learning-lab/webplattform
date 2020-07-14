@@ -1,4 +1,4 @@
-import { debounce } from 'lodash'
+import debounce from 'lodash/debounce'
 import axios from 'axios'
 import ContentTeaser from '../components/ContentTeaser.vue'
 import CompetenceFilter from '../components/CompetenceFilter.vue'

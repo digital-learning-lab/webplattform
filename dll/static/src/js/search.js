@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { debounce } from 'lodash'
+import debounce from 'lodash/debounce'
 var autocomplete = require('autocomplete.js');
 
 var source = function(query, callback) {

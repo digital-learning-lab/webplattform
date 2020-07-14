@@ -57,7 +57,7 @@
 </template>
 
 <script>
-  import { debounce } from 'lodash'
+  import debounce from 'lodash/debounce'
   import axios from 'axios'
   import ContentTeaser from './components/ContentTeaser.vue'
   import Pagination from './components/Pagination.vue'

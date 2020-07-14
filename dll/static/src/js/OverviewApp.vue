@@ -125,7 +125,7 @@
 
 <script>
   import vSelect from 'vue-select'
-  import { debounce } from 'lodash'
+  import debounce from 'lodash/debounce'
   import axios from 'axios'
   import Pagination from './components/Pagination.vue'
   import { paginationMixin } from './mixins/paginationMixin'
