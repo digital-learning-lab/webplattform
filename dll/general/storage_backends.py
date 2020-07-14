@@ -8,6 +8,8 @@ class StaticStorage(S3Boto3Storage):
     default_acl = 'public-read'
 
     def get_object_parameters(self, name):
+        if not name:
+            return
         nname = self._normalize_name(self._clean_name(name))
         if nname and '.' in nname:
             ext = nname.split('.')[-1]
