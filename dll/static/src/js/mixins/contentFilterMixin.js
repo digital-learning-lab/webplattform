@@ -38,6 +38,7 @@ export const contentFilter = {
         params: this.getParams(page)
       })
         .then(response => {
+          window.scroll(0, 0)
           this.updateQueryString()
           this.contents = response.data.results
           this.updatePagination(response)
