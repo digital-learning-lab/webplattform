@@ -165,9 +165,6 @@ if env.bool('DJANGO_USE_S3', False):
     AWS_REGION = os.getenv('DJANGO_AWS_REGION', 'eu-central-1')
     AWS_DEFAULT_ACL = None
     AWS_IS_GZIPPED = True
-    AWS_S3_OBJECT_PARAMETERS = {
-        "CacheControl": "public, max-age=31536000"
-    }
     AWS_S3_ENDPOINT_URL = 'https://s3-de-central.profitbricks.com'
     AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3-{AWS_REGION}-central.profitbricks.com'
     # s3 static settings

@@ -7,6 +7,17 @@ class StaticStorage(S3Boto3Storage):
     location = 'static'
     default_acl = 'public-read'
 
+    def get_object_parameters(self, name):
+        if name and '.' in name:
+            ext = name.split('.')[-1]
+            LONG_CACHE_FILE_EXTENSIONS = \
+                ['js', 'css', 'ttf', 'woff', 'svg', 'woff2', 'png', 'jpeg', 'jpg', 'webp', 'otf']
+            if ext in LONG_CACHE_FILE_EXTENSIONS:
+                return {
+                    "CacheControl": "public, max-age=31536000"
+                }
+        return
+
 
 class PublicMediaStorage(S3Boto3Storage):
     """This is needed to set the media-location"""
