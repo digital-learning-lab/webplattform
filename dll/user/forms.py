@@ -129,13 +129,15 @@ class UserAccountDeleteForm(forms.Form):
         self.instance = kwargs.pop('instance')
         super(UserAccountDeleteForm, self).__init__(**kwargs)
         self.helper = FormHelper()
+        submit_button = Submit('submit', 'Löschen')
+        submit_button.field_classes = 'button button--danger'
         self.helper.layout = Layout(
             Fieldset(
                 '',
                 'conditions',
             ),
             ButtonHolder(
-                Submit('submit', 'Löschen', css_class='button button--danger')
+                submit_button
             )
         )
 

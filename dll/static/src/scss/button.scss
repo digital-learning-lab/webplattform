@@ -12,34 +12,38 @@
 }
 .button--primary {
   background-color: $color--oracle;
-  &:hover {
+  &:hover, &:focus {
     color: rgba(255, 255, 255, 1);
     background-color: $color--smalt-blue;
   }
+  outline: 0;
 }
 .button--preview {
   background-color: $color--preview;
-  &:hover {
+  &:hover, &:focus {
     color: rgba(255, 255, 255, 1);
     background-color: darken($color--preview, 5%);
   }
+  outline: 0;
 }
 .button--submit {
   background-color: $color--submit;
-  &:hover {
+  &:hover, &:focus {
     color: rgba(255, 255, 255, 1);
     background-color: darken($color--submit, 10%);
   }
+  outline: 0;
 }
 .button--teaching-module,
 .button--teaching-module:visited {
   color: rgba(255, 255, 255, 1);
   font-weight: $font-weight-light;
   background-color: $color--teaching-module;
-  &:hover {
+  &:hover, &:focus {
     color: rgba(255, 255, 255, 1);
     background-color: $color--teaching-module;
     text-decoration: underline;
+    outline: 0;
   }
 }
 .button--trend,
@@ -47,10 +51,11 @@
   color: rgba(255, 255, 255, 1);
   font-weight: $font-weight-light;
   background-color: $color--trend;
-  &:hover {
+  &:hover, &:focus {
     color: rgba(255, 255, 255, 1);
     background-color: $color--trend;
     text-decoration: underline;
+    outline: 0;
   }
 }
 .button--tool,
@@ -58,10 +63,11 @@
   color: rgba(255, 255, 255, 1);
   font-weight: $font-weight-light;
   background-color: $color--tool;
-  &:hover {
+  &:hover, &:focus {
     color: rgba(255, 255, 255, 1);
     background-color: $color--tool;
     text-decoration: underline;
+    outline: 0;
   }
 }
 .button--neutral,
@@ -69,20 +75,22 @@
   color: rgba(255, 255, 255, 1);
   font-weight: $font-weight-semi-bold;
   background-color: $color--pale;
-  &:hover {
+  &:hover, &:focus {
     color: rgba(255, 255, 255, 1);
     background-color: $color--pale;
     text-decoration: none;
+    outline: 0;
   }
 }
 .button--danger,
 .button--danger:visited {
   color: rgba(255, 255, 255, 1);
   background-color: $color--punch;
-  &:hover {
+  &:hover, &:focus {
     color: rgba(255, 255, 255, 1);
     background-color: darken($color--punch, 10%);
     text-decoration: none;
+    outline: 0;
   }
 }
 .button--smallSquare {
