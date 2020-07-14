@@ -9,7 +9,7 @@ class StaticStorage(S3Boto3Storage):
 
     def get_object_parameters(self, name):
         if not name:
-            return
+            return {}
         nname = self._normalize_name(self._clean_name(name))
         if nname and '.' in nname:
             ext = nname.split('.')[-1]
@@ -19,7 +19,7 @@ class StaticStorage(S3Boto3Storage):
                 return {
                     "CacheControl": "public, max-age=31536000"
                 }
-        return
+        return {}
 
 
 class PublicMediaStorage(S3Boto3Storage):
