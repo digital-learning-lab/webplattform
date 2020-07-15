@@ -336,6 +336,5 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 THUMBNAIL_OPTIMIZE_COMMAND = {
     'png': '/usr/bin/optipng {filename}',
     'gif': '/usr/bin/optipng {filename}',
-    'jpeg': '/usr/bin/jpegoptim {filename}',
-    'jpg': '/usr/bin/jpegoptim {filename}'
+    'jpeg': '/usr/bin/jpegoptim {filename}'
 }
