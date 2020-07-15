@@ -176,6 +176,7 @@ if env.bool('DJANGO_USE_S3', False):
     PUBLIC_MEDIA_LOCATION = 'media'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
     DEFAULT_FILE_STORAGE = 'dll.general.storage_backends.PublicMediaStorage'
+    THUMBNAIL_DEFAULT_STORAGE = 'dll.general.storage_backends.PublicMediaStorage'
 else:
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/2.2/howto/static-files/
@@ -336,5 +337,6 @@ FILE_UPLOAD_PERMISSIONS = 0o644
 THUMBNAIL_OPTIMIZE_COMMAND = {
     'png': '/usr/bin/optipng {filename}',
     'gif': '/usr/bin/optipng {filename}',
-    'jpeg': '/usr/bin/jpegoptim {filename}'
+    'jpeg': '/usr/bin/jpegoptim {filename}',
+    'jpg': '/usr/bin/jpegoptim {filename}'
 }
