@@ -177,6 +177,7 @@ if env.bool('DJANGO_USE_S3', False):
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
     DEFAULT_FILE_STORAGE = 'dll.general.storage_backends.PublicMediaStorage'
     THUMBNAIL_DEFAULT_STORAGE = 'dll.general.storage_backends.PublicMediaStorage'
+    THUMBNAIL_CHECK_CACHE_MISS = True
 else:
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/2.2/howto/static-files/
