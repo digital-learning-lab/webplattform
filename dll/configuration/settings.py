@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'webpack_loader',
     'easy_thumbnails',
+    'easy_thumbnails.optimize',
     'filer',
     'mptt',
     'meta',
@@ -331,3 +332,9 @@ if CORS_ADD_ALLOW_HEADERS:
     CORS_ALLOW_HEADERS = list(default_headers) + CORS_ADD_ALLOW_HEADERS
 
 FILE_UPLOAD_PERMISSIONS = 0o644
+
+THUMBNAIL_OPTIMIZE_COMMAND = {
+    'png': '/usr/bin/optipng {filename}',
+    'gif': '/usr/bin/optipng {filename}',
+    'jpeg': '/usr/bin/jpegoptim {filename}'
+}
