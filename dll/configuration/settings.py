@@ -38,7 +38,7 @@ ALLOWED_HOSTS = env.list('DJANGO_ALLOWED_HOSTS', ['*'])
 # ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS', [])]
 ADMINS = (
     ('Robert Stein', 'robert@blueshoe.de'),
-    ('Michael Heinemann', 'michael.heinemann@tuhh.de'),
+    ('Huu Hung Nguyen', 'hh.nguyen@tuhh.de'),
 )
 
 
