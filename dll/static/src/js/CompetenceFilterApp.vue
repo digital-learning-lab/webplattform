@@ -123,6 +123,7 @@
         })
           .then(response => {
             this.updateQueryString()
+            window.scroll(0, 0)
             this.loading = false
             this.contents = response.data.results
             this.pagination = {
