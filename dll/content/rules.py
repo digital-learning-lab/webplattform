@@ -24,13 +24,13 @@ def review_in_progress(user, obj: Review):
 
 @rules.predicate
 def content_review_in_progress(user, obj: Content):
-    review = getattr(obj, 'review', None)
+    review = getattr(obj, "review", None)
     return review_in_progress(user, review)
 
 
 is_authenticated = rules.is_authenticated
-is_bsb_reviewer = rules.is_group_member('BSB-Reviewer')
-is_tuhh_reviewer = rules.is_group_member('TUHH-Reviewer')
+is_bsb_reviewer = rules.is_group_member("BSB-Reviewer")
+is_tuhh_reviewer = rules.is_group_member("TUHH-Reviewer")
 
 
 def can_assign_reviewer(user, content: Content):
@@ -40,7 +40,9 @@ def can_assign_reviewer(user, content: Content):
 def check_content_for_review(user, content: Content):
     if is_bsb_reviewer(user) and isinstance(content, TeachingModule):
         return True
-    elif is_tuhh_reviewer(user) and (isinstance(content, Tool) or isinstance(content, Trend)):
+    elif is_tuhh_reviewer(user) and (
+        isinstance(content, Tool) or isinstance(content, Trend)
+    ):
         return True
     else:
         return False
@@ -57,28 +59,48 @@ def can_review_content(user, content: Content):
     return check_content_for_review(user, content)
 
 
-rules.add_perm('content.view_content', is_author | is_co_author | (can_review_content & content_review_in_progress))
-rules.add_perm('content.view_tool', is_author | is_co_author | (can_review_content & content_review_in_progress))
-rules.add_perm('content.view_trend', is_author | is_co_author | (can_review_content & content_review_in_progress))
-rules.add_perm('content.view_teachingmodule',
-               is_author | is_co_author | (can_review_content & content_review_in_progress))
+rules.add_perm(
+    "content.view_content",
+    is_author | is_co_author | (can_review_content & content_review_in_progress),
+)
+rules.add_perm(
+    "content.view_tool",
+    is_author | is_co_author | (can_review_content & content_review_in_progress),
+)
+rules.add_perm(
+    "content.view_trend",
+    is_author | is_co_author | (can_review_content & content_review_in_progress),
+)
+rules.add_perm(
+    "content.view_teachingmodule",
+    is_author | is_co_author | (can_review_content & content_review_in_progress),
+)
 
-rules.add_perm('content.add_content', is_authenticated)
-rules.add_perm('content.add_tool', is_authenticated)
-rules.add_perm('content.add_trend', is_authenticated)
-rules.add_perm('content.add_teachingmodule', is_authenticated)
+rules.add_perm("content.add_content", is_authenticated)
+rules.add_perm("content.add_tool", is_authenticated)
+rules.add_perm("content.add_trend", is_authenticated)
+rules.add_perm("content.add_teachingmodule", is_authenticated)
 
-rules.add_perm('content.change_content', (is_author | is_co_author) & ~content_review_in_progress)
-rules.add_perm('content.change_tool', (is_author | is_co_author) & ~content_review_in_progress)
-rules.add_perm('content.change_trend', (is_author | is_co_author) & ~content_review_in_progress)
-rules.add_perm('content.change_teachingmodule', (is_author | is_co_author) & ~content_review_in_progress)
+rules.add_perm(
+    "content.change_content", (is_author | is_co_author) & ~content_review_in_progress
+)
+rules.add_perm(
+    "content.change_tool", (is_author | is_co_author) & ~content_review_in_progress
+)
+rules.add_perm(
+    "content.change_trend", (is_author | is_co_author) & ~content_review_in_progress
+)
+rules.add_perm(
+    "content.change_teachingmodule",
+    (is_author | is_co_author) & ~content_review_in_progress,
+)
 
-rules.add_perm('content.delete_content', is_author)
-rules.add_perm('content.delete_tool', is_author)
-rules.add_perm('content.delete_trend', is_author)
-rules.add_perm('content.delete_teachingmodule', is_author)
+rules.add_perm("content.delete_content", is_author)
+rules.add_perm("content.delete_tool", is_author)
+rules.add_perm("content.delete_trend", is_author)
+rules.add_perm("content.delete_teachingmodule", is_author)
 
-rules.add_perm('content.change_review', can_review & review_in_progress)
+rules.add_perm("content.change_review", can_review & review_in_progress)
 
-rules.add_perm('content.assign_reviewer', can_assign_reviewer)
-rules.add_perm('content.claim_review', can_review)
+rules.add_perm("content.assign_reviewer", can_assign_reviewer)
+rules.add_perm("content.claim_review", can_review)

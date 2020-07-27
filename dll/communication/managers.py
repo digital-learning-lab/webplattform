@@ -2,7 +2,6 @@ from django.db import models
 
 
 class CommunicationEventTypeManager(models.Manager):
-
     def get_and_render(self, code, context):
         """
         :param code: Code of the EventType.

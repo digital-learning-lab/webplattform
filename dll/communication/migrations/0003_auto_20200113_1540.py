@@ -6,12 +6,15 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('communication', '0002_auto_20190912_1730'),
+        ("communication", "0002_auto_20190912_1730"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='newslettersubscrption',
-            options={'verbose_name': 'Newsletter Subscription', 'verbose_name_plural': 'Newsletter Subscriptions'},
+            name="newslettersubscrption",
+            options={
+                "verbose_name": "Newsletter Subscription",
+                "verbose_name_plural": "Newsletter Subscriptions",
+            },
         ),
     ]

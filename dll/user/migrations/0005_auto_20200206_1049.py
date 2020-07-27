@@ -7,17 +7,19 @@ import dll.general.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('user', '0004_remove_dlluser_additional_emails'),
+        ("user", "0004_remove_dlluser_additional_emails"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='dlluser',
-            options={'verbose_name': 'User', 'verbose_name_plural': 'Users'},
+            name="dlluser",
+            options={"verbose_name": "User", "verbose_name_plural": "Users"},
         ),
         migrations.AlterField(
-            model_name='dlluser',
-            name='slug',
-            field=dll.general.models.DllSlugField(blank=True, editable=False, populate_from='full_name'),
+            model_name="dlluser",
+            name="slug",
+            field=dll.general.models.DllSlugField(
+                blank=True, editable=False, populate_from="full_name"
+            ),
         ),
     ]

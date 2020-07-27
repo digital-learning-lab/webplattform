@@ -18,28 +18,34 @@ from dll.communication.tokens import co_author_invitation_token
 from dll.content.models import Content
 from dll.user.models import DllUser
 
-logger = logging.getLogger('dll.communication.models')
+logger = logging.getLogger("dll.communication.models")
 
 
 class CommunicationEvent(TimeStampedModel):
-    sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL,
-                               related_name="communication_events", verbose_name=_("Auslösender User"), null=True)
+    sender = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name="communication_events",
+        verbose_name=_("Auslösender User"),
+        null=True,
+    )
     from_email = models.CharField(max_length=128)
     to = ArrayField(models.EmailField())
     cc = ArrayField(models.EmailField(), null=True)
     bcc = ArrayField(models.EmailField(), null=True)
-    event_type = models.ForeignKey('CommunicationEventType', on_delete=models.CASCADE, verbose_name=_("Event Type"))
+    event_type = models.ForeignKey(
+        "CommunicationEventType", on_delete=models.CASCADE, verbose_name=_("Event Type")
+    )
 
     class Meta:
         verbose_name = _("Kommunikations-Ereignis")
         verbose_name_plural = _("Kommunikations-Ereignisse")
-        ordering = ['-created']
+        ordering = ["-created"]
 
     def __str__(self):
-        recip = self.sender.id if self.sender else ''
+        recip = self.sender.id if self.sender else ""
         return _("'{type:s}' event for user #{number:s}").format(
-            type=u(self.event_type.name),
-            number=u(recip)
+            type=u(self.event_type.name), number=u(recip)
         )
 
 
@@ -47,30 +53,44 @@ class CommunicationEventType(TimeStampedModel):
     """
     A 'type' of communication.  Like a order confirmation email.
     """
-    code = models.CharField(max_length=128, unique=True, editable=True,
-                            help_text=_("Code, mit dem dieses Ereignis programmgesteuert gesucht werden kann."))
+
+    code = models.CharField(
+        max_length=128,
+        unique=True,
+        editable=True,
+        help_text=_(
+            "Code, mit dem dieses Ereignis programmgesteuert gesucht werden kann."
+        ),
+    )
 
     #: Name is the friendly description of an event for use in the admin
     name = models.CharField(
-        _('Name'), max_length=255,
-        help_text=_("Dies dient nur zu organisatorischen Zwecken."))
+        _("Name"),
+        max_length=255,
+        help_text=_("Dies dient nur zu organisatorischen Zwecken."),
+    )
     from_email = models.EmailField(max_length=128, default=settings.EMAIL_SENDER)
     # Template content for emails
     # NOTE: There's an intentional distinction between None and ''. None
     # instructs Oscar to look for a file-based template, '' is just an empty
     # template.
     email_subject_template = models.CharField(
-        _('Email Subject Template'), max_length=255, blank=True, null=True)
+        _("Email Subject Template"), max_length=255, blank=True, null=True
+    )
     email_body_template = models.TextField(
-        _('Email Body Template'), blank=True, null=True)
+        _("Email Body Template"), blank=True, null=True
+    )
     email_body_html_template = models.TextField(
-        _('Email Body HTML Template'), blank=True, null=True,
-        help_text=_("HTML template"))
+        _("Email Body HTML Template"),
+        blank=True,
+        null=True,
+        help_text=_("HTML template"),
+    )
 
     # File templates
-    email_subject_template_file = 'dll/communication/emails/%s/subject.txt'
-    email_body_template_file = 'dll/communication/emails/%s/body.txt'
-    email_body_html_template_file = 'dll/communication/emails/%s/body.html'
+    email_subject_template_file = "dll/communication/emails/%s/subject.txt"
+    email_body_template_file = "dll/communication/emails/%s/body.txt"
+    email_body_html_template_file = "dll/communication/emails/%s/body.html"
 
     objects = CommunicationEventTypeManager()
 
@@ -87,10 +107,11 @@ class CommunicationEventType(TimeStampedModel):
         """
 
         # Build a dict of message name to Template instances
-        templates = {'subject': 'email_subject_template',
-                     'body': 'email_body_template',
-                     # 'html': 'email_body_html_template'
-                     }
+        templates = {
+            "subject": "email_subject_template",
+            "body": "email_body_template",
+            # 'html': 'email_body_html_template'
+        }
         for name, attr_name in templates.items():
             field = getattr(self, attr_name, None)
             if field:
@@ -103,25 +124,29 @@ class CommunicationEventType(TimeStampedModel):
                     templates[name] = get_template(template_name)
                 except TemplateDoesNotExist:
                     templates[name] = None
-                    logger.warning("Template file {path} missing for CommunicationEvent {code}"
-                                   .format(path=template_name, code=self.code))
+                    logger.warning(
+                        "Template file {path} missing for CommunicationEvent {code}".format(
+                            path=template_name, code=self.code
+                        )
+                    )
 
         # Pass base URL for serving images within HTML emails
         if ctx is None:
             ctx = {}
-        ctx['static_base_url'] = getattr(
-            settings, 'STATIC_URL', None)  # set url here for images etc
+        ctx["static_base_url"] = getattr(
+            settings, "STATIC_URL", None
+        )  # set url here for images etc
 
         messages = {}
         for name, template in templates.items():
-            messages[name] = template.render(ctx) if template else ''
+            messages[name] = template.render(ctx) if template else ""
 
-        if 'subject' in ctx:
-            messages['subject'] = ctx['subject']
+        if "subject" in ctx:
+            messages["subject"] = ctx["subject"]
         else:
             # Ensure the email subject doesn't contain any newlines
-            messages['subject'] = messages['subject'].replace("\n", "")
-            messages['subject'] = messages['subject'].replace("\r", "")
+            messages["subject"] = messages["subject"].replace("\n", "")
+            messages["subject"] = messages["subject"].replace("\r", "")
 
         return messages
 
@@ -144,16 +169,26 @@ class NewsletterSubscrption(TimeStampedModel):
         self.delete()
 
     class Meta:
-        verbose_name = _('Newsletter Subscription')
-        verbose_name_plural = _('Newsletter Subscriptions')
+        verbose_name = _("Newsletter Subscription")
+        verbose_name_plural = _("Newsletter Subscriptions")
 
 
 class CoAuthorshipInvitation(TimeStampedModel):
-    by = models.ForeignKey(DllUser, on_delete=models.CASCADE, verbose_name=_("Einladung von"),
-                           related_name='sent_invitations')
-    to = models.ForeignKey(DllUser, on_delete=models.CASCADE, verbose_name=_("Einladung an"),
-                           related_name='received_invitations')
-    content = models.ForeignKey(Content, on_delete=models.CASCADE, related_name='invitations')
+    by = models.ForeignKey(
+        DllUser,
+        on_delete=models.CASCADE,
+        verbose_name=_("Einladung von"),
+        related_name="sent_invitations",
+    )
+    to = models.ForeignKey(
+        DllUser,
+        on_delete=models.CASCADE,
+        verbose_name=_("Einladung an"),
+        related_name="received_invitations",
+    )
+    content = models.ForeignKey(
+        Content, on_delete=models.CASCADE, related_name="invitations"
+    )
     accepted = models.BooleanField(null=True, verbose_name=_("Status"))
     message = models.TextField(max_length=500, verbose_name=_("Nachricht"), null=True)
     site = models.ForeignKey(Site, on_delete=models.CASCADE)
@@ -171,60 +206,68 @@ class CoAuthorshipInvitation(TimeStampedModel):
 
     def send_invitation_mail(self):
         from dll.communication.tasks import send_mail
-        token = reverse('communication:coauthor-invitation', kwargs={
-            'inv_id_b64': urlsafe_base64_encode(force_bytes(self.pk)),
-            'token': co_author_invitation_token.make_token(self)
-        })
-        token = 'https://%s%s' % (Site.objects.get_current().domain, token)
+
+        token = reverse(
+            "communication:coauthor-invitation",
+            kwargs={
+                "inv_id_b64": urlsafe_base64_encode(force_bytes(self.pk)),
+                "token": co_author_invitation_token.make_token(self),
+            },
+        )
+        token = "https://%s%s" % (Site.objects.get_current().domain, token)
         instance = self.content.get_real_instance()
         context = {
-            'content_title': instance.name,
-            'content_type': instance.type_verbose,
-            'author': self.by.full_name,
-            'invitee': self.to.full_name,
-            'message': self.message,
-            'token': token
+            "content_title": instance.name,
+            "content_type": instance.type_verbose,
+            "author": self.by.full_name,
+            "invitee": self.to.full_name,
+            "message": self.message,
+            "token": token,
         }
         send_mail.delay(
-            event_type_code='COAUTHOR_INVITATION',
+            event_type_code="COAUTHOR_INVITATION",
             ctx=context,
             sender_id=self.by.pk,
-            recipient_ids=[self.to.pk]
+            recipient_ids=[self.to.pk],
         )
 
     def send_invitation_accepted_mail(self):
         from dll.communication.tasks import send_mail
+
         instance = self.content.get_real_instance()
         context = {
-            'content_title': instance.name,
-            'content_type': instance.type_verbose,
-            'message': self.message,
-            'invited_user_name': self.to.full_name,
-            'author': self.by.full_name,
+            "content_title": instance.name,
+            "content_type": instance.type_verbose,
+            "message": self.message,
+            "invited_user_name": self.to.full_name,
+            "author": self.by.full_name,
         }
         send_mail.delay(
-            event_type_code='COAUTHOR_INVITATION_ACCEPTED',
+            event_type_code="COAUTHOR_INVITATION_ACCEPTED",
             ctx=context,
             sender_id=self.to.pk,
-            recipient_ids=[self.by.pk]
+            recipient_ids=[self.by.pk],
         )
 
     def send_invitation_declined_mail(self):
         from dll.communication.tasks import send_mail
+
         instance = self.content.get_real_instance()
         context = {
-            'content_title': instance.name,
-            'content_type': instance.type_verbose,
-            'message': self.message,
-            'invited_user_name': self.to.full_name,
-            'author': self.by.full_name,
+            "content_title": instance.name,
+            "content_type": instance.type_verbose,
+            "message": self.message,
+            "invited_user_name": self.to.full_name,
+            "author": self.by.full_name,
         }
         send_mail.delay(
-            event_type_code='COAUTHOR_INVITATION_DECLINED',
+            event_type_code="COAUTHOR_INVITATION_DECLINED",
             ctx=context,
             sender_id=self.to.pk,
-            recipient_ids=[self.by.pk]
+            recipient_ids=[self.by.pk],
         )
 
     def __str__(self):
-        return "Invitation by {by} to {to}".format(by=self.by.full_name, to=self.to.full_name )
+        return "Invitation by {by} to {to}".format(
+            by=self.by.full_name, to=self.to.full_name
+        )

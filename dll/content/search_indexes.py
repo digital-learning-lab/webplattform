@@ -5,13 +5,15 @@ from dll.content.models import Content, Tool, TeachingModule, Trend
 
 class ContentIndex(indexes.SearchIndex):
     text = indexes.CharField(document=True, use_template=True)
-    name = indexes.CharField(model_attr='name', boost=2)
-    teaser = indexes.CharField(model_attr='teaser', boost=1.5, null=True)
-    additional_info = indexes.CharField(model_attr='additional_info', boost=1, null=True)
+    name = indexes.CharField(model_attr="name", boost=2)
+    teaser = indexes.CharField(model_attr="teaser", boost=1.5, null=True)
+    additional_info = indexes.CharField(
+        model_attr="additional_info", boost=1, null=True
+    )
     url = indexes.CharField()
     tags = indexes.MultiValueField()
     authors = indexes.MultiValueField()
-    published = indexes.DateTimeField(model_attr='created', null=True)
+    published = indexes.DateTimeField(model_attr="created", null=True)
 
     def get_model(self):
         return Content
@@ -23,7 +25,7 @@ class ContentIndex(indexes.SearchIndex):
         return obj.name
 
     def prepare_tags(self, obj):
-        return list(obj.tags.values_list('name', flat=True))
+        return list(obj.tags.values_list("name", flat=True))
 
     def prepare_authors(self, obj):
         """
@@ -43,7 +45,7 @@ class ToolsIndex(ContentIndex, indexes.Indexable):
         return Tool
 
     def prepare_operating_systems(self, obj):
-        return list(obj.operating_systems.values_list('name', flat=True))
+        return list(obj.operating_systems.values_list("name", flat=True))
 
 
 class TeachingModulesIndex(ContentIndex, indexes.Indexable):
@@ -53,10 +55,9 @@ class TeachingModulesIndex(ContentIndex, indexes.Indexable):
         return TeachingModule
 
     def prepare_subjects(self, obj):
-        return list(obj.subjects.values_list('name', flat=True))
+        return list(obj.subjects.values_list("name", flat=True))
 
 
 class TrendsIndex(ContentIndex, indexes.Indexable):
-
     def get_model(self):
         return Trend

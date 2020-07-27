@@ -3,7 +3,7 @@ from .models import DllUser
 
 
 class DllUserAdmin(admin.ModelAdmin):
-    exclude = ('json_data',)
+    exclude = ("json_data",)
 
 
 admin.site.register(DllUser, DllUserAdmin)

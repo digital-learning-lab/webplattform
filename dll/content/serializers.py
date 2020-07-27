@@ -14,17 +14,33 @@ from rest_polymorphic.serializers import PolymorphicSerializer
 
 from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
-from dll.content.models import SchoolType, Competence, SubCompetence, Subject, OperatingSystem, ToolApplication, \
-    HelpText, Content, Tool, Trend, TeachingModule, ContentLink, Review, ToolLink
+from dll.content.models import (
+    SchoolType,
+    Competence,
+    SubCompetence,
+    Subject,
+    OperatingSystem,
+    ToolApplication,
+    HelpText,
+    Content,
+    Tool,
+    Trend,
+    TeachingModule,
+    ContentLink,
+    Review,
+    ToolLink,
+)
 from dll.general.utils import custom_slugify
 from dll.user.models import DllUser
 
 
-logger = logging.getLogger('dll.communication.serializers')
+logger = logging.getLogger("dll.communication.serializers")
 
 
 class ContentListSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()  # WARNING: can conflict with Content.image
+    image = (
+        serializers.SerializerMethodField()
+    )  # WARNING: can conflict with Content.image
     type = serializers.SerializerMethodField()
     type_verbose = serializers.SerializerMethodField()
     competences = serializers.SerializerMethodField()
@@ -34,14 +50,24 @@ class ContentListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Content
-        fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created',
-                  'co_authors']
+        fields = [
+            "id",
+            "name",
+            "image",
+            "type",
+            "type_verbose",
+            "teaser",
+            "competences",
+            "url",
+            "created",
+            "co_authors",
+        ]
 
     def get_image(self, obj):
         return obj.get_image()
 
     def get_co_authors(self, obj):
-        return [f'{author.full_name}' for author in obj.co_authors.all()]
+        return [f"{author.full_name}" for author in obj.co_authors.all()]
 
     def get_type(self, obj):
         return obj.type
@@ -64,7 +90,7 @@ class ContentListInternalSerializer(ContentListSerializer):
     status = serializers.SerializerMethodField()
 
     def get_author(self, obj):
-        return str(obj.author.full_name) if obj.author else ''
+        return str(obj.author.full_name) if obj.author else ""
 
     def get_preview_url(self, obj):
         return obj.get_preview_url()
@@ -73,37 +99,72 @@ class ContentListInternalSerializer(ContentListSerializer):
         return obj.get_edit_url()
 
     def get_status(self, obj):
-        status = _('Draft')
+        status = _("Draft")
         if obj.publisher_linked:
             if obj.review:
                 if obj.review.status == Review.DECLINED:
-                    return _('Approved - Resubmission declined.')
+                    return _("Approved - Resubmission declined.")
                 else:
-                    return _('Approved - Resubmission pending.')
-            return _('Approved')
+                    return _("Approved - Resubmission pending.")
+            return _("Approved")
 
-        if obj.publisher_is_draft and obj.review and obj.review.status == Review.DECLINED:
-            return _('Declined')
+        if (
+            obj.publisher_is_draft
+            and obj.review
+            and obj.review.status == Review.DECLINED
+        ):
+            return _("Declined")
 
         if obj.publisher_is_draft and obj.reviews.count():
-            return _('Submitted')
+            return _("Submitted")
 
         return status
 
     class Meta(ContentListSerializer.Meta):
-        fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created',
-                  'co_authors', 'preview_url', 'edit_url', 'author', 'status']
+        fields = [
+            "id",
+            "name",
+            "image",
+            "type",
+            "type_verbose",
+            "teaser",
+            "competences",
+            "url",
+            "created",
+            "co_authors",
+            "preview_url",
+            "edit_url",
+            "author",
+            "status",
+        ]
 
 
 class ContentListInvitationSerializer(ContentListInternalSerializer):
     invitation_url = serializers.SerializerMethodField()
 
     def get_invitation_url(self, obj):
-        return reverse('communication:coauthor-invitation-internal', kwargs={'pk': obj.pk})
+        return reverse(
+            "communication:coauthor-invitation-internal", kwargs={"pk": obj.pk}
+        )
 
     class Meta(ContentListSerializer.Meta):
-        fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created',
-                  'co_authors', 'preview_url', 'edit_url', 'author', 'status', 'invitation_url']
+        fields = [
+            "id",
+            "name",
+            "image",
+            "type",
+            "type_verbose",
+            "teaser",
+            "competences",
+            "url",
+            "created",
+            "co_authors",
+            "preview_url",
+            "edit_url",
+            "author",
+            "status",
+            "invitation_url",
+        ]
 
 
 class ContentListInternalReviewSerializer(ContentListInternalSerializer):
@@ -130,18 +191,23 @@ class ContentListInternalReviewSerializer(ContentListInternalSerializer):
         return obj.get_unassign_reviewer_url()
 
     def get_can_unassign(self, obj):
-        user = self.context.get('request').user
-        return user and obj.review and obj.review.assigned_reviewer and obj.review.assigned_reviewer == user
+        user = self.context.get("request").user
+        return (
+            user
+            and obj.review
+            and obj.review.assigned_reviewer
+            and obj.review.assigned_reviewer == user
+        )
 
     def get_can_assign(self, obj):
         """Provides information whether current user can assign others as reviewers."""
-        user = self.context.get('request').user
-        return user.has_perm('content.assign_reviewer')
+        user = self.context.get("request").user
+        return user.has_perm("content.assign_reviewer")
 
     def get_can_claim(self, obj):
         """Provides information whether current user can assign others as reviewers."""
-        user = self.context.get('request').user
-        return user.has_perm('content.claim_review', obj.review)
+        user = self.context.get("request").user
+        return user.has_perm("content.claim_review", obj.review)
 
     def get_reviewer(self, obj):
         if obj.review and obj.review.assigned_reviewer:
@@ -149,9 +215,30 @@ class ContentListInternalReviewSerializer(ContentListInternalSerializer):
         return None
 
     class Meta(ContentListInternalSerializer.Meta):
-        fields = ['id', 'name', 'image', 'type', 'type_verbose', 'teaser', 'competences', 'url', 'created', 'reviewer',
-                  'co_authors', 'preview_url', 'edit_url', 'author', 'status', 'review_url', 'has_assigned_reviewer',
-                  'assign_reviewer_url', 'can_unassign', 'unassign_reviewer_url', 'can_assign', 'can_claim']
+        fields = [
+            "id",
+            "name",
+            "image",
+            "type",
+            "type_verbose",
+            "teaser",
+            "competences",
+            "url",
+            "created",
+            "reviewer",
+            "co_authors",
+            "preview_url",
+            "edit_url",
+            "author",
+            "status",
+            "review_url",
+            "has_assigned_reviewer",
+            "assign_reviewer_url",
+            "can_unassign",
+            "unassign_reviewer_url",
+            "can_assign",
+            "can_claim",
+        ]
 
 
 class AuthorSerializer(serializers.ModelSerializer):
@@ -162,55 +249,53 @@ class AuthorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DllUser
-        fields = ['username', 'pk']
+        fields = ["username", "pk"]
 
 
 class SchoolTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = SchoolType
-        fields = ['name', 'pk']
+        fields = ["name", "pk"]
 
 
 class SubjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subject
-        fields = ['name', 'pk']
+        fields = ["name", "pk"]
 
 
 class CompetenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Competence
-        fields = ['name', 'pk']
+        fields = ["name", "pk"]
 
 
 class SubCompetenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCompetence
-        fields = ['name', 'pk']
+        fields = ["name", "pk"]
 
 
 class LinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContentLink
-        fields = ['url', 'name', 'type']
+        fields = ["url", "name", "type"]
         depth = 1
 
 
 class DllM2MField(RelatedField):
-
     def to_representation(self, value):
         try:
-            label = getattr(value, 'username')
+            label = getattr(value, "username")
         except AttributeError:
-            label = getattr(value, 'name')
-        return {'pk': value.pk, 'label': label}
+            label = getattr(value, "name")
+        return {"pk": value.pk, "label": label}
 
     def to_internal_value(self, data):
-        return data['pk']
+        return data["pk"]
 
 
 class RelatedContentField(DllM2MField):
-
     def to_representation(self, value):
         try:
             content = Content.objects.get(pk=value.pk).get_published()
@@ -221,10 +306,10 @@ class RelatedContentField(DllM2MField):
                 return {}
         except Content.DoesNotExist:
             return {}
-        return {'pk': pk, 'label': label}
+        return {"pk": pk, "label": label}
 
     def to_internal_value(self, data):
-        pk = data['pk']
+        pk = data["pk"]
         content = Content.objects.get(pk=pk)
         return content.get_draft().pk
 
@@ -232,7 +317,7 @@ class RelatedContentField(DllM2MField):
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
-        fields = ['status', 'json_data']
+        fields = ["status", "json_data"]
 
 
 class AdditionalToolsField(RelatedField):
@@ -243,15 +328,23 @@ class AdditionalToolsField(RelatedField):
         return str(value)
 
 
-class   BaseContentSubclassSerializer(serializers.ModelSerializer):
+class BaseContentSubclassSerializer(serializers.ModelSerializer):
     name = CharField(required=True)
     image = SerializerMethodField()
     author = AuthorSerializer(read_only=True, allow_null=True, required=False)
     contentlink_set = LinkSerializer(many=True, allow_null=True, required=False)
-    co_authors = DllM2MField(allow_null=True, many=True, required=False, queryset=DllUser.objects.all())
-    competences = DllM2MField(allow_null=True, many=True, queryset=Competence.objects.all())
-    sub_competences = DllM2MField(allow_null=True, many=True, queryset=SubCompetence.objects.all())
-    related_content = RelatedContentField(allow_null=True, many=True, queryset=Content.objects.drafts())
+    co_authors = DllM2MField(
+        allow_null=True, many=True, required=False, queryset=DllUser.objects.all()
+    )
+    competences = DllM2MField(
+        allow_null=True, many=True, queryset=Competence.objects.all()
+    )
+    sub_competences = DllM2MField(
+        allow_null=True, many=True, queryset=SubCompetence.objects.all()
+    )
+    related_content = RelatedContentField(
+        allow_null=True, many=True, queryset=Content.objects.drafts()
+    )
     tools = SerializerMethodField(allow_null=True)
     trends = SerializerMethodField(allow_null=True)
     teaching_modules = SerializerMethodField(allow_null=True)
@@ -261,20 +354,37 @@ class   BaseContentSubclassSerializer(serializers.ModelSerializer):
     submitted = SerializerMethodField(allow_null=True)
     pending_co_authors = SerializerMethodField(allow_null=True)
     content_files = SerializerMethodField(allow_null=True)
-    additional_tools = AdditionalToolsField(many=True, allow_null=True, required=False, queryset=Tool.objects.drafts(),
-                                            source='get_additional_tools', write_only=True)
+    additional_tools = AdditionalToolsField(
+        many=True,
+        allow_null=True,
+        required=False,
+        queryset=Tool.objects.drafts(),
+        source="get_additional_tools",
+        write_only=True,
+    )
 
     def validate_name(self, data):
         """Make sure the slug of this name will be unique too."""
-        expected_slug = custom_slugify(data)[:50]  # corresponds to DllSlugField max_length
-        if (self.instance is None and Content.objects.drafts().filter(slug=expected_slug).count() >= 1) or \
-                Content.objects.published().filter(slug=expected_slug).count() > 1:
-            raise ValidationError(_('A content with this name already exists.'))
+        expected_slug = custom_slugify(data)[
+            :50
+        ]  # corresponds to DllSlugField max_length
+        if (
+            self.instance is None
+            and Content.objects.drafts().filter(slug=expected_slug).count() >= 1
+        ) or Content.objects.published().filter(slug=expected_slug).count() > 1:
+            raise ValidationError(_("A content with this name already exists."))
         if self.instance is not None:
-            content_to_check = Content.objects.filter(slug=expected_slug).exclude(pk=self.instance.pk)
-            if (self.instance.publisher_is_draft and content_to_check.drafts().count() >= 1) or \
-               (not self.instance.publisher_is_draft and content_to_check.published().count() >= 1):
-                raise ValidationError(_('A content with this name already exists.'))
+            content_to_check = Content.objects.filter(slug=expected_slug).exclude(
+                pk=self.instance.pk
+            )
+            if (
+                self.instance.publisher_is_draft
+                and content_to_check.drafts().count() >= 1
+            ) or (
+                not self.instance.publisher_is_draft
+                and content_to_check.published().count() >= 1
+            ):
+                raise ValidationError(_("A content with this name already exists."))
         return data
 
     def validate_related_content(self, data):
@@ -286,20 +396,30 @@ class   BaseContentSubclassSerializer(serializers.ModelSerializer):
         return res
 
     def get_content_files(self, obj):
-        return [{'title': file.title, 'url': file.file.url, 'id': file.id} for file in obj.content_files.all()]
+        return [
+            {"title": file.title, "url": file.file.url, "id": file.id}
+            for file in obj.content_files.all()
+        ]
 
     def get_pending_co_authors(self, obj):
-        return [invite.to.full_name for invite in obj.invitations.filter(accepted__isnull=True)]
+        return [
+            invite.to.full_name
+            for invite in obj.invitations.filter(accepted__isnull=True)
+        ]
 
     def get_submitted(self, obj):
-        return obj.review and (obj.review.status == Review.IN_PROGRESS or obj.review.status == Review.NEW)
+        return obj.review and (
+            obj.review.status == Review.IN_PROGRESS or obj.review.status == Review.NEW
+        )
 
     def get_help_texts(self, obj):
         result = {}
         try:
-            help_text = HelpText.objects.get(content_type=ContentType.objects.get_for_model(obj))
+            help_text = HelpText.objects.get(
+                content_type=ContentType.objects.get_for_model(obj)
+            )
             for field in help_text.help_text_fields.all():
-                result[field.name.split('.')[-1].strip('>')] = field.text
+                result[field.name.split(".")[-1].strip(">")] = field.text
         except HelpText.DoesNotExist:
             pass
         return result
@@ -309,7 +429,7 @@ class   BaseContentSubclassSerializer(serializers.ModelSerializer):
 
     def get_image(self, obj):
         if obj.image:
-            return {'name': str(obj.image), 'url': obj.image.url}
+            return {"name": str(obj.image), "url": obj.image.url}
         return None
 
     def _get_content_name(self, content):
@@ -319,33 +439,35 @@ class   BaseContentSubclassSerializer(serializers.ModelSerializer):
         return content.name
 
     def get_tools(self, obj):
-        return [{'pk': content.pk, 'label': self._get_content_name(content)}
-                for content in obj.related_content.drafts().instance_of(Tool)]
+        return [
+            {"pk": content.pk, "label": self._get_content_name(content)}
+            for content in obj.related_content.drafts().instance_of(Tool)
+        ]
 
     def get_trends(self, obj):
-        return [{'pk': content.pk, 'label': self._get_content_name(content)}
-                for content in obj.related_content.drafts().instance_of(Trend)]
+        return [
+            {"pk": content.pk, "label": self._get_content_name(content)}
+            for content in obj.related_content.drafts().instance_of(Trend)
+        ]
 
     def get_teaching_modules(self, obj):
-        return [{'pk': content.pk, 'label': self._get_content_name(content)}
-                for content in obj.related_content.drafts().instance_of(TeachingModule)]
+        return [
+            {"pk": content.pk, "label": self._get_content_name(content)}
+            for content in obj.related_content.drafts().instance_of(TeachingModule)
+        ]
 
     def get_m2m_fields(self):
-        return [
-            'competences',
-            'sub_competences',
-            'related_content'
-        ]
+        return ["competences", "sub_competences", "related_content"]
 
     def get_array_fields(self):
         return [
-            'learning_goals',
+            "learning_goals",
         ]
 
     def create(self, validated_data):
-        links_data = validated_data.pop('contentlink_set', [])
-        co_authors = validated_data.pop('co_authors', [])
-        additional_tools = validated_data.pop('get_additional_tools', [])
+        links_data = validated_data.pop("contentlink_set", [])
+        co_authors = validated_data.pop("co_authors", [])
+        additional_tools = validated_data.pop("get_additional_tools", [])
         content = super(BaseContentSubclassSerializer, self).create(validated_data)
         self._update_content_links(content, links_data)
         self._update_co_authors(content, co_authors)
@@ -361,8 +483,13 @@ class   BaseContentSubclassSerializer(serializers.ModelSerializer):
             ContentLink.objects.create(content=content, **dict(link))
 
     def _update_co_authors(self, content, co_authors):
-        invited_co_authors = set(DllUser.objects.filter(pk__in=content.invitations.filter(accepted__isnull=True)
-                                                        .values_list('to', flat=True)))
+        invited_co_authors = set(
+            DllUser.objects.filter(
+                pk__in=content.invitations.filter(accepted__isnull=True).values_list(
+                    "to", flat=True
+                )
+            )
+        )
         current_co_authors = set(content.co_authors.all())
         updated_list = set(DllUser.objects.filter(pk__in=co_authors))
         new_co_authors = updated_list - current_co_authors - invited_co_authors
@@ -370,17 +497,17 @@ class   BaseContentSubclassSerializer(serializers.ModelSerializer):
         content.co_authors.remove(*removed_co_authors)
         for user in new_co_authors:
             invitation = CoAuthorshipInvitation.objects.create(
-                by=self.context['request'].user,
+                by=self.context["request"].user,
                 to=user,
                 content=content,
-                site_id=settings.SITE_ID
+                site_id=settings.SITE_ID,
             )
             invitation.send_invitation_mail()
 
     def _update_m2m_fields(self, instance, field, values):
         for pk in values:
             getattr(instance, field).add(pk)
-        for pk in getattr(instance, field).values_list('pk', flat=True):
+        for pk in getattr(instance, field).values_list("pk", flat=True):
             if pk not in values:
                 getattr(instance, field).remove(pk)
 
@@ -394,8 +521,8 @@ class   BaseContentSubclassSerializer(serializers.ModelSerializer):
         maps it to the corresponding processing method
         """
         update_methods = {
-            'contentlink_set': '_update_content_links',
-            'co_authors': '_update_co_authors'
+            "contentlink_set": "_update_content_links",
+            "co_authors": "_update_co_authors",
         }
         for update_key, update_method in update_methods.items():
             try:
@@ -426,48 +553,56 @@ class   BaseContentSubclassSerializer(serializers.ModelSerializer):
             else:
                 self._update_array_fields(instance, field, values)
 
-        additional_tools = validated_data.pop('get_additional_tools', [])
+        additional_tools = validated_data.pop("get_additional_tools", [])
         for tool in additional_tools:
-            if tool.get('name') and tool.get('url'):
+            if tool.get("name") and tool.get("url"):
                 tool_instance = Tool.objects.create(
-                name=tool['name'],
-                author=instance.author
+                    name=tool["name"], author=instance.author
                 )
                 tool_instance.related_content.add(instance)
                 tool_instance.save()
-                ToolLink.objects.create(tool=tool_instance, url=tool['url'])
+                ToolLink.objects.create(tool=tool_instance, url=tool["url"])
             else:
-                raise ValidationError({'additional_tools': [_('All additional tools must contain a name and an URL.')]})
+                raise ValidationError(
+                    {
+                        "additional_tools": [
+                            _("All additional tools must contain a name and an URL.")
+                        ]
+                    }
+                )
         instance = super().update(instance, validated_data)
         return instance
 
 
 class ToolLinkSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = ToolLink
-        fields = ['url', 'name']
+        fields = ["url", "name"]
 
 
 class ToolSerializer(BaseContentSubclassSerializer):
-    operating_systems = DllM2MField(allow_null=True, many=True, queryset=OperatingSystem.objects.all(), required=False)
-    applications = DllM2MField(allow_null=True, many=True, queryset=ToolApplication.objects.all(), required=False)
+    operating_systems = DllM2MField(
+        allow_null=True,
+        many=True,
+        queryset=OperatingSystem.objects.all(),
+        required=False,
+    )
+    applications = DllM2MField(
+        allow_null=True,
+        many=True,
+        queryset=ToolApplication.objects.all(),
+        required=False,
+    )
     url = ToolLinkSerializer(allow_null=True, many=False, required=False)
 
     def get_array_fields(self):
         fields = super(ToolSerializer, self).get_array_fields()
-        fields.extend([
-            'pro',
-            'contra'
-        ])
+        fields.extend(["pro", "contra"])
         return fields
 
     def get_m2m_fields(self):
         fields = super(ToolSerializer, self).get_m2m_fields()
-        fields.extend([
-            'operating_systems',
-            'applications'
-        ])
+        fields.extend(["operating_systems", "applications"])
         return fields
 
     def update(self, instance, validated_data):
@@ -477,7 +612,7 @@ class ToolSerializer(BaseContentSubclassSerializer):
                     instance.url.delete()
             except ObjectDoesNotExist:
                 pass
-            url = validated_data.pop('url', None)
+            url = validated_data.pop("url", None)
             if url:
                 ToolLink.objects.create(**url, tool=instance)
 
@@ -486,49 +621,48 @@ class ToolSerializer(BaseContentSubclassSerializer):
 
     class Meta:
         model = Tool
-        fields = '__all__'
+        fields = "__all__"
 
 
 class TrendSerializer(BaseContentSubclassSerializer):
-
     def get_array_fields(self):
         fields = super(TrendSerializer, self).get_array_fields()
-        fields.extend([
-            'target_group',
-            'publisher'
-        ])
+        fields.extend(["target_group", "publisher"])
         return fields
 
     class Meta:
         model = Trend
-        fields = '__all__'
+        fields = "__all__"
 
 
 class TeachingModuleSerializer(BaseContentSubclassSerializer):
     subjects = DllM2MField(allow_null=True, many=True, queryset=Subject.objects.all())
-    school_types = DllM2MField(allow_null=True, many=True, queryset=SchoolType.objects.all())
-    school_class = RangeField(NumericRange, child=IntegerField(allow_null=True), required=False, allow_null=True)
+    school_types = DllM2MField(
+        allow_null=True, many=True, queryset=SchoolType.objects.all()
+    )
+    school_class = RangeField(
+        NumericRange,
+        child=IntegerField(allow_null=True),
+        required=False,
+        allow_null=True,
+    )
 
     def get_array_fields(self):
         fields = super(TeachingModuleSerializer, self).get_array_fields()
-        fields.extend([
-            'expertise',
-            'equipment',
-            'estimated_time',
-            'subject_of_tuition',
-        ])
+        fields.extend(
+            ["expertise", "equipment", "estimated_time", "subject_of_tuition",]
+        )
         return fields
 
     class Meta:
         model = TeachingModule
-        fields = '__all__'
+        fields = "__all__"
 
     def get_m2m_fields(self):
         fields = super(TeachingModuleSerializer, self).get_m2m_fields()
-        fields.extend([
-            'subjects',
-            'school_types',
-        ])
+        fields.extend(
+            ["subjects", "school_types",]
+        )
         return fields
 
 
@@ -536,7 +670,7 @@ class ContentPolymorphicSerializer(PolymorphicSerializer):
     model_serializer_mapping = {
         Tool: ToolSerializer,
         Trend: TrendSerializer,
-        TeachingModule: TeachingModuleSerializer
+        TeachingModule: TeachingModuleSerializer,
     }
 
 

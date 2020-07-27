@@ -8,8 +8,9 @@ def forwards_func(apps, schema_editor):
     db_alias = schema_editor.connection.alias
     tms = TeachingModule.objects.using(db_alias).all()
     for tm in tms:
-        tm.subject_of_tuition_migration = ' '.join(tm.subject_of_tuition)
+        tm.subject_of_tuition_migration = " ".join(tm.subject_of_tuition)
         tm.save()
+
 
 def reverse_func(apps, schema_editor):
     TeachingModule = apps.get_model("content", "TeachingModule")
@@ -23,32 +24,22 @@ def reverse_func(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content', '0003_auto_20200113_1540'),
+        ("content", "0003_auto_20200113_1540"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='teachingmodule',
-            name='subject_of_tuition_migration',
-            field=models.TextField(
-                max_length=2000,
-                null=True,
-                blank=True
-            ),
+            model_name="teachingmodule",
+            name="subject_of_tuition_migration",
+            field=models.TextField(max_length=2000, null=True, blank=True),
         ),
         migrations.RunPython(
-            code=forwards_func,
-            reverse_code=reverse_func,
-            atomic=True
+            code=forwards_func, reverse_code=reverse_func, atomic=True
         ),
-        migrations.RemoveField(
-            model_name='teachingmodule',
-            name='subject_of_tuition'
-        ),
+        migrations.RemoveField(model_name="teachingmodule", name="subject_of_tuition"),
         migrations.RenameField(
-            model_name='teachingmodule',
-            old_name='subject_of_tuition_migration',
-            new_name='subject_of_tuition',
-
-        )
+            model_name="teachingmodule",
+            old_name="subject_of_tuition_migration",
+            new_name="subject_of_tuition",
+        ),
     ]

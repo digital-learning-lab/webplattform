@@ -10,26 +10,37 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('content', '0001_initial'),
+        ("content", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('sites', '0002_alter_domain_unique'),
-        ('communication', '0001_initial'),
+        ("sites", "0002_alter_domain_unique"),
+        ("communication", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='coauthorshipinvitation',
-            name='content',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='invitations', to='content.Content'),
+            model_name="coauthorshipinvitation",
+            name="content",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="invitations",
+                to="content.Content",
+            ),
         ),
         migrations.AddField(
-            model_name='coauthorshipinvitation',
-            name='site',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='sites.Site'),
+            model_name="coauthorshipinvitation",
+            name="site",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="sites.Site"
+            ),
         ),
         migrations.AddField(
-            model_name='coauthorshipinvitation',
-            name='to',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='received_invitations', to=settings.AUTH_USER_MODEL, verbose_name='Einladung an'),
+            model_name="coauthorshipinvitation",
+            name="to",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="received_invitations",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="Einladung an",
+            ),
         ),
     ]

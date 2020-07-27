@@ -9,13 +9,18 @@ import django_extensions.db.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content', '0006_auto_20200113_1721'),
+        ("content", "0006_auto_20200113_1721"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='content',
-            name='created',
-            field=django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, default=datetime.datetime(2020, 1, 23, 9, 2, 31, 966823, tzinfo=utc), null=True, verbose_name='created'),
+            model_name="content",
+            name="created",
+            field=django_extensions.db.fields.CreationDateTimeField(
+                auto_now_add=True,
+                default=datetime.datetime(2020, 1, 23, 9, 2, 31, 966823, tzinfo=utc),
+                null=True,
+                verbose_name="created",
+            ),
         ),
     ]

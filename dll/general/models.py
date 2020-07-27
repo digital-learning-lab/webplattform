@@ -13,7 +13,7 @@ from dll.general import signals
 from .utils import custom_slugify
 
 
-logger = logging.getLogger('dll.publisher')
+logger = logging.getLogger("dll.publisher")
 
 
 class PublisherModelBase(TimeStampedModel):
@@ -21,16 +21,15 @@ class PublisherModelBase(TimeStampedModel):
     STATE_DRAFT = True
 
     publisher_linked = models.OneToOneField(
-        'self',
-        related_name='publisher_draft',
+        "self",
+        related_name="publisher_draft",
         null=True,
         editable=False,
-        on_delete=models.SET_NULL)
+        on_delete=models.SET_NULL,
+    )
 
     publisher_is_draft = models.BooleanField(
-        default=STATE_DRAFT,
-        editable=False,
-        db_index=True
+        default=STATE_DRAFT, editable=False, db_index=True
     )
 
     class Meta:
@@ -68,16 +67,16 @@ class PublisherModel(PublisherModelBase):
 
     class Meta:
         abstract = True
-        permissions = (
-            ('can_publish', 'Can publish'),
-        )
+        permissions = (("can_publish", "Can publish"),)
 
     def publish(self):
         if not self.publisher_is_draft:
-            logger.exception('Can only publish drafts')
+            logger.exception("Can only publish drafts")
             return
         else:
-            logger.debug('Publish {} with pk {}'.format(self.__class__.__name__, self.pk))
+            logger.debug(
+                "Publish {} with pk {}".format(self.__class__.__name__, self.pk)
+            )
             draft_obj = self
             if draft_obj.publisher_linked:
                 draft_obj.publisher_linked.delete()
@@ -92,7 +91,9 @@ class PublisherModel(PublisherModelBase):
             self.copy_relations(draft_obj, publish_obj)
             draft_obj.publisher_linked = publish_obj
             draft_obj.save()
-            signals.post_publish.send(sender=publish_obj.__class__, instance=publish_obj)
+            signals.post_publish.send(
+                sender=publish_obj.__class__, instance=publish_obj
+            )
 
     def copy_relations(self, src, dst):
         pass
@@ -110,12 +111,15 @@ class PublisherModel(PublisherModelBase):
         if self.publisher_is_draft:
             if self.publisher_linked:
                 counter, deleted_counter = self.publisher_linked.delete(**kwargs)
-                logger.info("Deleting also public version ({}, {})".format(counter, deleted_counter))
+                logger.info(
+                    "Deleting also public version ({}, {})".format(
+                        counter, deleted_counter
+                    )
+                )
         return super(PublisherModel, self).delete(**kwargs)
 
 
 class DllSlugField(AutoSlugField):
-
     def slugify_function(self, value):
         return custom_slugify(value)
 
@@ -127,13 +131,19 @@ class NewsletterSubscription(TimeStampedModel):
 
 class Message(TimeStampedModel):
     TYPE_CHOICES = (
-        ('co_author_invitation', _('Koauthorenschaftsanfrage')),
-        ('bsb_contact_mail', _('BSB Kontaktanfrage')),
-        ('dll_contact_mail', _('DLL Kontaktanfrage'))
+        ("co_author_invitation", _("Koauthorenschaftsanfrage")),
+        ("bsb_contact_mail", _("BSB Kontaktanfrage")),
+        ("dll_contact_mail", _("DLL Kontaktanfrage")),
     )
 
-    from_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_messages')
-    to_user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='received_messages')
+    from_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="sent_messages"
+    )
+    to_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="received_messages",
+    )
     subject = models.CharField(max_length=140)
     content = models.TextField()
     message_type = models.CharField(max_length=20, choices=TYPE_CHOICES)
@@ -144,4 +154,5 @@ class ArrayLength(models.Func):
     Annotate array fields with their length
     usage: MyModel.objects.all().annotate(field_len=ArrayLength('field')).order_by('field_len')
     """
-    function = 'CARDINALITY'
+
+    function = "CARDINALITY"

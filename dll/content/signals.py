@@ -6,7 +6,7 @@ from dll.content.models import TeachingModule, Tool, Trend, Content, ContentFile
 from dll.general.signals import post_publish, post_unpublish
 import sys
 
-TESTING = len(sys.argv) > 1 and sys.argv[1] == 'test'
+TESTING = len(sys.argv) > 1 and sys.argv[1] == "test"
 
 
 class ContentSignalProcessor(BaseSignalProcessor):
@@ -39,4 +39,3 @@ def auto_delete_filer_image_on_delete(sender, instance, **kwargs):
 @receiver(models.signals.post_delete, sender=ContentFile)
 def auto_delete_filer_file_on_delete(sender, instance, **kwargs):
     instance.file.delete()
-

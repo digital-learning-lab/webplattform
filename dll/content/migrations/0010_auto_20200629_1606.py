@@ -9,13 +9,18 @@ import django_extensions.db.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content', '0009_fix_missing_created_values'),
+        ("content", "0009_fix_missing_created_values"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='content',
-            name='created',
-            field=django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, default=datetime.datetime(2020, 6, 29, 14, 6, 32, 695639, tzinfo=utc), null=True, verbose_name='created'),
+            model_name="content",
+            name="created",
+            field=django_extensions.db.fields.CreationDateTimeField(
+                auto_now_add=True,
+                default=datetime.datetime(2020, 6, 29, 14, 6, 32, 695639, tzinfo=utc),
+                null=True,
+                verbose_name="created",
+            ),
         ),
     ]

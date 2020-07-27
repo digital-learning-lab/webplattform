@@ -18,11 +18,22 @@ from rest_framework.generics import ListAPIView
 
 from dll.communication.models import CoAuthorshipInvitation, NewsletterSubscrption
 from dll.communication.tasks import send_mail
-from .forms import UserProfileForm, UserEmailsForm, UserPasswordChangeForm, UserAccountDeleteForm
+from .forms import (
+    UserProfileForm,
+    UserEmailsForm,
+    UserPasswordChangeForm,
+    UserAccountDeleteForm,
+)
 from dll.content.models import Content, TeachingModule, Tool, Trend, Review
 from dll.content.rules import is_bsb_reviewer, is_tuhh_reviewer
-from dll.content.serializers import TeachingModuleSerializer, ToolSerializer, TrendSerializer, \
-    ContentListInternalSerializer, ContentListInternalReviewSerializer, ContentListInvitationSerializer
+from dll.content.serializers import (
+    TeachingModuleSerializer,
+    ToolSerializer,
+    TrendSerializer,
+    ContentListInternalSerializer,
+    ContentListInternalReviewSerializer,
+    ContentListInvitationSerializer,
+)
 from dll.content.views import BreadcrumbMixin
 from dll.user.models import EmailChangeRequest
 from dll.user.tokens import account_activation_token, email_confirmation_token
@@ -33,45 +44,47 @@ USER_MODEL = get_user_model()
 
 
 class TestView(TemplateView):
-    template_name = 'dll/test.html'
+    template_name = "dll/test.html"
 
     def get(self, request, *args, **kwargs):
-        user_id = request.GET.get('user', None)
+        user_id = request.GET.get("user", None)
         if user_id:
             user = USER_MODEL.objects.get(pk=user_id)
-            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            login(request, user, backend="django.contrib.auth.backends.ModelBackend")
         return super(TestView, self).get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         ctx = super(TestView, self).get_context_data(**kwargs)
-        ctx['users'] = USER_MODEL.objects.all()
-        ctx['teaching_modules'] = Content.objects.teaching_modules()
-        ctx['tools'] = Content.objects.tools()
-        ctx['trends'] = Content.objects.trends()
+        ctx["users"] = USER_MODEL.objects.all()
+        ctx["teaching_modules"] = Content.objects.teaching_modules()
+        ctx["tools"] = Content.objects.tools()
+        ctx["trends"] = Content.objects.trends()
         return ctx
 
 
 class MyContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
-    template_name = 'dll/user/content/overview.html'
-    breadcrumb_title = 'Meine Inhalte'
-    breadcrumb_url = reverse_lazy('user-content-overview')
+    template_name = "dll/user/content/overview.html"
+    breadcrumb_title = "Meine Inhalte"
+    breadcrumb_url = reverse_lazy("user-content-overview")
 
 
 class MyReviewsView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
-    template_name = 'dll/user/content/review_content.html'
-    breadcrumb_title = 'Review Inhalte'
-    breadcrumb_url = reverse_lazy('user-content-overview')
+    template_name = "dll/user/content/review_content.html"
+    breadcrumb_title = "Review Inhalte"
+    breadcrumb_url = reverse_lazy("user-content-overview")
 
     def get_context_data(self, **kwargs):
         ctx = super(MyReviewsView, self).get_context_data(**kwargs)
         user = self.request.user
-        base_qs = Content.objects.drafts().filter(Q(reviews__status=Review.NEW) | Q(reviews__status=Review.IN_PROGRESS))
+        base_qs = Content.objects.drafts().filter(
+            Q(reviews__status=Review.NEW) | Q(reviews__status=Review.IN_PROGRESS)
+        )
         if is_bsb_reviewer(user):
-            ctx['contents'] = base_qs.instance_of(TeachingModule)
+            ctx["contents"] = base_qs.instance_of(TeachingModule)
         elif is_tuhh_reviewer(user):
-            ctx['contents'] = base_qs.not_instance_of(TeachingModule)
+            ctx["contents"] = base_qs.not_instance_of(TeachingModule)
         elif user.is_superuser:
-            ctx['contents'] = base_qs
+            ctx["contents"] = base_qs
         # ctx['contents'] = self.request.user.qs_any_content()
         return ctx
 
@@ -82,18 +95,25 @@ class CreateEditContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
 
     def get_context_data(self, **kwargs):
         ctx = super(CreateEditContentView, self).get_context_data(**kwargs)
-        slug = self.kwargs.get('slug', None)
+        slug = self.kwargs.get("slug", None)
         if slug:
             obj = self.get_object()
             data = self.serializer(obj).data
-            if obj and obj.review and obj.review.status != Review.DECLINED and not self.request.user.is_reviewer:
-                data['review'] = None
-            ctx['obj'] = json.dumps(data)
-            ctx['author'] = obj.author.full_name
-            ctx['can_delete'] = 'true' if self.request.user.has_perm('can_delete', obj) else 'false'
+            if (
+                obj
+                and obj.review
+                and obj.review.status != Review.DECLINED
+                and not self.request.user.is_reviewer
+            ):
+                data["review"] = None
+            ctx["obj"] = json.dumps(data)
+            ctx["author"] = obj.author.full_name
+            ctx["can_delete"] = (
+                "true" if self.request.user.has_perm("can_delete", obj) else "false"
+            )
         else:
-            ctx['author'] = self.request.user.full_name
-            ctx['can_delete'] = 'true'
+            ctx["author"] = self.request.user.full_name
+            ctx["can_delete"] = "true"
         return ctx
 
     def get_object(self):
@@ -101,132 +121,149 @@ class CreateEditContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
         user = self.request.user
         if not user.is_superuser:
             qs = qs.filter(Q(author=user) | Q(co_authors__in=[user.pk])).distinct()
-        if not getattr(self, 'object', None):
-            slug = self.kwargs.get('slug', None)
+        if not getattr(self, "object", None):
+            slug = self.kwargs.get("slug", None)
             if slug:
                 try:
                     self.object = qs.get(slug=slug)
                 except ObjectDoesNotExist:
                     raise Http404
-        return getattr(self, 'object', None)
+        return getattr(self, "object", None)
 
     def get_breadcrumbs(self):
         bcs = super(CreateEditContentView, self).get_breadcrumbs()
         temp_bc = bcs[1]
         del bcs[1]
         if self.get_object():
-            temp_bc['title'] = temp_bc['title'].format('bearbeiten')
+            temp_bc["title"] = temp_bc["title"].format("bearbeiten")
         else:
-            temp_bc['title'] = temp_bc['title'].format('erstellen')
-        bcs.extend([
-            {'title': 'Meine Inhalte', 'url': reverse_lazy('user-content-overview')},
-            temp_bc
-        ])
+            temp_bc["title"] = temp_bc["title"].format("erstellen")
+        bcs.extend(
+            [
+                {
+                    "title": "Meine Inhalte",
+                    "url": reverse_lazy("user-content-overview"),
+                },
+                temp_bc,
+            ]
+        )
         return bcs
 
 
 class CreateEditTeachingModuleView(CreateEditContentView):
-    template_name = 'dll/user/content/add_teaching_module.html'
-    breadcrumb_title = 'Digitalen Unterrichtsbaustein {}'
-    breadcrumb_url = reverse_lazy('add-teaching-module')
+    template_name = "dll/user/content/add_teaching_module.html"
+    breadcrumb_title = "Digitalen Unterrichtsbaustein {}"
+    breadcrumb_url = reverse_lazy("add-teaching-module")
     model = TeachingModule
     serializer = TeachingModuleSerializer
 
 
 class ReviewTeachingModuleView(CreateEditTeachingModuleView):
-    template_name = 'dll/user/content/review_teaching_module.html'
+    template_name = "dll/user/content/review_teaching_module.html"
+
     def get_breadcrumbs(self):
         bcs = super(CreateEditTeachingModuleView, self).get_breadcrumbs()
         result = []
         result.append(bcs[0])
-        result.extend([
-            {'title': 'Review Inhalte', 'url': reverse_lazy('user-content-review')},
-            {'title': 'Digitalen Unterrichtbaustein reviewen', 'url': reverse_lazy('user-content-review')},
-        ])
+        result.extend(
+            [
+                {"title": "Review Inhalte", "url": reverse_lazy("user-content-review")},
+                {
+                    "title": "Digitalen Unterrichtbaustein reviewen",
+                    "url": reverse_lazy("user-content-review"),
+                },
+            ]
+        )
         return result
 
 
 class CreateEditToolView(CreateEditContentView):
-    template_name = 'dll/user/content/add_tool.html'
-    breadcrumb_title = 'Tool {}'
-    breadcrumb_url = reverse_lazy('add-tool')
+    template_name = "dll/user/content/add_tool.html"
+    breadcrumb_title = "Tool {}"
+    breadcrumb_url = reverse_lazy("add-tool")
     model = Tool
     serializer = ToolSerializer
 
 
 class ReviewToolView(CreateEditToolView):
-    template_name = 'dll/user/content/review_tool.html'
+    template_name = "dll/user/content/review_tool.html"
+
     def get_breadcrumbs(self):
         bcs = super(CreateEditToolView, self).get_breadcrumbs()
         result = []
         result.append(bcs[0])
-        result.extend([
-            {'title': 'Review Inhalte', 'url': reverse_lazy('user-content-review')},
-            {'title': 'Tool reviewen', 'url': reverse_lazy('user-content-review')},
-        ])
+        result.extend(
+            [
+                {"title": "Review Inhalte", "url": reverse_lazy("user-content-review")},
+                {"title": "Tool reviewen", "url": reverse_lazy("user-content-review")},
+            ]
+        )
         return result
 
 
 class CreateEditTrendView(CreateEditContentView):
-    template_name = 'dll/user/content/add_trend.html'
-    breadcrumb_title = 'Trend {}'
-    breadcrumb_url = reverse_lazy('add-trend')
+    template_name = "dll/user/content/add_trend.html"
+    breadcrumb_title = "Trend {}"
+    breadcrumb_url = reverse_lazy("add-trend")
     model = Trend
     serializer = TrendSerializer
 
 
 class ReviewTrendView(CreateEditTrendView):
-    template_name = 'dll/user/content/review_trend.html'
+    template_name = "dll/user/content/review_trend.html"
 
     def get_breadcrumbs(self):
         bcs = super(CreateEditTrendView, self).get_breadcrumbs()
         result = []
         result.append(bcs[0])
-        result.extend([
-            {'title': 'Review Inhalte', 'url': reverse_lazy('user-content-review')},
-            {'title': 'Trend reviewen', 'url': reverse_lazy('user-content-review')},
-        ])
+        result.extend(
+            [
+                {"title": "Review Inhalte", "url": reverse_lazy("user-content-review")},
+                {"title": "Trend reviewen", "url": reverse_lazy("user-content-review")},
+            ]
+        )
         return result
 
 
 class SignUpView(FormView):
-    template_name = 'dll/user/signup.html'
+    template_name = "dll/user/signup.html"
     form_class = SignUpForm
-    email_template = 'dll/user/email/account_activation_email.html'
-    success_url = reverse_lazy('user:signup-success')
+    email_template = "dll/user/email/account_activation_email.html"
+    success_url = reverse_lazy("user:signup-success")
 
     def form_valid(self, form):
         user = form.save(commit=False)
         user.is_active = False
         user.save()
 
-        confirmation_url = reverse('user:activate', kwargs={
-            'uidb64': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': account_activation_token.make_token(user),
-        })
+        confirmation_url = reverse(
+            "user:activate",
+            kwargs={
+                "uidb64": urlsafe_base64_encode(force_bytes(user.pk)),
+                "token": account_activation_token.make_token(user),
+            },
+        )
         confirmation_url = self.request.build_absolute_uri(confirmation_url)
 
-        context = {
-            'username': user.full_name,
-            'confirmation_url': confirmation_url
-        }
-        send_mail.delay(
-            event_type_code='USER_SIGNUP',
-            email=user.email,
-            ctx=context
-        )
+        context = {"username": user.full_name, "confirmation_url": confirmation_url}
+        send_mail.delay(event_type_code="USER_SIGNUP", email=user.email, ctx=context)
 
         if form.cleaned_data["newsletter_registration"]:
             try:
-                NewsletterSubscrption.objects.get(email=form.cleaned_data['email'])
+                NewsletterSubscrption.objects.get(email=form.cleaned_data["email"])
             except NewsletterSubscrption.DoesNotExist:
                 subscription, created = NewsletterSubscrption.objects.update_or_create(
-                    email=form.cleaned_data['email']
+                    email=form.cleaned_data["email"]
                 )
-                token = reverse('communication:newsletter-confirm', kwargs={
-                    'nl_id_b64': urlsafe_base64_encode(force_bytes(subscription.pk)),
-                    'token': newsletter_confirm_token.make_token(subscription)
-                })
+                token = reverse(
+                    "communication:newsletter-confirm",
+                    kwargs={
+                        "nl_id_b64": urlsafe_base64_encode(
+                            force_bytes(subscription.pk)
+                        ),
+                        "token": newsletter_confirm_token.make_token(subscription),
+                    },
+                )
                 token = self.request.build_absolute_uri(token)
                 form.send_registration_email(token)
 
@@ -234,7 +271,7 @@ class SignUpView(FormView):
 
 
 class SignUpSuccessfulView(TemplateView):
-    template_name = 'dll/user/signup_success.html'
+    template_name = "dll/user/signup_success.html"
 
 
 class UserContentView(ListAPIView):
@@ -246,28 +283,32 @@ class UserContentView(ListAPIView):
 
         qs = qs.drafts()
 
-        type = self.request.GET.get('type', None)
-        search_term = self.request.GET.get('q', None)
-        status = self.request.GET.get('status', None)
+        type = self.request.GET.get("type", None)
+        search_term = self.request.GET.get("q", None)
+        status = self.request.GET.get("status", None)
 
-        if type == 'trend':
+        if type == "trend":
             qs = qs.instance_of(Trend)
-        if type == 'tool':
+        if type == "tool":
             qs = qs.instance_of(Tool)
-        if type == 'teaching-module':
+        if type == "teaching-module":
             qs = qs.instance_of(TeachingModule)
 
-        if status == 'draft':
+        if status == "draft":
             qs = qs.filter(publisher_linked__isnull=True, reviews__isnull=True)
-        if status == 'submitted':
-            qs = qs.filter(Q(reviews__status=Review.NEW) | Q(reviews__status=Review.IN_PROGRESS))
-        if status == 'approved':
+        if status == "submitted":
+            qs = qs.filter(
+                Q(reviews__status=Review.NEW) | Q(reviews__status=Review.IN_PROGRESS)
+            )
+        if status == "approved":
             qs = qs.filter(publisher_linked__isnull=False)
-        if status == 'declined':
+        if status == "declined":
             qs = qs.filter(reviews__status=Review.DECLINED)
 
         if search_term:
-            qs = qs.filter(Q(name__icontains=search_term) | Q(teaser__icontains=search_term))
+            qs = qs.filter(
+                Q(name__icontains=search_term) | Q(teaser__icontains=search_term)
+            )
 
         return qs.distinct()
 
@@ -278,13 +319,16 @@ class UserInvitationView(UserContentView):
     def get_queryset(self):
         user = self.request.user
 
-        invitation_contents = CoAuthorshipInvitation.objects.filter(to=user, accepted=None)\
-            .values_list('content__pk', flat=True)
+        invitation_contents = CoAuthorshipInvitation.objects.filter(
+            to=user, accepted=None
+        ).values_list("content__pk", flat=True)
 
         return Content.objects.filter(pk__in=invitation_contents)
 
 
-def activate_user(request, uidb64, token, backend='django.contrib.auth.backends.ModelBackend'):
+def activate_user(
+    request, uidb64, token, backend="django.contrib.auth.backends.ModelBackend"
+):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
         user = USER_MODEL.objects.get(pk=uid)
@@ -297,32 +341,34 @@ def activate_user(request, uidb64, token, backend='django.contrib.auth.backends.
         user.doi_confirmed_date = timezone.now()
         user.save()
         login(request, user, backend=backend)
-        return redirect('user-content-overview')
+        return redirect("user-content-overview")
     else:
-        return render(request, 'dll/user/account_activation_invalid.html')
+        return render(request, "dll/user/account_activation_invalid.html")
 
 
 class PendingReviewContentView(UserContentView):
     serializer_class = ContentListInternalReviewSerializer
 
     def get_queryset(self):
-        reviews = Review.objects.filter(is_active=True, status__in=[Review.NEW, Review.IN_PROGRESS])
-        qs = Content.objects.drafts().filter(
-            reviews__in=reviews
+        reviews = Review.objects.filter(
+            is_active=True, status__in=[Review.NEW, Review.IN_PROGRESS]
         )
+        qs = Content.objects.drafts().filter(reviews__in=reviews)
 
-        type = self.request.GET.get('type', None)
-        search_term = self.request.GET.get('q', None)
+        type = self.request.GET.get("type", None)
+        search_term = self.request.GET.get("q", None)
 
-        if type == 'trend':
+        if type == "trend":
             qs = qs.instance_of(Trend)
-        if type == 'tool':
+        if type == "tool":
             qs = qs.instance_of(Tool)
-        if type == 'teaching-module':
+        if type == "teaching-module":
             qs = qs.instance_of(TeachingModule)
 
         if search_term:
-            qs = qs.filter(Q(name__icontains=search_term) | Q(teaser__icontains=search_term))
+            qs = qs.filter(
+                Q(name__icontains=search_term) | Q(teaser__icontains=search_term)
+            )
 
         user = self.request.user
 
@@ -338,28 +384,30 @@ class PendingReviewContentView(UserContentView):
 
 
 class BaseProfileView(FormView, BreadcrumbMixin):
-    breadcrumb_title = _('Mein Profil')
-    breadcrumb_url = reverse_lazy('user:profile')
+    breadcrumb_title = _("Mein Profil")
+    breadcrumb_url = reverse_lazy("user:profile")
 
     def get_form_kwargs(self):
         kwargs = super(BaseProfileView, self).get_form_kwargs()
-        kwargs['instance'] = getattr(self.request, 'user', None)
+        kwargs["instance"] = getattr(self.request, "user", None)
         return kwargs
 
 
 class ProfileViewIndex(BaseProfileView):
-    template_name = 'dll/user/profile.html'
+    template_name = "dll/user/profile.html"
     form_class = UserProfileForm
 
 
 class ProfileViewChangePassword(BaseProfileView):
-    template_name = 'dll/user/password_change.html'
+    template_name = "dll/user/password_change.html"
     form_class = UserPasswordChangeForm
-    success_url = reverse_lazy('user:profile')
+    success_url = reverse_lazy("user:profile")
 
     def get_breadcrumbs(self):
         bcs = super(ProfileViewChangePassword, self).get_breadcrumbs()
-        bcs.append({'title': _("Passwort Ändern"), 'url': reverse_lazy('user:password_change')})
+        bcs.append(
+            {"title": _("Passwort Ändern"), "url": reverse_lazy("user:password_change")}
+        )
         return bcs
 
     def form_valid(self, form):
@@ -368,35 +416,40 @@ class ProfileViewChangePassword(BaseProfileView):
 
 
 class ProfileViewEmails(BaseProfileView):
-    template_name = 'dll/user/account_email.html'
+    template_name = "dll/user/account_email.html"
     form_class = UserEmailsForm
-    success_url = reverse_lazy('user:profile')
+    success_url = reverse_lazy("user:profile")
 
     def get_breadcrumbs(self):
         bcs = super(ProfileViewEmails, self).get_breadcrumbs()
-        bcs.append({'title': _("E-Mails"), 'url': reverse_lazy('user:email')})
+        bcs.append({"title": _("E-Mails"), "url": reverse_lazy("user:email")})
         return bcs
 
     def form_valid(self, form):
         from dll.communication.tasks import send_mail
 
-        cr = EmailChangeRequest.objects.create(user=self.request.user, email=form.cleaned_data['email'])
+        cr = EmailChangeRequest.objects.create(
+            user=self.request.user, email=form.cleaned_data["email"]
+        )
 
-        confirmation_url = reverse('user:email_confirm', kwargs={
-            'cr_idb64': urlsafe_base64_encode(force_bytes(cr.pk)),
-            'token': email_confirmation_token.make_token(cr),
-        })
+        confirmation_url = reverse(
+            "user:email_confirm",
+            kwargs={
+                "cr_idb64": urlsafe_base64_encode(force_bytes(cr.pk)),
+                "token": email_confirmation_token.make_token(cr),
+            },
+        )
         confirmation_url = self.request.build_absolute_uri(confirmation_url)
 
         context = {
-            'full_name': self.request.user.full_name,
-            'confirmation_url': confirmation_url
+            "full_name": self.request.user.full_name,
+            "confirmation_url": confirmation_url,
         }
 
         send_mail.delay(
-            event_type_code='USER_EMAIL_CHANGE',
+            event_type_code="USER_EMAIL_CHANGE",
             ctx=context,
-            email=form.cleaned_data['email']
+            email=form.cleaned_data["email"],
         )
         return HttpResponseRedirect(self.get_success_url())
 
@@ -413,20 +466,22 @@ def confirm_email(request, cr_idb64, token):
         cr.user.save()
         cr.delete()
         messages.success(request, _("Ihre E-Mail wurde erfolgreich geändert."))
-        return redirect('user:profile')
+        return redirect("user:profile")
     else:
         messages.warning(request, _("Ihr E-Mail Aktivierungslink ist ungültig."))
-        return HttpResponseRedirect('user:profile')
+        return HttpResponseRedirect("user:profile")
 
 
 class ProfileViewDelete(BaseProfileView):
-    template_name = 'dll/user/account_delete.html'
+    template_name = "dll/user/account_delete.html"
     form_class = UserAccountDeleteForm
-    success_url = reverse_lazy('user:account_delete_success')
+    success_url = reverse_lazy("user:account_delete_success")
 
     def get_breadcrumbs(self):
         bcs = super(ProfileViewDelete, self).get_breadcrumbs()
-        bcs.append({'title': _("Account löschen"), 'url': reverse_lazy('user:account_delete')})
+        bcs.append(
+            {"title": _("Account löschen"), "url": reverse_lazy("user:account_delete")}
+        )
         return bcs
 
     def form_valid(self, form):
@@ -437,4 +492,4 @@ class ProfileViewDelete(BaseProfileView):
 
 
 class ProfileViewDeleteSuccess(TemplateView):
-    template_name = 'dll/user/account_delete_success.html'
+    template_name = "dll/user/account_delete_success.html"

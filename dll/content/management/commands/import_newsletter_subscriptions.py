@@ -8,7 +8,6 @@ from dll.content.utils import create_newsletter_subscriptions_from_csv
 
 
 class Command(BaseCommand):
-
     def handle(self, *args, **options):
-        with open('dll/fixtures/newsletter.csv') as csvfile:
+        with open("dll/fixtures/newsletter.csv") as csvfile:
             create_newsletter_subscriptions_from_csv(csvfile)

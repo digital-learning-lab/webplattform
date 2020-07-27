@@ -6,13 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content', '0004_teachingmodule_subject_of_tuitiuon_migration'),
+        ("content", "0004_teachingmodule_subject_of_tuitiuon_migration"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='teachingmodule',
-            name='subject_of_tuition',
-            field=models.TextField(blank=True, max_length=2000, null=True, verbose_name='Unterichtsgegenstand'),
+            model_name="teachingmodule",
+            name="subject_of_tuition",
+            field=models.TextField(
+                blank=True,
+                max_length=2000,
+                null=True,
+                verbose_name="Unterichtsgegenstand",
+            ),
         ),
     ]

@@ -5,7 +5,7 @@ from django.utils import timezone
 
 
 def fix_missing_created_values(apps, schema_editor):
-    Content = apps.get_model('content', 'Content')
+    Content = apps.get_model("content", "Content")
     for content in Content.objects.all():
         if not content.publisher_is_draft and not content.created:
             if content.publisher_linked and content.publisher_linked.modified:
@@ -14,13 +14,15 @@ def fix_missing_created_values(apps, schema_editor):
                 content.created = timezone.now()
             content.save()
 
+
 def unfix_missing_created_values(apps, schema_editor):
     pass
+
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('content', '0008_auto_20200206_1049'),
+        ("content", "0008_auto_20200206_1049"),
     ]
 
     operations = [
