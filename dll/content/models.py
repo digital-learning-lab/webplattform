@@ -61,6 +61,10 @@ LICENCE_CHOICES = (
 )
 
 
+def get_default_created_time():
+    return timezone.now()
+
+
 class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     name = models.CharField(
         _("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200
@@ -72,7 +76,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         _("created"),
         editable=True,
         auto_now_add=False,
-        default=timezone.now(),
+        default=get_default_created_time,
         null=True,
     )
     slug = DllSlugField(populate_from="name", overwrite=True, allow_duplicates=True)
@@ -524,6 +528,7 @@ class TeachingModule(Content):
     licence = models.IntegerField(
         _("Lizenz"), choices=LICENCE_CHOICES, blank=True, null=True
     )
+    hybrid = models.BooleanField(_("Geeignet für Hybridunterricht"), default=False)
 
     class Meta(Content.Meta):
         verbose_name = _("Unterrichtsbaustein")
