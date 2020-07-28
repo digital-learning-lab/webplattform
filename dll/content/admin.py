@@ -1,18 +1,15 @@
-from functools import update_wrapper
-
 import xlsxwriter
-from django.contrib import admin, messages
+from django.contrib import admin
 
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
-from django.core.management import call_command
 from django.http import JsonResponse, HttpResponse
-from django.shortcuts import redirect
 from django.utils.six import BytesIO
 from django.utils.translation import ugettext_lazy as _
-from django.urls import path
 
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
+from import_export import resources
+from import_export.admin import ImportExportMixin
 
 from dll.content.forms import FlatPageAdminForm, HelpTextAdminForm, HelpTextFieldForm
 from .models import (
@@ -28,11 +25,23 @@ from .models import (
     HelpText,
     HelpTextField,
     ContentLink,
-    ContentFile,
-    Content,
 )
 
 admin.site.unregister(FlatPage)
+
+
+class TeachingModuleResource(resources.ModelResource):
+    def after_save_instance(self, instance, using_transactions, dry_run):
+        if instance.publisher_linked and not dry_run:
+            published = instance.publisher_linked.get_real_instance()
+            published.hybrid = instance.hybrid
+            published.save()
+
+    class Meta:
+        model = TeachingModule
+        skip_unchanged = True
+        report_skipped = True
+        fields = ("id", "name", "hybrid")
 
 
 class PublishedFilter(admin.SimpleListFilter):
@@ -63,9 +72,14 @@ class ContentAdmin(admin.ModelAdmin, DynamicArrayMixin):
 
 
 @admin.register(TeachingModule)
-class TeachingModuleAdmin(ContentAdmin):
+class TeachingModuleAdmin(ImportExportMixin, ContentAdmin):
     actions = ["export_xlsx"]
     list_filter = (PublishedFilter,)
+    resource_class = TeachingModuleResource
+
+    def get_export_queryset(self, request):
+        qs = super(TeachingModuleAdmin, self).get_export_queryset(request)
+        return qs.drafts()
 
     def export_xlsx(self, request, queryset):
 
@@ -131,32 +145,6 @@ class TeachingModuleAdmin(ContentAdmin):
 class ToolAdmin(admin.ModelAdmin):
     exclude = ("json_data", "tags")
 
-    def get_urls(self):
-        urls = super(ToolAdmin, self).get_urls()
-
-        def wrap(view):
-            def wrapper(*args, **kwargs):
-                return self.admin_site.admin_view(view)(*args, **kwargs)
-
-            wrapper.model_admin = self
-            return update_wrapper(wrapper, view)
-
-        custom_urls = [
-            path(
-                "remove-tools-without-name",
-                wrap(self._remove_tools_without_name),
-                name="cleanup_tools",
-            ),
-        ]
-        return urls + custom_urls
-
-    def _remove_tools_without_name(self, request):
-        call_command("cleanup_broken_tools")
-        messages.add_message(
-            request, messages.INFO, _("Deleted all tools without a name.")
-        )
-        return redirect("admin:content_tool_changelist")
-
 
 class HelpTextFieldInline(admin.TabularInline):
     model = HelpTextField
@@ -169,20 +157,19 @@ class HelpTextFieldInline(admin.TabularInline):
             return 0
 
     def has_add_permission(self, request, obj=None):
-        if obj:
-            return True
-        else:
-            return False
+        return bool(obj)
 
 
 def download_as_json(modeladmin, request, queryset):
     result = {"list": []}
     for help_text in queryset:
-        help_text_json = {}
-        help_text_json["content_type"] = (
-            help_text.content_type.app_label + "." + help_text.content_type.model
-        )
-        help_text_json["fields"] = []
+        help_text_json = {
+            "content_type": help_text.content_type.app_label
+            + "."
+            + help_text.content_type.model,
+            "fields": [],
+        }
+
         for field in help_text.help_text_fields.all():
             help_text_json["fields"].append({"name": field.name, "text": field.text})
         result["list"].append(help_text_json)

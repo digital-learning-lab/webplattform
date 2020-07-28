@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "django_extensions",
     "crispy_forms",
     "ckeditor",
+    "import_export",
     "dll.content",
     "dll.user",
     "dll.general",
