@@ -14,6 +14,12 @@
           </select>
           <h3 class="form-subhead">Schlagwortsuche</h3>
           <input type="text" v-model="q" name="searchTerm" class="form-control" @keydown="preventEnter">
+
+          <div class="form-check mt-3">
+            <input type="checkbox" name="hybrid" id="input-hybrid" v-model="hybrid" class="form-check-input">
+            <label for="input-hybrid" class="form-check-label">Grundsätzlich geeignet für den Hybridunterricht</label>
+          </div>
+
           <app-competence-filter :competences.sync="competences"></app-competence-filter>
           <div>
             <h3 class="form-subhead">Unterrichtsfach</h3>
@@ -86,7 +92,8 @@
         state: '',
         schoolClassFrom: null,
         schoolClassTo: null,
-        schoolType: null
+        schoolType: null,
+        hybrid: false
       }
     },
     methods: {
@@ -105,7 +112,8 @@
           state: this.state,
           schoolClassFrom: this.schoolClassFrom,
           schoolClassTo: this.schoolClassTo,
-          schoolType: this.schoolType
+          schoolType: this.schoolType,
+          hybrid: this.hybrid
         }
       }
     },
@@ -123,6 +131,9 @@
         this.debouncedUpdate()
       },
       schoolType () {
+        this.updateContents()
+      },
+      hybrid () {
         this.updateContents()
       }
     }

@@ -74,3 +74,21 @@ class ToolDataPrivacyFilter(PolymorphicAttributeFilter):
     model = "Tool"
     query_parameter_name = "dataPrivacy"
     field_name = "privacy"
+
+
+class TeachingModuleSubjectFilter(PolymorphicAttributeFilter):
+    model = "TeachingModule"
+    query_parameter_name = "subjects[]"
+    field_name = "subjects__pk__in"
+
+
+class TeachingModuleStateFilter(PolymorphicAttributeFilter):
+    model = "TeachingModule"
+    query_parameter_name = "state"
+    field_name = "state"
+
+
+class TeachingModuleSchoolTypeFilter(PolymorphicAttributeFilter):
+    model = "TeachingModule"
+    query_parameter_name = "schoolType"
+    field_name = "school_types__pk__in"
