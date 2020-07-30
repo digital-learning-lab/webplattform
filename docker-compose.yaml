@@ -3,6 +3,9 @@ version: '3'
 services:
   db:
     image: postgres:12
+    environment:
+      - POSTGRES_PASSWORD=
+      - POSTGRES_HOST_AUTH_METHOD=trust
   webpack:
     command: npm run start
     volumes:
