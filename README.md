@@ -11,7 +11,7 @@
 If you'd like to restore a database dump leave out step 2 of the setup. Instead copy your
 database dump into the database container and restore it:
 
-```
+```bash
 docker cp ./local_path/to/db/dump [db-container-name]:/backup/db_dump
 docker exec [db-container-name] pg_restore -U postgres -d postgres /backup/db_dump
 ```
@@ -26,7 +26,7 @@ a directory called `media` within the `dll` directory (`project_dir/dll/media/`)
 ### Superuser creation 🦸‍
 
 You can create a super user by running the following command:
-```
+```bash
 docker-compose run --rm web python manage.py createsuperuser
 ```
 
@@ -37,7 +37,7 @@ cause problems.
 
 In some cases it is useful to be able to access the Python shell of the web container:
 
-```
+```bash
 docker-compose run --rm web python manage.py shell_plus
 ```
 
