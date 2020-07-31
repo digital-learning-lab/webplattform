@@ -66,6 +66,12 @@ class ContentLinkInlineAdmin(admin.StackedInline):
     model = ContentLink
 
 
+class CompetenceAdditionalInformationInlineAdmin(admin.StackedInline):
+    model = CompetenceAdditionalInformation
+    max_num = 1
+    min_num = 1
+
+
 @admin.register(Trend)
 class ContentAdmin(admin.ModelAdmin, DynamicArrayMixin):
     exclude = ("json_data", "tags")
@@ -201,8 +207,11 @@ class FlatPageAdmin(FlatPageAdmin):
     form = FlatPageAdminForm
 
 
-admin.site.register(CompetenceAdditionalInformation)
-admin.site.register(Competence)
+@admin.register(Competence)
+class CompetenceAdmin(admin.ModelAdmin):
+    inlines = [CompetenceAdditionalInformationInlineAdmin]
+
+
 admin.site.register(SubCompetence)
 admin.site.register(Subject)
 admin.site.register(SchoolType)
