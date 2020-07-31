@@ -1,12 +1,50 @@
-# Setup
+# digital.learning.lab
 
+## Local Development Setup
+### Container Setup 🛳
 1. Run `docker-compose up` to setup project.
 2. Run `docker-compose run --rm web python manage.py migrate`
-3. Clone content repo (https://collaborating.tuhh.de/itbh/tnt/digital-learning-lab/inhalte)
-4. Run `docker-compose run --rm web python manage.py import_content -f ./path-to-inhalte`
 
 
-# Solr 8.2
+### Database Restore 📦
+
+If you'd like to restore a database dump leave out step 2 of the setup. Instead copy your
+database dump into the database container and restore it:
+
+```
+docker cp ./local_path/to/db/dump [db-container-name]:/backup/db_dump
+docker exec [db-container-name] pg_restore -U postgres -d postgres /backup/db_dump
+```
+
+The database container name can be retrieved by runnning `docker ps`.
+
+### Media File Restore 🖼
+If you would like to restore the media files on your local development setup simply create 
+a directory called `media` within the `dll` directory (`project_dir/dll/media/`) and copy 
+`filer_public` as well as `filer_public_thumbnails` into it.
+
+### Superuser creation 🦸‍
+
+You can create a super user by running the following command:
+```
+docker-compose run --rm web python manage.py createsuperuser
+```
+
+Please note the first and last name are mandatory fields. Leaving both fields empty may
+cause problems.
+
+### Python Shell Access 🐍
+
+In some cases it is useful to be able to access the Python shell of the web container:
+
+```
+docker-compose run --rm web python manage.py shell_plus
+```
+
+The `shell_plus` is a part of the `django-extensions` package. It automatically imports 
+all project relevant models and some helper functions.
+
+### Solr 8.2
 
 #### Setup
 Instruct solr to use the `schema.xml` file:
@@ -16,18 +54,18 @@ Instruct solr to use the `schema.xml` file:
 - `python manage.py build_solr_schema -f solr/conf/schema.xml`
 
 
-# JSON Data fields
-### Content
+### JSON Data fields
+#### Content
 ```yaml
 from_import: 
   type: Bool
   descr: created during import
 ```
 
-### Review
+#### Review
 contains the reviewer comments on the content fields
 
-### DllUser
+#### DllUser
 ```yaml
 from_import: 
   type: Bool
