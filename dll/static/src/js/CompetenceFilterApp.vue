@@ -2,8 +2,18 @@
   <div class="row mt-5 mb-5">
     <div class="col col-12 col-lg-5 col-xl-4 mb-4">
       <div class="section-info">
-        <h1 class="d-lg-none" v-html="window.competenceName"></h1>
-        <p class="mb-5 d-lg-none" v-html="window.competenceText"></p>
+        <div class="row d-lg-none" v-if="windowWidth < 1200">
+          <div class="col-12">
+            <h1 class="mb-3" v-html="window.competenceName"></h1>
+          </div>
+          <div class="col-12 mb-4" v-html="window.videoEmbed"></div>
+          <div class="col-12">
+            <p>
+              <b class="font-weight-bold" v-html="window.competenceTextTitle"></b>
+            </p>
+            <p class="mb-5 d-lg-none" v-html="window.competenceText"></p>
+          </div>
+        </div>
         <form method="get" :action="resource" class="collapse d-lg-block" id="filterForm">
           <h2>Filtern nach</h2>
 
@@ -38,19 +48,34 @@
       </div>
     </div>
     <div class="col col-12 col-lg-7 col-xl-8">
-      <h1 class="d-none d-lg-block" v-html="window.competenceName"></h1>
-      <p class="mb-5 d-none d-lg-block" v-html="window.competenceText"></p>
-      <div class="row" v-if="contents.length > 0 || loading">
-        <div class="col col-12 col-xl-6 mb-4" v-for="content in contents">
-          <app-content-teaser :content="content"></app-content-teaser>
+      <div class="section-info mb-5" v-if="windowWidth >= 1200">
+        <div class="row">
+          <div class="col-12">
+            <h1 class="d-none d-lg-block text-center mb-5" v-html="window.competenceName"></h1>
+          </div>
+          <div class="col-lg-12 col-xl-7 mb-4" v-html="window.videoEmbed"></div>
+          <div class="col-lg-12 col-xl-5">
+            <p>
+              <b class="font-weight-bold" v-html="window.competenceTextTitle"></b>
+            </p>
+            <p class="mb-5 d-none d-lg-block" v-html="window.competenceText"></p>
+          </div>
         </div>
-        <app-pagination :current-page="currentPage" :pagination="pagination" @prev="previousPage" @next="nextPage" @jump="jumpTo"></app-pagination>
-      </div>
-      <div class="row" v-else>
-        <div class="col">
-          <h2>Ihre Suchanfrage ergab keine Treffer.</h2>
-          <p>Bitte versuchen Sie es mit anderen Suchbegriffen oder schauen Sie gern auf anderen Datenbanken für freie Unterrichtsmaterialien wie <a href="https://oerhoernchen.de/suche" target="_blank" rel="noopener noreferrer">OERhörchen</a>.</p>
         </div>
+        <div class="row" v-if="contents.length > 0 || loading">
+          <div class="col col-12 col-xl-6 mb-4" v-for="content in contents">
+            <app-content-teaser :content="content"></app-content-teaser>
+          </div>
+          <app-pagination :current-page="currentPage" :pagination="pagination" @prev="previousPage" @next="nextPage"
+                          @jump="jumpTo"></app-pagination>
+        </div>
+        <div class="row" v-else>
+          <div class="col">
+            <h2>Ihre Suchanfrage ergab keine Treffer.</h2>
+            <p>Bitte versuchen Sie es mit anderen Suchbegriffen oder schauen Sie gern auf anderen Datenbanken für freie
+              Unterrichtsmaterialien wie <a href="https://oerhoernchen.de/suche" target="_blank"
+                                            rel="noopener noreferrer">OERhörchen</a>.</p>
+          </div>
       </div>
     </div>
   </div>
@@ -91,7 +116,8 @@
           perPage: 20,
           next: null,
           prev: null
-        }
+        },
+        windowWidth: 0
       }
     },
     methods: {
@@ -137,6 +163,9 @@
             this.loading = false
             console.log(error)
           })
+      },
+      onResize() {
+        this.windowWidth = window.innerWidth
       }
     },
     computed: {
@@ -155,6 +184,15 @@
           return pages
         }
       }
+    },
+    mounted () {
+      this.windowWidth = window.innerWidth
+      this.$nextTick(() => {
+        window.addEventListener('resize', this.onResize);
+      })
+    },
+    beforeDestroy() {
+      window.removeEventListener('resize', this.onResize);
     },
     created () {
       this.updateContents()

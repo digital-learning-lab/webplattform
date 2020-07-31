@@ -10,7 +10,9 @@
 {% block extra_scripts %}
   <script>
     window.competenceName = '{{ competence.name }}';
-    window.competenceText = '{{ competence.description }}';
+    window.competenceTextTitle = '{{ competence.additional_information.title }}';
+    window.competenceText = '{{ competence.additional_information.description }}';
+    window.videoEmbed = '{{ competence.additional_information.video_embed_code }}';
     window.competenceSlug = '{{ competence.slug }}';
   </script>
 {% endblock %}

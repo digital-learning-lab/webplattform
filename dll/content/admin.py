@@ -25,6 +25,7 @@ from .models import (
     HelpText,
     HelpTextField,
     ContentLink,
+    CompetenceAdditionalInformation,
 )
 
 admin.site.unregister(FlatPage)
@@ -200,6 +201,7 @@ class FlatPageAdmin(FlatPageAdmin):
     form = FlatPageAdminForm
 
 
+admin.site.register(CompetenceAdditionalInformation)
 admin.site.register(Competence)
 admin.site.register(SubCompetence)
 admin.site.register(Subject)

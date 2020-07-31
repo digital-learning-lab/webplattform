@@ -9,6 +9,7 @@ from django.contrib.sites.models import Site
 from django.core.files import File
 from django.db import models
 from django.db.models import Q
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -1098,6 +1099,69 @@ class Competence(TimeStampedModel):
         ordering = ["cid"]
         verbose_name = _("Kompetenz")
         verbose_name_plural = _("Kompetenzen")
+
+
+class CompetenceAdditionalInformation(models.Model):
+    competence = models.OneToOneField(
+        Competence,
+        verbose_name=_("Kompentenz"),
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name="additional_information",
+    )
+
+    title = models.CharField(verbose_name=_("Titel"), max_length=255)
+
+    description = models.TextField(verbose_name=_("Beschreibung"))
+
+    video_url = models.URLField(
+        _("Video URL"),
+        help_text=_(
+            "Es werden YouTube und Vimeo Videos unterstützt. Kopieren Sie einfach die URL des Videos in dieses"
+            " Feld. Diese wird automatisch in die Embed-URL umgewandelt."
+        ),
+        null=True,
+        blank=False,
+    )
+
+    def __str__(self):
+        return "{} - {}".format(self.competence.name, self.title)
+
+    def clean(self):
+        """
+        Check video url. Depending on the link generate the embed URL.
+        """
+        if not self.video_url:
+            return
+
+        if "vimeo.com" in self.video_url:
+            if "https://player.vimeo.com/video/" in self.video_url:
+                return
+            self.video_url = self.video_url.replace(
+                "https://vimeo.com/", "https://player.vimeo.com/video/"
+            )
+
+        if "youtube.com" in self.video_url:
+            if "https://www.youtube.com/embed/" in self.video_url:
+                return
+            self.video_url = self.video_url.replace("watch?v=", "embed/")
+
+    @property
+    def video_embed_code(self):
+        if "vimeo.com" in self.video_url:
+            return render_to_string(
+                "dll/filter/partials/vimeo_embed.html", {"embed_url": self.video_url}
+            )
+        if "youtube.com" in self.video_url:
+            return render_to_string(
+                "dll/filter/partials/youtube_embed.html", {"embed_url": self.video_url}
+            )
+        return ""
+
+    class Meta:
+        verbose_name = _("Zusätzliche Kompetenz Information")
+        verbose_name_plural = _("Zusätzliche Kompetenz Informationen")
 
 
 class SubCompetence(TimeStampedModel):
