@@ -76,6 +76,7 @@
           acceptedFiles:
             '.pdf,.docx,.doc,.pptx,.ppt,.xls,.xlsx,.odt,.odp,.ods,.wav,.mp3,.zip,.png,.jpg,.jpeg,.gif'
           ,
+          maxFilesize: 12,
           dictDefaultMessage: 'Dateien hier hinziehen',
           dictFallbackMessage: 'Ihr Browser ist nicht für den Dateiupload unterstützt.',
           dictFallbackText: null,
