@@ -19,6 +19,13 @@
 
 
 {% block sidebar_information %}
+  {% if object.hybrid %}
+    <li class="sidebar__information-item">
+      <span class="sidebar__information-icon fab fa-mixer"></span>
+      Grundsätzlich geeignet für den Hybridunterricht
+    </li>
+  {% endif %}
+
   {% if object.subjects.all.count %}
     <li class="sidebar__information-item">
       <span class="sidebar__information-icon icon-subject"></span>

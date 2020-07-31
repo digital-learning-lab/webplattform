@@ -17,7 +17,7 @@
 
           <div class="form-check mt-3">
             <input type="checkbox" name="hybrid" id="input-hybrid" v-model="hybrid" class="form-check-input">
-            <label for="input-hybrid" class="form-check-label">Grundsätzlich geeignet für den Hybridunterricht</label>
+            <label for="input-hybrid" class="form-check-label">Grundsätzlich geeignet für den Hybridunterricht (in Arbeit)</label>
           </div>
 
           <app-competence-filter :competences.sync="competences"></app-competence-filter>
