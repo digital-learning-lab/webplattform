@@ -70,6 +70,12 @@ class ToolOperationSystemFilter(PolymorphicAttributeFilter):
     field_name = "operating_systems__pk__in"
 
 
+class ToolFunctionFilter(PolymorphicAttributeFilter):
+    model = "Tool"
+    query_parameter_name = "toolFunctions[]"
+    field_name = "functions__pk__in"
+
+
 class ToolDataPrivacyFilter(PolymorphicAttributeFilter):
     model = "Tool"
     query_parameter_name = "dataPrivacy"

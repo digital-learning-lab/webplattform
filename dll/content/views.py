@@ -61,7 +61,9 @@ from .filters import (
     TeachingModuleSubjectFilter,
     TeachingModuleStateFilter,
     TeachingModuleSchoolTypeFilter,
+    ToolFunctionFilter,
 )
+from .models import ToolFunction
 from .serializers import ContentListSerializer, ContentPolymorphicSerializer
 
 
@@ -475,6 +477,14 @@ class ToolFilterView(BaseFilterView):
     template_name = "dll/filter/tools.html"
     rss_feed_url = reverse_lazy("tools-feed")
 
+    def get_context_data(self, **kwargs):
+        ctx = super(ToolFilterView, self).get_context_data(**kwargs)
+        ctx["functions_filter"] = [
+            {"id": function.id, "title": function.title}
+            for function in ToolFunction.objects.all()
+        ]
+        return ctx
+
 
 class ToolDataFilterView(ContentDataFilterView):
     model = Tool
@@ -483,6 +493,7 @@ class ToolDataFilterView(ContentDataFilterView):
         ToolApplicationFilter,
         ToolDataPrivacyFilter,
         ToolOperationSystemFilter,
+        ToolFunctionFilter,
     ] + ContentDataFilterView.filter_backends
 
 

@@ -88,6 +88,15 @@
                 <option id="status-3" value="onoff" name="status">Online & Offline</option>
             </select>
           </div>
+          <div>
+            <h3 class="form-subhead">Tool-Funktionen</h3>
+            <ul class="list-unstyled">
+              <li class="form-check" v-for="toolFunction in getToolFunctions()">
+                <input type="checkbox" class="form-check-input" :value="toolFunction.id" name="toolFunction" :id="'toolFunction' + toolFunction.id" v-model="toolFunctions">
+                <label class="form-check-label" :for="'toolFunction' + toolFunction.id">{{ toolFunction.title }}</label>
+              </li>
+            </ul>
+          </div>
         </form>
         <div class="text-center">
           <button class="button button--primary d-lg-none" type="button" data-toggle="collapse" data-target="#filterForm" aria-expanded="false" aria-controls="filterForm">
@@ -124,6 +133,7 @@
         dataUrl: '/api/tools',
         status: '',
         applications: [],
+        toolFunctions: [],
         operatingSystems: [],
         dataPrivacy: null
       }
@@ -134,11 +144,18 @@
           status: this.status,
           dataPrivacy: this.dataPrivacy,
           applications: this.applications,
-          operatingSystems: this.operatingSystems
+          operatingSystems: this.operatingSystems,
+          toolFunctions: this.toolFunctions
         }
+      },
+      getToolFunctions () {
+        return window.functionsFilter
       }
     },
     watch: {
+      toolFunctions () {
+        this.debouncedUpdate()
+      },
       dataPrivacy () {
         this.debouncedUpdate()
       },

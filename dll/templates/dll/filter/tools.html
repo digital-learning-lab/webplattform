@@ -6,3 +6,9 @@
 {% block app_content %}
   <div id="tools-app"></div>
 {% endblock %}
+
+{% block extra_scripts %}
+  <script>
+  window.functionsFilter = {{ functions_filter|safe }};
+  </script>
+{% endblock %}
