@@ -14,6 +14,15 @@
           </select>
           <h3 class="form-subhead">Schlagwortsuche</h3>
           <input type="text" v-model="q" name="searchTerm" class="form-control" @keydown="preventEnter">
+          <div>
+            <h3 class="form-subhead">Tool-Funktionen</h3>
+            <ul class="list-unstyled">
+              <li class="form-check" v-for="toolFunction in getToolFunctions()">
+                <input type="checkbox" class="form-check-input" :value="toolFunction.id" name="toolFunction" :id="'toolFunction' + toolFunction.id" v-model="toolFunctions">
+                <label class="form-check-label" :for="'toolFunction' + toolFunction.id">{{ toolFunction.title }}</label>
+              </li>
+            </ul>
+          </div>
           <h3 class="form-subhead">Datenschutz</h3>
           <select name="data-privacy" id="data-privacy" v-model="dataPrivacy" @change="updateContents" class="form-control">
             <option value="" selected>--------</option>
@@ -87,15 +96,6 @@
                 <option id="status-2" value="off" name="status">Offline</option>
                 <option id="status-3" value="onoff" name="status">Online & Offline</option>
             </select>
-          </div>
-          <div>
-            <h3 class="form-subhead">Tool-Funktionen</h3>
-            <ul class="list-unstyled">
-              <li class="form-check" v-for="toolFunction in getToolFunctions()">
-                <input type="checkbox" class="form-check-input" :value="toolFunction.id" name="toolFunction" :id="'toolFunction' + toolFunction.id" v-model="toolFunctions">
-                <label class="form-check-label" :for="'toolFunction' + toolFunction.id">{{ toolFunction.title }}</label>
-              </li>
-            </ul>
           </div>
         </form>
         <div class="text-center">
