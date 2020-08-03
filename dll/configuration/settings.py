@@ -332,3 +332,26 @@ THUMBNAIL_OPTIMIZE_COMMAND = {
     "gif": "/usr/bin/optipng {filename}",
     "jpeg": "/usr/bin/jpegoptim {filename}",
 }
+CKEDITOR_CONFIGS = {
+    "default": {
+        "toolbar_Full": [
+            [
+                "Styles",
+                "Format",
+                "Bold",
+                "Italic",
+                "Underline",
+                "Strike",
+                "SpellChecker",
+                "Undo",
+                "Redo",
+            ],
+            ["Link", "Unlink", "Anchor"],
+            ["Image", "Flash", "Table", "HorizontalRule"],
+            ["TextColor", "BGColor"],
+            ["SpecialChar"],
+            ["Iframe", "Source"],
+        ],
+        "extra_plugins": ["iframe,iframedialog"],
+    }
+}
