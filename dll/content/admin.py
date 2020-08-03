@@ -8,8 +8,9 @@ from django.utils.six import BytesIO
 from django.utils.translation import ugettext_lazy as _
 
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
-from import_export import resources
+from import_export import resources, fields
 from import_export.admin import ImportExportMixin
+from import_export.widgets import ManyToManyWidget
 
 from dll.content.forms import FlatPageAdminForm, HelpTextAdminForm, HelpTextFieldForm
 from .models import (
@@ -44,6 +45,22 @@ class TeachingModuleResource(resources.ModelResource):
         skip_unchanged = True
         report_skipped = True
         fields = ("id", "name", "hybrid")
+
+
+class ToolResource(resources.ModelResource):
+    functions = fields.Field(widget=ManyToManyWidget(ToolFunction))
+
+    def after_save_instance(self, instance, using_transactions, dry_run):
+        if instance.publisher_linked and not dry_run:
+            published = instance.publisher_linked.get_real_instance()
+            published.functions.add(*instance.functions.all())
+            published.save()
+
+    class Meta:
+        model = Tool
+        skip_unchanged = True
+        report_skipped = True
+        fields = ("id", "name", "functions")
 
 
 class PublishedFilter(admin.SimpleListFilter):
@@ -150,8 +167,13 @@ class TeachingModuleAdmin(ImportExportMixin, ContentAdmin):
 
 
 @admin.register(Tool)
-class ToolAdmin(admin.ModelAdmin):
+class ToolAdmin(ImportExportMixin, admin.ModelAdmin):
     exclude = ("json_data", "tags")
+    resource_class = ToolResource
+
+    def get_export_queryset(self, request):
+        qs = super(ToolAdmin, self).get_export_queryset(request)
+        return qs.drafts()
 
 
 class HelpTextFieldInline(admin.TabularInline):
