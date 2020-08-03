@@ -18,7 +18,7 @@ from django.utils.translation import ugettext_lazy as _
 
 from django_better_admin_arrayfield.models.fields import ArrayField
 from django_extensions.db.fields import CreationDateTimeField
-from django_extensions.db.models import TimeStampedModel
+from django_extensions.db.models import TimeStampedModel, TitleSlugDescriptionModel
 from easy_thumbnails.exceptions import InvalidImageFormatError
 from easy_thumbnails.files import get_thumbnailer
 from filer.fields.file import FilerFileField
@@ -653,6 +653,9 @@ class Tool(Content):
     )
     description = models.TextField(_("Beschreibung"), null=True, blank=True)
     usage = models.TextField(_("Nutzung"), null=True, blank=True)
+    functions = models.ManyToManyField(
+        to="content.ToolFunction", verbose_name=_("Tool-Funktionen"), blank=True
+    )
 
     class Meta(Content.Meta):
         verbose_name = _("Tool")
@@ -699,6 +702,7 @@ class Tool(Content):
         super(Tool, self).copy_relations(draft_instance, public_instance)
         public_instance.operating_systems.add(*draft_instance.operating_systems.all())
         public_instance.applications.add(*draft_instance.applications.all())
+        public_instance.functions.add(*draft_instance.functions.all())
 
         url_clone = draft_instance.url
         url_clone.pk = None
@@ -707,6 +711,15 @@ class Tool(Content):
         url_clone.modified = None
         url_clone.tool = public_instance
         url_clone.save()
+
+
+class ToolFunction(TitleSlugDescriptionModel):
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = "Tool Funktion"
+        verbose_name_plural = "Tool Funktionen"
 
 
 class Trend(Content):

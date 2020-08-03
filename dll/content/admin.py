@@ -25,6 +25,7 @@ from .models import (
     HelpText,
     HelpTextField,
     ContentLink,
+    ToolFunction,
     CompetenceAdditionalInformation,
 )
 
@@ -212,6 +213,7 @@ class CompetenceAdmin(admin.ModelAdmin):
     inlines = [CompetenceAdditionalInformationInlineAdmin]
 
 
+admin.site.register(ToolFunction)
 admin.site.register(SubCompetence)
 admin.site.register(Subject)
 admin.site.register(SchoolType)
