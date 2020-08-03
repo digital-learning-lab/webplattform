@@ -1,5 +1,8 @@
 # digital.learning.lab
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
+
 ## Local Development Setup
 ### Container Setup 🛳
 1. Run `docker-compose up` to setup project.
