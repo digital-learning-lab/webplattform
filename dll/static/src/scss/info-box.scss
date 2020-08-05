@@ -55,6 +55,12 @@ $info-box__left-spacing: 1.5rem;
     vertical-align: middle;
   }
 }
+.info-box__link--inline {
+  position: relative;
+  display: inline;
+  bottom: auto;
+  left: auto;
+}
 @media (min-width: 992px) {
   .info-box__image-container {
     display: block;

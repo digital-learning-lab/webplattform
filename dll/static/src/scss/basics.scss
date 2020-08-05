@@ -82,6 +82,10 @@ a[rel*=external]:after {
     padding-bottom: 155px;
   }
 }
+
+.font-weight-semi-bold {
+  font-weight: 600 !important;
+}
 // Default Django error list class
 .errorlist {
   padding-left: 15px;
