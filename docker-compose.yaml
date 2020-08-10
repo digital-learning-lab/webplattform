@@ -18,23 +18,8 @@ services:
         context: .
         dockerfile: Dockerfile.dev
     command: python manage.py runserver 0.0.0.0:8000
+    env_file: .env
     image: dll_web
-    environment:
-      - REDIS_HOSTNAME=redis
-      - DATABASE_USER=postgres
-      - DATABASE_NAME=postgres
-      - DATABASE_HOST=db
-      - DJANGO_DEBUG=True
-      - CELERY_TASK_ALWAYS_EAGER=True
-      - SOLR_HOSTNAME=solr
-      - EMAIL_HOST=floki.rz.tuhh.de
-      - EMAIL_PORT=25
-      - EMAIL_USE_TLS=False
-      - EMAIL_SENDER=digital.learning.lab@tuhh.de
-      - EMAIL_RECEIVER_DLL=dll@blueshoe.de
-      - EMAIL_RECEIVER_BSB=dll@blueshoe.de
-      - GOOGLE_RECAPTCHA_WEBSITE_KEY=6Le0P8MUAAAAAD7sqvNRhIjrqW6iB33K7KUfNkBg
-      - GOOGLE_RECAPTCHA_SECRET_KEY=6Le0P8MUAAAAAPB0eDq-KKwc5yCIJxfMQpsdicFC
     volumes:
       - .:/code
     user: "1000:1000"
@@ -47,21 +32,8 @@ services:
     hostname: redis
   celery:
     image: dll_web
+    env_file: .env
     command: [celery, worker, --app=dll.configuration.celery.app, --concurrency=1, --loglevel=DEBUG]
-    environment:
-    - REDIS_HOSTNAME=redis
-    - DATABASE_USER=postgres
-    - DATABASE_NAME=postgres
-    - DATABASE_HOST=db
-    - DJANGO_DEBUG=True
-    - CELERY_TASK_ALWAYS_EAGER=True
-    - SOLR_HOSTNAME=solr
-    - EMAIL_HOST=floki.rz.tuhh.de
-    - EMAIL_PORT=25
-    - EMAIL_USE_TLS=False
-    - EMAIL_SENDER=digital.learning.lab@tuhh.de
-    - EMAIL_RECEIVER_DLL=dll@blueshoe.de
-    - EMAIL_RECEIVER_BSB=dll@blueshoe.de
     user: "1000:1000"
     volumes:
       - .:/code

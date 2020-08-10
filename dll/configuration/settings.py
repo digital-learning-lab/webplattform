@@ -35,12 +35,7 @@ DEBUG = env.bool("DJANGO_DEBUG", False)
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", ["*"])
 
 # DJANGO_ADMINS=John:john@admin.com,Jane:jane@admin.com
-# ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS', [])]
-ADMINS = (
-    ("Robert Stein", "robert@blueshoe.de"),
-    ("Huu Hung Nguyen", "hh.nguyen@tuhh.de"),
-)
-
+ADMINS = [x.split(":") for x in env.list("DJANGO_ADMINS", [])]
 
 # Application definition
 

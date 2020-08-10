@@ -45,7 +45,7 @@ Longer term items - working on this soon!
 ### 🛳 Container Setup 
 1. Run `docker-compose up` to setup project.
 2. Run `docker-compose run --rm web python manage.py migrate`
-
+3. Create an `.env` file from `sample.env`
 
 ### 📦 Database Restore
 
