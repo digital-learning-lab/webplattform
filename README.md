@@ -23,7 +23,7 @@ The digital.learning.lab is a online platform and understands itself as competen
     -   collaboration of users for development of joint new content
     -   Review and release of contributions by authorised users
 
-## 🛣️ Roadmap
+## Roadmap
 
 Short term - What we are working on now 
 
