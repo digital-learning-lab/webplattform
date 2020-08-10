@@ -21,6 +21,15 @@ docker exec [db-container-name] pg_restore -U postgres -d postgres /backup/db_du
 
 The database container name can be retrieved by runnning `docker ps`.
 
+Depending on the age of your database dump there may be new data base migrations
+which are not yet reflected in the database dump. This is usually the case when 
+you're experiencing a `ProgrammingError` after restoring a database dump.
+
+In that simply execute Django's migration command in the web container:
+```bash
+docker-compose run --rm web python manage.py migrate
+```
+
 ### Media File Restore 🖼
 If you would like to restore the media files on your local development setup simply create 
 a directory called `media` within the `dll` directory (`project_dir/dll/media/`) and copy 
