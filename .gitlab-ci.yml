@@ -40,7 +40,7 @@ test_staging_images:
     services:
       - postgres:12-alpine
     script:
-      - coverage  run --source=dll/ -m pytest dll/
+      - coverage run --source=/code/dll/ -m pytest /code/dll/
       - coverage report
     tags:
         - tuhh
