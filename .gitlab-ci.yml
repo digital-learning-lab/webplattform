@@ -38,7 +38,7 @@ test_staging_images:
     stage: test
     image: ${CONTAINER_STAGING_IMAGE}-staging
     services:
-      - postgres:12.2-alpine
+      - postgres:12-alpine
     script:
       - coverage  run --source=dll/ -m pytest dll/
       - coverage report
