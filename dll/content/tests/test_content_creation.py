@@ -123,7 +123,7 @@ class TrendCreationTests(BaseTestCase):
             "sub_competences": [{"pk": self.sub_competence.pk}],
             "resourcetype": "Trend",
             "contentlink_set": [
-                {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
+                {"url": "https://www.foo.com", "name": "Foo", "type": "href"},
                 {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
             ],
         }
@@ -146,7 +146,7 @@ class TrendCreationTests(BaseTestCase):
             "sub_competences": [{"pk": self.sub_competence.pk}],
             "resourcetype": "Trend",
             "contentlink_set": [
-                {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
+                {"url": "https://www.foo.com", "name": "Foo", "type": "href"},
                 {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
             ],
         }
@@ -174,7 +174,7 @@ class ContentUpdateTests(BaseTestCase):
             "sub_competences": [{"pk": self.sub_competence.pk}],
             "resourcetype": "Trend",
             "contentlink_set": [
-                {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
+                {"url": "https://www.foo.com", "name": "Foo", "type": "href"},
                 {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
             ],
         }
@@ -237,7 +237,7 @@ class ContentDeleteTests(BaseTestCase):
             "sub_competences": [{"pk": self.sub_competence.pk}],
             "resourcetype": "Trend",
             "contentlink_set": [
-                {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
+                {"url": "https://www.foo.com", "name": "Foo", "type": "href"},
                 {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
             ],
         }
@@ -287,7 +287,7 @@ class ToolCreationTests(BaseTestCase):
             "sub_competences": [{"pk": self.sub_competence.pk}],
             "resourcetype": "Tool",
             "contentlink_set": [
-                {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
+                {"url": "https://www.foo.com", "name": "Foo", "type": "href"},
                 {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
             ],
         }
@@ -320,7 +320,7 @@ class TeachingModuleCreationTests(BaseTestCase):
             "sub_competences": [{"pk": self.sub_competence.pk}],
             "resourcetype": "TeachingModule",
             "contentlink_set": [
-                {"url": "https://www.foo.com", "name": "Foo", "type": "audio"},
+                {"url": "https://www.foo.com", "name": "Foo", "type": "href"},
                 {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
             ],
             "subjects": [{"pk": self.subject.pk}],

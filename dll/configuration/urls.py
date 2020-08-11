@@ -81,9 +81,9 @@ from dll.user.views import (
 )
 
 router = DefaultRouter()
-router.register(r"inhalte", PublishedContentViewSet, base_name="public-content")
-router.register(r"inhalt-bearbeiten", DraftsContentViewSet, base_name="draft-content")
-router.register(r"review", ReviewViewSet, base_name="review")
+router.register(r"inhalte", PublishedContentViewSet, basename="public-content")
+router.register(r"inhalt-bearbeiten", DraftsContentViewSet, basename="draft-content")
+router.register(r"review", ReviewViewSet, basename="review")
 
 urlpatterns = [
     path("admin/", admin.site.urls),

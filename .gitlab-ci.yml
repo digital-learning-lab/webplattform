@@ -9,11 +9,12 @@ variables:
     DOCKER_FILE_PATH: .
 
 stages:
-    - test
+    - lint
     - register
+    - test
 
 black:
-  stage: test
+  stage: lint
   image: collaborating.tuhh.de:5005/itbh/tnt/digital-learning-lab/python-black:latest
   tags:
     - tuhh
@@ -30,6 +31,17 @@ register_staging_images:
         - docker push ${CONTAINER_STAGING_IMAGE}-staging
     tags:
         - floki_build
+    only:
+        - develop
+
+test_staging_images:
+    stage: register
+    image: ${CONTAINER_STAGING_IMAGE}-staging
+    script:
+      - coverage  run --source=dll/ -m pytest dll/
+      - coverage report
+    tags:
+        - tuhh
     only:
         - develop
 

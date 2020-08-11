@@ -33,4 +33,6 @@ EXPOSE 80
 COPY dll /code/dll
 COPY solr /code/solr
 COPY manage.py /code
+COPY tox.ini /code
+COPY .coveragerc /code
 COPY --from=webpack /node_deps/static/dist /code/dll/static/dist
