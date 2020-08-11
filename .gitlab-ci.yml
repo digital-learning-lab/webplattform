@@ -36,7 +36,7 @@ register_staging_images:
 
 test_staging_images:
     stage: test
-    image: collaborating.tuhh.de:5005/itbh/tnt/digital-learning-lab/codebasis_plattform/${CONTAINER_STAGING_IMAGE}-staging
+    image: ${CONTAINER_STAGING_IMAGE}-staging
     services:
       - postgres:12-alpine
     script:
