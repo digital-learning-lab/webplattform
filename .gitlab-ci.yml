@@ -59,6 +59,7 @@ test_staging_images:
         EMAIL_HOST: "floki.rz.tuhh.de"
         EMAIL_PORT: "25"
         EMAIL_USE_TLS: "False"
+        EMAIL_SENDER: "j.doe@example.com"
     only:
         - develop
 
