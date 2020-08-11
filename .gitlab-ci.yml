@@ -35,7 +35,7 @@ register_staging_images:
         - develop
 
 test_staging_images:
-    stage: register
+    stage: test
     image: ${CONTAINER_STAGING_IMAGE}-staging
     script:
       - coverage  run --source=dll/ -m pytest dll/
