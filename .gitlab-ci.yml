@@ -42,6 +42,17 @@ test_staging_images:
       - coverage report
     tags:
         - tuhh
+    variables:
+        REDIS_HOSTNAME: redis
+        DATABASE_USER: postgres
+        DATABASE_NAME: postgres
+        DATABASE_HOST: db
+        DJANGO_DEBUG: True
+        CELERY_TASK_ALWAYS_EAGER: True
+        SOLR_HOSTNAME: solr
+        EMAIL_HOST: floki.rz.tuhh.de
+        EMAIL_PORT: 25
+        EMAIL_USE_TLS: False
     only:
         - develop
 
