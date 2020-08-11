@@ -50,7 +50,7 @@
 }
 .content-teaser__body {
   display: inline-block;
-  padding: 10px 1rem;
+  padding: 10px 1rem 58px 1rem;
   flex: 0 0 68%;
   max-width: 68%;
   vertical-align: top;
@@ -78,9 +78,14 @@
   font-style: italic;
   font-weight: $font-weight-light;
 }
+.content-teaser__footer {
+  position: absolute;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+}
 .content-teaser__competences {
   font-size: 2rem;
-  padding-left: 15px;
   vertical-align: middle;
 }
 .content-teaser__competence {

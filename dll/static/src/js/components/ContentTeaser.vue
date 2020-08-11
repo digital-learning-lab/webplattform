@@ -7,7 +7,7 @@
       <div class="content-teaser__type">{{ content.type_verbose }}</div>
       <div class="content-teaser__title">{{ content.name }}</div>
       <div class="content-teaser__abstract">{{ content.teaser }}</div>
-      <div class="row align-items-center">
+      <div class="content-teaser__footer">
         <div class="content-teaser__competences">
           <span v-for="competence in content.competences" class="content-teaser__competence" :class="competence"></span>
         </div>

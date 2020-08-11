@@ -7,21 +7,21 @@
     <div class="content-teaser__type">{{ content.type_verbose }}</div>
     <div class="content-teaser__title">{{ content.name|truncatechars:50 }}</div>
     <div class="content-teaser__abstract">{{ content.teaser|default_if_none:''|truncatechars:64 }}</div>
-  <div class="row align-items-center">
-    <div class="content-teaser__competences">
-      {% for competence in content.competences.all %}
-        <span class="content-teaser__competence icon-{{ competence.slug }}"></span>
-      {% endfor %}
+    <div class="content-teaser__footer">
+      <div class="content-teaser__competences">
+        {% for competence in content.competences.all %}
+          <span class="content-teaser__competence icon-{{ competence.slug }}"></span>
+        {% endfor %}
 
+      </div>
+      {% if content.type == 'teaching-module' %}
+        <div class="content-teaser__upload-date-container">
+            <span class="content-teaser__upload-icon icon-upload"></span>
+            <span class="content-teaser__upload-date">
+              {{ content.created|date:'d.m.Y' }}
+            </span>
+          </div>
+      {% endif %}
     </div>
-    {% if content.type == 'teaching-module' %}
-      <div class="content-teaser__upload-date-container">
-          <span class="content-teaser__upload-icon icon-upload"></span>
-          <span class="content-teaser__upload-date">
-            {{ content.created|date:'d.m.Y' }}
-          </span>
-        </div>
-    {% endif %}
-  </div>
   </div>
 </a>
