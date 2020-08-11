@@ -37,16 +37,22 @@ register_staging_images:
 test_staging_images:
     stage: test
     image: ${CONTAINER_STAGING_IMAGE}-staging
+    services:
+      - postgres:12.2-alpine
     script:
       - coverage  run --source=dll/ -m pytest dll/
       - coverage report
     tags:
         - tuhh
     variables:
+        POSTGRES_DB: "postgres"
+        POSTGRES_USER: "postgres"
+        POSTGRES_PASSWORD: ""
+        POSTGRES_HOST_AUTH_METHOD: trust
         REDIS_HOSTNAME: "redis"
         DATABASE_USER: "postgres"
         DATABASE_NAME: "postgres"
-        DATABASE_HOST: "db"
+        DATABASE_HOST: "postgres"
         DJANGO_DEBUG: "True"
         CELERY_TASK_ALWAYS_EAGER: "True"
         SOLR_HOSTNAME: "solr"
