@@ -29,6 +29,7 @@ from dll.content.models import (
     ContentLink,
     Review,
     ToolLink,
+    Favorite,
 )
 from dll.general.utils import custom_slugify
 from dll.user.models import DllUser
@@ -680,3 +681,15 @@ class ImageFileSerializer(serializers.Serializer):
 
 class FileSerializer(serializers.Serializer):
     file = serializers.FileField()
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    content = ContentListSerializer()
+
+    def to_representation(self, instance):
+        instance.content = instance.content.get_published().get_real_instance()
+        return super(FavoriteSerializer, self).to_representation(instance)
+
+    class Meta:
+        model = Favorite
+        fields = ["content", "created"]

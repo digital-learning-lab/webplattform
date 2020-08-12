@@ -10,6 +10,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
+from django.utils.translation import ugettext_lazy as _
 from django_filters.rest_framework import DjangoFilterBackend
 from django_select2.views import AutoResponseView
 from filer.models import Image, File
@@ -18,10 +19,15 @@ from haystack.inputs import AutoQuery
 from haystack.query import SearchQuerySet
 from psycopg2._range import NumericRange
 from rest_framework import viewsets, filters, mixins, status
+from rest_framework.decorators import action
 from rest_framework.generics import ListAPIView, GenericAPIView, DestroyAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import FileUploadParser
-from rest_framework.permissions import DjangoObjectPermissions, BasePermission
+from rest_framework.permissions import (
+    DjangoObjectPermissions,
+    BasePermission,
+    IsAuthenticated,
+)
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
@@ -63,8 +69,12 @@ from .filters import (
     TeachingModuleSchoolTypeFilter,
     ToolFunctionFilter,
 )
-from .models import ToolFunction
-from .serializers import ContentListSerializer, ContentPolymorphicSerializer
+from .models import ToolFunction, Favorite
+from .serializers import (
+    ContentListSerializer,
+    ContentPolymorphicSerializer,
+    FavoriteSerializer,
+)
 
 
 class ReviewerPermission(BasePermission):
@@ -253,9 +263,6 @@ class PublishedContentViewSet(viewsets.ReadOnlyModelViewSet):
         else:
             return super(PublishedContentViewSet, self).get_serializer_class()
 
-    def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
-
 
 class DraftsContentViewSet(
     AutoPermissionViewSetMixin,
@@ -270,9 +277,36 @@ class DraftsContentViewSet(
     serializer_class = ContentPolymorphicSerializer
     queryset = Content.objects.drafts()
     lookup_field = "slug"
+    permission_type_map = {
+        **AutoPermissionViewSetMixin.permission_type_map,
+        "favor": None,
+        "unfavor": None,
+    }
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def favor(self, request, slug):
+        user = self.request.user
+        content = self.get_object()
+        result = content.favor(user)
+        if result:
+            return HttpResponse()
+        return JsonResponse(
+            status=400, data={"error": _("Inhalt bereits favorisiert.")}
+        )
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def unfavor(self, request, slug):
+        user = self.request.user
+        content = self.get_object()
+        result = content.unfavor(user)
+        if result:
+            return HttpResponse()
+        return JsonResponse(
+            status=400, data={"error": _("Favorit konnte nicht gefunden werden.")}
+        )
 
 
 class SubmitContentView(GenericAPIView):
@@ -777,3 +811,12 @@ def search_view(request):
 
     ctx = {"results": Content.objects.filter(pk__in=sqs.values_list("pk", flat=True))}
     return render(request, "dll/search.html", ctx)
+
+
+class FavoriteListApiView(ListAPIView):
+    serializer_class = FavoriteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Favorite.objects.filter(user=user)
