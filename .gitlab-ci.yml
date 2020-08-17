@@ -64,6 +64,7 @@ test_staging_images:
         CONTACT_EMAIL_DLL: "j.doe@example.com"
         META_SITE_PROTOCOL: https
         META_SITE_DOMAIN: staging.digitallearninglab.de
+        DEFAULT_USER_EMAIL: digital.learning.lab@tuhh.de
     only:
         - develop
 
