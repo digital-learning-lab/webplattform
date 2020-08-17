@@ -61,7 +61,7 @@ test_staging_images:
         EMAIL_USE_TLS: "False"
         EMAIL_SENDER: "j.doe@example.com"
         CONTACT_EMAIL_BSB: "j.doe@example.com"
-        CONTACT_EMAIL_TUHH: "j.doe@example.com"
+        CONTACT_EMAIL_DLL: "j.doe@example.com"
     only:
         - develop
 
