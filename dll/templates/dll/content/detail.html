@@ -69,6 +69,20 @@
                   </li>
                 {% endif %}
                 {% block sidebar_information %}{% endblock %}
+                {% if user.is_authenticated %}
+                  <li class="sidebar__information-item{% if not favored %} d-none{% endif %}">
+                    <a href="#" class="js-unfavor" data-url="{{ object.get_unfavor_url }}">
+                      <span class="sidebar__information-icon fa fa-heart"></span>
+                      Vom Merkzettel entfernen
+                    </a>
+                  </li>
+                  <li class="sidebar__information-item{% if favored %} d-none{% endif %}">
+                    <a href="#" class="js-favor" data-url="{{ object.get_favor_url }}">
+                      <span class="sidebar__information-icon fa fa-heart"></span>
+                      Zum Merkzettel hinzufügen
+                    </a>
+                  </li>
+                {% endif %}
               </ul>
               <ul class="nav flex-column sidebar__nav" role="tablist" aria-orientation="vertical">
                 {% block sidebar_navigation_items %}{% endblock %}

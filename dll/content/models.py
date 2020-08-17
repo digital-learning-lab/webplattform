@@ -497,6 +497,12 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         except Favorite.DoesNotExist:
             return False
 
+    def get_favor_url(self):
+        return reverse("draft-content-favor", kwargs={"slug": self.slug})
+
+    def get_unfavor_url(self):
+        return reverse("draft-content-unfavor", kwargs={"slug": self.slug})
+
     class Meta(RulesModelBaseMixin, PublisherModel.Meta):
         ordering = ["slug"]
         verbose_name = _("Inhalt")

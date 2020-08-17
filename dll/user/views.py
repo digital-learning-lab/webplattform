@@ -493,3 +493,12 @@ class ProfileViewDelete(BaseProfileView):
 
 class ProfileViewDeleteSuccess(TemplateView):
     template_name = "dll/user/account_delete_success.html"
+
+
+class UserFavoriteView(TemplateView):
+    template_name = "dll/user/content/favorites.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super(UserFavoriteView, self).get_context_data(**kwargs)
+        ctx["favorites"] = self.request.user.favorites.all()
+        return ctx
