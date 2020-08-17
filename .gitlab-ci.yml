@@ -62,6 +62,8 @@ test_staging_images:
         EMAIL_SENDER: "j.doe@example.com"
         CONTACT_EMAIL_BSB: "j.doe@example.com"
         CONTACT_EMAIL_DLL: "j.doe@example.com"
+        META_SITE_PROTOCOL: https
+        META_SITE_DOMAIN: staging.digitallearninglab.de
     only:
         - develop
 
