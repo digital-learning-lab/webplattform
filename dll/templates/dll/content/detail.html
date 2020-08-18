@@ -85,12 +85,12 @@
                   {% if user.is_authenticated %}
                   <div class="content-info__favor">
                     <button type="button" class="button button--secondary m-0 js-favor{% if favored %} d-none{% endif %}" data-url="{{ object.get_favor_url }}">
-                      <span class="fa fa-heart favor-icon favor-icon--inactive mr-1" focusable="false"></span>
-                      Zum Merkzettel hinzufügen
+                      <span class="fa fa-heart favor-icon favor-icon--inactive" focusable="false"></span>
+                      <span>Zum Merkzettel hinzufügen</span>
                     </button>
                     <button type="button" class="button button--secondary m-0 js-unfavor {% if not favored %} d-none{% endif %}" data-url="{{ object.get_unfavor_url }}">
-                      <span class="fa fa-heart favor-icon favor-icon--active mr-1" focusable="false"></span>
-                      Vom Merkzettel entfernen
+                      <span class="fa fa-heart favor-icon favor-icon--active" focusable="false"></span>
+                      <span class="">Vom Merkzettel entfernen</span>
                     </button>
                   </div>
                   {% endif %}
