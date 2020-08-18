@@ -30,11 +30,11 @@ $('.js-favor, .js-unfavor').click(function (e) {
   })
     .then(res => {
       if (e.target.classList.contains('js-favor')) {
-        $(e.target).parent().addClass('d-none')
-        $('.js-unfavor').parent().removeClass('d-none')
+        $(e.target).addClass('d-none')
+        $('.js-unfavor').removeClass('d-none')
       } else {
-        $(e.target).parent().addClass('d-none')
-        $('.js-favor').parent().removeClass('d-none')
+        $(e.target).addClass('d-none')
+        $('.js-favor').removeClass('d-none')
       }
     })
     .catch(err => {

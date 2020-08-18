@@ -18,6 +18,18 @@
   }
   outline: 0;
 }
+.button--secondary {
+  background-color: #fff;
+  color: $color--oracle;
+  border: 1px solid $color--oracle;
+  &:hover, &:focus, &:active {
+    color: $color--smalt-blue;
+    border-color: $color--smalt-blue;
+    border-radius: 0;
+    outline: 0;
+  }
+  outline: 0;
+}
 .button--preview {
   background-color: $color--preview;
   &:hover, &:focus {

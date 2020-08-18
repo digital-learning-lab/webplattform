@@ -69,20 +69,6 @@
                   </li>
                 {% endif %}
                 {% block sidebar_information %}{% endblock %}
-                {% if user.is_authenticated %}
-                  <li class="sidebar__information-item{% if not favored %} d-none{% endif %}">
-                    <a href="#" class="js-unfavor" data-url="{{ object.get_unfavor_url }}">
-                      <span class="sidebar__information-icon fa fa-heart"></span>
-                      Vom Merkzettel entfernen
-                    </a>
-                  </li>
-                  <li class="sidebar__information-item{% if favored %} d-none{% endif %}">
-                    <a href="#" class="js-favor" data-url="{{ object.get_favor_url }}">
-                      <span class="sidebar__information-icon fa fa-heart"></span>
-                      Zum Merkzettel hinzufügen
-                    </a>
-                  </li>
-                {% endif %}
               </ul>
               <ul class="nav flex-column sidebar__nav" role="tablist" aria-orientation="vertical">
                 {% block sidebar_navigation_items %}{% endblock %}
@@ -94,7 +80,21 @@
               <header>
                 <div class="content-info content-info--{{ object.type }}">
                   <img class="content-info__image" src="{% thumbnail object.image 750x500 upscale=True %}" srcset="{% thumbnail object.image 750x500 upscale=True %} 1x, {% thumbnail object.image 1500x1000 %} 2x" alt="{{ object.name }}">
+                  <div class="clearfix"></div>
                   <div class="content-info__type">{{ object.type_verbose }}</div>
+                  {% if user.is_authenticated %}
+                  <div class="content-info__favor">
+                    <button type="button" class="button button--secondary m-0 js-favor{% if favored %} d-none{% endif %}" data-url="{{ object.get_favor_url }}">
+                      <span class="fa fa-heart favor-icon favor-icon--inactive mr-1" focusable="false"></span>
+                      Zum Merkzettel hinzufügen
+                    </button>
+                    <button type="button" class="button button--secondary m-0 js-unfavor {% if not favored %} d-none{% endif %}" data-url="{{ object.get_unfavor_url }}">
+                      <span class="fa fa-heart favor-icon favor-icon--active mr-1" focusable="false"></span>
+                      Vom Merkzettel entfernen
+                    </button>
+                  </div>
+                  {% endif %}
+                  <div class="clearfix"></div>
                   <h1 class="content-info__title">{{ object.name }}</h1>
                   {% if object.teaser %}<p class="content-info__teaser">{{ object.teaser|linebreaksbr }}</p>{% endif %}
                   <div class="row align-items-center">
