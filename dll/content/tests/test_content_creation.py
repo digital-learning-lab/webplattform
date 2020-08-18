@@ -105,6 +105,7 @@ class ContentListTests(BaseTestCase):
                 "created",
                 "id",
                 "co_authors",
+                "favored",
             },
         )
         self.assertTrue(isinstance(data["results"][0]["competences"], list))
