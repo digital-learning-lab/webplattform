@@ -21,6 +21,10 @@
   font-size: 0.8rem;
   font-weight: $font-weight-semi-bold;
   text-transform: uppercase;
+  float: left;
+}
+.content-info__favor {
+  float: right;
 }
 .content-info__teaser {
   font-style: italic;

@@ -65,6 +65,7 @@ from dll.content.views import (
     TeachingModulesFeed,
     ToolsFeed,
     TrendsFeed,
+    FavoriteListApiView,
 )
 from dll.user.views import (
     MyContentView,
@@ -78,6 +79,7 @@ from dll.user.views import (
     ReviewTrendView,
     PendingReviewContentView,
     UserInvitationView,
+    UserFavoriteView,
 )
 
 router = DefaultRouter()
@@ -135,6 +137,7 @@ urlpatterns = [
     path("tools", ToolFilterView.as_view(), name="tools-filter"),
     path("trends", TrendFilterView.as_view(), name="trends-filter"),
     path("meine-inhalte", MyContentView.as_view(), name="user-content-overview"),
+    path("mein-merkzettel", UserFavoriteView.as_view(), name="user-favorites-overview"),
     path("review-inhalte", MyReviewsView.as_view(), name="user-content-review"),
     path(
         "meine-inhalte/unterrichtsbausteine/",
@@ -190,6 +193,7 @@ urlpatterns = [
     path("api/states", StateSearchView.as_view(), name="state-search"),
     path("api/subjects", SubjectSearchView.as_view(), name="subject-search"),
     path("api/competences", CompetencesSearchView.as_view(), name="competence-search"),
+    path("api/favorites", FavoriteListApiView.as_view(), name="user-favorites"),
     path(
         "api/sub-competences",
         SubCompetencesSearchView.as_view(),

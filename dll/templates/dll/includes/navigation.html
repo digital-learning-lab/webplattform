@@ -40,6 +40,9 @@
       {% endif %}
       {% if request.user.is_authenticated %}
         <li class="navigation__item js-navigation__item">
+          <a href="{% url 'user-favorites-overview' %}">Mein Merkzettel</a>
+        </li>
+        <li class="navigation__item js-navigation__item">
           <a href="{% url 'user-content-overview' %}">Meine Inhalte</a>
         </li>
         {% if request.user.is_reviewer %}

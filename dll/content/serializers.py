@@ -12,6 +12,7 @@ from rest_framework.fields import SerializerMethodField, IntegerField, CharField
 from rest_framework.relations import RelatedField
 from rest_polymorphic.serializers import PolymorphicSerializer
 
+from content.utils import is_favored
 from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
 from dll.content.models import (
@@ -29,6 +30,7 @@ from dll.content.models import (
     ContentLink,
     Review,
     ToolLink,
+    Favorite,
 )
 from dll.general.utils import custom_slugify
 from dll.user.models import DllUser
@@ -47,6 +49,7 @@ class ContentListSerializer(serializers.ModelSerializer):
     url = serializers.SerializerMethodField()
     created = serializers.DateTimeField(format="%d.%m.%Y")
     co_authors = serializers.SerializerMethodField()
+    favored = serializers.SerializerMethodField()
 
     class Meta:
         model = Content
@@ -61,6 +64,7 @@ class ContentListSerializer(serializers.ModelSerializer):
             "url",
             "created",
             "co_authors",
+            "favored",
         ]
 
     def get_image(self, obj):
@@ -81,6 +85,13 @@ class ContentListSerializer(serializers.ModelSerializer):
 
     def get_url(self, obj):
         return obj.get_absolute_url()
+
+    def get_favored(self, obj):
+        request = self.context.get("request")
+        favored = False
+        if request:
+            favored = is_favored(request.user, obj)
+        return favored
 
 
 class ContentListInternalSerializer(ContentListSerializer):
@@ -354,6 +365,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     submitted = SerializerMethodField(allow_null=True)
     pending_co_authors = SerializerMethodField(allow_null=True)
     content_files = SerializerMethodField(allow_null=True)
+    favored = SerializerMethodField()
     additional_tools = AdditionalToolsField(
         many=True,
         allow_null=True,
@@ -463,6 +475,13 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         return [
             "learning_goals",
         ]
+
+    def get_favored(self, obj):
+        request = self.context.get("request")
+        favored = False
+        if request:
+            favored = is_favored(request.user, obj)
+        return favored
 
     def create(self, validated_data):
         links_data = validated_data.pop("contentlink_set", [])
@@ -680,3 +699,15 @@ class ImageFileSerializer(serializers.Serializer):
 
 class FileSerializer(serializers.Serializer):
     file = serializers.FileField()
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    content = ContentListSerializer()
+
+    def to_representation(self, instance):
+        instance.content = instance.content.get_published().get_real_instance()
+        return super(FavoriteSerializer, self).to_representation(instance)
+
+    class Meta:
+        model = Favorite
+        fields = ["content", "created"]

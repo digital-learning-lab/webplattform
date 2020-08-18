@@ -493,3 +493,14 @@ class ProfileViewDelete(BaseProfileView):
 
 class ProfileViewDeleteSuccess(TemplateView):
     template_name = "dll/user/account_delete_success.html"
+
+
+class UserFavoriteView(BreadcrumbMixin, TemplateView):
+    template_name = "dll/user/content/favorites.html"
+    breadcrumb_title = "Mein Merkzettel"
+    breadcrumb_url = reverse_lazy("user-favorites-overview")
+
+    def get_context_data(self, **kwargs):
+        ctx = super(UserFavoriteView, self).get_context_data(**kwargs)
+        ctx["favorites"] = self.request.user.favorites.all()
+        return ctx
