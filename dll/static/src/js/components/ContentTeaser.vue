@@ -5,6 +5,12 @@
     </div>
     <div class="content-teaser__body">
       <div class="content-teaser__type">{{ content.type_verbose }}</div>
+      <div class="content-teaser__favor" v-if="content.favored">
+        <span class="fa fa-heart favor-icon favor-icon--active">
+          <span class="sr-only">Auf dem Merkzettel</span>
+        </span>
+      </div>
+      <div class="clearfix"></div>
       <div class="content-teaser__title">{{ content.name }}</div>
       <div class="content-teaser__abstract">{{ content.teaser }}</div>
       <div class="content-teaser__footer">

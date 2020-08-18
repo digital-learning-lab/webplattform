@@ -1,6 +1,6 @@
 from django import template
 
-from dll.content.models import Favorite
+from content.utils import is_favored
 
 register = template.Library()
 
@@ -9,8 +9,6 @@ register = template.Library()
 def favored_snippet(context, content):
     request = context.get("request")
     favored = False
-    if request and request.user.is_authenticated:
-        favored = Favorite.objects.filter(
-            user=request.user, content=content.get_draft()
-        ).exists()
+    if request:
+        favored = is_favored(request.user, content)
     return {"favored": favored}

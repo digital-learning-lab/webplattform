@@ -239,7 +239,6 @@ class PublishedContentViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Content.objects.published()
     filter_backends = [DjangoFilterBackend, SolrTagFilter, SortingFilter]
     permission_classes = []
-    authentication_classes = []
 
     def get_queryset(self):
         competence = self.request.GET.get("competence", "")
@@ -413,7 +412,6 @@ class ContentDataFilterView(ListAPIView):
     filter_backends = [DjangoFilterBackend, SolrTagFilter, SortingFilter]
     model = None
     permission_classes = []
-    authentication_classes = []
 
     def get_queryset(self):
         qs = (
