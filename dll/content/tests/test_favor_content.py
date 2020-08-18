@@ -1,8 +1,8 @@
 from django.urls import reverse
 
-from content.utils import is_favored
+from dll.content.utils import is_favored
 from dll.content.models import Content
-from content.tests.test_content_creation import BaseTestCase
+from dll.content.tests.test_content_creation import BaseTestCase
 
 
 class FavorTestCase(BaseTestCase):
