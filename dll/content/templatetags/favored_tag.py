@@ -1,6 +1,6 @@
 from django import template
 
-from content.utils import is_favored
+from dll.content.utils import is_favored
 
 register = template.Library()
 

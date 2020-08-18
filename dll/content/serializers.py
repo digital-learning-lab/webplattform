@@ -12,7 +12,7 @@ from rest_framework.fields import SerializerMethodField, IntegerField, CharField
 from rest_framework.relations import RelatedField
 from rest_polymorphic.serializers import PolymorphicSerializer
 
-from content.utils import is_favored
+from dll.content.utils import is_favored
 from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
 from dll.content.models import (
