@@ -13,7 +13,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, RedirectView
+from django.views.generic.base import View
 from rest_framework.generics import ListAPIView
 
 from dll.communication.models import CoAuthorshipInvitation, NewsletterSubscrption
@@ -504,3 +505,14 @@ class UserFavoriteView(BreadcrumbMixin, TemplateView):
         ctx = super(UserFavoriteView, self).get_context_data(**kwargs)
         ctx["favorites"] = self.request.user.favorites.all()
         return ctx
+
+
+class FavoriteLoginRequiredView(RedirectView):
+    url = reverse_lazy("user:login")
+
+    def get(self, *args, **kwargs):
+        messages.info(
+            self.request,
+            "Um die Merkzettel-Funktion nutzen zu können, loggen Sie sich bitte ein!",
+        )
+        return super(FavoriteLoginRequiredView, self).get(*args, **kwargs)

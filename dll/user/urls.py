@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import path, re_path, reverse_lazy
 from django.contrib.auth import views as auth_views
 
-from dll.user.views import SignUpSuccessfulView
+from dll.user.views import SignUpSuccessfulView, FavoriteLoginRequiredView
 from .views import (
     SignUpView,
     activate_user,
@@ -83,5 +83,10 @@ urlpatterns = [
             template_name="dll/user/password_reset_complete.html"
         ),
         name="password_reset_complete",
+    ),
+    path(
+        "favorite-login-required",
+        FavoriteLoginRequiredView.as_view(),
+        name="favorite-login-required",
     ),
 ]
