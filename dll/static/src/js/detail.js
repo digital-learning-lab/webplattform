@@ -30,16 +30,23 @@ $('.js-favor, .js-unfavor').click(function (e) {
   })
     .then(res => {
       if (e.target.classList.contains('js-favor')) {
+        $('.js-toast-body').text('Erfolgreich auf Ihrem Merkzettel hinzugefügt. Sie finden Ihrem Merkzettel im Menü unter „Mein Merkzettel“.')
         $(e.target).addClass('d-none')
         $('.js-unfavor').removeClass('d-none')
       } else {
+        $('.js-toast-body').text('Erfolgreich vom Merkzettel entfernt!')
         $(e.target).addClass('d-none')
         $('.js-favor').removeClass('d-none')
       }
+      $('.js-toast').toast('show')
     })
     .catch(err => {
       console.log(err)
     })
   e.preventDefault();
   return false;
+})
+
+$('.js-toast').toast({
+  delay: 3000
 })
