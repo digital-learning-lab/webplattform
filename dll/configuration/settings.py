@@ -35,12 +35,7 @@ DEBUG = env.bool("DJANGO_DEBUG", False)
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", ["*"])
 
 # DJANGO_ADMINS=John:john@admin.com,Jane:jane@admin.com
-# ADMINS = [x.split(':') for x in env.list('DJANGO_ADMINS', [])]
-ADMINS = (
-    ("Robert Stein", "robert@blueshoe.de"),
-    ("Huu Hung Nguyen", "hh.nguyen@tuhh.de"),
-)
-
+ADMINS = [x.split(":") for x in env.list("DJANGO_ADMINS", [])]
 
 # Application definition
 
@@ -161,10 +156,8 @@ if env.bool("DJANGO_USE_S3", False):
     AWS_REGION = os.getenv("DJANGO_AWS_REGION", "eu-central-1")
     AWS_DEFAULT_ACL = None
     AWS_IS_GZIPPED = True
-    AWS_S3_ENDPOINT_URL = "https://s3-de-central.profitbricks.com"
-    AWS_S3_CUSTOM_DOMAIN = (
-        f"{AWS_STORAGE_BUCKET_NAME}.s3-{AWS_REGION}-central.profitbricks.com"
-    )
+    AWS_S3_ENDPOINT_URL = os.getenv("AWS_S3_ENDPOINT_URL")
+    AWS_S3_CUSTOM_DOMAIN = os.getenv("AWS_S3_CUSTOM_DOMAIN")
     # s3 static settings
     STATIC_LOCATION = "static"
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/"
@@ -210,8 +203,8 @@ AUTHENTICATION_BACKENDS = (
 )
 
 DEFAULT_USER_USERNAME = "TUHH"
-DEFAULT_USER_EMAIL = "digital.learning.lab@tuhh.de"
-DEFAULT_USER_PASSWORD = "?&~ pCYqyj2Q4]/a?w#P`"
+DEFAULT_USER_EMAIL = os.getenv("DEFAULT_USER_EMAIL")
+DEFAULT_USER_PASSWORD = os.getenv("DEFAULT_USER_PASSWORD")
 SHELL_PLUS = "bpython"  # bpython does not work on pycharm terminal. use plain
 
 TAGGIT_CASE_INSENSITIVE = True
@@ -259,15 +252,15 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [],
 }
 
-CONTACT_EMAIL_BSB = "stabsstelle-digitalisierung@bsb.hamburg.de"
-CONTACT_EMAIL_DLL = "digital.learning.lab@tuhh.de"
+CONTACT_EMAIL_BSB = env.str("CONTACT_EMAIL_BSB")
+CONTACT_EMAIL_DLL = env.str("CONTACT_EMAIL_DLL")
 
 # ---------------------- ReCaptcha --------------------
 
 VALIDATE_RECAPTCHA = True
 GOOGLE_RECAPTCHA_VERIFICATION_URL = "https://www.google.com/recaptcha/api/siteverify"
-GOOGLE_RECAPTCHA_SECRET_KEY = "6LeOaeAUAAAAAJRsM7ZTfXxOKgRcXcBWNm4Xj9xj"  # env.str('GOOGLE_RECAPTCHA_SECRET_KEY', '')
-GOOGLE_RECAPTCHA_WEBSITE_KEY = "6LeOaeAUAAAAAAilJ2gDQ7PkoRWIzSuHvXVHawap"  # env.str('GOOGLE_RECAPTCHA_WEBSITE_KEY', '')
+GOOGLE_RECAPTCHA_SECRET_KEY = env.str("GOOGLE_RECAPTCHA_SECRET_KEY", "")
+GOOGLE_RECAPTCHA_WEBSITE_KEY = env.str("GOOGLE_RECAPTCHA_WEBSITE_KEY", "")
 
 # ---------------------- Celery --------------------
 
@@ -291,8 +284,8 @@ HAYSTACK_SIGNAL_PROCESSOR = "dll.content.signals.ContentSignalProcessor"
 
 # ---------------------- Django Meta --------------------
 
-META_SITE_PROTOCOL = "https"
-META_SITE_DOMAIN = "digitallearninglab.de/"
+META_SITE_PROTOCOL = env.str("META_SITE_PROTOCOL")
+META_SITE_DOMAIN = env.str("META_SITE_DOMAIN")
 META_USE_OG_PROPERTIES = True
 
 BSB_REVIEW_MAIL = os.getenv("EMAIL_RECEIVER_DLL", "dll@blueshoe.de")
@@ -300,7 +293,7 @@ TUHH_REVIEW_MAIL = os.getenv("EMAIL_RECEIVER_BSB", "dll@blueshoe.de")
 
 LOCALE_PATHS = [os.path.join(BASE_DIR, "locales")]
 
-DEFAULT_FROM_EMAIL = "kontakt@digitallearninglab.de"
+DEFAULT_FROM_EMAIL = env.str("EMAIL_SENDER")
 
 SERVER_EMAIL = DEFAULT_FROM_EMAIL
 

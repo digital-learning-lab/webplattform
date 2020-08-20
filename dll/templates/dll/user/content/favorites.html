@@ -1,0 +1,19 @@
+{% extends 'dll/default_page.html' %}
+
+{% block content %}
+  <h1>Mein Merkzettel</h1>
+
+  <div class="row">
+    {% for content in favorites %}
+      <div class="col col-12 col-xl-6 mb-5">
+        {% include 'dll/includes/content_teaser.html' %}
+      </div>
+    {% empty %}
+      <div class="col">
+        Aktuell befinden sich keine Inhalte auf Ihrem Merkzettel.
+      </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}
+

@@ -21,6 +21,11 @@
   font-size: 0.8rem;
   font-weight: $font-weight-semi-bold;
   text-transform: uppercase;
+  float: left;
+}
+.content-info__favor {
+  padding-top: 10px;
+  clear: both;
 }
 .content-info__teaser {
   font-style: italic;
@@ -49,4 +54,11 @@
   font-size: 0.8rem;
   display: inline-block;
   vertical-align: middle;
+}
+@media (min-width: 768px) {
+  .content-info__favor {
+    float: right;
+    padding-top: 0;
+    clear: none;
+  }
 }

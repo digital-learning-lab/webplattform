@@ -50,13 +50,16 @@
 }
 .content-teaser__body {
   display: inline-block;
-  padding: 10px 1rem;
+  padding: 10px 1rem 58px 1rem;
   flex: 0 0 68%;
   max-width: 68%;
   vertical-align: top;
   &:hover {
     color: rgba(255, 255, 255, 1);
     .content-teaser__type {
+      color: rgba(255, 255, 255, 1);
+    }
+    .content-teaser__favor .favor-icon {
       color: rgba(255, 255, 255, 1);
     }
   }
@@ -66,6 +69,10 @@
   font-weight: $font-weight-semi-bold;
   text-transform: uppercase;
   margin-bottom: 10px;
+  float: left;
+}
+.content-teaser__favor {
+  float: right;
 }
 .content-teaser__title {
   font-weight: $font-weight-light;
@@ -78,9 +85,14 @@
   font-style: italic;
   font-weight: $font-weight-light;
 }
+.content-teaser__footer {
+  position: absolute;
+  bottom: 10px;
+  display: flex;
+  align-items: center;
+}
 .content-teaser__competences {
   font-size: 2rem;
-  padding-left: 15px;
   vertical-align: middle;
 }
 .content-teaser__competence {

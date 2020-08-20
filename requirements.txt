@@ -32,3 +32,6 @@ django-select2<8
 django-better-admin-arrayfield<2
 django-storages~=1.9.1
 boto3~=1.12.47
+pytest==6.0.1
+coverage~=5.2.1
+pytest-django~=3.8.0

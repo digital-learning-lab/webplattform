@@ -19,11 +19,11 @@ class SignUpTests(TestCase):
         self.response = self.client.get(url)
 
     def test_signup_status_code(self):
-        self.assertEquals(self.response.status_code, 200)
+        self.assertEqual(self.response.status_code, 200)
 
     def test_signup_url_resolves_signup_view(self):
         view = resolve("/signup/")
-        self.assertEquals(view.func.view_class, SignUpView)
+        self.assertEqual(view.func.view_class, SignUpView)
 
     def test_csrf(self):
         self.assertContains(self.response, "csrfmiddlewaretoken")
@@ -77,7 +77,7 @@ class InvalidSignUpTests(TestCase):
         self.response = self.client.post(url, {})
 
     def test_signup_status_code(self):
-        self.assertEquals(self.response.status_code, 200)
+        self.assertEqual(self.response.status_code, 200)
 
     def test_form_errors(self):
         form = self.response.context.get("form")

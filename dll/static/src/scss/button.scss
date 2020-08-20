@@ -18,6 +18,18 @@
   }
   outline: 0;
 }
+.button--secondary {
+  background-color: #fff;
+  color: $color--oracle;
+  border: 1px solid $color--oracle;
+  &:hover, &:focus, &:active {
+    color: $color--smalt-blue;
+    border-color: $color--smalt-blue;
+    border-radius: 0;
+    outline: 0;
+  }
+  outline: 0;
+}
 .button--preview {
   background-color: $color--preview;
   &:hover, &:focus {
@@ -108,4 +120,8 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 
+}
+.button--small {
+  font-size: 0.8rem;
+  padding: 0.25rem 1rem;
 }

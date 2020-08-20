@@ -57,6 +57,12 @@ class DllUser(TimeStampedModel, AbstractUser):
     slug = DllSlugField(populate_from="full_name")
     json_data = JSONField(default=dict)  # see README for details
 
+    favorites = models.ManyToManyField(
+        to="content.Content",
+        through="content.Favorite",
+        through_fields=("user", "content"),
+    )
+
     USERNAME_FIELD = "email"
     EMAIL_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]

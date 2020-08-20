@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import IntegerRangeField, JSONField
 from django.contrib.sites.models import Site
 from django.core.files import File
-from django.db import models
+from django.db import models, IntegrityError
 from django.db.models import Q
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -154,6 +154,10 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     def get_additional_tools(self):
         tools = self.related_content.all().instance_of(Tool)
         return tools.filter(publisher_linked__isnull=True, publisher_is_draft=True)
+
+    @property
+    def favorite_count(self):
+        return
 
     @property
     def review(self):
@@ -478,6 +482,26 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
 
     def get_unassign_reviewer_url(self):
         return reverse("unassign-reviewer", kwargs={"slug": self.slug})
+
+    def favor(self, user):
+        try:
+            Favorite.objects.create(user=user, content=self)
+            return True
+        except IntegrityError:
+            return False
+
+    def unfavor(self, user):
+        try:
+            Favorite.objects.get(user=user, content=self).delete()
+            return True
+        except Favorite.DoesNotExist:
+            return False
+
+    def get_favor_url(self):
+        return reverse("draft-content-favor", kwargs={"slug": self.slug})
+
+    def get_unfavor_url(self):
+        return reverse("draft-content-unfavor", kwargs={"slug": self.slug})
 
     class Meta(RulesModelBaseMixin, PublisherModel.Meta):
         ordering = ["slug"]
@@ -1489,3 +1513,18 @@ class ToolApplication(TimeStampedModel):
         ordering = ["name"]
         verbose_name = _("Anwendung")
         verbose_name_plural = _("Anwendungen")
+
+
+class Favorite(TimeStampedModel):
+    """ Model to store user's liked/favored content.
+
+    It is important to keep in mind that the relation to a content object must refer to the draft version of the
+    content. In case a content is republished, the existing published version is deleted, therefore we cannot store
+    any relation to a public content instance here.
+    """
+
+    user = models.ForeignKey(DllUser, on_delete=models.CASCADE)
+    content = models.ForeignKey(Content, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("user", "content")

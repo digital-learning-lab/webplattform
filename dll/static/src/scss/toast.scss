@@ -1,0 +1,17 @@
+.toast {
+  border-radius: 0;
+  border: 0;
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  top: 125px;
+  z-index: 10000;
+}
+@media (min-width: 768px) {
+ .toast {
+    left: auto;
+    transform: none;
+    right: 30px;
+  }
+}
