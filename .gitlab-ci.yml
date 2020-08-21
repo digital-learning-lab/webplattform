@@ -83,4 +83,4 @@ register_kube_images:
     only:
         - master
     when: manual
-
+-
