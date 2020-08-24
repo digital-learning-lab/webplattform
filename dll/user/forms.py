@@ -4,7 +4,13 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit, Layout, ButtonHolder, Field, Fieldset
 
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm
+from django.contrib.auth.forms import (
+    UserCreationForm,
+    PasswordChangeForm,
+    PasswordResetForm,
+)
+from django.core.mail import EmailMultiAlternatives
+from django.template import loader
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
 
@@ -151,3 +157,19 @@ class UserAccountDeleteForm(forms.Form):
 
     def save(self):
         self.instance.delete()
+
+
+class DLLPasswordResetForm(PasswordResetForm):
+    def send_mail(
+        self,
+        subject_template_name,
+        email_template_name,
+        context,
+        from_email,
+        to_email,
+        html_email_template_name=None,
+    ):
+        context.pop("user")
+        send_mail.delay(
+            event_type_code="USER_PASSWORD_RESET", ctx=context, email=to_email
+        )
