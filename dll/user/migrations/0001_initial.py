@@ -166,6 +166,8 @@ class Migration(migrations.Migration):
                 "get_latest_by": "modified",
                 "abstract": False,
             },
-            managers=[("objects", dll.user.models.DllUserManager()),],
+            managers=[
+                ("objects", dll.user.models.DllUserManager()),
+            ],
         ),
     ]

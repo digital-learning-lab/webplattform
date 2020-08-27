@@ -53,6 +53,8 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"unique_together": {("user", "content")},},
+            options={
+                "unique_together": {("user", "content")},
+            },
         ),
     ]

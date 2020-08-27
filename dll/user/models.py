@@ -49,7 +49,10 @@ class DllUser(TimeStampedModel, AbstractUser):
     first_name = models.CharField(_("first name"), max_length=80, blank=True)
 
     username = models.CharField(_("username"), max_length=150, null=True)
-    doi_confirmed = models.BooleanField(_("Double-opt-in confirmed"), default=False,)
+    doi_confirmed = models.BooleanField(
+        _("Double-opt-in confirmed"),
+        default=False,
+    )
     doi_confirmed_date = models.DateTimeField(
         _("Datum der Registrierungsbestätigung"), null=True, editable=False
     )

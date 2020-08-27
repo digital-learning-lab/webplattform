@@ -17,5 +17,7 @@ class Command(BaseCommand):
                 help_text, created = HelpText.objects.get_or_create(content_type=ct)
                 for field in help_text_dict["fields"]:
                     HelpTextField.objects.get_or_create(
-                        name=field["name"], help_text=help_text, text=field["text"],
+                        name=field["name"],
+                        help_text=help_text,
+                        text=field["text"],
                     )

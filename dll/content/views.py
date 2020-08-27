@@ -723,7 +723,9 @@ class FileUploadView(FileUploadBaseView):
                 owner=self.request.user,
             )
             cf = ContentFile.objects.create(
-                content=obj, title=file.name, file=filer_file,
+                content=obj,
+                title=file.name,
+                file=filer_file,
             )
             result = {"title": cf.title, "url": cf.file.url, "id": cf.id}
             return Response(result, status=status.HTTP_201_CREATED)

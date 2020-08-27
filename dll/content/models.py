@@ -1516,7 +1516,7 @@ class ToolApplication(TimeStampedModel):
 
 
 class Favorite(TimeStampedModel):
-    """ Model to store user's liked/favored content.
+    """Model to store user's liked/favored content.
 
     It is important to keep in mind that the relation to a content object must refer to the draft version of the
     content. In case a content is republished, the existing published version is deleted, therefore we cannot store
