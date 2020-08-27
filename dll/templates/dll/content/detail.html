@@ -94,7 +94,7 @@
                       <span class="">Vom Merkzettel entfernen</span>
                     </button>
                     {% else %}
-                    <a href="{% url 'user:favorite-login-required' %}" class="button button--secondary button--small m-0">
+                    <a href="{% url 'user:favorite-login-required' %}?next={{ object.get_absolute_url }}" class="button button--secondary button--small m-0">
                       <span class="fa fa-heart favor-icon favor-icon--inactive" focusable="false"></span>
                       <span>Zum Merkzettel hinzufügen</span>
                     </a>
