@@ -3,6 +3,7 @@ from django.urls import path, re_path, reverse_lazy
 from django.contrib.auth import views as auth_views
 
 from dll.user.views import SignUpSuccessfulView, FavoriteLoginRequiredView
+from .forms import DLLPasswordResetForm
 from .views import (
     SignUpView,
     activate_user,
@@ -59,6 +60,7 @@ urlpatterns = [
             email_template_name="dll/user/email/password_reset_email.html",
             subject_template_name="dll/user/email/password_reset_subject.txt",
             success_url=reverse_lazy("user:password_reset_done"),
+            form_class=DLLPasswordResetForm,
         ),
         name="password_reset",
     ),
