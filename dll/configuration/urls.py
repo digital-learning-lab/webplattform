@@ -17,7 +17,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.flatpages import views
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework.routers import DefaultRouter
 
 from dll.content.views import (
@@ -90,8 +90,8 @@ router.register(r"review", ReviewViewSet, basename="review")
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", HomePageView.as_view(), name="home"),
-    path("impressum", ImprintView.as_view(), name="imprint"),
-    path("datenschutz", DataPrivacyView.as_view(), name="data-privacy"),
+    path("impressum", views.flatpage, {"url": "/impressum/"}, name="imprint"),
+    path("datenschutz", views.flatpage, {"url": "/datenschutz/"}, name="data-privacy"),
     path("struktur", StructureView.as_view(), name="structure"),
     path("nutzung", UsageView.as_view(), name="usage"),
     path("entwicklung", DevelopmentView.as_view(), name="development"),
@@ -263,6 +263,6 @@ urlpatterns = [
     ),
     path("suche", search_view, name="search"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-
+urlpatterns += [re_path(r"^(?P<url>.*/)$", views.flatpage)]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
