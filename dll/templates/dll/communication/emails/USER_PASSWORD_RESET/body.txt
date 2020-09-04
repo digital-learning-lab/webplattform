@@ -1,1 +1,0 @@
-Link: {{ protocol }}://{{ domain }}{% url 'user:password_reset_confirm' uidb64=uid token=token %}
