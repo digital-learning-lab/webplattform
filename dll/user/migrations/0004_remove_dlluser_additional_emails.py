@@ -10,5 +10,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="dlluser", name="additional_emails",),
+        migrations.RemoveField(
+            model_name="dlluser",
+            name="additional_emails",
+        ),
     ]

@@ -1152,6 +1152,8 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"unique_together": {("name", "help_text")},},
+            options={
+                "unique_together": {("name", "help_text")},
+            },
         ),
     ]

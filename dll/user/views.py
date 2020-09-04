@@ -509,6 +509,7 @@ class UserFavoriteView(BreadcrumbMixin, TemplateView):
 
 class FavoriteLoginRequiredView(RedirectView):
     url = reverse_lazy("user:login")
+    query_string = True
 
     def get(self, *args, **kwargs):
         messages.info(

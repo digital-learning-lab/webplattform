@@ -48,10 +48,14 @@ class BaseTestCase(TestCase):
         self.tuhh_reviewer_2 = DllUser.objects.create(**tuhh_reviewer_2)
 
         self.teaching_module = TeachingModule.objects.create(
-            name="Foo", author=self.author,
+            name="Foo",
+            author=self.author,
         )
 
-        self.trend = Trend.objects.create(name="Bar", author=self.author,)
+        self.trend = Trend.objects.create(
+            name="Bar",
+            author=self.author,
+        )
 
         bsb_reviewer_group = get_bsb_reviewer_group()
         tuhh_reviewer_group = get_tuhh_reviewer_group()

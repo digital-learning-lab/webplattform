@@ -669,7 +669,12 @@ class TeachingModuleSerializer(BaseContentSubclassSerializer):
     def get_array_fields(self):
         fields = super(TeachingModuleSerializer, self).get_array_fields()
         fields.extend(
-            ["expertise", "equipment", "estimated_time", "subject_of_tuition",]
+            [
+                "expertise",
+                "equipment",
+                "estimated_time",
+                "subject_of_tuition",
+            ]
         )
         return fields
 
@@ -680,7 +685,10 @@ class TeachingModuleSerializer(BaseContentSubclassSerializer):
     def get_m2m_fields(self):
         fields = super(TeachingModuleSerializer, self).get_m2m_fields()
         fields.extend(
-            ["subjects", "school_types",]
+            [
+                "subjects",
+                "school_types",
+            ]
         )
         return fields
 

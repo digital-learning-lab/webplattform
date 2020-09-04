@@ -137,7 +137,11 @@ class UserAccountDeleteForm(forms.Form):
         submit_button = Submit("submit", "Löschen")
         submit_button.field_classes = "button button--danger"
         self.helper.layout = Layout(
-            Fieldset("", "conditions",), ButtonHolder(submit_button)
+            Fieldset(
+                "",
+                "conditions",
+            ),
+            ButtonHolder(submit_button),
         )
 
     def clean_conditions(self):

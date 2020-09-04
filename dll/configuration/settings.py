@@ -128,9 +128,15 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
 
@@ -215,7 +221,9 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
-        "console": {"class": "logging.StreamHandler",},
+        "console": {
+            "class": "logging.StreamHandler",
+        },
         "mail_admins": {
             "level": "ERROR",
             "class": "django.utils.log.AdminEmailHandler",
@@ -266,7 +274,9 @@ GOOGLE_RECAPTCHA_WEBSITE_KEY = env.str("GOOGLE_RECAPTCHA_WEBSITE_KEY", "")
 
 CELERY_BROKER_URL = env(
     "CELERY_BROKER_URL",
-    default="redis://{hostname}:6379/0".format(hostname=env.str("REDIS_HOSTNAME"),),
+    default="redis://{hostname}:6379/0".format(
+        hostname=env.str("REDIS_HOSTNAME"),
+    ),
 )
 CELERY_TASK_ALWAYS_EAGER = env.bool("CELERY_TASK_ALWAYS_EAGER")
 

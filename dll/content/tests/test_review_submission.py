@@ -58,7 +58,10 @@ class BaseTestCase(TestCase):
         bsb_reviewer_group.user_set.add(self.bsb_reviewer)
         self.tuhh_reviewer = DllUser.objects.create(**tuhh_reviewer)
         tuhh_reviewer_group.user_set.add(self.tuhh_reviewer)
-        self.content = TeachingModule.objects.create(name="Foo", author=self.author,)
+        self.content = TeachingModule.objects.create(
+            name="Foo",
+            author=self.author,
+        )
         self.content.update_or_add_image_from_path(
             "dll/static/img/cc_license.png", image_name="Test Image.jpg"
         )
@@ -66,7 +69,10 @@ class BaseTestCase(TestCase):
 
         # related content
         self.content.related_content.add(
-            TeachingModule.objects.create(name="Bar", author=self.other_author,)
+            TeachingModule.objects.create(
+                name="Bar",
+                author=self.other_author,
+            )
         )
 
         # co authors

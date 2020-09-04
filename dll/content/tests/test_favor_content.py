@@ -50,21 +50,27 @@ class FavorTestCase(BaseTestCase):
     def test_authenticated_preview_favor_button_hidden(self):
         self.client.login(email="test+alice@blueshoe.de", password="password")
         draft_content = Content.objects.drafts().first()
-        response = self.client.get(draft_content.get_preview_url(),)
+        response = self.client.get(
+            draft_content.get_preview_url(),
+        )
         self.assertTemplateUsed(response, "dll/content/detail.html")
         self.assertNotContains(response, "content-info__favor")
 
     def test_authenticated_favor_button_shown(self):
         self.client.login(email="test+alice@blueshoe.de", password="password")
         draft_content = Content.objects.drafts().first()
-        response = self.client.get(draft_content.get_absolute_url(),)
+        response = self.client.get(
+            draft_content.get_absolute_url(),
+        )
         self.assertTemplateUsed(response, "dll/content/detail.html")
         self.assertContains(response, "Zum Merkzettel hinzufügen")
 
     def test_authenticated_unfavor_button_shown(self):
         self.client.login(email="test+alice@blueshoe.de", password="password")
         draft_content = Content.objects.drafts().first()
-        response = self.client.get(draft_content.get_absolute_url(),)
+        response = self.client.get(
+            draft_content.get_absolute_url(),
+        )
         self.assertTemplateUsed(response, "dll/content/detail.html")
         self.assertContains(response, "Vom Merkzettel entfernen")
 
@@ -72,7 +78,9 @@ class FavorTestCase(BaseTestCase):
         self.client.login(email="test+alice@blueshoe.de", password="password")
         draft_content = Content.objects.drafts().first()
         self._favor_content(draft_content)
-        response = self.client.get(reverse("user-favorites-overview"),)
+        response = self.client.get(
+            reverse("user-favorites-overview"),
+        )
         self.assertTemplateUsed(response, "dll/user/content/favorites.html")
         self.assertContains(response, draft_content.name)
 
@@ -81,6 +89,8 @@ class FavorTestCase(BaseTestCase):
         self.client.login(email="test+alice@blueshoe.de", password="password")
         draft_content = Content.objects.drafts().first()
         self._favor_content(draft_content)
-        response = self.client.get(reverse("user-favorites-overview"),)
+        response = self.client.get(
+            reverse("user-favorites-overview"),
+        )
         self.assertTemplateUsed(response, "dll/includes/content_teaser.html")
         self.assertContains(response, "Auf dem Merkzettel")

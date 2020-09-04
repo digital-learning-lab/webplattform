@@ -52,7 +52,10 @@ class BaseTestCase(TestCase):
         self.removed_co_author.set_password("password")
         self.removed_co_author.save()
 
-        self.content = TeachingModule.objects.create(name="Foo", author=self.author,)
+        self.content = TeachingModule.objects.create(
+            name="Foo",
+            author=self.author,
+        )
         self.content.co_authors.add(self.co_author, self.removed_co_author)
         CommunicationEventType.objects.create(
             code="COAUTHOR_INVITATION", name="Coauthor invitation"

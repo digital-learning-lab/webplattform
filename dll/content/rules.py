@@ -60,7 +60,8 @@ def can_review_content(user, content: Content):
 
 
 rules.add_perm(
-    "content.view_content", is_authenticated,
+    "content.view_content",
+    is_authenticated,
 )
 rules.add_perm(
     "content.view_tool",
