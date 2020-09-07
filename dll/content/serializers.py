@@ -1,4 +1,5 @@
 import logging
+from time import strftime
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
@@ -188,6 +189,7 @@ class ContentListInternalReviewSerializer(ContentListInternalSerializer):
     can_unassign = serializers.SerializerMethodField(allow_null=False)
     can_assign = serializers.SerializerMethodField(allow_null=False)
     can_claim = serializers.SerializerMethodField(allow_null=False)
+    submitted = serializers.SerializerMethodField(allow_null=True)
 
     def get_review_url(self, obj):
         return obj.get_review_url()
@@ -225,6 +227,11 @@ class ContentListInternalReviewSerializer(ContentListInternalSerializer):
             return obj.review.assigned_reviewer.full_name
         return None
 
+    def get_submitted(self, obj):
+        if obj.review and obj.review.created:
+            return obj.review.created.strftime("%d.%m.%Y")
+        return None
+
     class Meta(ContentListInternalSerializer.Meta):
         fields = [
             "id",
@@ -249,6 +256,7 @@ class ContentListInternalReviewSerializer(ContentListInternalSerializer):
             "unassign_reviewer_url",
             "can_assign",
             "can_claim",
+            "submitted",
         ]
 
 
