@@ -108,3 +108,18 @@
   margin-left: 15px;
   vertical-align: middle;
 }
+.slick-container .content-teaser {
+  margin: .5em;
+}
+.slick-next {
+  right: -10px !important;
+}
+.slick-prev {
+  left: -10px !important;
+}
+.slick-next:before {
+  color: black !important;
+}
+.slick-prev:before {
+  color: black !important;
+}

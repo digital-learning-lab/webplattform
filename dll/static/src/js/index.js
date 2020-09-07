@@ -19,4 +19,5 @@ import './toolSubmission'
 import './tooltips'
 import './trendSubmission'
 import './recaptcha'
+import './slick'
 
