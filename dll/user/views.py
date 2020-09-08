@@ -354,7 +354,7 @@ class PendingReviewContentView(UserContentView):
         reviews = Review.objects.filter(
             is_active=True, status__in=[Review.NEW, Review.IN_PROGRESS]
         )
-        qs = Content.objects.drafts().filter(reviews__in=reviews)
+        qs = Content.objects.drafts().filter(reviews__in=reviews).order_by("created")
 
         type = self.request.GET.get("type", None)
         search_term = self.request.GET.get("q", None)
