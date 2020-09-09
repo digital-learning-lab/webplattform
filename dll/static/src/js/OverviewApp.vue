@@ -71,6 +71,9 @@
           <div class="content-box__author">
             <span class="fas fa-user"></span> {{ content.author }}
           </div>
+          <div class="content-box__date" v-if="content.submitted">
+            <span>Einreichungsdatum: {{ content.submitted }}</span>
+          </div>
         </div>
         <div class="col" v-if="content.co_authors.length">
           <div class="content-box__coauthors">
