@@ -112,14 +112,16 @@
   margin: .5em;
 }
 .slick-next {
-  right: -10px !important;
+  right: -5px !important;
 }
 .slick-prev {
   left: -10px !important;
 }
 .slick-next:before {
   color: black !important;
+  font-size: 25px !important;
 }
 .slick-prev:before {
   color: black !important;
+  font-size: 25px !important;
 }

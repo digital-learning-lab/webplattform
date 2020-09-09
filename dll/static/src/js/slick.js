@@ -7,5 +7,22 @@ $('.js-slick-wrapper').slick({
     slidesToShow: 3,
     slidesToScroll: 3,
     dots: true,
+    autoplay: true,
+    responsive: [
+        {
+            breakpoint: 1400,
+            settings: {
+                slidesToShow: 2,
+                slidesToScroll: 2,
+            }
+        },
+        {
+            breakpoint: 920,
+            settings: {
+                slidesToShow: 1,
+                slidesToScroll: 1,
+            }
+        }
+    ]
 })
 
