@@ -71,6 +71,7 @@ INSTALLED_APPS = [
     "haystack",
     "django_better_admin_arrayfield.apps.DjangoBetterAdminArrayfieldConfig",
     "django_select2",
+    "simple_history",
 ]
 
 MIDDLEWARE = [
@@ -82,6 +83,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.flatpages.middleware.FlatpageFallbackMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 ROOT_URLCONF = "dll.configuration.urls"

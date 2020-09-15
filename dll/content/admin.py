@@ -11,6 +11,7 @@ from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 from import_export import resources, fields
 from import_export.admin import ImportExportMixin
 from import_export.widgets import ManyToManyWidget
+from simple_history.admin import SimpleHistoryAdmin
 
 from dll.content.forms import FlatPageAdminForm, HelpTextAdminForm, HelpTextFieldForm
 from .models import (
@@ -91,7 +92,7 @@ class CompetenceAdditionalInformationInlineAdmin(admin.StackedInline):
 
 
 @admin.register(Trend)
-class ContentAdmin(admin.ModelAdmin, DynamicArrayMixin):
+class ContentAdmin(SimpleHistoryAdmin, admin.ModelAdmin, DynamicArrayMixin):
     exclude = ("json_data", "tags")
     inlines = [ContentLinkInlineAdmin]
 
