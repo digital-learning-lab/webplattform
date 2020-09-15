@@ -29,6 +29,7 @@ from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 from rules.contrib.models import RulesModelMixin, RulesModelBaseMixin
 from taggit.managers import TaggableManager
+from simple_history.models import HistoricalRecords
 
 from .managers import ContentQuerySet
 from dll.general.models import DllSlugField, PublisherModel
@@ -131,6 +132,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
 
     tags = TaggableManager(verbose_name=_("Tags"))
     objects = PolymorphicManager.from_queryset(ContentQuerySet)()
+    history = HistoricalRecords(inherit=True)
 
     _metadata = {
         "title": "name",
