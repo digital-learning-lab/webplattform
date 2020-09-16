@@ -168,6 +168,7 @@ class ContentDetailBase(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(ContentDetailBase, self).get_context_data(**kwargs)
         ctx["competences"] = Competence.objects.all()
+        ctx["functions"] = ToolFunction.objects.all()
         if self.request.user.is_authenticated:
             ctx["favored"] = Favorite.objects.filter(
                 user=self.request.user, content=self.get_object().get_draft()
