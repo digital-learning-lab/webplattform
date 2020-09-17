@@ -14,18 +14,7 @@
     {% endfor %}
   </div>
 </div>
-
-{% if object.description %}
-  <div class="information-area information-area--{{ object.type }}">
-    <div class="information-area__title information-area__title">
-      Beschreibung/Funktion
-    </div>
-    <div class="information-area__body">
-      {{ object.description|linebreaksbr|urlize }}
-    </div>
-  </div>
-{% endif %}
-
+{% if object.functions.all.count > 0 %}
     <div class="information-area information-area--{{ object.type }}">
         <div class="information-area__title">
            Tool-funktionen
@@ -40,8 +29,19 @@
         {% for function in functions %}
           <span class="information-area__icon icon-{{ function.slug }}{% if function in object.functions.all %} information-area__icon--active{% endif %}"></span>
         {% endfor %}
-  </div>
+        </div>
     </div>
+{% endif %}
+{% if object.description %}
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Beschreibung/Funktion
+    </div>
+    <div class="information-area__body">
+      {{ object.description|linebreaksbr|urlize }}
+    </div>
+  </div>
+{% endif %}
 
 {% if object.applications.all|length > 0 %}
   <div class="information-area information-area--{{ object.type }}">
