@@ -21,6 +21,7 @@
 
 
 {% block sidebar_information %}
+  {% if object.functions.all.count > 0 %}
   <li class="sidebar__information-item">
     <span class="sidebar__information-icon icon-tool"></span>
     <ul class="list-unstyled">
@@ -29,6 +30,7 @@
     {% endfor %}
     </ul>
   </li>
+  {% endif %}
   {% if object.applications.all.count %}
   <li class="sidebar__information-item">
     <span class="sidebar__information-icon icon-settings"></span>
