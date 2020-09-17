@@ -10,7 +10,7 @@ $('.js-slick-wrapper').slick({
     autoplay: true,
     responsive: [
         {
-            breakpoint: 1400,
+            breakpoint: 1490,
             settings: {
                 slidesToShow: 2,
                 slidesToScroll: 2,
