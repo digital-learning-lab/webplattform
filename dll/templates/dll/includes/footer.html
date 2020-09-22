@@ -38,11 +38,11 @@
                     <a href="{% url 'data-privacy' %}" class="footer__link">Datenschutz</a>
                   </div>
                   <p class="">Weitere Informationen im
-                      <a href="{% url 'communication:newsletter' %}" class="footer__link-newsletter">Newsletter</a>
+                      <a href="{% url 'communication:newsletter' %}" class="footer__link-newsletter">Newsletter<br></a>
                       oder auf unseren Social-Media-Kanälen:
                   </p>
                     <a href="https://twitter.com/digilearninglab">
-                        <img src="{% static "img/icons/twitter.png" %}">
+                        <img class="mr-3" src="{% static "img/icons/twitter.png" %}">
                     </a>
                     <a href="https://www.youtube.com/channel/UC9w8XPtdEqIOsdjS7ZEwnzA">
                         <img src="{% static "img/icons/youtube.png" %}">
@@ -54,7 +54,7 @@
                             {# TODO: add link to flatpage that does not exist yet #}
                             <a class="footer__link-newsletter" href="#">Comenius EduMedia Siegel</a>
                         </div>
-                        <div class="d-inline"><img class="d-inline" src="{% static "img/icons/siegel.png" %}"></div>
+                        <div class="d-inline ml-3"><img class="d-inline" src="{% static "img/icons/siegel.png" %}"></div>
                     </div>
                   Diese <a class="footer__cc-link" href="https://github.com/iTBH/digitallearninglab">Plattform</a> ist lizensiert unter der <br>
                   <a class="footer__cc-link" href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank" rel="noreferrer">
