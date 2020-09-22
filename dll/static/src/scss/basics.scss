@@ -7,7 +7,7 @@ body {
   font-family: $font-body;
   overflow-x: hidden;
   padding-top: 80px;
-  padding-bottom: 280px;
+  padding-bottom: 600px;
 }
 a {
   text-decoration: none;
@@ -79,7 +79,7 @@ a[rel*=external]:after {
 
 @media (min-width: 992px) {
   body {
-    padding-bottom: 155px;
+    padding-bottom: 350px;
   }
 }
 

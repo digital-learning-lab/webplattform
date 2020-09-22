@@ -6,20 +6,25 @@
         <div class="row justify-content-center">
           <div class="col col-xl-11">
             <div class="section-info__body">
-              <div class="row align-items-center">
+              <div class="row mt-5">
                 <div class="mb-3 col col-12 col-lg-4 col-xl-4 d-lg-flex">
                   <div class="row">
-                    <div class="col col-4 text-center">
+                    <div class="col col-3 text-center">
+                      <a href="https://www.itbh-hh.de/" class="partner-logo__link" target="_blank" rel="noopener noreferrer">
+                        <img src="{% static 'img/partners/ITBH_Logo_cmyk.svg' %}" class="footer__partner-logo" alt="JHS-Logo">
+                      </a>
+                    </div>
+                    <div class="col col-3 text-center">
                       <a href="https://www.tuhh.de/" class="partner-logo__link" target="_blank" rel="noopener noreferrer">
                         <img src="{% static 'img/partners/tuhh_logo.svg' %}" class="footer__partner-logo" alt="TUHH-Logo">
                       </a>
                     </div>
-                    <div class="col col-4 text-center">
+                    <div class="col col-3 text-center">
                       <a href="https://www.hamburg.de/bsb/wir-ueber-uns/" class="partner-logo__link" target="_blank" rel="noopener noreferrer">
                         <img src="{% static 'img/partners/Logo_BSB.jpg' %}" class="footer__partner-logo" alt="BSB-Logo">
                       </a>
                     </div>
-                    <div class="col col-4 text-center">
+                    <div class="col col-3 text-center">
                       <a href="https://www.joachim-herz-stiftung.de/" class="partner-logo__link" target="_blank" rel="noopener noreferrer">
                         <img src="{% static 'img/partners/JHS_Logo_RGB.png' %}" class="footer__partner-logo" alt="JHS-Logo">
                       </a>
@@ -27,11 +32,30 @@
                   </div>
                 </div>
                 <div class="mb-3 col col-12 col-lg-4 col-xl-5 text-center">
-                  <a href="{% url 'imprint' %}" class="footer__link">Impressum</a>
-                  <a href="{% url 'terms' %}" class="footer__link">Nutzungsbedingungen</a>
-                  <a href="{% url 'data-privacy' %}" class="footer__link">Datenschutz</a>
+                  <div class="pb-5 pt-4">
+                    <a href="{% url 'imprint' %}" class="footer__link">Impressum</a>
+                    <a href="{% url 'terms' %}" class="footer__link">Nutzungsbedingungen</a>
+                    <a href="{% url 'data-privacy' %}" class="footer__link">Datenschutz</a>
+                  </div>
+                  <p class="">Weitere Informationen im
+                      <a href="{% url 'communication:newsletter' %}" class="footer__link-newsletter">Newsletter</a>
+                      oder auf unseren Social-Media-Kanälen:
+                  </p>
+                    <a href="https://twitter.com/digilearninglab">
+                        <img src="{% static "img/icons/twitter.png" %}">
+                    </a>
+                    <a href="https://www.youtube.com/channel/UC9w8XPtdEqIOsdjS7ZEwnzA">
+                        <img src="{% static "img/icons/youtube.png" %}">
+                    </a>
                 </div>
                 <div class="mb-3 col col-12 col-lg-4 col-xl-3 text-center text-lg-right footer__text">
+                    <div class="d-flex flex-column flex-lg-row pb-5 justify-content-lg-end justify-content-sm-center align-items-center">
+                        <div class="d-inline">Ausgezeichnet mit dem <br>
+                            {# TODO: add link to flatpage that does not exist yet #}
+                            <a class="footer__link-newsletter" href="#">Comenius EduMedia Siegel</a>
+                        </div>
+                        <div class="d-inline"><img class="d-inline" src="{% static "img/icons/siegel.png" %}"></div>
+                    </div>
                   Diese <a class="footer__cc-link" href="https://github.com/iTBH/digitallearninglab">Plattform</a> ist lizensiert unter der <br>
                   <a class="footer__cc-link" href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank" rel="noreferrer">
                     <span class="text-nowrap">GNU General Public License v3.0</span>
