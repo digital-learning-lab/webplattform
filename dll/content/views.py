@@ -492,9 +492,15 @@ class TeachingModuleFilterView(BaseFilterView):
         ]
         states_filter.insert(0, {"value": "", "name": "------"})
         school_types_filter.insert(0, {"value": "", "name": "------"})
+        hybrid_filter = [
+            {"value": "", "name": "------"},
+            {"value": True, "name": "nur geeignete Unterrichtsteine"},
+            {"value": False, "name": "nur nicht geeignete Unterrichtsteine"},
+        ]
         ctx["subject_filter"] = json.dumps(subject_filter)
         ctx["states_filter"] = json.dumps(states_filter)
         ctx["school_types_filter"] = json.dumps(school_types_filter)
+        ctx["hybrid_filter"] = json.dumps(hybrid_filter)
         return ctx
 
 
@@ -511,7 +517,11 @@ class TeachingModuleDataFilterView(ContentDataFilterView):
 
         class_from = self.request.GET.get("schoolClassFrom", [])
         class_to = self.request.GET.get("schoolClassTo", [])
-        hybrid = self.request.GET.get("hybrid") == "true"
+        hybrid = (
+            self.request.GET.get("hybrid") == "true"
+            if self.request.GET.get("hybrid")
+            else None
+        )
 
         try:
             if class_from:
@@ -535,8 +545,8 @@ class TeachingModuleDataFilterView(ContentDataFilterView):
             qs = qs.filter(
                 TeachingModule___school_class__overlap=NumericRange(None, int(class_to))
             )
-
-        qs = qs.filter(TeachingModule___hybrid=hybrid)
+        if hybrid != None:
+            qs = qs.filter(TeachingModule___hybrid=hybrid)
 
         return qs.distinct()
 
