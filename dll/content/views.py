@@ -462,8 +462,8 @@ class TeachingModuleFilterView(BaseFilterView):
         school_types_filter.insert(0, {"value": "", "name": "------"})
         hybrid_filter = [
             {"value": "", "name": "------"},
-            {"value": True, "name": _("nur geeignete Unterrichtsbausteine")},
-            {"value": False, "name": _("nur nicht geeignete Unterrichtsbausteine")},
+            {"value": True, "name": "nur geeignete Unterrichtsbausteine"},
+            {"value": False, "name": "nur nicht geeignete Unterrichtsbausteine"},
         ]
         ctx["subject_filter"] = json.dumps(subject_filter)
         ctx["states_filter"] = json.dumps(states_filter)
