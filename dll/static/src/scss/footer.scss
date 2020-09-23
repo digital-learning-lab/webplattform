@@ -14,19 +14,22 @@
   text-transform: uppercase;
   padding: 10px;
   display: block;
+  &-newsletter {
+    text-transform: none;
+  }
 }
 .footer__cc-link {
   font-weight: $font-weight-light;
 }
 .footer__partner-logo {
   height: auto;
-  max-height: 40px;
+  max-height: 60px;
   max-width: 100%;
 }
 @media (min-width: 576px) {
   .footer__link {
     display: inline-block;
-    padding: 5px 10px;
+    padding: 0 5px 10px;
   }
 }
 @media(min-width: 768px) {
