@@ -16,6 +16,7 @@ stages:
 black:
   stage: lint
   image: collaborating.tuhh.de:5005/itbh/tnt/digital-learning-lab/python-black:latest
+  allow_failure: true
   tags:
     - tuhh
   script:
