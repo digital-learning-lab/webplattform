@@ -504,7 +504,8 @@ class TeachingModuleDataFilterView(ContentDataFilterView):
                 TeachingModule___school_class__overlap=NumericRange(None, int(class_to))
             )
 
-        qs = qs.filter(TeachingModule___hybrid=hybrid)
+        if hybrid:
+            qs = qs.filter(TeachingModule___hybrid=hybrid)
 
         return qs.distinct()
 
