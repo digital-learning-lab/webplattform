@@ -51,6 +51,7 @@ from dll.content.models import (
 from dll.content.serializers import (
     AuthorSerializer,
     CompetenceSerializer,
+    ToolFunctionSerializer,
     SubCompetenceSerializer,
     SchoolTypeSerializer,
     ReviewSerializer,
@@ -627,6 +628,13 @@ class CompetencesSearchView(ListAPIView):
     serializer_class = CompetenceSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     search_fields = ["name"]
+
+
+class ToolFunctionSearchView(ListAPIView):
+    queryset = ToolFunction.objects.all()
+    serializer_class = ToolFunctionSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ["title"]
 
 
 class SubCompetencesSearchView(ListAPIView):
