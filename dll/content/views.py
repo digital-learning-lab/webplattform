@@ -2,10 +2,10 @@ import json
 import random
 
 from django.contrib.syndication.views import Feed
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
@@ -51,6 +51,7 @@ from dll.content.models import (
 from dll.content.serializers import (
     AuthorSerializer,
     CompetenceSerializer,
+    ToolFunctionSerializer,
     SubCompetenceSerializer,
     SchoolTypeSerializer,
     ReviewSerializer,
@@ -165,9 +166,41 @@ class DevelopmentView(TemplateView, BreadcrumbMixin):
 
 
 class ContentDetailBase(DetailView):
+    def get(self, request, *args, **kwargs):
+        try:
+            self.object = self.get_object()
+        except Http404:
+            # The length of the slug field has been adapted from 50 to 200.
+            # To make sure old slugs, which have been truncated in the past, are still available
+            # this redirect logic had to be implemented.
+            queryset = self.get_queryset()
+            pk = self.kwargs.get(self.pk_url_kwarg)
+            slug = self.kwargs.get(self.slug_url_kwarg)
+            # Only check for slugs with the length of 50 (which are likely to be old truncated slugs).
+            if (
+                slug is not None
+                and (pk is None or self.query_pk_and_slug)
+                and len(slug) in [49, 50]
+            ):
+                slug_field = self.get_slug_field()
+                queryset = queryset.filter(**{slug_field + "__startswith": slug})
+                try:
+                    obj = queryset.get()
+                except MultipleObjectsReturned:
+                    # This is very unlikely to happen. However, in case there are multiple
+                    # Content objects which start with the same 50 letters we return the first found.
+                    obj = queryset.first()
+                except ObjectDoesNotExist:
+                    raise Http404
+                return redirect(obj.get_absolute_url())
+            raise Http404
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
     def get_context_data(self, **kwargs):
         ctx = super(ContentDetailBase, self).get_context_data(**kwargs)
         ctx["competences"] = Competence.objects.all()
+        ctx["functions"] = ToolFunction.objects.all()
         if self.request.user.is_authenticated:
             ctx["favored"] = Favorite.objects.filter(
                 user=self.request.user, content=self.get_object().get_draft()
@@ -595,6 +628,13 @@ class CompetencesSearchView(ListAPIView):
     serializer_class = CompetenceSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     search_fields = ["name"]
+
+
+class ToolFunctionSearchView(ListAPIView):
+    queryset = ToolFunction.objects.all()
+    serializer_class = ToolFunctionSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ["title"]
 
 
 class SubCompetencesSearchView(ListAPIView):

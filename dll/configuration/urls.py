@@ -66,6 +66,7 @@ from dll.content.views import (
     ToolsFeed,
     TrendsFeed,
     FavoriteListApiView,
+    ToolFunctionSearchView,
 )
 from dll.user.views import (
     MyContentView,
@@ -193,6 +194,11 @@ urlpatterns = [
     path("api/states", StateSearchView.as_view(), name="state-search"),
     path("api/subjects", SubjectSearchView.as_view(), name="subject-search"),
     path("api/competences", CompetencesSearchView.as_view(), name="competence-search"),
+    path(
+        "api/toolFunctions",
+        ToolFunctionSearchView.as_view(),
+        name="tool-function-search",
+    ),
     path("api/favorites", FavoriteListApiView.as_view(), name="user-favorites"),
     path(
         "api/sub-competences",

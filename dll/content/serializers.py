@@ -32,6 +32,7 @@ from dll.content.models import (
     Review,
     ToolLink,
     Favorite,
+    ToolFunction,
 )
 from dll.general.utils import custom_slugify
 from dll.user.models import DllUser
@@ -289,6 +290,14 @@ class CompetenceSerializer(serializers.ModelSerializer):
         fields = ["name", "pk"]
 
 
+class ToolFunctionSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(source="title")
+
+    class Meta:
+        model = ToolFunction
+        fields = ["name", "title", "pk"]
+
+
 class SubCompetenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCompetence
@@ -307,7 +316,10 @@ class DllM2MField(RelatedField):
         try:
             label = getattr(value, "username")
         except AttributeError:
-            label = getattr(value, "name")
+            if hasattr(value, "name"):
+                label = getattr(value, "name")
+            else:
+                label = getattr(value, "title")
         return {"pk": value.pk, "label": label}
 
     def to_internal_value(self, data):
@@ -618,6 +630,12 @@ class ToolSerializer(BaseContentSubclassSerializer):
         allow_null=True,
         many=True,
         queryset=ToolApplication.objects.all(),
+        required=False,
+    )
+    functions = DllM2MField(
+        allow_null=True,
+        many=True,
+        queryset=ToolFunction.objects.all(),
         required=False,
     )
     url = ToolLinkSerializer(allow_null=True, many=False, required=False)

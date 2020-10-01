@@ -14,7 +14,24 @@
     {% endfor %}
   </div>
 </div>
+{% if object.functions.all.count > 0 %}
+    <div class="information-area information-area--{{ object.type }}">
+        <div class="information-area__title">
+           Tool-funktionen
+        </div>
+        <div class="information-area__body">
+            <ul class="list-unstyled">
+              {% for function in object.functions.all %}
 
+                <li>{{ function.title }}</li>
+              {% endfor %}
+            </ul>
+        {% for function in functions %}
+          <span class="information-area__icon icon-{{ function.slug }}{% if function in object.functions.all %} information-area__icon--active{% endif %}"></span>
+        {% endfor %}
+        </div>
+    </div>
+{% endif %}
 {% if object.description %}
   <div class="information-area information-area--{{ object.type }}">
     <div class="information-area__title information-area__title">

@@ -16,6 +16,7 @@
       <app-dropdown id="tools" :readonly="readonly" :review="review" label="Passende Tools" :value.sync="data.tools" :review-value.sync="reviewValue.tools" :error="errorFields.includes('tools')" fetch-url="/api/tools" :multiple="true" :help-text="getHelpText('tools')" :prefetch="true"></app-dropdown>
       <app-dropdown id="trends" :readonly="readonly" :review="review" label="Passende Trends" :value.sync="data.trends" :review-value.sync="reviewValue.trends" :error="errorFields.includes('trends')" fetch-url="/api/trends" :multiple="true" :help-text="getHelpText('trends')" :prefetch="true"></app-dropdown>
       <app-dropdown id="competences" :readonly="readonly" :review="review" label="Kompetenzen in der digitalen Welt" :required="true" :value.sync="data.competences" :review-value.sync="reviewValue.competences" :error="errorFields.includes('competences')" fetch-url="/api/competences" :multiple="true" :prefetch="true" :help-text="getHelpText('competences')"></app-dropdown>
+      <app-dropdown id="tool-functions" :readonly="readonly" :review="review" label="Tool-Funktionen" :required="true" :value.sync="data.functions" :review-value.sync="reviewValue.functions" :error="errorFields.includes('functions')" fetch-url="/api/toolFunctions" :multiple="true" :prefetch="true" :help-text="getHelpText('functions')"></app-dropdown>
       <app-link-input id="url" :readonly="readonly" :review="review" :link.sync="data.url" :review-value.sync="reviewValue.url" :error="errorFields.includes('url')" label="Website" :type="'null'" :help-text="getHelpText('url')" :required="true"></app-link-input>
       <app-list-input :min="1" id="pro" :readonly="readonly" :review="review" label="Vorteile" :list.sync="data.pro" :review-value.sync="reviewValue.pro" :error="errorFields.includes('pro')" :initial="data.pro" :help-text="getHelpText('pro')"></app-list-input>
       <app-list-input :min="1" id="contra" :readonly="readonly" :review="review" label="Nachteile" :list.sync="data.contra" :review-value.sync="reviewValue.contra" :error="errorFields.includes('contra')" :initial="data.contra" :help-text="getHelpText('contra')"></app-list-input>
@@ -67,6 +68,7 @@
           state: '',
           estimated_time: [],
           competences: [],
+          functions: [],
           educational_plan_reference: '',
           differentiating_attribute: '',
           sub_competences: [],
