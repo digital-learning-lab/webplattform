@@ -180,7 +180,7 @@ class ContentDetailBase(DetailView):
             if (
                 slug is not None
                 and (pk is None or self.query_pk_and_slug)
-                and len(slug) == 50
+                and len(slug) in [49, 50]
             ):
                 slug_field = self.get_slug_field()
                 queryset = queryset.filter(**{slug_field + "__startswith": slug})
