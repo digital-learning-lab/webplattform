@@ -14,3 +14,7 @@ __pycache__
 
 # Compiled Documentation
 docs/_build
+dll/media
+.pytest_cache
+node_modules
+.env
