@@ -28,6 +28,7 @@ from meta.models import ModelMeta
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 from rules.contrib.models import RulesModelMixin, RulesModelBaseMixin
+from simple_history.utils import get_history_model_for_model
 from taggit.managers import TaggableManager
 from simple_history.models import HistoricalRecords
 
@@ -990,7 +991,12 @@ class Review(TimeStampedModel):
             self.is_active = False
             self.accepted_by = by_user
             self.save()
-            self.content.get_real_instance().publish()
+            instance = self.content.get_real_instance()
+            instance._change_reason = _(
+                "Reviewer {} hat den Inhalt akzeptiert.".format(by_user)
+            )
+            instance.save()
+            instance.publish()
             self.send_review_accepted_mail()
 
     def decline(self, by_user: DllUser):
@@ -998,6 +1004,11 @@ class Review(TimeStampedModel):
             self.declined_by = by_user
             self.status = self.DECLINED
             self.save()
+            instance = self.content.get_real_instance()
+            instance._change_reason = _(
+                "Reviewer {} hat den Inhalt abgelehnt.".format(by_user)
+            )
+            instance.save()
             self.send_review_declined_mail()
 
     def send_review_accepted_mail(self):
@@ -1022,12 +1033,19 @@ class Review(TimeStampedModel):
             recipient_ids = set(cc_ids)
             cc_ids = set()
 
+        if cc_ids:
+            cc_addresses = DllUser.objects.filter(pk__in=cc_ids).values_list(
+                "email", flat=True
+            )
+        else:
+            cc_addresses = []
+
         send_mail.delay(
             event_type_code="REVIEW_ACCEPTED",
             ctx=context,
             sender_id=getattr(self.accepted_by, "pk", None),
             recipient_ids=recipient_ids,
-            cc=list(cc_ids),
+            cc=list(cc_addresses),
         )
 
     def send_review_declined_mail(self):
@@ -1052,12 +1070,19 @@ class Review(TimeStampedModel):
             recipient_ids = set(cc_ids)
             cc_ids = set()
 
+        if cc_ids:
+            cc_addresses = DllUser.objects.filter(pk__in=cc_ids).values_list(
+                "email", flat=True
+            )
+        else:
+            cc_addresses = []
+
         send_mail.delay(
             event_type_code="REVIEW_DECLINED",
             ctx=context,
             sender_id=getattr(self.declined_by, "pk", None),
             recipient_ids=recipient_ids,
-            cc=list(cc_ids),
+            cc=list(cc_addresses),
         )
 
 
