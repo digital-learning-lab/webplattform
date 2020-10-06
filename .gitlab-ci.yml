@@ -17,7 +17,7 @@ black:
   stage: lint
   image: collaborating.tuhh.de:5005/itbh/tnt/digital-learning-lab/python-black:latest
   tags:
-    - tuhh
+    - dll-docker
   script:
     - black --check .
 
@@ -30,7 +30,7 @@ register_staging_images:
         - docker build --no-cache -t ${CONTAINER_STAGING_IMAGE}-staging ${DOCKER_FILE_PATH}
         - docker push ${CONTAINER_STAGING_IMAGE}-staging
     tags:
-        - floki_build
+        - dll-shell
     only:
         - develop
 
@@ -43,7 +43,7 @@ test_staging_images:
       - coverage run --source=/code/dll/ -m pytest /code/dll/
       - coverage report
     tags:
-        - tuhh
+        - dll-docker
     variables:
         POSTGRES_DB: "postgres"
         POSTGRES_USER: "postgres"
@@ -79,7 +79,7 @@ register_kube_images:
         #- docker build --no-cache -t ${CONTAINER_RELEASE_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
         #- docker push ${CONTAINER_RELEASE_SOLR_IMAGE}
     tags:
-        - floki_build
+        - dll-shell
     only:
         - master
     when: manual
