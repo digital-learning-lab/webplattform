@@ -31,12 +31,6 @@
             </ul>
           </div>
           <div>
-            <h3 class="form-subhead">Bundesland</h3>
-            <select v-model="state"  class="form-control">
-              <option v-for="state in getStates()" :value="state.value">{{state.name}}</option>
-            </select>
-          </div>
-          <div>
             <h3 class="form-subhead">Schulform</h3>
             <select v-model="schoolType"  class="form-control">
               <option v-for="schoolType in getSchoolTypes()" :value="schoolType.value">{{schoolType.name}}</option>
@@ -89,7 +83,6 @@
       return {
         dataUrl: '/api/unterrichtsbausteine',
         subjects: [],
-        state: '',
         schoolClassFrom: null,
         schoolClassTo: null,
         schoolType: null,
@@ -100,16 +93,12 @@
       getSubjects ()  {
         return window.subjectFilter
       },
-      getStates ()  {
-        return window.statesFilter
-      },
       getSchoolTypes () {
         return window.schoolFilter
       },
       getQueryParams () {
         return {
           subjects: this.subjects,
-          state: this.state,
           schoolClassFrom: this.schoolClassFrom,
           schoolClassTo: this.schoolClassTo,
           schoolType: this.schoolType,
