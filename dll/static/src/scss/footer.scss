@@ -1,7 +1,6 @@
 .footer {
   line-height: 1.3em;
   position: absolute;
-  bottom: 0;
   left: 0;
   width: 100%;
 }
@@ -33,6 +32,9 @@
   }
 }
 @media(min-width: 768px) {
+  .footer {
+    padding-bottom: 0;
+  }
   .footer__partner-logo {
     margin-right: 15px;
   }
