@@ -40,7 +40,7 @@
       {% endfor %}
     </ul>
     {% for competence in competences %}
-      <span class="information-area__icon icon-{{ competence.slug }}{% if competence in object.competences.all %} information-area__icon--active{% endif %}"></span>
+      <span class="information-area__icon {{ competence.icon_class }}{% if competence in object.competences.all %} information-area__icon--active{% endif %}" data-toggle="tooltip" title="{{ competence.name }}"></span>
     {% endfor %}
     {% if object.sub_competences.count > 0 %}
     <a class="information-area__title d-block pt-3" href="#subcompetence-collapse" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="subcompetence-collapse">

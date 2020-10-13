@@ -16,6 +16,7 @@ import './trendFilter'
 import './toolFilter'
 import './teachingModuleSubmission'
 import './toolSubmission'
+import './tooltips'
 import './trendSubmission'
 import './recaptcha'
 

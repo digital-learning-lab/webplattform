@@ -12,7 +12,7 @@
     <div class="content-teaser__footer">
       <div class="content-teaser__competences">
         {% for competence in content.competences.all %}
-          <span class="content-teaser__competence icon-{{ competence.slug }}"></span>
+          <span class="content-teaser__competence icon-{{ competence.slug }}" data-toggle="tooltip" title="{{ competence.name }}"></span>
         {% endfor %}
 
       </div>

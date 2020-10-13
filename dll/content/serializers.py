@@ -83,7 +83,7 @@ class ContentListSerializer(serializers.ModelSerializer):
 
     def get_competences(self, obj):
         competences = obj.competences.all()
-        return [i.icon_class for i in competences]
+        return [c.to_dict() for c in competences]
 
     def get_url(self, obj):
         return obj.get_absolute_url()

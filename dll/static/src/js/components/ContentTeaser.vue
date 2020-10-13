@@ -15,7 +15,7 @@
       <div class="content-teaser__abstract">{{ content.teaser }}</div>
       <div class="content-teaser__footer">
         <div class="content-teaser__competences">
-          <span v-for="competence in content.competences" class="content-teaser__competence" :class="competence"></span>
+          <span v-for="competence in content.competences" class="content-teaser__competence" :class="competence.icon"  v-tooltip="competence.name"></span>
         </div>
         <div class="content-teaser__upload-date-container" v-if="content.type === 'teaching-module'">
           <span class="content-teaser__upload-icon icon-upload"></span>
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+  import { tooltipDirective } from '../tooltips'
+
   export default {
     name: 'ContentTeaser',
     props: {
@@ -43,6 +45,9 @@
       contentClass: function () {
         return this.content.type ? `content-teaser--${this.content.type}` : ''
       }
+    },
+    directives: {
+      tooltip: tooltipDirective
     }
   }
 </script>

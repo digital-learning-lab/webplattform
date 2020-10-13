@@ -10,7 +10,7 @@
       {% endfor %}
     </ul>
     {% for competence in competences %}
-      <span class="information-area__icon icon-{{ competence.slug }}{% if competence in object.competences.all %} information-area__icon--active{% endif %}"></span>
+      <span class="information-area__icon icon-{{ competence.slug }}{% if competence in object.competences.all %} information-area__icon--active{% endif %}" data-toggle="tooltip" title="{{ competence.name }}"></span>
     {% endfor %}
   </div>
 </div>

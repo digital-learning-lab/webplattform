@@ -1151,6 +1151,9 @@ class Competence(TimeStampedModel):
         """used for mapping to css icons"""
         return "icon-competence-id-{}".format(self.cid)
 
+    def to_dict(self):
+        return {"name": self.name, "icon": self.icon_class}
+
     def __str__(self):
         return dict(self.DEFAULT_NAMES)[int(self.cid)]
 
