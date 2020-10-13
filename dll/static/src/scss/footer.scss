@@ -3,7 +3,6 @@
   position: absolute;
   left: 0;
   width: 100%;
-  padding-bottom: 2rem;
 }
 .footer__text{
   font-size: 14px;
@@ -34,7 +33,6 @@
 }
 @media(min-width: 768px) {
   .footer {
-    bottom: 0;
     padding-bottom: 0;
   }
   .footer__partner-logo {
