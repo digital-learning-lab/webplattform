@@ -141,7 +141,7 @@
             long:'Zielsetzungen des Unterrichtsbausteins',
           },
           {
-            short: 'Vorraussetzungen zum Einsatz',
+            short: 'Voraussetzungen zum Einsatz',
             long: 'Voraussetzungen zum Einsatz des Unterrichtsbausteins im Unterricht'
           },
           {
