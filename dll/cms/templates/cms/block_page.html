@@ -1,0 +1,10 @@
+{% extends 'dll/default_page.html' %}
+{% load wagtailuserbar %}
+{% load wagtailcore_tags %}
+
+{% block cms %}
+  {% wagtailuserbar %}
+  {% for block in page.body %}
+      {% include_block block %}
+  {% endfor %}
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'dll/default_page.html' %}
+{% load wagtailuserbar %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+  {% wagtailuserbar %}
+  {{ page.body|richtext }}
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends "blocks/block_base.html" %}
+{% load wagtailcore_tags %}
+
+{% block block_content %}
+{{ value|richtext }}
+{% endblock block_content %}

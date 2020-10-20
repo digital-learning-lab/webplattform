@@ -19,11 +19,12 @@ from django.contrib import admin
 from django.contrib.flatpages import views
 from django.urls import path, include, re_path
 from rest_framework.routers import DefaultRouter
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail.core import urls as wagtail_urls
+from wagtail.documents import urls as wagtaildocs_urls
 
 from dll.content.views import (
     HomePageView,
-    ImprintView,
-    DataPrivacyView,
     StructureView,
     UsageView,
     DevelopmentView,
@@ -268,6 +269,9 @@ urlpatterns = [
         name="admin-help-text-choices",
     ),
     path("suche", search_view, name="search"),
+    path("cms/", include(wagtailadmin_urls)),
+    path("documents/", include(wagtaildocs_urls)),
+    path("", include(wagtail_urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += [re_path(r"^(?P<url>.*/)$", views.flatpage)]
 if settings.DEBUG:

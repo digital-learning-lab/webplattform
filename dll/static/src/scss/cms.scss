@@ -1,0 +1,37 @@
+.block {
+  &__inner {
+    background-color: #f1f1f1;
+    width: 1280px;
+  }
+  &__headline {
+    font-size: 32pt;
+    font-weight: 400;
+    text-align: center;
+    margin: 0;
+  }
+  &__headline-2 {
+    font-weight: 300;
+    font-size: 32pt;
+
+  }
+  &__paragraph {
+    font-size: 21pt;
+    line-height: 27pt;
+    text-align: center;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0;
+    max-width: 960px;
+  }
+  &__image {
+    padding-top: 41px;
+    padding-bottom: 41px;
+  }
+  &__link {
+    display: block;
+    font-size: 20pt;
+    font-weight: 400;
+  }
+}

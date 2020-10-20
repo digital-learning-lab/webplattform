@@ -1,0 +1,20 @@
+{% load wagtailcore_tags %}
+
+<section class="mb-5 mt-5">
+  <div class="row justify-content-center no-gutters">
+    <div class="col col-12 col-md-10 col-xl-9">
+      <div class="section-info{% if value.background_color == 'blue' %} bg-transparent{% endif %}">
+        <div class="section-info__body">
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-11">
+              {% block block_content %}
+              <h1 class="section-info__headline">{{ value.headline }}</h1>
+              <div class="text-center">{{ value.text|richtext }}</div>
+              {% endblock block_content %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

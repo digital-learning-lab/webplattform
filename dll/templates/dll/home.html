@@ -10,72 +10,84 @@
       </div>
     </div>
   </section>
-
-<section class="mb-5">
+  {% block cms %}
+  <section class="mb-5">
     <div class="row no-gutters justify-content-center">
       <div class="col col-12 col-md-10 col-lg-9 col-xl-8">
         <div class="section-info pt-5 pb-3 text-center">
           <h3 class="section-info__headline">Impulse für den digital gestützten Hybridunterricht</h3>
           <div class="section-info__body">
             <p>
-              Das neue Schuljahr beginnt und innovative Unterrichtskonzepte sind gefragt.<br />
-              Dafür haben wir konkrete Impulse zur Gestaltung von hybridem Unterricht mit digitalen Tools sowie weitere Informations- und Qualifizierungsangebote zusammengetragen.<br />
+              Das neue Schuljahr beginnt und innovative Unterrichtskonzepte sind gefragt.<br/>
+              Dafür haben wir konkrete Impulse zur Gestaltung von hybridem Unterricht mit digitalen Tools sowie weitere
+              Informations- und Qualifizierungsangebote zusammengetragen.<br/>
             </p>
-            <p class="mt-5"><a href="https://digitallearninglab.de/impulse-hybridunterricht/" class="info-box__link info-box__link--inline">Hier inspirieren lassen</a></p>
+            <p class="mt-5"><a href="https://digitallearninglab.de/impulse-hybridunterricht/"
+                               class="info-box__link info-box__link--inline">Hier inspirieren lassen</a></p>
           </div>
           <div class="row mt-5 mb-5">
             <div class="col-sm">
-              <img class="img-responsive" src="https://data.digitallearninglab.de/index.php/apps/sharingpath/dll/DLL/files/images/hybrid-unterricht.PNG" title="Hybridunterricht" alt="Hybridunterricht Titelbild" />
-              <p class="mt-4 font-weight-semi-bold">Grundsätzlich für den <br /> Hybridunterricht geeignete Unterrichtsbausteine</p>
+              <img class="img-responsive"
+                   src="https://data.digitallearninglab.de/index.php/apps/sharingpath/dll/DLL/files/images/hybrid-unterricht.PNG"
+                   title="Hybridunterricht" alt="Hybridunterricht Titelbild"/>
+              <p class="mt-4 font-weight-semi-bold">Grundsätzlich für den <br/> Hybridunterricht geeignete
+                                                    Unterrichtsbausteine</p>
             </div>
             <div class="col-sm">
-              <img class="img-responsive" src="https://data.digitallearninglab.de/index.php/apps/sharingpath/dll/DLL/files/images/fernunterricht.PNG" title="Fernunterricht" alt="Fernunterricht Titelbild" />
-              <p class="mt-4 font-weight-semi-bold">Digitale Tools in Zeiten <br /> des Hybridunterrichts</p>
+              <img class="img-responsive"
+                   src="https://data.digitallearninglab.de/index.php/apps/sharingpath/dll/DLL/files/images/fernunterricht.PNG"
+                   title="Fernunterricht" alt="Fernunterricht Titelbild"/>
+              <p class="mt-4 font-weight-semi-bold">Digitale Tools in Zeiten <br/> des Hybridunterrichts</p>
             </div>
             <div class="col-sm">
-              <img class="img-responsive" src="https://data.digitallearninglab.de/index.php/apps/sharingpath/dll/DLL/files/images/online-unterricht.PNG" title="Online-Unterricht" alt="Online-Unterricht Titelbild" />
-              <p class="mt-4 font-weight-semi-bold">Aktuelle Informations- und <br /> Qualifizierungsquellen <br /> für den Hybridunterricht</p>
+              <img class="img-responsive"
+                   src="https://data.digitallearninglab.de/index.php/apps/sharingpath/dll/DLL/files/images/online-unterricht.PNG"
+                   title="Online-Unterricht" alt="Online-Unterricht Titelbild"/>
+              <p class="mt-4 font-weight-semi-bold">Aktuelle Informations- und <br/> Qualifizierungsquellen <br/> für
+                                                    den Hybridunterricht</p>
             </div>
           </div>
         </div>
       </div>
     </div>
-</section>
-<section class="mb-5" id="dll-aufbau">
-  <div class="row no-gutters justify-content-center">
-    <div class="col-md-5 col-lg-5 col-xl-4">
-      <article class="news-box news-box--news">
-        <div class="news-box__head news-box__head--news">Neu im digital.learning.lab</div>
-        <h3 class="news-box__subhead">Einreichung eigener Unterrichtskonzepte leicht gemacht</h3>
-        <div class="news-box__body">
-          Inspirieren auch Sie deutschlandweit Kolleginnen und Kollegen anderer Schulen mit Ihren digitalen Unterrichtsideen. Über den Login-Bereich können Sie eigene Unterrichtsimpulse erstellen.
-        </div>
-        {% if request.user.is_authenticated %}
+  </section>
+  <section class="mb-5" id="dll-aufbau">
+    <div class="row no-gutters justify-content-center">
+      <div class="col-md-5 col-lg-5 col-xl-4">
+        <article class="news-box news-box--news">
+          <div class="news-box__head news-box__head--news">Neu im digital.learning.lab</div>
+          <h3 class="news-box__subhead">Einreichung eigener Unterrichtskonzepte leicht gemacht</h3>
+          <div class="news-box__body">
+            Inspirieren auch Sie deutschlandweit Kolleginnen und Kollegen anderer Schulen mit Ihren digitalen
+            Unterrichtsideen. Über den Login-Bereich können Sie eigene Unterrichtsimpulse erstellen.
+          </div>
+          {% if request.user.is_authenticated %}
           <a href="{% url 'user-content-overview' %}" class="news-box__link">
-              Hier geht es zu Ihren Inhalten
+            Hier geht es zu Ihren Inhalten
           </a>
-        {% else %}
+          {% else %}
           <a href="{% url 'user:login' %}" class="news-box__link">
-              Hier geht es zum Login-Bereich
+            Hier geht es zum Login-Bereich
           </a>
-        {% endif %}
-      </article>
+          {% endif %}
+        </article>
+      </div>
+
+      <div class="col-md-5 col-lg-4 col-xl-4">
+        <article class="news-box">
+          <div class="news-box__head">Fortbildung</div>
+          <h3 class="news-box__subhead">Kostenlose Online-Fortbildung zum digital.learning.lab</h3>
+          <div class="news-box__body">
+            Sie möchten Ihre Kompetenzen im Umang mit dem dll erweitern? Fobizz bietet Ihnen dafür eine kostenlose
+            Online-Fortbildung mit abschließendem Zertifikat.
+          </div>
+          <a href="{{ training_trend.get_absolute_url }}" class="news-box__link">
+            Zur Fortbildung gelangen Sie hier
+          </a>
+        </article>
+      </div>
     </div>
-    
-    <div class="col-md-5 col-lg-4 col-xl-4">
-      <article class="news-box">
-        <div class="news-box__head">Fortbildung</div>
-        <h3 class="news-box__subhead">Kostenlose Online-Fortbildung zum digital.learning.lab</h3>
-        <div class="news-box__body">
-          Sie möchten Ihre Kompetenzen im Umang mit dem dll erweitern? Fobizz bietet Ihnen dafür eine kostenlose Online-Fortbildung mit abschließendem Zertifikat.
-        </div>
-        <a href="{{ training_trend.get_absolute_url }}" class="news-box__link">
-          Zur Fortbildung gelangen Sie hier
-        </a>
-      </article>
-    </div>
-  </div>
-</section>
+  </section>
 
   <section class="mb-5">
     <div class="row no-gutters justify-content-center">
@@ -83,16 +95,22 @@
         <div class="section-info">
           <h3 class="section-info__headline">Was ist das dll?</h3>
           <div class="section-info__body">
-            <p class="text-center">Das digital.learning.lab ist ein Hamburger Kompetenzzentrum für die Unterrichtsgestaltung in digitalen Zeiten. Lehrkräfte finden hier Anregungen und Unterstützung, ihren Unterricht unter Berücksichtigung der Kompetenzen für eine digitalisierte Lebens- und Arbeitswelt weiter zu entwickeln.</p>
+            <p class="text-center">Das digital.learning.lab ist ein Hamburger Kompetenzzentrum für die
+                                   Unterrichtsgestaltung in digitalen Zeiten. Lehrkräfte finden hier Anregungen und
+                                   Unterstützung, ihren Unterricht unter Berücksichtigung der Kompetenzen für eine
+                                   digitalisierte Lebens- und Arbeitswelt weiter zu entwickeln.</p>
             <div class="row">
               <div class="col col-12 col-lg-4 mb-4">
                 <article class="info-box">
                   <div class="info-box__head">Struktur</div>
                   <div class="info-box__image-container">
-                    <img class="info-box__image" src="{% static 'img/content/struktur_preview.png' %}" srcset="{% static 'img/content/struktur_preview.png' %} 1x, {% static 'img/content/struktur_preview_large.png' %} 2x" alt="Skizze zur Struktur des dll">
+                    <img class="info-box__image" src="{% static 'img/content/struktur_preview.png' %}"
+                         srcset="{% static 'img/content/struktur_preview.png' %} 1x, {% static 'img/content/struktur_preview_large.png' %} 2x"
+                         alt="Skizze zur Struktur des dll">
                   </div>
                   <div class="info-box__body">
-                    Entlang von sechs Kompetenzbereichen für die digitale Welt werden im dll Inhalte für Lehrkräfte zur Gestaltung ihres Fachunterrichts mit digitalen Medien bereitgestellt.
+                    Entlang von sechs Kompetenzbereichen für die digitale Welt werden im dll Inhalte für Lehrkräfte zur
+                    Gestaltung ihres Fachunterrichts mit digitalen Medien bereitgestellt.
                   </div>
                   <a href="{% url 'structure' %}" class="info-box__link">
                     weiterlesen
@@ -103,10 +121,13 @@
                 <article class="info-box">
                   <div class="info-box__head">Nutzung</div>
                   <div class="info-box__image-container">
-                    <img class="info-box__image" src="{% static 'img/content/nutzung_preview.png' %}" srcset="{% static 'img/content/nutzung_preview.png' %} 1x, {% static 'img/content/nutzung_preview_large.png' %} 2x" alt="Sizze zur Nutzung des dll">
+                    <img class="info-box__image" src="{% static 'img/content/nutzung_preview.png' %}"
+                         srcset="{% static 'img/content/nutzung_preview.png' %} 1x, {% static 'img/content/nutzung_preview_large.png' %} 2x"
+                         alt="Sizze zur Nutzung des dll">
                   </div>
                   <div class="info-box__body">
-                    Lehrkräfte können mit dem dll ihren Unterricht neu (digital) gestalten, verschiedene Tools kennenlernen und sich über schulischen Fachunterricht in digitalen Zeiten informieren.
+                    Lehrkräfte können mit dem dll ihren Unterricht neu (digital) gestalten, verschiedene Tools
+                    kennenlernen und sich über schulischen Fachunterricht in digitalen Zeiten informieren.
                   </div>
                   <a href="{% url 'usage' %}" class="info-box__link">
                     weiterlesen
@@ -117,10 +138,13 @@
                 <article class="info-box">
                   <div class="info-box__head">Entwicklung</div>
                   <div class="info-box__image-container">
-                    <img class="info-box__image" src="{% static 'img/content/entwicklung_preview.png' %}" srcset="{% static 'img/content/entwicklung_preview.png' %} 1x, {% static 'img/content/entwicklung_preview_large.png' %} 2x" alt="Skizze zur Entwicklung des dll">
+                    <img class="info-box__image" src="{% static 'img/content/entwicklung_preview.png' %}"
+                         srcset="{% static 'img/content/entwicklung_preview.png' %} 1x, {% static 'img/content/entwicklung_preview_large.png' %} 2x"
+                         alt="Skizze zur Entwicklung des dll">
                   </div>
                   <div class="info-box__body">
-                    Das dll wird hier in einer ersten Version veröffentlicht. Das Konzept und die Webplattform werden kontinuierlich weiterentwickelt und erweitert.
+                    Das dll wird hier in einer ersten Version veröffentlicht. Das Konzept und die Webplattform werden
+                    kontinuierlich weiterentwickelt und erweitert.
                   </div>
                   <a href="{% url 'development' %}" class="info-box__link">
                     weiterlesen
@@ -133,7 +157,7 @@
       </div>
     </div>
   </section>
-
+  {% endblock cms %}
   <section class="mb-5">
     <div class="row no-gutters justify-content-center">
       <div class="col col-12 col-md-10 col-lg-9 col-xl-8">
@@ -142,9 +166,9 @@
           <div class="section-info__body">
             <div class="row">
               {% for content in contents %}
-                <div class="col col-12 col-xl-6 mb-5">
+              <div class="col col-12 col-xl-6 mb-5">
                 {% include 'dll/includes/content_teaser.html' %}
-                </div>
+              </div>
               {% endfor %}
             </div>
           </div>
@@ -162,29 +186,36 @@
             <div class="row align-items-center justify-content-around">
               <div class="col col-12 col-sm-6 col-lg-2 mb-5">
                 <div class="partner-logo">
-                  <a href="https://www.itbh-hh.de/" class="partner-logo__link" name="Partner ITBH" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.itbh-hh.de/" class="partner-logo__link" name="Partner ITBH" target="_blank"
+                     rel="noopener noreferrer">
                     <img src="{% static 'img/partners/ITBH_Logo_cmyk.svg' %}" alt="ITBH" class="partner-logo__image">
                   </a>
                 </div>
               </div>
               <div class="col col-12 col-sm-6 col-lg-3 mb-5">
                 <div class="partner-logo">
-                  <a href="https://www.tuhh.de/" class="partner-logo__link" name="Partner TUHH" target="_blank" rel="noopener noreferrer">
+                  <a href="https://www.tuhh.de/" class="partner-logo__link" name="Partner TUHH" target="_blank"
+                     rel="noopener noreferrer">
                     <img src="{% static 'img/partners/tuhh_logo.svg' %}" alt="TUHH" class="partner-logo__image">
                   </a>
                 </div>
               </div>
               <div class="col col-12 col-sm-6 col-lg-4 mb-5">
                 <div class="partner-logo">
-                  <a href="https://www.hamburg.de/bsb/wir-ueber-uns/" name="Partner BSB Hamburg" class="partner-logo__link" target="_blank" rel="noopener noreferrer">
-                    <img src="{% static 'img/partners/Logo_BSB.jpg' %}" srcset="{% static 'img/partners/Logo_BSB.jpg' %} 1x, {% static 'img/partners/Logo_BSB__large.jpg' %} 2x" alt="BSB Hamburg" class="partner-logo__image">
+                  <a href="https://www.hamburg.de/bsb/wir-ueber-uns/" name="Partner BSB Hamburg"
+                     class="partner-logo__link" target="_blank" rel="noopener noreferrer">
+                    <img src="{% static 'img/partners/Logo_BSB.jpg' %}"
+                         srcset="{% static 'img/partners/Logo_BSB.jpg' %} 1x, {% static 'img/partners/Logo_BSB__large.jpg' %} 2x"
+                         alt="BSB Hamburg" class="partner-logo__image">
                   </a>
                 </div>
               </div>
               <div class="col col-12 col-sm-6 col-lg-3 mb-5">
                 <div class="partner-logo">
-                  <a href="https://www.joachim-herz-stiftung.de/" name="Partner Joachim Herz Stiftung" class="partner-logo__link" target="_blank" rel="noopener noreferrer">
-                    <img src="{% static 'img/partners/JHS_Logo_RGB.png' %}" alt="Joachim Herz Stiftung" class="partner-logo__image">
+                  <a href="https://www.joachim-herz-stiftung.de/" name="Partner Joachim Herz Stiftung"
+                     class="partner-logo__link" target="_blank" rel="noopener noreferrer">
+                    <img src="{% static 'img/partners/JHS_Logo_RGB.png' %}" alt="Joachim Herz Stiftung"
+                         class="partner-logo__image">
                   </a>
                 </div>
               </div>

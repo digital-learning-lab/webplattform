@@ -1,0 +1,11 @@
+{% extends "blocks/block_base.html" %}
+{% load wagtailcore_tags %}
+
+{% block block_content %}
+  {{ block.super }}
+  <div class="row">
+    {% for block in value.elements %}
+        {% include_block block %}
+    {% endfor %}
+  </div>
+{% endblock block_content %}

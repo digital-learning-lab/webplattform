@@ -354,6 +354,9 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         """Suggested related content based on Solr results"""
         return self.objects.none()
 
+    def get_absolute_url(self):
+        raise NotImplemented
+
     def update_or_add_image_from_path(self, path, update=False, image_name=None):
         base = self.base_folder or custom_slugify(self.name)
         if self.image:

@@ -1,0 +1,30 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" ><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
+<defs>
+<font id="wagtail_admin" horiz-adv-x="512" >
+  <font-face 
+    font-family="wagtail_admin"
+    font-weight="400"
+    font-stretch="normal"
+    units-per-em="512"
+    panose-1="2 0 5 3 0 0 0 0 0 0"
+    ascent="448"
+    descent="-64"
+    bbox="0 -64.001 512.001 448"
+    underline-thickness="25.6"
+    underline-position="-51.2"
+    unicode-range="U+0020-F102"
+  />
+    <missing-glyph />
+    <glyph glyph-name="space" unicode=" " horiz-adv-x="200" 
+ />
+    <glyph glyph-name="001-columns" unicode="&#xf100;" 
+d="M500.364 448c6.43164 0 11.6357 -5.20508 11.6367 -11.6367v-488.728c0 -6.43164 -5.20508 -11.6367 -11.6367 -11.6367h-488.728c-6.43164 0 -11.6367 5.20508 -11.6367 11.6367v488.728c0 6.43164 5.20508 11.6367 11.6367 11.6367h488.728zM244.364 -40.7275v465.455
+h-221.092v-465.455h221.092zM488.728 -40.7275v465.455h-221.092v-465.455h221.092z" />
+    <glyph glyph-name="003-layout-with-header-and-footer-areas" unicode="&#xf102;" 
+d="M0 76.9316v231.424h512v-231.424h-512zM31.0273 277.328v-169.369h449.945v169.369h-449.945zM0 -64v98.2598h512v-98.2598h-512zM0 349.74v98.2598h512v-98.2598h-512z" />
+    <glyph glyph-name="002-columns-1" unicode="&#xf101;" 
+d="M500.364 448c6.43164 0 11.6357 -5.20508 11.6367 -11.6367v-488.728c0 -6.43164 -5.20508 -11.6367 -11.6367 -11.6367h-488.728c-6.43164 0 -11.6367 5.20508 -11.6367 11.6367v488.728c0 6.43164 5.20508 11.6367 11.6367 11.6367h488.728zM162.909 -40.7275v465.455
+h-139.637v-465.455h139.637zM325.818 -40.7275v465.455h-139.636v-465.455h139.636zM488.728 -40.7275v465.455h-139.637v-465.455h139.637z" />
+  </font>
+</defs></svg>

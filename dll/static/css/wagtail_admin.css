@@ -1,0 +1,29 @@
+@font-face {
+  font-family: "wagtail_admin";
+  src: url("../fonts/wagtail_admin.eot");
+  src: url("../fonts/wagtail_admin.eot?#iefix") format("embedded-opentype"),
+       url("../fonts/wagtail_admin.woff2") format("woff2"),
+       url("../fonts/wagtail_admin.woff") format("woff"),
+       url("../fonts/wagtail_admin.ttf") format("truetype"),
+       url("../fonts/wagtail_admin.svg#Flaticon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) {
+  @font-face {
+    font-family: "wagtail_admin";
+    src: url("../fonts/wagtail_admin.svg#wagtail_admin") format("svg");
+  }
+}
+
+[class^="icon-wagtail-"]:before, [class*=" icon-wagtail-"]:before,
+[class^="icon-wagtail-"]:after, [class*=" icon-wagtail-"]:after {
+    font-family: wagtail_admin;
+    font-size: 20px;
+    font-style: normal;
+}
+
+.icon-wagtail-admin-columns-2:before { content: "\f100"; }
+.icon-wagtail-admin-columns-3:before { content: "\f101"; }
+.icon-wagtail-admin-layout:before { content: "\f102"; }

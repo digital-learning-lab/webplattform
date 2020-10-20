@@ -74,6 +74,19 @@ INSTALLED_APPS = [
     "django_better_admin_arrayfield.apps.DjangoBetterAdminArrayfieldConfig",
     "django_select2",
     "simple_history",
+    "wagtail.contrib.forms",
+    "wagtail.contrib.redirects",
+    "wagtail.embeds",
+    "wagtail.sites",
+    "wagtail.users",
+    "wagtail.snippets",
+    "wagtail.documents",
+    "wagtail.images",
+    "wagtail.search",
+    "dll.cms",
+    "wagtail.admin",
+    "wagtail.core",
+    "modelcluster",
 ]
 
 MIDDLEWARE = [
@@ -86,6 +99,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.contrib.flatpages.middleware.FlatpageFallbackMiddleware",
     "simple_history.middleware.HistoryRequestMiddleware",
+    "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
 ROOT_URLCONF = "dll.configuration.urls"
@@ -499,3 +513,5 @@ CONSTANCE_CONFIG_FIELDSETS = {
         "collapse": True,
     },
 }
+
+WAGTAIL_SITE_NAME = "digital.learning.lab"

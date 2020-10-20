@@ -1,0 +1,16 @@
+{% load wagtailembeds_tags %}
+{% load wagtailcore_tags %}
+{% load wagtailimages_tags %}
+
+{% if value.image %}
+  {% image value.image width-600 class="img-fluid" %}
+{% else %}
+  <div class="embed-responsive embed-responsive-16by9">
+    {% embed value.video.url %}
+  </div>
+{% endif %}
+<p>{{ value.subline }}</p>
+{{ value.text|richtext }}
+{% if value.url %}
+  <a href="{{ value.url }}">{{ value.link_text }}</a>
+{% endif %}

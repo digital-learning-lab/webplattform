@@ -1,0 +1,14 @@
+{% extends "blocks/block_base.html" %}
+{% load wagtailembeds_tags %}
+{% load wagtailimages_tags %}
+
+{% block block_content %}
+  {{ block.super }}
+  {% if value.image %}
+    {% image value.image width-1200 class="img-fluid" %}
+  {% else %}
+    <div class="embed-responsive embed-responsive-16by9">
+      {% embed value.video.url %}
+    </div>
+  {% endif %}
+{% endblock %}

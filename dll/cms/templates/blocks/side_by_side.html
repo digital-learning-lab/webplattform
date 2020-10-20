@@ -1,0 +1,23 @@
+{% extends "blocks/block_base.html" %}
+{% load wagtailcore_tags %}
+{% load wagtailembeds_tags %}
+{% load wagtailimages_tags %}
+
+{% block block_content %}
+  <div class="row">
+    <div class="col-lg-6{% if value.layout == "image_left" %} order-2{% endif %}">
+      <h1 class="section-info__headline text-left mt-4">{{ value.headline }}</h1>
+      <h2 class="section-info__subheadline text-left mt-4">{{ value.sub_headline }}</h2>
+      <div>{{ value.text|richtext }}</div>
+    </div>
+    <div class="col-lg-6{% if value.layout == "image_left" %} order-1{% endif %}">
+      {% if value.image %}
+        {% image value.image width-720 class="img-fluid" %}
+      {% else %}
+        <div class="embed-responsive embed-responsive-16by9">
+          {% embed value.video.url %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
