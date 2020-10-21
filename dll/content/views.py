@@ -873,9 +873,13 @@ def recommender_system_view(request):
 
     env = Env()
 
-    solr = pysolr.Solr("http://{}:8983/solr/dll-default".format(env.str("SOLR_HOSTNAME")), always_commit=True)
+    main_content = "content.teachingmodule.988"
+
+    solr = pysolr.Solr(
+        f"http://{env.str('SOLR_HOSTNAME')}:8983/solr/dll-default", always_commit=True
+    )
     response = solr.search(
-        q="id:content.teachingmodule.988",
+        q=f"id:{main_content}",
         **{
             "mlt": "true",
             "mlt.count": 10,
@@ -897,5 +901,14 @@ def recommender_system_view(request):
     #     }
     # ]
 
-    # ctx = {"results": Content.objects.filter(pk__in=sqs.values_list("pk", flat=True))}
-    return HttpResponse(response, content_type='application/json')
+    try:
+        raw = response.raw_response
+        docs = raw["moreLikeThis"][main_content]["docs"]
+        django_id_list = [d["django_id"] for d in docs]
+        mlt_polymorphic_qs = Content.objects.filter(pk__in=django_id_list)
+        mlt_real_qs = mlt_polymorphic_qs.get_real_instances()
+    except Exception as e:
+        print(e)
+
+    ctx = {"mlt": mlt_real_qs}
+    return render(request, "dll/test_more_like_this.html", ctx)
