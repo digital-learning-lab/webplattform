@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.flatpages",
     "django.contrib.postgres",
+    "constance",
+    "constance.backends.database",
     "webpack_loader",
     "easy_thumbnails",
     "easy_thumbnails.optimize",
@@ -359,4 +361,81 @@ CKEDITOR_CONFIGS = {
         ],
         "extra_plugins": ["iframe,iframedialog"],
     }
+}
+
+# ---------------------- Constance --------------------
+CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
+CONSTANCE_CONFIG = {
+    "MORE_LIKE_THIS_USE_TEXT": (
+        True,
+        "",
+        bool,
+    ),
+    "MORE_LIKE_THIS_USE_NAME": (
+        True,
+        "",
+        bool,
+    ),
+    "MORE_LIKE_THIS_USE_TEASER": (
+        True,
+        "",
+        bool,
+    ),
+    "MORE_LIKE_THIS_USE_ADDITIONAL_INFO": (
+        True,
+        "",
+        bool,
+    ),
+    "MORE_LIKE_THIS_USE_TAGS": (
+        True,
+        "",
+        bool,
+    ),
+    "MORE_LIKE_THIS_USE_AUTHORS": (
+        True,
+        "",
+        bool,
+    ),
+    "MORE_LIKE_THIS_USE_SUBJECTS": (
+        True,
+        "",
+        bool,
+    ),
+    "MORE_LIKE_THIS_BOOST_TEXT": (
+        1.0,
+        "",
+        float,
+    ),
+    "MORE_LIKE_THIS_BOOST_NAME": (
+        5.0,
+        "",
+        float,
+    ),
+    "MORE_LIKE_THIS_BOOST_TEASER": (
+        0.1,
+        "",
+        float,
+    ),
+    "MORE_LIKE_THIS_BOOST_ADDITIONAL_INFO": (
+        0.01,
+        "",
+        float,
+    ),
+    "MORE_LIKE_THIS_BOOST_TAGS": (
+        10.0,
+        "",
+        float,
+    ),
+    "MORE_LIKE_THIS_BOOST_AUTHORS": (
+        0.1,
+        "",
+        float,
+    ),
+    "MORE_LIKE_THIS_BOOST_SUBJECTS": (
+        2.0,
+        "",
+        float,
+    ),
+    "MORE_LIKE_THIS_COUNT": (12, "", int),
+    "MORE_LIKE_THIS_SCORE_CUTOFF": (150.0, "", float),
 }

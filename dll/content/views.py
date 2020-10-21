@@ -868,47 +868,9 @@ class FavoriteListApiView(ListAPIView):
 
 
 def recommender_system_view(request):
-    import pysolr
-    from environs import Env
+    from dll.content.more_like_this import more_like_this
 
-    env = Env()
-
-    main_content = "content.teachingmodule.988"
-
-    solr = pysolr.Solr(
-        f"http://{env.str('SOLR_HOSTNAME')}:8983/solr/dll-default", always_commit=True
-    )
-    response = solr.search(
-        q=f"id:{main_content}",
-        **{
-            "mlt": "true",
-            "mlt.count": 10,
-            "mlt.interestingTerms": "details",
-            "mlt.minwl": 4,
-            "mlt.maxqt": 1000,
-            "mlt.maxntp": 100,
-            "mlt.fl": "name,tags,subjects,teaser,additional_info,authors",
-            "mlt.mindf": 1,
-            "mlt.mintf": 1,
-            "mlt.boost": "true",
-            "mlt.qf": "name^5.0 tags^10.0 subjects^2.0 authors^0.1",
-        },
-    )
-
-    # mlt = [
-    #     {
-    #         "score":
-    #     }
-    # ]
-
-    try:
-        raw = response.raw_response
-        docs = raw["moreLikeThis"][main_content]["docs"]
-        django_id_list = [d["django_id"] for d in docs]
-        mlt_polymorphic_qs = Content.objects.filter(pk__in=django_id_list)
-        mlt_real_qs = mlt_polymorphic_qs.get_real_instances()
-    except Exception as e:
-        print(e)
-
-    ctx = {"mlt": mlt_real_qs}
+    content = Content.objects.get(pk=988)
+    mlt = more_like_this(content)
+    ctx = {"mlt": mlt}
     return render(request, "dll/test_more_like_this.html", ctx)

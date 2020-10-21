@@ -7,30 +7,31 @@
         <div class="col-lg-12 align-middle js-slick-wrapper bg-white">
             {% for content in more_like_this %}
                 <div class="slick-container">
-                    <a data-v-2543e798="" data-v-685436d2=""
-                       href="/unterrichtsbausteine/erklarvideos-zu-spielanleitungen-gestalten"
-                       class="content-teaser content-teaser--teaching-module">
+                    <a data-v-2543e798="" data-v-685436d2="" class="content-teaser content-teaser--{{ content.type }}" href="{{ content.get_absolute_url }}">
                         <div data-v-2543e798="" class="content-teaser__image-container">
-                                <img class="content-teaser__image" src="{% thumbnail content.image 300x300 crop=True %}" srcset="" alt="Vorschaubild {{ content.name }}">
+                            <img class="content-teaser__image" src="{% thumbnail content.image 300x300 crop=True %}" srcset="" alt="Vorschaubild {{ content.name }}">
                         </div>
                         <div data-v-2543e798="" class="content-teaser__body">
-                            <div data-v-2543e798="" class="content-teaser__type">Unterrichtsbaustein</div> <!---->
+                            <div data-v-2543e798="" class="content-teaser__type">{{ content.type_verbose }}</div>
                             <div data-v-2543e798="" class="clearfix"></div>
                             <div data-v-2543e798="" class="content-teaser__title">
-                                {{ content.name|truncatechars:50 }}
+                                {{ content.name|truncatechars:40 }}
                             </div>
                             <div data-v-2543e798="" class="content-teaser__abstract">
-                                {{ content.teaser|default_if_none:''|truncatechars:64 }}
+                                {{ content.teaser|default_if_none:''|truncatechars:55 }}
                             </div>
                             <div data-v-2543e798="" class="content-teaser__footer">
                                 <div data-v-2543e798="" class="content-teaser__competences">
-                                    <span data-v-2543e798="" class="content-teaser__competence icon-competence-id-3"></span>
-                                    <span data-v-2543e798="" class="content-teaser__competence icon-competence-id-5"></span>
+                                    {% for competence in content.competences.all %}
+                                        <span data-v-2543e798="" class="content-teaser__competence icon-{{ competence.slug }}" data-toggle="tooltip" title="{{ competence.name }}"></span>
+                                    {% endfor %}
                                 </div>
-                                <div data-v-2543e798="" class="content-teaser__upload-date-container">
-                                    <span data-v-2543e798="" class="content-teaser__upload-icon icon-upload"></span>
-                                    <span data-v-2543e798="" class="content-teaser__upload-date">{{ content.created|date:'d.m.Y' }}</span>
-                                </div>
+                                {% if content.type == 'teaching-module' %}
+                                    <div data-v-2543e798="" class="content-teaser__upload-date-container">
+                                        <span data-v-2543e798="" class="content-teaser__upload-icon icon-upload"></span>
+                                        <span data-v-2543e798="" class="content-teaser__upload-date">{{ content.created|date:'d.m.Y' }}</span>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </a>
