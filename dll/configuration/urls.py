@@ -66,7 +66,7 @@ from dll.content.views import (
     ToolsFeed,
     TrendsFeed,
     FavoriteListApiView,
-    ToolFunctionSearchView,
+    ToolFunctionSearchView, recommender_system_view,
 )
 from dll.user.views import (
     MyContentView,
@@ -268,6 +268,7 @@ urlpatterns = [
         name="admin-help-text-choices",
     ),
     path("suche", search_view, name="search"),
+    path("vorschlagssystem", recommender_system_view, name="recommender_system"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += [re_path(r"^(?P<url>.*/)$", views.flatpage)]
 if settings.DEBUG:

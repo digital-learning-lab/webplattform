@@ -865,3 +865,37 @@ class FavoriteListApiView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Favorite.objects.filter(user=user)
+
+
+def recommender_system_view(request):
+    import pysolr
+    from environs import Env
+
+    env = Env()
+
+    solr = pysolr.Solr("http://{}:8983/solr/dll-default".format(env.str("SOLR_HOSTNAME")), always_commit=True)
+    response = solr.search(
+        q="id:content.teachingmodule.988",
+        **{
+            "mlt": "true",
+            "mlt.count": 10,
+            "mlt.interestingTerms": "details",
+            "mlt.minwl": 4,
+            "mlt.maxqt": 1000,
+            "mlt.maxntp": 100,
+            "mlt.fl": "name,tags,subjects,teaser,additional_info,authors",
+            "mlt.mindf": 1,
+            "mlt.mintf": 1,
+            "mlt.boost": "true",
+            "mlt.qf": "name^5.0 tags^10.0 subjects^2.0 authors^0.1",
+        },
+    )
+
+    # mlt = [
+    #     {
+    #         "score":
+    #     }
+    # ]
+
+    # ctx = {"results": Content.objects.filter(pk__in=sqs.values_list("pk", flat=True))}
+    return HttpResponse(response, content_type='application/json')
