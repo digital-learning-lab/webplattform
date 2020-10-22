@@ -8,10 +8,12 @@
   {% if object.textual_links %}
     {# TODO ARRAYFIELD #}
     <div class="col">
-      <div class="content-info_link">
-        <span class="fas fa-at"></span>
+      <div class="content-info_link d-flex flex-column">
           {% for link in object.textual_links %}
+          <div class="pb-2">
+            <span class="fas fa-at"></span>
             <a target="_blank" rel="noopener noreferrer" href="{{ link.url }}">{{ link.name }}</a>
+          </div>
           {% endfor %}
       </div>
     </div>
