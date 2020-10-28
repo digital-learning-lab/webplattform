@@ -15,7 +15,7 @@ RUN npm run build
 
 ### Stage 2: The release image
 
-FROM python:3.7-slim
+FROM python:3.8-slim
 ENV PYTHONUNBUFFERED 1
 
 COPY requirements.txt /usr/src/
