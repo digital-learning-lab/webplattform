@@ -5,7 +5,6 @@ const autoprefixer = require('autoprefixer');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const BundleTracker = require('webpack-bundle-tracker');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const SentryCliPlugin = require('@sentry/webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
@@ -64,11 +63,6 @@ const plugins = [
   new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
   new webpack.HotModuleReplacementPlugin(),
   new CleanWebpackPlugin(),
-  new CopyWebpackPlugin({
-    patterns: [
-      { from: './static/src/images/**/*', to: path.resolve('./static/dist/images/[name].[ext]'), toType: 'template' }
-    ]
-  }),
   new LodashModuleReplacementPlugin({
     'collections': true,
     'paths': true
