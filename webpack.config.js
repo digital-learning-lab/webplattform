@@ -64,9 +64,11 @@ const plugins = [
   new BundleAnalyzerPlugin({ analyzerMode: 'static', openAnalyzer: false }),
   new webpack.HotModuleReplacementPlugin(),
   new CleanWebpackPlugin(),
-  new CopyWebpackPlugin([
-    { from: './static/src/images/**/*', to: path.resolve('./static/dist/images/[name].[ext]'), toType: 'template' }
-  ]),
+  new CopyWebpackPlugin({
+    patterns: [
+      { from: './static/src/images/**/*', to: path.resolve('./static/dist/images/[name].[ext]'), toType: 'template' }
+    ]
+  }),
   new LodashModuleReplacementPlugin({
     'collections': true,
     'paths': true
