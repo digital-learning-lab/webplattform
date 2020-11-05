@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import 'slick-carousel';
 
 
 $('.js-slick-wrapper').slick({

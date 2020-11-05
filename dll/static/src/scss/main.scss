@@ -7,6 +7,12 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 @import "~@fortawesome/fontawesome-free/scss/brands";
 @import "~@fortawesome/fontawesome-free/scss/fontawesome";
 
+$slick-font-path: "~slick-carousel/slick/fonts/" !default;
+$slick-font-family: "slick" !default;
+$slick-loader-path: "~slick-carousel/slick/" !default;
+@import "~slick-carousel/slick/slick.scss";
+@import "~slick-carousel/slick/slick-theme.scss";
+
 @import 'variables';
 @import 'typography';
 
@@ -40,5 +46,6 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 @import 'section-competence';
 @import 'section-info';
 @import 'sidebar';
+@import 'slick';
 @import 'tabs';
 @import 'toast';

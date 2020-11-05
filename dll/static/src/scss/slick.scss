@@ -1,0 +1,26 @@
+.slick-container {
+  padding: 0 1em;
+}
+.slick-next {
+  right: 0 !important;
+}
+.slick-prev {
+  left: -5px !important;
+}
+.slick-next:before {
+  color: black !important;
+  font-size: 25px !important;
+}
+.slick-prev:before {
+  color: black !important;
+  font-size: 25px !important;
+}
+.slick-container .content-teaser {
+  height: 100%;
+}
+.slick-dots {
+  bottom: -40px;
+}
+.slick-dots li button:before {
+  font-size: 12px;
+}

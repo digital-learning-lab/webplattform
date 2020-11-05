@@ -71,6 +71,7 @@ from .filters import (
     ToolFunctionFilter,
 )
 from .models import ToolFunction, Favorite
+from .more_like_this import more_like_this
 from .serializers import (
     ContentListSerializer,
     ContentPolymorphicSerializer,
@@ -201,6 +202,7 @@ class ContentDetailBase(DetailView):
         ctx = super(ContentDetailBase, self).get_context_data(**kwargs)
         ctx["competences"] = Competence.objects.all()
         ctx["functions"] = ToolFunction.objects.all()
+        ctx["recommended_content"] = more_like_this(self.object)
         if self.request.user.is_authenticated:
             ctx["favored"] = Favorite.objects.filter(
                 user=self.request.user, content=self.get_object().get_draft()

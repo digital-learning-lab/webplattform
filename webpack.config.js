@@ -45,7 +45,7 @@ const jsRule = {
 };
 
 const assetRule = {
-  test: /.(jpg|png|woff(2)?|eot|ttf|svg)$/,
+  test: /.(jpg|png|woff(2)?|eot|gif|ttf|woff|woff2|svg)$/,
   loader: 'file-loader'
 };
 

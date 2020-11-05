@@ -108,20 +108,17 @@
   margin-left: 15px;
   vertical-align: middle;
 }
-.slick-container .content-teaser {
-  margin: 1em;
-}
-.slick-next {
-  right: 0px !important;
-}
-.slick-prev {
-  left: -5px !important;
-}
-.slick-next:before {
-  color: black !important;
-  font-size: 25px !important;
-}
-.slick-prev:before {
-  color: black !important;
-  font-size: 25px !important;
+.content-teaser--condensed {
+  .content-teaser__title {
+    font-size: 18px;
+  }
+  .content-teaser__abstract {
+    font-size: 0.9rem;
+  }
+  .content-teaser__footer {
+    font-size: 0.8rem;
+  }
+  .content-teaser__competences {
+    font-size: 1.5rem;
+  }
 }

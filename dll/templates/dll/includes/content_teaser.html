@@ -1,5 +1,5 @@
 {% load thumbnail favored_tag %}
-<a class="content-teaser content-teaser--{{ content.type }}" href="{{ content.get_absolute_url }}">
+<a class="content-teaser content-teaser--{{ content.type }}{% if condensed %} content-teaser--condensed{% endif %}" href="{{ content.get_absolute_url }}">
   <div class="content-teaser__image-container">
     <img class="content-teaser__image" src="{% thumbnail content.image 300x300 crop=True %}" srcset="" alt="Vorschaubild {{ content.name }}">
   </div>
