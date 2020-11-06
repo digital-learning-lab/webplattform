@@ -867,12 +867,3 @@ class FavoriteListApiView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Favorite.objects.filter(user=user)
-
-
-def recommender_system_view(request):
-    from dll.content.more_like_this import more_like_this
-
-    content = Content.objects.get(pk=988)
-    mlt = more_like_this(content)
-    ctx = {"mlt": mlt}
-    return render(request, "dll/test_more_like_this.html", ctx)
