@@ -366,76 +366,130 @@ CKEDITOR_CONFIGS = {
 # ---------------------- Constance --------------------
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
 CONSTANCE_CONFIG = {
+    # Content Teaser
     "MORE_LIKE_THIS_USE_TEXT": (
         True,
-        "",
+        """
+        Verwendung von 'text' als Suchkriterium. 
+        Inhalte (wie Unterrichtsbausteine, Tools & Tutorials, Trends, ...) haben verschiedene Datenbankfelder \
+        (z.B.: 'text', 'name', ...), welche als Grundlage für die Übereinstimmungsberechnung verwendet werden. \
+        Über die Auswahl von Suchkriterien ist es möglich die für die Berechnung der Gesamtpunktzahl verwendeten \
+        Daten einzustellen. Basierend auf der Gesamtpunktzahl, welche die Übereinstimmung zu anderen Inhalten \
+        widerspiegelt, werden vorgeschlagenen Inhalte angezeigt.
+        """,
         bool,
     ),
     "MORE_LIKE_THIS_USE_NAME": (
         True,
-        "",
+        "Verwendung von 'name' als Suchkriterium.",
         bool,
     ),
     "MORE_LIKE_THIS_USE_TEASER": (
         True,
-        "",
+        "Verwendung von 'teaser' als Suchkriterium.",
         bool,
     ),
     "MORE_LIKE_THIS_USE_ADDITIONAL_INFO": (
         True,
-        "",
+        "Verwendung von 'additional_info' als Suchkriterium.",
         bool,
     ),
     "MORE_LIKE_THIS_USE_TAGS": (
         True,
-        "",
+        "Verwendung von 'tags' als Suchkriterium.",
         bool,
     ),
     "MORE_LIKE_THIS_USE_AUTHORS": (
         True,
-        "",
+        "Verwendung von 'authors' als Suchkriterium.",
         bool,
     ),
     "MORE_LIKE_THIS_USE_SUBJECTS": (
         True,
-        "",
+        "Verwendung von 'subjects' als Suchkriterium.",
         bool,
     ),
     "MORE_LIKE_THIS_BOOST_TEXT": (
         1.0,
-        "",
+        """
+        Relative Gewichtung der aus 'text' ermittelten Punktzahl. Dieser Wert beeinflusst die Gesamtpunktzahl nur, \
+        wenn das entsprechende Suchkriterium ausgewählt ist.
+        """,
         float,
     ),
     "MORE_LIKE_THIS_BOOST_NAME": (
         5.0,
-        "",
+        "Relative Gewichtung der aus 'name' ermittelten Punktzahl.",
         float,
     ),
     "MORE_LIKE_THIS_BOOST_TEASER": (
         0.1,
-        "",
+        "Relative Gewichtung der aus 'name' ermittelten Punktzahl.",
         float,
     ),
     "MORE_LIKE_THIS_BOOST_ADDITIONAL_INFO": (
         0.01,
-        "",
+        "Relative Gewichtung der aus 'additional_info' ermittelten Punktzahl.",
         float,
     ),
     "MORE_LIKE_THIS_BOOST_TAGS": (
         10.0,
-        "",
+        "Relative Gewichtung der aus 'tags' ermittelten Punktzahl.",
         float,
     ),
     "MORE_LIKE_THIS_BOOST_AUTHORS": (
         0.1,
-        "",
+        "Relative Gewichtung der aus 'authors' ermittelten Punktzahl.",
         float,
     ),
     "MORE_LIKE_THIS_BOOST_SUBJECTS": (
         2.0,
-        "",
+        "Relative Gewichtung der aus 'subjects' ermittelten Punktzahl.",
         float,
     ),
-    "MORE_LIKE_THIS_COUNT": (12, "", int),
-    "MORE_LIKE_THIS_SCORE_CUTOFF": (150.0, "", float),
+    "MORE_LIKE_THIS_COUNT": (
+        12,
+        """
+        Anzahl der maximal angezeigten vorgeschlagenen Inhalte. Falls mehr Vorschläge ermittelt werden, werden die \
+        Vorschläge mit der höchsten Gesamtpunktzahl angezeigt. Wenn jedoch weniger Vorschläge ermittelt werden, \
+        z.B. bedingt durch den gesetzten 'MORE_LIKE_THIS_SCORE_CUTOFF', können auch weniger Vorschläge wie hier \
+        definiert angezeigt werden.
+        """,
+        int,
+    ),
+    "MORE_LIKE_THIS_SCORE_CUTOFF": (
+        150.0,
+        """
+        Minimale Gesamtpunktzahl die erreicht werden muss, damit Vorschläge in den vorgeschlagenen Inhalten \
+        auftauchen. Dieser Wert sollte an die verwendete Gewichtung der einzelnen Vorschlagkriterien angepasst \
+        werden.
+        """,
+        float,
+    ),
+}
+CONSTANCE_CONFIG_FIELDSETS = {
+    """
+    Vorgeschlagene Inhalte (Content Teaser) - Einstellungen für die 'More Like This (MLT)' Funktionalität von Solr, \
+    auf der vorgeschlagene Inhalte ermittelt werden
+    """: {
+        "fields": (
+            "MORE_LIKE_THIS_USE_TEXT",
+            "MORE_LIKE_THIS_USE_NAME",
+            "MORE_LIKE_THIS_USE_TEASER",
+            "MORE_LIKE_THIS_USE_ADDITIONAL_INFO",
+            "MORE_LIKE_THIS_USE_TAGS",
+            "MORE_LIKE_THIS_USE_AUTHORS",
+            "MORE_LIKE_THIS_USE_SUBJECTS",
+            "MORE_LIKE_THIS_BOOST_TEXT",
+            "MORE_LIKE_THIS_BOOST_NAME",
+            "MORE_LIKE_THIS_BOOST_TEASER",
+            "MORE_LIKE_THIS_BOOST_ADDITIONAL_INFO",
+            "MORE_LIKE_THIS_BOOST_TAGS",
+            "MORE_LIKE_THIS_BOOST_AUTHORS",
+            "MORE_LIKE_THIS_BOOST_SUBJECTS",
+            "MORE_LIKE_THIS_COUNT",
+            "MORE_LIKE_THIS_SCORE_CUTOFF",
+        ),
+        "collapse": True,
+    },
 }
