@@ -67,7 +67,6 @@ from dll.content.views import (
     TrendsFeed,
     FavoriteListApiView,
     ToolFunctionSearchView,
-    recommender_system_view,
 )
 from dll.user.views import (
     MyContentView,
