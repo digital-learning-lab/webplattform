@@ -24,3 +24,9 @@
 .slick-dots li button:before {
   font-size: 12px;
 }
+.slick-prev {
+    left: 15px !important;
+}
+.slick-next {
+    right: 15px !important;
+}
