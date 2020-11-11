@@ -137,7 +137,11 @@
     </div>
 
     <div class="row justify-content-center mt-5 mb-5">
-      {% include "dll/includes/more_like_this.html" with more_like_this=recommended_content %}
+      <div class="col col-12 col-lg-11 col-xl-8">
+        <div class="bg-white pb-5">
+          {% include "dll/includes/more_like_this.html" with more_like_this=recommended_content %}
+        </div>
+      </div>
     </div>
   </main>
 
