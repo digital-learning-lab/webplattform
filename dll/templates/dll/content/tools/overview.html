@@ -27,7 +27,7 @@
               {% endfor %}
             </ul>
         {% for function in functions %}
-          <span class="information-area__icon icon-{{ function.slug }}{% if function in object.functions.all %} information-area__icon--active{% endif %}"></span>
+          <span class="information-area__icon icon-{{ function.slug }}{% if function in object.functions.all %} information-area__icon--active{% endif %}" data-toggle="tooltip" title="{{ function.title }}"></span>
         {% endfor %}
         </div>
     </div>
