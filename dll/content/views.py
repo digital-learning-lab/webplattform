@@ -77,6 +77,7 @@ from .serializers import (
     ContentPolymorphicSerializer,
     FavoriteSerializer,
 )
+from .utils import get_random_content
 
 
 class ReviewerPermission(BasePermission):
@@ -113,20 +114,8 @@ class HomePageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(HomePageView, self).get_context_data(**kwargs)
-        content_pks = []
-        try:
-            content_pks += random.choices(
-                TeachingModule.objects.published().values_list("pk", flat=True), k=2
-            )
-            content_pks += random.choices(
-                Trend.objects.published().values_list("pk", flat=True), k=2
-            )
-            content_pks += random.choices(
-                Tool.objects.published().values_list("pk", flat=True), k=2
-            )
-        except IndexError:
-            pass  # no content yet
-        ctx["contents"] = Content.objects.filter(pk__in=content_pks)
+        content_objs = get_random_content(2, 2, 2)
+        ctx["contents"] = content_objs
         try:
             ctx["training_trend"] = Trend.objects.published().get(
                 slug="fortbildung-digitallearninglab"
@@ -856,7 +845,15 @@ def search_view(request):
         results = [{"title": result.name, "url": result.url} for result in sqs[:10]]
         return JsonResponse(results, safe=False)
 
-    ctx = {"results": Content.objects.filter(pk__in=sqs.values_list("pk", flat=True))}
+    # If there are no results - display random Content objects.
+    suggestions = []
+    if sqs.count() == 0:
+        suggestions = get_random_content(2, 2, 2)
+
+    ctx = {
+        "results": Content.objects.filter(pk__in=sqs.values_list("pk", flat=True)),
+        "mlt": suggestions,
+    }
     return render(request, "dll/search.html", ctx)
 
 
