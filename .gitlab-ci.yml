@@ -39,6 +39,9 @@ test_staging_images:
     image: ${CONTAINER_STAGING_IMAGE}-staging
     services:
       - postgres:12-alpine
+      - name: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-latest
+        alias: solr
+
     script:
       - coverage run --source=/code/dll/ -m pytest /code/dll/
       - coverage report
