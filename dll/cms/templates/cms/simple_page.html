@@ -2,6 +2,8 @@
 {% load wagtailuserbar %}
 {% load wagtailcore_tags %}
 
+{% block title %}{{ page.seo_title }}{% endblock %}
+
 {% block content %}
   {% wagtailuserbar %}
   {{ page.body|richtext }}

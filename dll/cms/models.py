@@ -1,6 +1,7 @@
 import random
 
 from django.utils.functional import cached_property
+from meta.views import Meta
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.blocks import RichTextBlock
 from wagtail.core.fields import RichTextField, StreamField
@@ -10,7 +11,6 @@ from dll.cms.blocks import (
     SingleElementBlock,
     MultiElementBlock,
     SideBySideBlock,
-    IFrameBlock,
 )
 from dll.content.models import TeachingModule, Trend, Tool, Content
 
@@ -24,6 +24,21 @@ class DllPageMixin:
     def get_context(self, request, *args, **kwargs):
         ctx = super(DllPageMixin, self).get_context(request, *args, **kwargs)
         ctx["breadcrumbs"] = self.breadcrumbs
+
+        ctx["meta"] = Meta(
+            **{
+                "use_og": True,
+                "use_twitter": True,
+                "use_schema_org": False,
+                "use_facebook": True,
+                "description": self.search_description,
+                "title": self.seo_title,
+                "og_description": self.search_description,
+                "og_title": self.seo_title,
+                "twitter_description": self.search_description,
+                "twitter_title": self.seo_title,
+            }
+        )
         return ctx
 
 
