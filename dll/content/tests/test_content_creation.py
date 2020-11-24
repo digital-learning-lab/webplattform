@@ -87,6 +87,62 @@ class ContentListTests(BaseTestCase):
         response = self.client.get(detail_view)
         self.assertEqual(response.status_code, 200)
 
+    def test_tool_detail(self):
+        public_tool = Tool.objects.published().first()
+        detail_view = reverse("tool-detail", kwargs={"slug": public_tool.slug})
+        response = self.client.get(detail_view)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response, f'<h1 class="content-info__title">{public_tool.name}</h1>'
+        )
+        self.assertContains(
+            response, f'<p class="content-info__teaser">{public_tool.teaser}</p>'
+        )
+        self.assertContains(
+            response, f'<meta name="description" content="{public_tool.teaser}">'
+        )
+        self.assertContains(response, f"<title>Tool | {public_tool.name}</title>")
+
+    def test_trend_detail(self):
+        public_trend = Trend.objects.published().first()
+        detail_view = reverse("trend-detail", kwargs={"slug": public_trend.slug})
+        response = self.client.get(detail_view)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response, f'<h1 class="content-info__title">{public_trend.name}</h1>'
+        )
+        self.assertContains(
+            response, f'<p class="content-info__teaser">{public_trend.teaser}</p>'
+        )
+        self.assertContains(
+            response, f'<meta name="description" content="{public_trend.teaser}">'
+        )
+        self.assertContains(response, f"<title>Trend | {public_trend.name}</title>")
+
+    def test_teaching_module_detail(self):
+        public_teaching_module = TeachingModule.objects.published().first()
+        detail_view = reverse(
+            "teaching-module-detail", kwargs={"slug": public_teaching_module.slug}
+        )
+        response = self.client.get(detail_view)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            f'<h1 class="content-info__title">{public_teaching_module.name}</h1>',
+        )
+        self.assertContains(
+            response,
+            f'<p class="content-info__teaser">{public_teaching_module.teaser}</p>',
+        )
+        self.assertContains(
+            response,
+            f'<meta name="description" content="{public_teaching_module.teaser}">',
+        )
+        self.assertContains(
+            response,
+            f"<title>Unterrichtsbaustein | {public_teaching_module.name}</title>",
+        )
+
     def test_content_list(self):
         list_view = reverse("public-content-list")
         response = self.client.get(list_view)
