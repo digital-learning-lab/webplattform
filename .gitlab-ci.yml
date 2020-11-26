@@ -22,7 +22,7 @@ black:
     - black --check .
 
 
-register_staging_images:
+register_staging_python_image:
     stage: register
     before_script:
         - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
@@ -34,7 +34,21 @@ register_staging_images:
     only:
         - develop
 
-test_staging_images:
+
+register_staging_solr_image:
+    stage: register
+    before_script:
+        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
+    script:
+        - docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
+        - docker push ${CONTAINER_STAGING_SOLR_IMAGE}
+    tags:
+        - dll-shell
+    only:
+        - develop
+    when: manual
+
+test_staging_image:
     stage: test
     image: ${CONTAINER_STAGING_IMAGE}-staging
     services:
@@ -72,15 +86,28 @@ test_staging_images:
         - develop
 
 
-register_kube_images:
+register_prod_python_image:
     stage: register
     before_script:
         - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
     script:
         - docker build --no-cache -t ${CONTAINER_RELEASE_IMAGE} ${DOCKER_FILE_PATH}
         - docker push ${CONTAINER_RELEASE_IMAGE}
-        #- docker build --no-cache -t ${CONTAINER_RELEASE_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
-        #- docker push ${CONTAINER_RELEASE_SOLR_IMAGE}
+        - docker build --no-cache -t ${CONTAINER_RELEASE_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
+        - docker push ${CONTAINER_RELEASE_SOLR_IMAGE}
+    tags:
+        - dll-shell
+    only:
+        - master
+    when: manual
+
+register_prod_solr_image:
+    stage: register
+    before_script:
+        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
+    script:
+        - docker build --no-cache -t ${CONTAINER_RELEASE_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
+        - docker push ${CONTAINER_RELEASE_SOLR_IMAGE}
     tags:
         - dll-shell
     only:
