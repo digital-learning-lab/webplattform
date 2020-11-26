@@ -50,9 +50,13 @@ class ToolsIndex(ContentIndex, indexes.Indexable):
 
 class TeachingModulesIndex(ContentIndex, indexes.Indexable):
     subjects = indexes.MultiValueField()
+    school_types = indexes.MultiValueField()
 
     def get_model(self):
         return TeachingModule
+
+    def prepare_school_types(self, obj):
+        return list(obj.school_types.values_list("name", flat=True))
 
     def prepare_subjects(self, obj):
         return list(obj.subjects.values_list("name", flat=True))

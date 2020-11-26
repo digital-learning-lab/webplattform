@@ -833,7 +833,12 @@ class TeachingModulesFeed(ContentFeed):
 def search_view(request):
     q = AutoQuery(request.GET.get("q", ""))
     sqs = SearchQuerySet().filter(
-        SQ(name=q) | SQ(teaser=q) | SQ(additional_info=q) | SQ(authors=q)
+        SQ(name=q)
+        | SQ(teaser=q)
+        | SQ(additional_info=q)
+        | SQ(authors=q)
+        | SQ(subjects=q)
+        | SQ(school_types=q)
     )
     sqs.query.boost_fields = {
         "name": 2,

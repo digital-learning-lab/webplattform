@@ -125,7 +125,7 @@
     <field name="additional_info" type="text_german" indexed="true" stored="true" multiValued="false" />
     
     <field name="url" type="text_german" indexed="true" stored="true" multiValued="false" />
-
+    
     <field name="tags" type="text_german" indexed="true" stored="true" multiValued="true" />
     
     <field name="authors" type="text_german" indexed="true" stored="true" multiValued="true" />
@@ -133,6 +133,8 @@
     <field name="published" type="pdate" indexed="true" stored="true" multiValued="false" />
     
     <field name="subjects" type="text_german" indexed="true" stored="true" multiValued="true" />
+    
+    <field name="school_types" type="text_german" indexed="true" stored="true" multiValued="true" />
     
     <field name="operating_systems" type="text_german" indexed="true" stored="true" multiValued="true" />
     

@@ -42,7 +42,9 @@ services:
       - db
       - redis
   solr:
-    image: solr
+    build:
+      context: .
+      dockerfile: Dockerfile.solr
     ports:
       - "8983:8983"
     volumes:
