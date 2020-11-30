@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import logging
 import os
 from environs import Env
-
+from django.utils.translation import ugettext_lazy as _
 
 env = Env()
 logger = logging.getLogger("dll.settings")
@@ -83,7 +83,9 @@ INSTALLED_APPS = [
     "wagtail.documents",
     "wagtail.images",
     "wagtail.search",
+    "nested_admin",
     "dll.cms",
+    "dll.survey",
     "wagtail.admin",
     "wagtail.core",
     "modelcluster",
@@ -115,6 +117,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "dll.survey.context_processor.survey_triggers",
             ],
         },
     },
@@ -515,3 +518,9 @@ CONSTANCE_CONFIG_FIELDSETS = {
 }
 
 WAGTAIL_SITE_NAME = "digital.learning.lab"
+
+TRIGGER_EVENTS = (
+    ("pageOpen", _("Open Page")),
+    ("leaveIntent", _("Leave Intent")),
+    ("content-submission", _("Content Submission")),
+)

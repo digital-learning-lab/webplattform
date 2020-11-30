@@ -51,7 +51,7 @@
     </div>
     <slot name="extra-buttons"></slot>
     <div v-if="mode === 'edit'">
-      <button class="button button--primary" type="button" @click="$emit('update')" :disabled="loading" v-if="!data.submitted">Speichern</button>
+      <button class="button button--primary" type="button" @click="submit" :disabled="loading" v-if="!data.submitted">Speichern</button>
       <button class="button button--preview" type="button" :disabled="loading" @click="$emit('preview')">Vorschau</button>
       <button class="button button--submit" type="button" :disabled="loading" @click="$emit('submit')" v-if="!data.submitted">Einreichen</button>
       <button class="button button--danger" type="button" :disabled="loading" @click="$emit('delete-warning')" v-if="canDelete">Löschen</button>
@@ -98,6 +98,13 @@
           return {}
         },
         required: false
+      }
+    },
+    methods: {
+      submit () {
+        const submissionEvent = new Event('content-submission')
+        window.dispatchEvent(submissionEvent)
+        this.$emit('submit')
       }
     }
   }

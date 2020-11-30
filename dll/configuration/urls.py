@@ -69,6 +69,7 @@ from dll.content.views import (
     FavoriteListApiView,
     ToolFunctionSearchView,
 )
+from dll.survey.views import SurveyDetailView
 from dll.user.views import (
     MyContentView,
     CreateEditTeachingModuleView,
@@ -267,6 +268,11 @@ urlpatterns = [
         "select2/admin_help_fields",
         HelpTextFieldChoices.as_view(),
         name="admin-help-text-choices",
+    ),
+    path(
+        "surveys/<int:pk>",
+        SurveyDetailView.as_view(),
+        name="survey-detail",
     ),
     path("suche", search_view, name="search"),
     path("cms/", include(wagtailadmin_urls)),
