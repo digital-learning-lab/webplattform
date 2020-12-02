@@ -424,6 +424,7 @@ class ProfileViewEmails(BaseProfileView):
         "Es wurde eine E-Mail zur Bestätigung der neuen Adresse versendet. Bitte prüfen Sie Ihr E-Mail "
         "Postfach um die Aktualisierung abzuschließen."
     )
+    INFO_NOT_CHANGED = _("E-Mail Adresse wurde nicht verändert.")
 
     def get_breadcrumbs(self):
         bcs = super(ProfileViewEmails, self).get_breadcrumbs()
@@ -456,8 +457,10 @@ class ProfileViewEmails(BaseProfileView):
             ctx=context,
             email=form.cleaned_data["email"],
         )
-
-        messages.info(self.request, self.INFO_TEXT)
+        if form.has_changed():
+            messages.info(self.request, self.INFO_TEXT)
+        else:
+            messages.info(self.request, self.INFO_NOT_CHANGED)
 
         return HttpResponseRedirect(self.get_success_url())
 
