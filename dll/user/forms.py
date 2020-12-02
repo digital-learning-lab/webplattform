@@ -9,6 +9,7 @@ from django.contrib.auth.forms import (
     PasswordChangeForm,
     PasswordResetForm,
 )
+from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
 from django.template import loader
 from django.urls import reverse_lazy
@@ -103,6 +104,14 @@ class UserEmailsForm(forms.ModelForm):
     class Meta:
         model = DllUser
         fields = ("email",)
+
+    def clean_email(self):
+        email = self.cleaned_data["email"]
+        if self.has_changed() and DllUser.objects.filter(email=email).exists():
+            raise ValidationError(
+                _("Es existiert bereits ein Konto mit dieser E-Mail Adresse.")
+            )
+        return email
 
     def save(self, commit=True):
         # do not save any changes here

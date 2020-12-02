@@ -1,5 +1,4 @@
 import re
-from urllib.parse import urlparse
 
 from django.core import mail
 from django.test import TestCase
@@ -23,6 +22,17 @@ class BaseTestCase(TestCase):
         self.author.set_password("password")
         self.author.save()
 
+        user_2 = {
+            "username": "alice",
+            "first_name": "Alice2",
+            "last_name": "Doe",
+            "email": "alice2@blueshoe.de",
+        }
+
+        self.user_2 = DllUser.objects.create(**user_2)
+        self.user_2.set_password("password")
+        self.user_2.save()
+
     def test_user_email_change(self):
         self.client.login(username="alice@blueshoe.de", password="password")
         post_data = {"email": "alice+1@blueshoe.de"}
@@ -45,3 +55,17 @@ class BaseTestCase(TestCase):
             CommunicationEventType.objects.get(code="USER_EMAIL_CHANGE").id,
         )
         self.assertEqual(communication_event.to[0], "alice+1@blueshoe.de")
+
+    def test_user_email_change_already_exists(self):
+        self.client.login(username="alice@blueshoe.de", password="password")
+        post_data = {"email": "alice2@blueshoe.de"}
+        response = self.client.post(reverse("user:email"), post_data, follow=True)
+        self.assertContains(
+            response, "Es existiert bereits ein Konto mit dieser E-Mail Adresse."
+        )
+
+    def test_user_email_change_not_changed(self):
+        self.client.login(username="alice@blueshoe.de", password="password")
+        post_data = {"email": "alice@blueshoe.de"}
+        response = self.client.post(reverse("user:email"), post_data, follow=True)
+        self.assertContains(response, ProfileViewEmails.INFO_NOT_CHANGED)
