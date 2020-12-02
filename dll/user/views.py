@@ -420,6 +420,10 @@ class ProfileViewEmails(BaseProfileView):
     template_name = "dll/user/account_email.html"
     form_class = UserEmailsForm
     success_url = reverse_lazy("user:profile")
+    INFO_TEXT = _(
+        "Es wurde eine E-Mail zur Bestätigung der neuen Adresse versendet. Bitte prüfen Sie Ihr E-Mail "
+        "Postfach um die Aktualisierung abzuschließen."
+    )
 
     def get_breadcrumbs(self):
         bcs = super(ProfileViewEmails, self).get_breadcrumbs()
@@ -452,6 +456,9 @@ class ProfileViewEmails(BaseProfileView):
             ctx=context,
             email=form.cleaned_data["email"],
         )
+
+        messages.info(self.request, self.INFO_TEXT)
+
         return HttpResponseRedirect(self.get_success_url())
 
 
