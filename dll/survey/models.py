@@ -85,7 +85,9 @@ class Trigger(models.Model):
         verbose_name=_("Delay"), default=1000, blank=False
     )
 
-    url = models.URLField(verbose_name=_("Page Url"), null=True, blank=True)
+    url = models.CharField(
+        verbose_name=_("Page Url"), null=True, blank=True, max_length=512
+    )
 
     survey = models.ForeignKey("survey.Survey", on_delete=models.CASCADE)
 

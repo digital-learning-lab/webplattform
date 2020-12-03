@@ -9,7 +9,7 @@
     {% if question.question_type == 0 %}
         {% for choice in question.choices.all %}
       <div class="form-check-inline">
-          <input type="radio" class="form-check-input" value="{{ choice.pk }}" name="surveyQuestion-{{ question.pk }}" id="surveyChoice-{{ choice.pk }}">
+          <input type="radio" class="form-check-input" value="{{ choice.label }}" name="surveyQuestion-{{ question.pk }}" id="surveyChoice-{{ choice.pk }}">
           <label class="form-check-label" for="surveyChoice-{{ choice.pk }}">
             {{ choice.label }}
           </label>
