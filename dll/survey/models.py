@@ -2,6 +2,7 @@ from ckeditor.fields import RichTextField
 from django.db import models
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
+from django_extensions.db.models import TimeStampedModel
 
 
 class Survey(models.Model):
@@ -55,7 +56,7 @@ class SurveyQuestionChoice(models.Model):
         ordering = ["position"]
 
 
-class SurveyResult(models.Model):
+class SurveyResult(TimeStampedModel):
     survey = models.ForeignKey("survey.Survey", on_delete=models.CASCADE)
 
     def __str__(self):
@@ -66,6 +67,8 @@ class SurveyResultAnswer(models.Model):
     question = models.ForeignKey(
         "survey.SurveyQuestion", on_delete=models.SET_NULL, null=True, blank=False
     )
+
+    result = models.ForeignKey("survey.SurveyResult", on_delete=models.CASCADE)
 
     value = models.TextField(
         verbose_name=_("Value"),

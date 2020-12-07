@@ -1,22 +1,6 @@
+{% load crispy_forms_tags %}
 
-
-<form action="some survey url" method="POST">
-{% for question in object.survey_questions.all %}
-  <div class="form-group">
-    <div class="font-weight-bold">
-      {{ question.title }}
-    </div>
-    {% if question.question_type == 0 %}
-        {% for choice in question.choices.all %}
-      <div class="form-check-inline">
-          <input type="radio" class="form-check-input" value="{{ choice.label }}" name="surveyQuestion-{{ question.pk }}" id="surveyChoice-{{ choice.pk }}">
-          <label class="form-check-label" for="surveyChoice-{{ choice.pk }}">
-            {{ choice.label }}
-          </label>
-      </div>
-        {% endfor %}
-    {% endif %}
-  </div>
-{% endfor %}
+<form action="{% url 'survey-detail' pk=object.id %}" method="POST">
+ {% crispy form %}
 </form>
 
