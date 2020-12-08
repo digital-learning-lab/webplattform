@@ -31,6 +31,7 @@ from rules.contrib.models import RulesModelMixin, RulesModelBaseMixin
 from simple_history.utils import get_history_model_for_model
 from taggit.managers import TaggableManager
 from simple_history.models import HistoricalRecords
+from wagtail.snippets.models import register_snippet
 
 from .managers import ContentQuerySet
 from dll.general.models import DllSlugField, PublisherModel
@@ -1173,6 +1174,7 @@ class Competence(TimeStampedModel):
         verbose_name_plural = _("Kompetenzen")
 
 
+@register_snippet
 class CompetenceAdditionalInformation(models.Model):
     competence = models.OneToOneField(
         Competence,
