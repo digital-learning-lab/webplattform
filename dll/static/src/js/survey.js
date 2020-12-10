@@ -12,18 +12,17 @@ class Trigger {
       this.setup()
     })
   }
-  listenerFunc () {
-    if (this.type === 'leaveIntent') {
-      document.removeEventListener('mouseleave', this.listenerFunc)
-    }
-    setTimeout(() => {
-      var modal = $('.js-surveyModal').modal()
-      modal.find('.modal-body').html(this.html)
-      modal.show()
-    }, this.delay)
-  }
-
   setup() {
+    let listenerFunc = () => {
+      if (this.type === 'leaveIntent') {
+        document.removeEventListener('mouseleave', listenerFunc)
+      }
+      setTimeout(() => {
+        var modal = $('.js-surveyModal').modal()
+        modal.find('.modal-body').html(this.html)
+        modal.show()
+      }, this.delay)
+    }
     $('.js-surveyModal').on('submit', 'form', (e) => {
       e.preventDefault()
       axios.post(`/surveys/${this.survey}`, $(e.target).serialize()).then(res => {
@@ -40,14 +39,14 @@ class Trigger {
       return false
     })
     if (this.type === 'leaveIntent' && window.location.pathname === this.url) {
-      document.addEventListener('mouseleave', this.listenerFunc)
+      document.addEventListener('mouseleave', listenerFunc)
       return
     }
     if (this.type === 'pageOpen' && window.location.pathname === this.url) {
-      this.listenerFunc()
+      listenerFunc()
       return
     }
-    window.addEventListener(this.type, this.listenerFunc)
+    window.addEventListener(this.type, listenerFunc)
   }
 
   getSurveyContent() {
