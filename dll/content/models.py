@@ -508,6 +508,23 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     def get_unfavor_url(self):
         return reverse("draft-content-unfavor", kwargs={"slug": self.slug})
 
+    @property
+    def sharing_text(self):
+        return {
+            "twitter": _(
+                "Schaut Euch mal diesen inspirierenden Impuls für die Unterrichtsgestaltung im @digilearninglab an:"
+            ),
+            "whatsapp": _(
+                "Ich möchte mit Euch diesen neuen Impuls für die Unterrichtsgestaltung im digital.learning.lab teilen:"
+            ),
+            "email_subject": _(
+                "Neuer Impuls für Unterrichtsgestaltung vom digital.learning.lab"
+            ),
+            "email_body": _(
+                "Ich möchte mit Euch diesen neuen Impuls für die Unterrichtsgestaltung im digital.learning.lab teilen:\n\n"
+            ),
+        }
+
     class Meta(RulesModelBaseMixin, PublisherModel.Meta):
         ordering = ["slug"]
         verbose_name = _("Inhalt")

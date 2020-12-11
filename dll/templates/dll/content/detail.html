@@ -81,27 +81,28 @@
                 <div class="content-info content-info--{{ object.type }}">
                   <img class="content-info__image" src="{% thumbnail object.image 750x500 upscale=True %}" srcset="{% thumbnail object.image 750x500 upscale=True %} 1x, {% thumbnail object.image 1500x1000 %} 2x" alt="{{ object.name }}">
                   <div class="clearfix"></div>
-                  <div class="content-info__type">{{ object.type_verbose }}</div>
                   {% if not preview %}
+                  {% include "dll/content/includes/sharing.html" %}
                   <div class="content-info__favor">
                     {% if user.is_authenticated %}
                     <button type="button" class="button button--secondary button--small m-0 js-favor{% if favored %} d-none{% endif %}" data-url="{{ object.get_favor_url }}">
-                      <span class="fa fa-heart favor-icon favor-icon--inactive" focusable="false"></span>
+                      <span class="fa fa-heart button__icon button__icon--inactive" focusable="false"></span>
                       <span>Zum Merkzettel hinzufügen</span>
                     </button>
                     <button type="button" class="button button--secondary button--small m-0 js-unfavor {% if not favored %} d-none{% endif %}" data-url="{{ object.get_unfavor_url }}">
-                      <span class="fa fa-heart favor-icon favor-icon--active" focusable="false"></span>
+                      <span class="fa fa-heart button__icon button__icon--active" focusable="false"></span>
                       <span class="">Vom Merkzettel entfernen</span>
                     </button>
                     {% else %}
                     <a href="{% url 'user:favorite-login-required' %}?next={{ object.get_absolute_url }}" class="button button--secondary button--small m-0">
-                      <span class="fa fa-heart favor-icon favor-icon--inactive" focusable="false"></span>
+                      <span class="fa fa-heart button__icon button__icon--inactive" focusable="false"></span>
                       <span>Zum Merkzettel hinzufügen</span>
                     </a>
                     {% endif %}
                   </div>
                   {% endif %}
-                  <div class="clearfix"></div>
+                  <div class="clearfix m-5"></div>
+                  <div class="content-info__type">{{ object.type_verbose }}</div>
                   <h1 class="content-info__title">{{ object.name }}</h1>
                   {% if object.teaser %}<p class="content-info__teaser">{{ object.teaser|linebreaksbr }}</p>{% endif %}
                   <div class="row align-items-center">
