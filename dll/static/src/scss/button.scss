@@ -125,3 +125,20 @@
   font-size: 0.8rem;
   padding: 0.25rem 1rem;
 }
+.button__icon {
+  pointer-events: none;
+  font-size: 19px;
+  float: left;
+  margin-top: 1px;
+  margin-left: -5px;
+  margin-right: 15px;
+  & + span {
+    pointer-events: none;
+  }
+}
+.button__icon--active {
+  color: rgba(192, 46, 21, 1)
+}
+.button__icon--inactive {
+  color: rgba(201, 209, 222, 1)
+}
