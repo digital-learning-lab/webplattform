@@ -1,7 +1,5 @@
 # digital.learning.lab
 
-[![pipeline status](https://collaborating.tuhh.de/itbh/tnt/digital-learning-lab/codebasis_plattform/badges/develop/pipeline.svg)](https://collaborating.tuhh.de/itbh/tnt/digital-learning-lab/codebasis_plattform/-/commits/master)
-[![coverage report](https://collaborating.tuhh.de/itbh/tnt/digital-learning-lab/codebasis_plattform/badges/develop/coverage.svg)](https://collaborating.tuhh.de/itbh/tnt/digital-learning-lab/codebasis_plattform/-/commits/master)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 The digital.learning.lab is a online platform and understands itself as competence centre for teaching in the digital age. School teachers will find suggestions and inspiration here for further developing their lessons, taking into account the competencies for a digitalised living and working environment.
