@@ -12,6 +12,7 @@ stages:
     - lint
     - register
     - test
+    - deploy
 
 black:
   stage: lint
@@ -22,18 +23,17 @@ black:
     - black --check .
 
 
-register_staging_python_image:
+register_staging_test_python_image:
     stage: register
     before_script:
         - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
     script:
-        - docker build --no-cache -t ${CONTAINER_STAGING_IMAGE}-staging ${DOCKER_FILE_PATH}
-        - docker push ${CONTAINER_STAGING_IMAGE}-staging
+        - docker build --no-cache -t ${CONTAINER_STAGING_IMAGE}-staging-test ${DOCKER_FILE_PATH}
+        - docker push ${CONTAINER_STAGING_IMAGE}-staging-test
     tags:
         - dll-shell
     only:
         - develop
-
 
 register_staging_solr_image:
     stage: register
@@ -50,7 +50,7 @@ register_staging_solr_image:
 
 test_staging_image:
     stage: test
-    image: ${CONTAINER_STAGING_IMAGE}-staging
+    image: ${CONTAINER_STAGING_IMAGE}-staging-test
     services:
       - postgres:12-alpine
       - name: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-latest
@@ -85,6 +85,18 @@ test_staging_image:
     only:
         - develop
 
+register_staging_python_image:
+  stage: deploy
+  before_script:
+    - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
+  script:
+    - echo "Reached deployment stage. Retagging staging-test image for automatic deployment via keel."
+    - docker tag ${CONTAINER_STAGING_IMAGE}-staging-test ${CONTAINER_STAGING_IMAGE}-staging
+    - docker push ${CONTAINER_STAGING_IMAGE}-staging
+  tags:
+    - dll-shell
+  only:
+    - develop
 
 register_prod_python_image:
     stage: register
