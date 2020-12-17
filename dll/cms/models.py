@@ -1,5 +1,6 @@
 import random
 
+from django.db.models import TextField
 from django.utils.functional import cached_property
 from wagtail.admin.edit_handlers import FieldPanel, StreamFieldPanel
 from wagtail.core.blocks import RichTextBlock
@@ -49,6 +50,14 @@ class SimplePage(DllPageMixin, Page):
         ],
     )
 
+    extra_source = TextField(blank=True, null=True)
+
+    settings_panels = Page.settings_panels + [
+        FieldPanel(
+            "extra_source",
+        )
+    ]
+
     content_panels = Page.content_panels + [
         FieldPanel("body", classname="full"),
     ]
@@ -68,6 +77,14 @@ class BlockPage(DllPageMixin, Page):
             ("richtext", RichTextBlock(template="blocks/richtext.html")),
         ]
     )
+
+    extra_source = TextField(blank=True)
+
+    settings_panels = Page.settings_panels + [
+        FieldPanel(
+            "extra_source",
+        )
+    ]
 
     content_panels = Page.content_panels + [
         StreamFieldPanel("body"),
@@ -89,6 +106,14 @@ class Frontpage(DllPageMixin, Page):
         ],
         null=True,
     )
+
+    extra_source = TextField(blank=True, null=True)
+
+    settings_panels = Page.settings_panels + [
+        FieldPanel(
+            "extra_source",
+        )
+    ]
 
     content_panels = Page.content_panels + [
         StreamFieldPanel("body"),

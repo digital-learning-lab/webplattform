@@ -2,6 +2,8 @@
 {% load wagtailuserbar %}
 {% load wagtailcore_tags %}
 
+{% block head_scripts %}{{ page.extra_source|safe }}{% endblock %}
+
 {% block cms %}
   {% wagtailuserbar %}
   {% if page.body %}
