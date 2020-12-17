@@ -62,7 +62,6 @@ def extended_link_entity(props):
                 link_props["href"] = props.get("url")
         else:
             link_props["href"] = props.get("url")
-
     return DOM.create_element("a", link_props, props["children"])
 
 

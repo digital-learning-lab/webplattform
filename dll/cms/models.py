@@ -75,7 +75,8 @@ class BlockPage(DllPageMixin, Page):
             ("side_by_side_block", SideBySideBlock()),
             ("multi_element_block", MultiElementBlock()),
             ("richtext", RichTextBlock(template="blocks/richtext.html")),
-        ]
+        ],
+        blank=True,
     )
 
     extra_source = TextField(blank=True)
