@@ -1,5 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.forms.utils import ErrorList
+from django.utils.functional import lazy
+from django.utils.translation import ugettext_lazy as _
 from wagtail.core import blocks
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
@@ -7,27 +9,31 @@ from wagtail.images.blocks import ImageChooserBlock
 
 class ImageVideoBlock(blocks.StructBlock):
     image = ImageChooserBlock(required=False)
+
+    alt_text = blocks.CharBlock(
+        label=_("Alt Text"),
+        required=False,
+        help_text=_("Überschreibt den Standard Alt Text des Bildes."),
+    )
+
     video = EmbedBlock(required=False)
 
     def clean(self, value):
         result = super(ImageVideoBlock, self).clean(value)
         errors = {}
-        if value["image"] and value["video"]:
-            errors["image"] = ErrorList(["Nur Bild oder Video erlaubt, nicht beides."])
-        if not value["image"] and not value["video"]:
-            errors["image"] = ErrorList(
-                ["Bitte geben Sie ein Bild oder eine Video-Url an."]
+        if value["alt_text"] and not value["image"]:
+            errors["alt_text"] = ErrorList(
+                ["Es ist kein Bild für den Alt Text hinterlegt."]
             )
         if errors:
             raise ValidationError(
                 "ValidationError in SingleElementBlock", params=errors
             )
-        return result
+        return self._to_struct_value(result)
 
 
 class SingleElementBlock(ImageVideoBlock):
-
-    headline = blocks.CharBlock()
+    headline = blocks.CharBlock(label=_("Überschrift"), required=False)
     text = blocks.RichTextBlock(
         features=[
             "bold",
@@ -45,13 +51,35 @@ class SingleElementBlock(ImageVideoBlock):
             "document-link",
             "image",
             "embed",
-        ]
+        ],
+        required=False,
     )
-    background_color = blocks.ChoiceBlock(
+
+    text_alignment = blocks.ChoiceBlock(
+        label=_("Text Ausrichtung"),
         choices=(
-            ("blue", "Blau"),
-            ("white", "Weiß"),
-        )
+            ("left", _("Links")),
+            ("center", _("Zentriert")),
+            ("right", _("Rechts")),
+        ),
+        required=False,
+        default="center",
+    )
+
+    advanced_options = blocks.StructBlock(
+        local_blocks=(
+            (
+                "background_color",
+                blocks.CharBlock(
+                    label=_("Hintergrund Farbe"),
+                    help_text=_("Hex Wert ohne #"),
+                    max_length=6,
+                    required=False,
+                ),
+            ),
+        ),
+        label=_("Erweiterte Einstellungen"),
+        form_classname="collapse collapse--custom",
     )
 
     class Meta:
@@ -80,6 +108,18 @@ class DllElementBlock(ImageVideoBlock):
             "embed",
         ],
     )
+
+    text_alignment = blocks.ChoiceBlock(
+        label=_("Text Ausrichtung"),
+        choices=(
+            ("left", _("Links")),
+            ("center", _("Zentriert")),
+            ("right", _("Rechts")),
+        ),
+        required=False,
+        default="center",
+    )
+
     link_text = blocks.CharBlock(required=False)
     url = blocks.URLBlock(required=False)
 
@@ -99,6 +139,12 @@ class DllElementBlock(ImageVideoBlock):
         icon = "wagtail-admin-layout"
 
 
+def generate_default_blocks(count):
+    return [
+        ("dll_element_block", DllElementBlock().to_python({})) for i in range(count)
+    ]
+
+
 class TwoColumnLayout(blocks.StructBlock):
     content = blocks.StreamBlock(
         [
@@ -106,6 +152,7 @@ class TwoColumnLayout(blocks.StructBlock):
         ],
         min_num=2,
         max_num=2,
+        default=lazy(lambda: generate_default_blocks(2), list)(),
     )
 
     class Meta:
@@ -120,6 +167,7 @@ class ThreeColumnLayout(blocks.StructBlock):
         ],
         min_num=3,
         max_num=3,
+        default=lazy(lambda: generate_default_blocks(3), list)(),
     )
 
     class Meta:
@@ -129,15 +177,14 @@ class ThreeColumnLayout(blocks.StructBlock):
 
 class IFrameBlock(blocks.StructBlock):
     url = blocks.URLBlock()
-    height = blocks.IntegerBlock()
+    height = blocks.IntegerBlock(required=False)
 
     class Meta:
         template = "blocks/iframe_block.html"
 
 
 class MultiElementBlock(blocks.StructBlock):
-
-    headline = blocks.CharBlock()
+    headline = blocks.CharBlock(label=_("Überschrift"), required=False)
     text = blocks.RichTextBlock(
         features=[
             "bold",
@@ -157,11 +204,32 @@ class MultiElementBlock(blocks.StructBlock):
             "embed",
         ]
     )
-    background_color = blocks.ChoiceBlock(
+
+    text_alignment = blocks.ChoiceBlock(
+        label=_("Text Ausrichtung"),
         choices=(
-            ("blue", "Blau"),
-            ("white", "Weiß"),
-        )
+            ("left", _("Links")),
+            ("center", _("Zentriert")),
+            ("right", _("Rechts")),
+        ),
+        required=False,
+        default="center",
+    )
+
+    advanced_options = blocks.StructBlock(
+        local_blocks=(
+            (
+                "background_color",
+                blocks.CharBlock(
+                    label=_("Hintergrund Farbe"),
+                    help_text=_("Hex Wert ohne #"),
+                    max_length=6,
+                    required=False,
+                ),
+            ),
+        ),
+        label=_("Erweiterte Einstellungen"),
+        form_classname="collapse collapse--custom",
     )
 
     elements = blocks.StreamBlock(
@@ -177,8 +245,8 @@ class MultiElementBlock(blocks.StructBlock):
 
 
 class SideBySideBlock(ImageVideoBlock):
-    headline = blocks.CharBlock()
-    sub_headline = blocks.CharBlock()
+    headline = blocks.CharBlock(label=_("Überschrift"), required=False)
+    sub_headline = blocks.CharBlock(label=_("Sub-Überschrift"), required=False)
     text = blocks.RichTextBlock(
         features=[
             "bold",
@@ -198,17 +266,39 @@ class SideBySideBlock(ImageVideoBlock):
             "embed",
         ]
     )
+
+    text_alignment = blocks.ChoiceBlock(
+        label=_("Text Ausrichtung"),
+        choices=(
+            ("left", _("Links")),
+            ("center", _("Zentriert")),
+            ("right", _("Rechts")),
+        ),
+        required=False,
+        default="left",
+    )
+
     layout = blocks.ChoiceBlock(
         choices=(
             ("image_left", "Bild links, Text rechts"),
             ("image_right", "Bild rechts, Text links"),
         )
     )
-    background_color = blocks.ChoiceBlock(
-        choices=(
-            ("blue", "Blau"),
-            ("white", "Weiß"),
-        )
+
+    advanced_options = blocks.StructBlock(
+        local_blocks=(
+            (
+                "background_color",
+                blocks.CharBlock(
+                    label=_("Hintergrund Farbe"),
+                    help_text=_("Hex Wert ohne #"),
+                    max_length=6,
+                    required=False,
+                ),
+            ),
+        ),
+        label=_("Erweiterte Einstellungen"),
+        form_classname="collapse collapse--custom",
     )
 
     class Meta:

@@ -27,3 +27,28 @@
 .icon-wagtail-admin-columns-2:before { content: "\f100"; }
 .icon-wagtail-admin-columns-3:before { content: "\f101"; }
 .icon-wagtail-admin-layout:before { content: "\f102"; }
+
+.DraftEditor-root {
+    background-color: #fafafa;
+    border: 1px solid #e6e6e6;
+    padding: 0 10px;
+}
+
+.collapse-button {
+    position: relative;
+    border: solid #e6e6e6;
+    color: #c3c3c3;
+    border-width: 1px;
+    background-color: #fafafa;
+    font-family: wagtail;
+    line-height: 1.4em;
+    font-size: 2em;
+    margin-top: 0.25em;
+    margin-bottom: 1em;
+}
+.collapse-button.is-active {
+    transform: rotate(180deg);
+}
+.collapse--custom {
+    display: none;
+}

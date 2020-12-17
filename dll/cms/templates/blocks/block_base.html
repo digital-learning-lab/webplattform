@@ -3,13 +3,15 @@
 <section class="mb-5 mt-5">
   <div class="row justify-content-center no-gutters">
     <div class="col col-12 col-md-10 col-xl-9">
-      <div class="section-info{% if value.background_color == 'blue' %} bg-transparent{% endif %}">
+      <div class="section-info{% if not value.bound_blocks.advanced_options.value.background_color %} bg-white{% endif %}"{% if value.bound_blocks.advanced_options.value.background_color %}style="background-color: #{{ value.bound_blocks.advanced_options.value.background_color }};"{% endif %}>
         <div class="section-info__body">
           <div class="row justify-content-center">
             <div class="col-12 col-md-11">
               {% block block_content %}
-              <h1 class="section-info__headline">{{ value.headline }}</h1>
-              <div class="text-center">{{ value.text|richtext }}</div>
+              <h1 class="section-info__headline text-{{ value.text_alignment|default:"center" }}">{{ value.headline }}</h1>
+              <div class="text-{{ value.text_alignment|default:"center" }}">
+                {{ value.text|richtext }}
+              </div>
               {% endblock block_content %}
             </div>
           </div>

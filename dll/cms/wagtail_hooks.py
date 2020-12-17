@@ -20,7 +20,15 @@ logger = logging.getLogger("dll.cms")
 @hooks.register("insert_global_admin_css")
 def global_admin_css():
     return format_html(
-        '<link rel="stylesheet" href="{}">', static("css/wagtail_admin.css")
+        '<link rel="stylesheet" href="{}">',
+        static("wagtail_admin/css/wagtail_admin.css"),
+    )
+
+
+@hooks.register("insert_editor_js", order=1000)
+def global_admin_js():
+    return format_html(
+        '<script src="{}"></script>', static("wagtail_admin/js/wagtail_admin.js")
     )
 
 
@@ -54,7 +62,6 @@ def extended_link_entity(props):
                 link_props["href"] = props.get("url")
         else:
             link_props["href"] = props.get("url")
-
     return DOM.create_element("a", link_props, props["children"])
 
 

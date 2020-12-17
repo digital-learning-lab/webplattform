@@ -4,6 +4,8 @@
 
 {% block title %}{{ page.seo_title }}{% endblock %}
 
+{% block head_scripts %}{{ page.extra_source|safe }}{% endblock %}
+
 {% block cms %}
   {% wagtailuserbar %}
   {% if page.body %}

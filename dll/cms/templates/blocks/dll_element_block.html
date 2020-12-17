@@ -3,14 +3,16 @@
 {% load wagtailimages_tags %}
 
 {% if value.image %}
-  {% image value.image width-600 class="img-fluid" %}
+  {% image value.image width-600 class="img-fluid" alt=value.alt_text|default:image.default_alt_text %}
 {% else %}
   <div class="embed-responsive embed-responsive-16by9">
     {% embed value.video.url %}
   </div>
 {% endif %}
-<p>{{ value.subline }}</p>
-{{ value.text|richtext }}
+<p class="text-{{ value.text_alignment|default:"center" }}">{{ value.subline }}</p>
+<div class="text-{{ value.text_alignment|default:"center" }}">
+  {{ value.text|richtext }}
+</div>
 {% if value.url %}
   <a href="{{ value.url }}">{{ value.link_text }}</a>
 {% endif %}

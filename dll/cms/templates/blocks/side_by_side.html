@@ -6,9 +6,11 @@
 {% block block_content %}
   <div class="row">
     <div class="col-lg-6{% if value.layout == "image_left" %} order-2{% endif %}">
-      <h1 class="section-info__headline text-left mt-4">{{ value.headline }}</h1>
-      <h2 class="section-info__subheadline text-left mt-4">{{ value.sub_headline }}</h2>
-      <div>{{ value.text|richtext }}</div>
+      <h1 class="section-info__headline text-{{ value.text_alignment|default:"left" }} mt-4">{{ value.headline }}</h1>
+      <h2 class="section-info__subheadline text-{{ value.text_alignment|default:"left" }} mt-4">{{ value.sub_headline }}</h2>
+      <div class="text-{{ value.text_alignment|default:"left" }}">
+       {{ value.text|richtext }}
+      </div>
     </div>
     <div class="col-lg-6{% if value.layout == "image_left" %} order-1{% endif %}">
       {% if value.image %}
