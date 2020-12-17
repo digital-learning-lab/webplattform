@@ -33,8 +33,7 @@ class ImageVideoBlock(blocks.StructBlock):
 
 
 class SingleElementBlock(ImageVideoBlock):
-
-    headline = blocks.CharBlock(required=False)
+    headline = blocks.CharBlock(label=_("Überschrift"), required=False)
     text = blocks.RichTextBlock(
         features=[
             "bold",
@@ -52,10 +51,12 @@ class SingleElementBlock(ImageVideoBlock):
             "document-link",
             "image",
             "embed",
-        ]
+        ],
+        required=False,
     )
 
     text_alignment = blocks.ChoiceBlock(
+        label=_("Text Ausrichtung"),
         choices=(
             ("left", _("Links")),
             ("center", _("Zentriert")),
@@ -65,11 +66,20 @@ class SingleElementBlock(ImageVideoBlock):
         default="center",
     )
 
-    background_color = blocks.ChoiceBlock(
-        choices=(
-            ("blue", "Blau"),
-            ("white", "Weiß"),
-        )
+    advanced_options = blocks.StructBlock(
+        local_blocks=(
+            (
+                "background_color",
+                blocks.CharBlock(
+                    label=_("Hintergrund Farbe"),
+                    help_text=_("Hex Wert ohne #"),
+                    max_length=6,
+                    required=False,
+                ),
+            ),
+        ),
+        label=_("Erweiterte Einstellungen"),
+        form_classname="collapse collapse--custom",
     )
 
     class Meta:
@@ -100,6 +110,7 @@ class DllElementBlock(ImageVideoBlock):
     )
 
     text_alignment = blocks.ChoiceBlock(
+        label=_("Text Ausrichtung"),
         choices=(
             ("left", _("Links")),
             ("center", _("Zentriert")),
@@ -173,8 +184,7 @@ class IFrameBlock(blocks.StructBlock):
 
 
 class MultiElementBlock(blocks.StructBlock):
-
-    headline = blocks.CharBlock(required=False)
+    headline = blocks.CharBlock(label=_("Überschrift"), required=False)
     text = blocks.RichTextBlock(
         features=[
             "bold",
@@ -196,6 +206,7 @@ class MultiElementBlock(blocks.StructBlock):
     )
 
     text_alignment = blocks.ChoiceBlock(
+        label=_("Text Ausrichtung"),
         choices=(
             ("left", _("Links")),
             ("center", _("Zentriert")),
@@ -205,11 +216,20 @@ class MultiElementBlock(blocks.StructBlock):
         default="center",
     )
 
-    background_color = blocks.ChoiceBlock(
-        choices=(
-            ("blue", "Blau"),
-            ("white", "Weiß"),
-        )
+    advanced_options = blocks.StructBlock(
+        local_blocks=(
+            (
+                "background_color",
+                blocks.CharBlock(
+                    label=_("Hintergrund Farbe"),
+                    help_text=_("Hex Wert ohne #"),
+                    max_length=6,
+                    required=False,
+                ),
+            ),
+        ),
+        label=_("Erweiterte Einstellungen"),
+        form_classname="collapse collapse--custom",
     )
 
     elements = blocks.StreamBlock(
@@ -225,8 +245,8 @@ class MultiElementBlock(blocks.StructBlock):
 
 
 class SideBySideBlock(ImageVideoBlock):
-    headline = blocks.CharBlock(required=False)
-    sub_headline = blocks.CharBlock(required=False)
+    headline = blocks.CharBlock(label=_("Überschrift"), required=False)
+    sub_headline = blocks.CharBlock(label=_("Sub-Überschrift"), required=False)
     text = blocks.RichTextBlock(
         features=[
             "bold",
@@ -248,6 +268,7 @@ class SideBySideBlock(ImageVideoBlock):
     )
 
     text_alignment = blocks.ChoiceBlock(
+        label=_("Text Ausrichtung"),
         choices=(
             ("left", _("Links")),
             ("center", _("Zentriert")),
@@ -263,11 +284,21 @@ class SideBySideBlock(ImageVideoBlock):
             ("image_right", "Bild rechts, Text links"),
         )
     )
-    background_color = blocks.ChoiceBlock(
-        choices=(
-            ("blue", "Blau"),
-            ("white", "Weiß"),
-        )
+
+    advanced_options = blocks.StructBlock(
+        local_blocks=(
+            (
+                "background_color",
+                blocks.CharBlock(
+                    label=_("Hintergrund Farbe"),
+                    help_text=_("Hex Wert ohne #"),
+                    max_length=6,
+                    required=False,
+                ),
+            ),
+        ),
+        label=_("Erweiterte Einstellungen"),
+        form_classname="collapse collapse--custom",
     )
 
     class Meta:
