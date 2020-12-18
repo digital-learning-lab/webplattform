@@ -14,7 +14,7 @@
     </div>
     <div class="col-lg-6{% if value.layout == "image_left" %} order-1{% endif %}">
       {% if value.image %}
-        {% image value.image width-720 class="img-fluid" %}
+        {% image value.image width-720 class="img-fluid" alt=value.alt_text|default:value.image.default_alt_text %}
       {% else %}
         <div class="embed-responsive embed-responsive-16by9">
           {% embed value.video.url %}

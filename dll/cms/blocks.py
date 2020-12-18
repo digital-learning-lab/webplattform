@@ -202,7 +202,8 @@ class MultiElementBlock(blocks.StructBlock):
             "document-link",
             "image",
             "embed",
-        ]
+        ],
+        required=False,
     )
 
     text_alignment = blocks.ChoiceBlock(
