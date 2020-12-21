@@ -98,15 +98,62 @@ register_staging_python_image:
   only:
     - develop
 
-register_prod_python_image:
+register_prod_test_python_image:
     stage: register
+    before_script:
+        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
+    script:
+        - docker build --no-cache -t ${CONTAINER_RELEASE_IMAGE}-test ${DOCKER_FILE_PATH}
+        - docker push ${CONTAINER_RELEASE_IMAGE}-test
+    tags:
+        - dll-shell
+    only:
+        - master
+
+test_prod_python_image:
+  stage: test
+  image: ${CONTAINER_RELEASE_IMAGE}-test
+  services:
+    - postgres:12-alpine
+    - name: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-latest
+      alias: solr
+
+  script:
+    - coverage run --source=/code/dll/ -m pytest /code/dll/
+    - coverage report
+  tags:
+    - dll-docker
+  variables:
+    POSTGRES_DB: "postgres"
+    POSTGRES_USER: "postgres"
+    POSTGRES_PASSWORD: ""
+    POSTGRES_HOST_AUTH_METHOD: trust
+    REDIS_HOSTNAME: "redis"
+    DATABASE_USER: "postgres"
+    DATABASE_NAME: "postgres"
+    DATABASE_HOST: "postgres"
+    DJANGO_DEBUG: "True"
+    CELERY_TASK_ALWAYS_EAGER: "True"
+    SOLR_HOSTNAME: "solr"
+    EMAIL_HOST: "floki.rz.tuhh.de"
+    EMAIL_PORT: "25"
+    EMAIL_USE_TLS: "False"
+    EMAIL_SENDER: "j.doe@example.com"
+    CONTACT_EMAIL_BSB: "j.doe@example.com"
+    CONTACT_EMAIL_DLL: "j.doe@example.com"
+    META_SITE_PROTOCOL: https
+    META_SITE_DOMAIN: staging.digitallearninglab.de
+    DEFAULT_USER_EMAIL: digital.learning.lab@tuhh.de
+  only:
+    - master
+
+register_prod_python_image:
+    stage: deploy
     before_script:
         - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
     script:
         - docker build --no-cache -t ${CONTAINER_RELEASE_IMAGE} ${DOCKER_FILE_PATH}
         - docker push ${CONTAINER_RELEASE_IMAGE}
-        - docker build --no-cache -t ${CONTAINER_RELEASE_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
-        - docker push ${CONTAINER_RELEASE_SOLR_IMAGE}
     tags:
         - dll-shell
     only:
