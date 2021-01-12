@@ -57,6 +57,12 @@ class Trigger {
       document.addEventListener(this.type, listenerFunc)
       return
     }
+    if (this.type === 'login') {
+      if (window.loginTrigger) {
+        listenerFunc()
+      }
+      return
+    }
     // Otherwise append event trigger type to window.
     window.addEventListener(this.type, listenerFunc)
   }
