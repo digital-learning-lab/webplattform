@@ -90,7 +90,7 @@ test_staging_image:
 register_staging_python_image:
   stage: deploy
   before_script:
-      - docker system prune -a -f
+    - docker system prune -a -f
     - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
   script:
     - echo "Reached deployment stage. Retagging staging-test image for automatic deployment via keel."
