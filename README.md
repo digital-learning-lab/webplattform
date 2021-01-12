@@ -106,25 +106,16 @@ all project relevant models and some helper functions.
 #### Setup
 Instruct solr to use the `schema.xml` file:
 - add `<schemaFactory class="ClassicIndexSchemaFactory"/>` in the solrconfig.xml
-- remove the `AddSchemaFieldsUpdateProcessorFactory` section from `solrconfig.xml` ([source](https://stackoverflow.com/questions/31719955/solr-error-this-indexschema-is-not-mutable)) 
-### Update the schema
+- remove the `AddSchemaFieldsUpdateProcessorFactory` section from `solrconfig.xml` ([source](https://stackoverflow.com/questions/31719955/solr-error-this-indexschema-is-not-mutable))
+
+#### Update the schema
 - `python manage.py build_solr_schema -f solr/conf/schema.xml`
 
+### Testing
 
-### JSON Data fields
-#### Content
-```yaml
-from_import: 
-  type: Bool
-  descr: created during import
-```
+The digital.learning.lab platform comes with a testsuite, which can simply be 
+extended and executed:
 
-#### Review
-contains the reviewer comments on the content fields
-
-#### DllUser
-```yaml
-from_import: 
-  type: Bool
-  descr: created during import
+```bash
+docker-compose exec web coverage run --source=/code/dll/ -m pytest /code/dll/
 ```
