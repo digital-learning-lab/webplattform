@@ -16,7 +16,7 @@
         {% endfor %}
 
       </div>
-      {% if content.type == 'teaching-module' %}
+      {% if content.type == 'teaching-module' and show_upload_date %}
         <div class="content-teaser__upload-date-container">
             <span class="content-teaser__upload-icon icon-upload"></span>
             <span class="content-teaser__upload-date">

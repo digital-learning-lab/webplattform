@@ -17,7 +17,7 @@
         <div class="content-teaser__competences">
           <span v-for="competence in content.competences" class="content-teaser__competence" :class="competence.icon"  v-tooltip="competence.name"></span>
         </div>
-        <div class="content-teaser__upload-date-container" v-if="content.type === 'teaching-module'">
+        <div class="content-teaser__upload-date-container" v-if="content.type === 'teaching-module' && showUploadDate">
           <span class="content-teaser__upload-icon icon-upload"></span>
           <span class="content-teaser__upload-date">
               {{ content.created }}
