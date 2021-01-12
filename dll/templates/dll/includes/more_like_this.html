@@ -6,7 +6,7 @@
 <div class="col-lg-12 align-middle js-slick-wrapper px-5">
   {% for content in more_like_this %}
   <div class="slick-container">
-    {% include 'dll/includes/content_teaser.html' with condensed=True %}
+    {% include 'dll/includes/content_teaser.html' with condensed=True show_upload_date=True %}
   </div>
   {% endfor %}
 </div>
