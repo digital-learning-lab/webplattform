@@ -90,7 +90,6 @@ test_staging_image:
 register_staging_python_image:
   stage: deploy
   before_script:
-    - docker system prune -a -f
     - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
   script:
     - echo "Reached deployment stage. Retagging staging-test image for automatic deployment via keel."
@@ -109,8 +108,6 @@ register_prod_python_image:
     script:
         - docker build --no-cache -t ${CONTAINER_RELEASE_IMAGE} ${DOCKER_FILE_PATH}
         - docker push ${CONTAINER_RELEASE_IMAGE}
-        - docker build --no-cache -t ${CONTAINER_RELEASE_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
-        - docker push ${CONTAINER_RELEASE_SOLR_IMAGE}
     tags:
         - dll-shell
     only:
