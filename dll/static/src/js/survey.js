@@ -2,28 +2,66 @@ import $ from 'jquery'
 import axios from 'axios'
 
 class Trigger {
-  constructor(type, delay, survey, url) {
+  constructor(type, delay, survey, url, targetSelector) {
+    /*
+     * Setup Trigger instance. Load survey html content asynchronously.
+     */
     this.delay = delay
     this.url = url
     this.type = type
     this.survey = survey
+    this.targetSelector = targetSelector
     this.getSurveyContent().then((res) => {
       this.html = res.data
       this.setup()
     })
   }
   setup() {
-    let listenerFunc = () => {
+    let listenerFunc = (e) => {
+      // Show leave intent only once.
       if (this.type === 'leaveIntent') {
         document.removeEventListener('mouseleave', listenerFunc)
       }
+      // Check if click events corresponds to given target selector.
+      if (this.type === 'click') {
+        if (!Array.from(document.querySelectorAll(this.targetSelector)).includes(e.target)) {
+          return
+        }
+      }
+      // Remove listener after first call.
+      if (this.type === 'click' || this.type === 'scroll') {
+        window.removeEventListener(this.type, listenerFunc)
+        document.removeEventListener(this.type, listenerFunc)
+      }
+      // Show survey modal with given html after defined timeout.
       setTimeout(() => {
-        var modal = $('.js-surveyModal').modal()
+        var modalElement = $('.js-surveyModal');
+        modalElement.off('submit');
+        this.setupModalSubmit();
+        var modal = modalElement.modal()
         modal.find('.modal-body').html(this.html)
         modal.show()
       }, this.delay)
     }
-    $('.js-surveyModal').on('submit', 'form', (e) => {
+    // Only append leave intent event listener when url matches.
+    if (this.type === 'leaveIntent' && window.location.pathname === this.url) {
+      document.addEventListener('mouseleave', listenerFunc)
+      return
+    }
+    // Only append pageOpen event listener when url matches.
+    if (this.type === 'pageOpen' && window.location.pathname === this.url) {
+      listenerFunc()
+      return
+    }
+    if (this.type === 'scroll') {
+      document.addEventListener(this.type, listenerFunc)
+      return
+    }
+    // Otherwise append event trigger type to window.
+    window.addEventListener(this.type, listenerFunc)
+  }
+  setupModalSubmit () {
+    $('.js-surveyModal').on('submit', `#survey-${this.survey}`, (e) => {
       e.preventDefault()
       axios.post(`/surveys/${this.survey}`, $(e.target).serialize()).then(res => {
         var modal = $('.js-surveyModal').modal()
@@ -38,18 +76,11 @@ class Trigger {
       })
       return false
     })
-    if (this.type === 'leaveIntent' && window.location.pathname === this.url) {
-      document.addEventListener('mouseleave', listenerFunc)
-      return
-    }
-    if (this.type === 'pageOpen' && window.location.pathname === this.url) {
-      listenerFunc()
-      return
-    }
-    window.addEventListener(this.type, listenerFunc)
   }
-
   getSurveyContent() {
+    /*
+     * Retrieve survey html content asynchronously.
+     */
     return axios.get(`/surveys/${this.survey}`)
   }
 }

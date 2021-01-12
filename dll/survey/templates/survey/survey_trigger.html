@@ -14,6 +14,6 @@
 
 <script>
 {% for trigger in survey_triggers %}
-  new Trigger("{{ trigger.event }}", {{ trigger.delay }}, {{ trigger.survey.pk }}, "{{ trigger.url|default:"" }}")
+  new Trigger("{{ trigger.event }}", {{ trigger.delay }}, {{ trigger.survey.pk }}, "{{ trigger.url|default:"" }}", "{{ trigger.target }}")
 {% endfor %}
 </script>

@@ -2,15 +2,21 @@ from crispy_forms.bootstrap import InlineRadios, InlineCheckboxes
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit
 from django import forms
+from django.shortcuts import get_object_or_404
 
-from dll.survey.models import SurveyResult
+from dll.survey.models import (
+    SurveyResult,
+    SurveyResultAnswer,
+    SurveyQuestion,
+    SurveyQuestionChoice,
+)
 
 
 class SurveyResultForm(forms.ModelForm):
 
     FIELD_MAP = {
         0: forms.ChoiceField,
-        1: forms.ChoiceField,
+        1: forms.MultipleChoiceField,
         2: forms.ChoiceField,
         3: forms.CharField,
     }
@@ -54,6 +60,29 @@ class SurveyResultForm(forms.ModelForm):
             if question.question_type in [0, 1, 2]:
                 kwargs["choices"] = question.choices.all().values_list("pk", "label")
             self.fields[field_name] = self.FIELD_MAP[question.question_type](**kwargs)
+
+    def save(self, commit=True):
+        self.instance.survey = self.survey
+        instance = super(SurveyResultForm, self).save(commit=commit)
+        for key, value in self.cleaned_data.items():
+            if key.startswith("question"):
+                try:
+                    question_id = key.split("_")[1]
+                except IndexError:
+                    continue
+                question = get_object_or_404(SurveyQuestion, id=question_id)
+                if question.question_type in [0, 1, 2]:
+                    result = [
+                        get_object_or_404(SurveyQuestionChoice, id=id).label
+                        for id in value
+                    ]
+                    result = ",".join(result)
+                else:
+                    result = value
+                SurveyResultAnswer.objects.create(
+                    question=question, result=instance, value=result
+                )
+        return instance
 
     def _get_widget(self, question_type):
         return self.WIDGET_MAP[question_type]

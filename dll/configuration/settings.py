@@ -523,4 +523,8 @@ TRIGGER_EVENTS = (
     ("pageOpen", _("Open Page")),
     ("leaveIntent", _("Leave Intent")),
     ("content-submission", _("Content Submission")),
+    ("click", _("Click")),
+    ("scroll", _("Scroll")),
+    ("login", _("Login")),
+    ("logout", _("Logout")),
 )

@@ -1,6 +1,6 @@
 {% load crispy_forms_tags %}
 
-<form action="{% url 'survey-detail' pk=object.id %}" method="POST">
+<form action="{% url 'survey-detail' pk=object.id %}" method="POST" id="survey-{{ object.id }}">
   <h2>{{ object.title }}</h2>
   <p>{{ object.description|safe }}</p>
  {% crispy form %}

@@ -8,6 +8,7 @@ from dll.survey.models import (
     SurveyResult,
     SurveyQuestion,
     SurveyQuestionChoice,
+    SurveyResultAnswer,
 )
 
 
@@ -34,8 +35,15 @@ class SurveyAdmin(nested_admin.NestedModelAdmin):
     inlines = [SurveyQuestionInlineAdmin]
 
 
+class SurveyResultAnswerInlineAdmin(admin.StackedInline):
+    model = SurveyResultAnswer
+    exclude = ["question"]
+    readonly_fields = ["value"]
+    extra = 0
+
+
 class SurveyResultAdmin(admin.ModelAdmin):
-    pass
+    inlines = [SurveyResultAnswerInlineAdmin]
 
 
 admin.site.register(Trigger, TriggerAdmin)
