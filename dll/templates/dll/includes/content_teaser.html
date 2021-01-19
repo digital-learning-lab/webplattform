@@ -16,14 +16,6 @@
         {% endfor %}
 
       </div>
-      {% if content.type == 'teaching-module' and show_upload_date %}
-        <div class="content-teaser__upload-date-container">
-            <span class="content-teaser__upload-icon icon-upload"></span>
-            <span class="content-teaser__upload-date">
-              {{ content.created|date:'d.m.Y' }}
-            </span>
-          </div>
-      {% endif %}
     </div>
   </div>
 </a>
