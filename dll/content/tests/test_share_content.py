@@ -1,8 +1,5 @@
-from django.urls import reverse
-
-from dll.content.utils import is_favored
 from dll.content.models import Content
-from dll.content.tests.test_content_creation import BaseTestCase
+from dll.content.tests.test_content_views import BaseTestCase
 
 
 class ShareContentTestCase(BaseTestCase):
