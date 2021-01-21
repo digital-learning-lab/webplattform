@@ -53,19 +53,26 @@ If you'd like to restore a database dump leave out step 2 of the setup. Instead 
 database dump into the database container and restore it:
 
 ```bash
-docker cp ./local_path/to/db/dump [db-container-name]:/backup/db_dump
+docker cp ./local_path/to/db/dump [db-container-name]:/db_dump.bin
 docker exec [db-container-name] pg_restore -U postgres -d postgres /backup/db_dump
 ```
 
 The database container name can be retrieved by runnning `docker ps`.
 
-Depending on the age of your database dump there may be new data base migrations
+Depending on the age of your database dump there may be new database migrations
 which are not yet reflected in the database dump. This is usually the case when 
 you're experiencing a `ProgrammingError` after restoring a database dump.
 
 In that simply execute Django's migration command in the web container:
 ```bash
 docker-compose run --rm web python manage.py migrate
+```
+
+At this point all content is available but not yet indexed for the search.
+Setup Solr and run following command to index all contents:
+
+```bash
+docker-compose run --rm web python manage.py rebuild_index
 ```
 
 ### 🖼 Media File Restore
@@ -99,25 +106,16 @@ all project relevant models and some helper functions.
 #### Setup
 Instruct solr to use the `schema.xml` file:
 - add `<schemaFactory class="ClassicIndexSchemaFactory"/>` in the solrconfig.xml
-- remove the `AddSchemaFieldsUpdateProcessorFactory` section from `solrconfig.xml` ([source](https://stackoverflow.com/questions/31719955/solr-error-this-indexschema-is-not-mutable)) 
-### Update the schema
+- remove the `AddSchemaFieldsUpdateProcessorFactory` section from `solrconfig.xml` ([source](https://stackoverflow.com/questions/31719955/solr-error-this-indexschema-is-not-mutable))
+
+#### Update the schema
 - `python manage.py build_solr_schema -f solr/conf/schema.xml`
 
+### Testing
 
-### JSON Data fields
-#### Content
-```yaml
-from_import: 
-  type: Bool
-  descr: created during import
-```
+The digital.learning.lab platform comes with a testsuite, which can simply be 
+extended and executed:
 
-#### Review
-contains the reviewer comments on the content fields
-
-#### DllUser
-```yaml
-from_import: 
-  type: Bool
-  descr: created during import
+```bash
+docker-compose exec web coverage run --source=/code/dll/ -m pytest /code/dll/
 ```

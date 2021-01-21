@@ -26,6 +26,7 @@ black:
 register_staging_test_python_image:
     stage: register
     before_script:
+        - docker system prune -a -f
         - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
     script:
         - docker build --no-cache -t ${CONTAINER_STAGING_IMAGE}-staging-test ${DOCKER_FILE_PATH}
@@ -38,6 +39,7 @@ register_staging_test_python_image:
 register_staging_solr_image:
     stage: register
     before_script:
+        - docker system prune -a -f
         - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
     script:
         - docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
@@ -101,6 +103,7 @@ register_staging_python_image:
 register_prod_test_python_image:
     stage: register
     before_script:
+        - docker system prune -a -f
         - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
     script:
         - docker build --no-cache -t ${CONTAINER_RELEASE_IMAGE}-test ${DOCKER_FILE_PATH}
@@ -163,6 +166,7 @@ register_prod_python_image:
 register_prod_solr_image:
     stage: deploy
     before_script:
+        - docker system prune -a -f
         - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
     script:
         - docker build --no-cache -t ${CONTAINER_RELEASE_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr

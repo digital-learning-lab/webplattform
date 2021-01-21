@@ -56,15 +56,15 @@
     "@fortawesome/fontawesome-free": "^5.13.1",
     "@sentry/webpack-plugin": "^1.8.0",
     "autocomplete.js": "^0.37.0",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.3.1",
     "jquery": "^3.5.1",
     "lodash": "^4.17.19",
     "popper.js": "^1.15.0",
     "query-string": "^6.12.1",
+    "slick-carousel": "^1.8.1",
     "vue": "^2.6.10",
     "vue-select": "^3.4.0",
-    "vue2-dropzone": "^3.6.0",
-    "slick-carousel": "^1.8.1"
+    "vue2-dropzone": "^3.6.0"
   }
 }

@@ -2,7 +2,7 @@ from django.urls import reverse
 
 from dll.content.utils import is_favored
 from dll.content.models import Content
-from dll.content.tests.test_content_creation import BaseTestCase
+from dll.content.tests.test_content_views import BaseTestCase
 
 
 class FavorTestCase(BaseTestCase):
@@ -46,6 +46,12 @@ class FavorTestCase(BaseTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(published_content.get_draft().favorite_set.count(), 0)
         self.assertFalse(is_favored(self.author, published_content))
+        # Test content cannot be unfavored twice
+        response = self.client.post(
+            published_content.get_unfavor_url(), data={"slug": published_content.slug}
+        )
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue("error" in response.json())
 
     def test_authenticated_preview_favor_button_hidden(self):
         self.client.login(email="test+alice@blueshoe.de", password="password")
@@ -94,3 +100,11 @@ class FavorTestCase(BaseTestCase):
         )
         self.assertTemplateUsed(response, "dll/includes/content_teaser.html")
         self.assertContains(response, "Auf dem Merkzettel")
+
+    def test_double_favor(self):
+        self.client.login(email="test+alice@blueshoe.de", password="password")
+        draft_content = Content.objects.drafts().first()
+        self._favor_content(draft_content)
+        response = self._favor_content(draft_content)
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue("error" in response.json())

@@ -37,6 +37,16 @@ class BaseTestCase(TestCase):
                 "teaser": "Nam adipiscing. In auctor lobortis lacus.",
             },
             {
+                "model": TeachingModule,
+                "name": "TeachingModule Proin pretium which has a very very long name",
+                "teaser": "Nam adipiscing. In auctor lobortis lacus.",
+            },
+            {
+                "model": TeachingModule,
+                "name": "TeachingModule Proin pretium which has a very very long other name",
+                "teaser": "Nam adipiscing. In auctor lobortis lacus.",
+            },
+            {
                 "model": Trend,
                 "name": "Trend Integer tincidunt",
                 "teaser": "Duis vel nibh at velit scelerisque suscipit. ",
@@ -80,7 +90,7 @@ class BaseTestCase(TestCase):
         self.create_view = reverse("draft-content-list")
 
 
-class ContentListTests(BaseTestCase):
+class ContentViewTests(BaseTestCase):
     def test_content_retrieve(self):
         public_tool = Tool.objects.published().first()
         detail_view = reverse("public-content-detail", kwargs={"pk": public_tool.pk})
@@ -143,11 +153,54 @@ class ContentListTests(BaseTestCase):
             f"<title>Unterrichtsbaustein | {public_teaching_module.name}</title>",
         )
 
+    def test_truncated_slug(self):
+        """Checks whether truncated slugs work for Content objects.
+
+        In earlier versions of the digital.learning.lab we used to truncate the slugs. Therefore the
+        ContentDetailBase contains some logic to check for truncated slugs in case of a 404.
+        """
+        public_teaching_module = (
+            TeachingModule.objects.filter(
+                name="TeachingModule Proin pretium which has a very very long name"
+            )
+            .published()
+            .first()
+        )
+        detail_view = reverse(
+            "teaching-module-detail", kwargs={"slug": public_teaching_module.slug[:50]}
+        )
+        response = self.client.get(detail_view, follow=True)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            f'<h1 class="content-info__title">{public_teaching_module.name}</h1>',
+        )
+        self.assertContains(
+            response,
+            f'<p class="content-info__teaser">{public_teaching_module.teaser}</p>',
+        )
+        self.assertContains(
+            response,
+            f'<meta name="description" content="{public_teaching_module.teaser}">',
+        )
+        self.assertContains(
+            response,
+            f"<title>Unterrichtsbaustein | {public_teaching_module.name}</title>",
+        )
+
+    def test_content_detail_404(self):
+        """Due to the truncated slug checking logic we need to test whether to 404 handling works correctly."""
+        detail_view = reverse(
+            "teaching-module-detail", kwargs={"slug": "some-random-slug"}
+        )
+        response = self.client.get(detail_view, follow=True)
+        self.assertEqual(response.status_code, 404)
+
     def test_content_list(self):
         list_view = reverse("public-content-list")
         response = self.client.get(list_view)
         data = response.json()
-        self.assertTrue(len(data["results"]) == 6)
+        self.assertTrue(len(data["results"]) == 8)
         self.assertEqual(
             set(data["results"][0].keys()),
             {
@@ -165,6 +218,59 @@ class ContentListTests(BaseTestCase):
             },
         )
         self.assertTrue(isinstance(data["results"][0]["competences"], list))
+
+        # test exclusion of content types
+        response = self.client.get(f"{list_view}?teachingModules=false")
+        self.assertTrue(len(response.json()["results"]) == 4)
+        response = self.client.get(f"{list_view}?trends=false")
+        self.assertTrue(len(response.json()["results"]) == 6)
+        response = self.client.get(f"{list_view}?tools=false")
+        self.assertTrue(len(response.json()["results"]) == 6)
+
+    def test_teaching_modules_filter_view(self):
+        url = reverse("teaching-modules-filter")
+        response = self.client.get(url)
+        # contains vue app container
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "teaching-modules-app")
+        self.assertContains(response, "window.subjectFilter")
+        self.assertContains(response, "window.schoolFilter")
+
+    def test_trends_filter_view(self):
+        url = reverse("trends-filter")
+        response = self.client.get(url)
+        # contains vue app container
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "trends-app")
+
+    def test_tools_filter_view(self):
+        url = reverse("tools-filter")
+        response = self.client.get(url)
+        # contains vue app container
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "tools-app")
+        self.assertContains(response, "window.functionsFilter")
+
+    def test_teaching_content_data_filter_view(self):
+        url = reverse("teaching-modules-data-filter")
+        response = self.client.get(url)
+        data = response.json()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data["results"]), 4)
+
+    def test_trends_data_filter_view(self):
+        url = reverse("trends-data-filter")
+        response = self.client.get(url)
+        data = response.json()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data["results"]), 2)
+
+    def test_tools_data_filter_view(self):
+        url = reverse("tools-data-filter")
+        response = self.client.get(url)
+        data = response.json()
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data["results"]), 2)
 
 
 class TrendCreationTests(BaseTestCase):

@@ -475,17 +475,12 @@ class TeachingModuleFilterView(BaseFilterView):
             {"value": subject.pk, "name": subject.name}
             for subject in Subject.objects.all()
         ]
-        states_filter = [
-            {"value": state[0], "name": state[1]} for state in GERMAN_STATES
-        ]
         school_types_filter = [
             {"value": school_type.pk, "name": school_type.name}
             for school_type in SchoolType.objects.all()
         ]
-        states_filter.insert(0, {"value": "", "name": "------"})
         school_types_filter.insert(0, {"value": "", "name": "------"})
         ctx["subject_filter"] = json.dumps(subject_filter)
-        ctx["states_filter"] = json.dumps(states_filter)
         ctx["school_types_filter"] = json.dumps(school_types_filter)
         return ctx
 

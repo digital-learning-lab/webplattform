@@ -41,6 +41,7 @@ services:
     depends_on:
       - db
       - redis
+      - web
   solr:
     build:
       context: .
