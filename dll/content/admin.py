@@ -29,6 +29,7 @@ from .models import (
     ContentLink,
     ToolFunction,
     CompetenceAdditionalInformation,
+    ContentFile,
 )
 
 admin.site.unregister(FlatPage)
@@ -85,6 +86,10 @@ class ContentLinkInlineAdmin(admin.StackedInline):
     model = ContentLink
 
 
+class ContentFileInlineAdmin(admin.StackedInline):
+    model = ContentFile
+
+
 class CompetenceAdditionalInformationInlineAdmin(admin.StackedInline):
     model = CompetenceAdditionalInformation
     max_num = 1
@@ -102,6 +107,7 @@ class TeachingModuleAdmin(ImportExportMixin, ContentAdmin):
     actions = ["export_xlsx"]
     list_filter = (PublishedFilter,)
     resource_class = TeachingModuleResource
+    inlines = [ContentLinkInlineAdmin, ContentFileInlineAdmin]
 
     def get_export_queryset(self, request):
         qs = super(TeachingModuleAdmin, self).get_export_queryset(request)
