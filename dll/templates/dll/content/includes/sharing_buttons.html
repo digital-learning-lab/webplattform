@@ -1,6 +1,6 @@
 <a class='sharing-button__link'
    href='https://twitter.com/intent/tweet/?text={{ object.sharing_text.twitter|urlencode }}%20{{ request.scheme|urlencode }}%3A%2F%2F{{ request.META.HTTP_HOST|urlencode }}{{ object.get_absolute_url|urlencode }}'
-   target='_blank' rel='noopener' aria-label='Auf Twitter teilen'>
+   target='_blank' rel='noopener' aria-label='Auf Twitter teilen' data-share='Twitter'>
   <div class='sharing-button sharing-button--twitter sharing-button--small'>
     <div aria-hidden='true' class='sharing-button__icon sharing-button__icon--solid'>
       <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
@@ -13,7 +13,7 @@
 
 <a class='sharing-button__link'
    href='mailto:?subject={{ object.sharing_text.email_subject|urlencode }}&amp;body={{ object.sharing_text.email_body|urlencode }}{{ object.name|urlencode }}%0A{{ object.teaser|urlencode }}%0A{{ request.scheme|urlencode }}%3A%2F%2F{{ request.META.HTTP_HOST|urlencode }}{{ object.get_absolute_url|urlencode }}'
-   target='_self' rel='noopener' aria-label=''>
+   target='_self' rel='noopener' aria-label='Per E-Mail teilen' data-share='Email'>
   <div class='sharing-button sharing-button--email sharing-button--small'>
     <div aria-hidden='true' class='sharing-button__icon sharing-button__icon--solid'>
       <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
@@ -26,7 +26,7 @@
 
 <a class='sharing-button__link'
    href='whatsapp://send?text={{ object.sharing_text.whatsapp|urlencode }}%20{{ request.scheme|urlencode }}%3A%2F%2F{{ request.META.HTTP_HOST|urlencode }}{{ object.get_absolute_url|urlencode }}'
-   target='_blank' rel='noopener' aria-label=''>
+   target='_blank' rel='noopener' aria-label='Via Whatsapp teilen' data-share='Whatsapp'>
   <div class='sharing-button sharing-button--whatsapp sharing-button--small'>
     <div aria-hidden='true' class='sharing-button__icon sharing-button__icon--solid'>
       <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
