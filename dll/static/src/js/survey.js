@@ -11,10 +11,14 @@ class Trigger {
     this.type = type
     this.survey = survey
     this.targetSelector = targetSelector
-    this.getSurveyContent().then((res) => {
-      this.html = res.data
-      this.setup()
-    })
+    var surveys = localStorage.getItem('surveys') || ""
+    surveys = surveys.split(",")
+    if (!surveys.includes(survey.toString())) {
+      this.getSurveyContent().then((res) => {
+        this.html = res.data
+        this.setup()
+      })
+    }
   }
   setup() {
     let listenerFunc = (e) => {
@@ -76,6 +80,9 @@ class Trigger {
           modal.find('.modal-body').html(this.html)
         } else {
           modal.modal('hide')
+          var surveys = localStorage.getItem('surveys') || ""
+          surveys += `,${this.survey}`
+          localStorage.setItem('surveys', surveys)
         }
       }).catch(err => {
         console.log(err)

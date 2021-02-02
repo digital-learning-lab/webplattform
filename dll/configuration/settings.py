@@ -526,5 +526,4 @@ TRIGGER_EVENTS = (
     ("click", _("Click")),
     ("scroll", _("Scroll")),
     ("login", _("Login")),
-    ("logout", _("Logout")),
 )
