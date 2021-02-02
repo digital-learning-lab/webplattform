@@ -37,6 +37,12 @@ class SurveyQuestionInlineAdmin(nested_admin.NestedStackedInline):
 class SurveyAdmin(nested_admin.NestedModelAdmin):
     actions = ["export_xlsx"]
     inlines = [SurveyQuestionInlineAdmin]
+    list_display = ("title", "get_answer_count")
+
+    def get_answer_count(self, obj):
+        return SurveyResult.objects.filter(survey=obj).count()
+
+    get_answer_count.short_description = "Anzahl Antworten"
 
     def export_xlsx(self, request, queryset):
         output = BytesIO()
