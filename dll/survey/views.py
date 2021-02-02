@@ -1,9 +1,11 @@
 from crispy_forms.utils import render_crispy_form
 from django.http import JsonResponse
 from django.views.generic import DetailView
+from rest_framework.generics import ListAPIView
 
 from dll.survey.forms import SurveyResultForm
-from dll.survey.models import Survey
+from dll.survey.models import Survey, Trigger
+from dll.survey.serializers import TriggerSerializer
 
 
 class SurveyDetailView(DetailView):
@@ -27,3 +29,8 @@ class SurveyDetailView(DetailView):
             )
         form.save()
         return JsonResponse({"success": True})
+
+
+class TriggerListApiView(ListAPIView):
+    queryset = Trigger.objects.filter(active=True)
+    serializer_class = TriggerSerializer

@@ -98,4 +98,23 @@ class Trigger {
   }
 }
 
-window.Trigger = Trigger
+function setupTrigger(triggerArray) {
+  for (let i = 0; i < triggerArray.length; i++) {
+    const trigger = triggerArray[i];
+    new Trigger(trigger.event, trigger.delay, trigger.survey, trigger.url, trigger.target)
+  }
+}
+
+function getTriggers(url) {
+  if (!url) {
+    url = '/api/triggers'
+  }
+  axios.get(url).then(res => {
+    setupTrigger(res.data.results);
+    if (res.data.next) {
+      getTriggers(res.data.next);
+    }
+  })
+}
+
+getTriggers();

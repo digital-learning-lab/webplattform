@@ -69,7 +69,7 @@ from dll.content.views import (
     FavoriteListApiView,
     ToolFunctionSearchView,
 )
-from dll.survey.views import SurveyDetailView
+from dll.survey.views import SurveyDetailView, TriggerListApiView
 from dll.user.views import (
     MyContentView,
     CreateEditTeachingModuleView,
@@ -273,6 +273,11 @@ urlpatterns = [
         "surveys/<int:pk>",
         SurveyDetailView.as_view(),
         name="survey-detail",
+    ),
+    path(
+        "api/triggers",
+        TriggerListApiView.as_view(),
+        name="trigger-list",
     ),
     path("suche", search_view, name="search"),
     path("cms/", include(wagtailadmin_urls)),
