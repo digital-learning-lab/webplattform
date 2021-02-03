@@ -177,6 +177,7 @@ class TeachingModuleAdmin(ImportExportMixin, ContentAdmin):
 class ToolAdmin(ImportExportMixin, admin.ModelAdmin):
     exclude = ("json_data", "tags")
     resource_class = ToolResource
+    inlines = [ContentLinkInlineAdmin]
 
     def get_export_queryset(self, request):
         qs = super(ToolAdmin, self).get_export_queryset(request)
