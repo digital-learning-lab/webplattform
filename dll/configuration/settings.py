@@ -307,6 +307,7 @@ HAYSTACK_CONNECTIONS = {
         "ENGINE": "solr.backend.CustomSolrEngine",
         "URL": "http://{}:8983/solr/dll-default".format(env.str("SOLR_HOSTNAME")),
         "ADMIN_URL": "http://{}:8983/solr/admin/cores".format(env.str("SOLR_HOSTNAME")),
+        "TIMEOUT": 20,
     },
 }
 HAYSTACK_SIGNAL_PROCESSOR = "dll.content.signals.ContentSignalProcessor"
