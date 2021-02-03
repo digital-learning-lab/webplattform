@@ -117,7 +117,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "dll.survey.context_processor.survey_triggers",
             ],
         },
     },
