@@ -3,7 +3,7 @@ html, body {
   position: relative;
 }
 body {
-  background-color: rgba(204, 216, 224, 1);
+  background-color: $color--fog;
   font-family: $font-body;
   overflow-x: hidden;
   padding-top: 80px;
