@@ -16,8 +16,8 @@ class SurveyResultForm(forms.ModelForm):
 
     FIELD_MAP = {
         0: forms.ChoiceField,
-        1: forms.MultipleChoiceField,
-        2: forms.ChoiceField,
+        2: forms.MultipleChoiceField,
+        1: forms.ChoiceField,
         3: forms.CharField,
     }
 

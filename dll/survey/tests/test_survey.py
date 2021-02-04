@@ -63,10 +63,12 @@ class SurveyTests(TestCase):
         data = {}
         text_answer = "Test Text"
         for question in self.survey.survey_questions.all():
-            if question.question_type != 3:
-                value = question.choices.all().first().pk
-            else:
+            if question.question_type == 3:
                 value = text_answer
+            elif question.question_type == 2:
+                value = [question.choices.all().first().pk]
+            else:
+                value = question.choices.all().first().pk
             data[f"question_{question.pk}"] = value
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
