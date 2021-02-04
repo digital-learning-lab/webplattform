@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import logging
 import os
 from environs import Env
-
+from django.utils.translation import ugettext_lazy as _
 
 env = Env()
 logger = logging.getLogger("dll.settings")
@@ -83,7 +83,9 @@ INSTALLED_APPS = [
     "wagtail.documents",
     "wagtail.images",
     "wagtail.search",
+    "nested_admin",
     "dll.cms",
+    "dll.survey",
     "wagtail.admin",
     "wagtail.core",
     "modelcluster",
@@ -305,6 +307,7 @@ HAYSTACK_CONNECTIONS = {
         "ENGINE": "solr.backend.CustomSolrEngine",
         "URL": "http://{}:8983/solr/dll-default".format(env.str("SOLR_HOSTNAME")),
         "ADMIN_URL": "http://{}:8983/solr/admin/cores".format(env.str("SOLR_HOSTNAME")),
+        "TIMEOUT": 20,
     },
 }
 HAYSTACK_SIGNAL_PROCESSOR = "dll.content.signals.ContentSignalProcessor"
@@ -515,3 +518,12 @@ CONSTANCE_CONFIG_FIELDSETS = {
 }
 
 WAGTAIL_SITE_NAME = "digital.learning.lab"
+
+TRIGGER_EVENTS = (
+    ("pageOpen", _("Open Page")),
+    ("leaveIntent", _("Leave Intent")),
+    ("content-submission", _("Content Submission")),
+    ("click", _("Click")),
+    ("scroll", _("Scroll")),
+    ("login", _("Login")),
+)

@@ -68,6 +68,13 @@ class MyContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
     breadcrumb_title = "Meine Inhalte"
     breadcrumb_url = reverse_lazy("user-content-overview")
 
+    def get_context_data(self, **kwargs):
+        ctx = super(MyContentView, self).get_context_data(**kwargs)
+        referrer = self.request.META.get("HTTP_REFERER")
+        if referrer and "/login" in referrer:
+            ctx["login_trigger"] = True
+        return ctx
+
 
 class MyReviewsView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
     template_name = "dll/user/content/review_content.html"
