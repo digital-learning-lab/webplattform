@@ -1,8 +1,12 @@
 {% load crispy_forms_tags %}
-
+<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+  <span aria-hidden="true">&times;</span>
+</button>
 <form action="{% url 'survey-detail' pk=object.id %}" method="POST" id="survey-{{ object.id }}">
   <h2>{{ object.title }}</h2>
   <p>{{ object.description|safe }}</p>
- {% crispy form %}
+  <div class="js-surveyFormContainer">
+    {% crispy form %}
+  </div>
 </form>
 

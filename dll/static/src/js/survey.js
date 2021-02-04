@@ -77,7 +77,7 @@ class Trigger {
         var modal = $('.js-surveyModal').modal()
         if (!res.data.success) {
           this.html = res.data.form
-          modal.find('.modal-body').html(this.html)
+          modal.find('.modal-body .js-surveyFormContainer').html(this.html)
         } else {
           modal.modal('hide')
           var surveys = localStorage.getItem('surveys') || ""
