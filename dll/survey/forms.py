@@ -23,8 +23,8 @@ class SurveyResultForm(forms.ModelForm):
 
     WIDGET_MAP = {
         0: forms.RadioSelect,
-        1: forms.CheckboxSelectMultiple,
-        2: forms.Select,
+        1: forms.Select,
+        2: forms.CheckboxSelectMultiple,
         3: forms.TextInput,
     }
 
