@@ -30,7 +30,7 @@ class SurveyResultForm(forms.ModelForm):
 
     CRISPY_MAP = {
         0: InlineRadios,
-        1: InlineCheckboxes,
+        2: InlineCheckboxes,
     }
 
     def __init__(self, *args, **kwargs):
