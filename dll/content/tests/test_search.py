@@ -1,5 +1,6 @@
 import time
 
+from django.core.management import call_command
 from django.urls import reverse
 from django.core import management
 
@@ -13,7 +14,7 @@ class SearchTestCase(BaseTestCase):
 
     def test_search_no_result(self):
         response = self.client.get(
-            self.search_url + "?somestrangesearchstringwhichhasnoresults"
+            self.search_url + "?q=somestrangesearchstringwhichhasnoresults"
         )
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Ihre Suchanfrage ergab keine Treffer.")
@@ -21,6 +22,6 @@ class SearchTestCase(BaseTestCase):
     def test_search_with_results(self):
         # Make sure index was updated before running tests.
         time.sleep(15)
-        response = self.client.get(self.search_url + "?TeachingModule")
+        response = self.client.get(self.search_url + "?q=TeachingModule")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "TeachingModule Ut a")
