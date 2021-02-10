@@ -71,12 +71,14 @@ class SurveyResultForm(forms.ModelForm):
                 except IndexError:
                     continue
                 question = get_object_or_404(SurveyQuestion, id=question_id)
-                if question.question_type in [0, 1, 2]:
+                if question.question_type == 2:
                     result = [
                         get_object_or_404(SurveyQuestionChoice, id=id).label
                         for id in value
                     ]
                     result = ",".join(result)
+                elif question.question_type in [0, 1]:
+                    result = get_object_or_404(SurveyQuestionChoice, id=value).label
                 else:
                     result = value
                 SurveyResultAnswer.objects.create(

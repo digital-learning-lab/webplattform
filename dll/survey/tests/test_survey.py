@@ -23,7 +23,7 @@ class SurveyTests(TestCase):
                 "question_type": 0,
                 "title": "Rate something from 1 to 5.",
                 "required": True,
-                "choices": [1, 2, 3, 4, 5],
+                "choices": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
             },
             {
                 "question_type": 1,
@@ -68,16 +68,18 @@ class SurveyTests(TestCase):
             elif question.question_type == 2:
                 value = [question.choices.all().first().pk]
             else:
-                value = question.choices.all().first().pk
+                value = question.choices.all().last().pk
             data[f"question_{question.pk}"] = value
         response = self.client.post(url, data=data)
         self.assertEqual(response.status_code, 200)
         for question in self.survey.survey_questions.all():
             answer = SurveyResultAnswer.objects.get(question=question)
-            if question.question_type != 3:
-                self.assertEqual(answer.value, question.choices.all().first().label)
-            else:
+            if question.question_type == 3:
                 self.assertEqual(answer.value, text_answer)
+            elif question.question_type == 0:
+                self.assertEqual(answer.value, question.choices.all().last().label)
+            else:
+                self.assertEqual(answer.value, question.choices.all().first().label)
 
     def test_submit_fail(self):
         url = reverse("survey-detail", kwargs={"pk": self.survey.pk})

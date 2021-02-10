@@ -79,10 +79,11 @@ class Trigger {
           this.html = res.data.form
           modal.find('.modal-body .js-surveyFormContainer').html(this.html)
         } else {
-          modal.modal('hide')
           var surveys = localStorage.getItem('surveys') || ""
           surveys += `,${this.survey}`
           localStorage.setItem('surveys', surveys)
+          modal.find('.js-thanks').removeClass('d-none')
+          modal.find('form').hide()
         }
       }).catch(err => {
         console.log(err)
@@ -101,7 +102,8 @@ class Trigger {
 function setupTrigger(triggerArray) {
   for (let i = 0; i < triggerArray.length; i++) {
     const trigger = triggerArray[i];
-    new Trigger(trigger.event, trigger.delay, trigger.survey, trigger.url, trigger.target)
+    new Trigger(trigger.event, trigger.delay, trigger.survey, trigger.url, trigger.target, trigger.thank_you_headline,
+      trigger.thank_you_text)
   }
 }
 

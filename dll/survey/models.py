@@ -40,9 +40,12 @@ class SurveyQuestion(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ["position"]
+
 
 class SurveyQuestionChoice(models.Model):
-    label = models.CharField(verbose_name=_("Label"), max_length=64)
+    label = models.CharField(verbose_name=_("Label"), max_length=100)
 
     position = models.PositiveIntegerField(verbose_name=_("Position"), default=0)
 

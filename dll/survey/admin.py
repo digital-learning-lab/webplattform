@@ -92,6 +92,7 @@ class SurveyResultAnswerInlineAdmin(admin.StackedInline):
 
 class SurveyResultAdmin(admin.ModelAdmin):
     inlines = [SurveyResultAnswerInlineAdmin]
+    list_display = ["__str__", "created"]
 
 
 admin.site.register(Trigger, TriggerAdmin)

@@ -382,6 +382,33 @@ CKEDITOR_CONFIGS = {
 
 # ---------------------- Constance --------------------
 CONSTANCE_BACKEND = "constance.backends.database.DatabaseBackend"
+CONSTANCE_CONFIG_FIELDSETS = {
+    """
+    Vorgeschlagene Inhalte (Content Teaser) - Einstellungen für die 'More Like This (MLT)' Funktionalität von Solr, \
+    auf der vorgeschlagene Inhalte ermittelt werden
+    """: {
+        "fields": (
+            "MORE_LIKE_THIS_USE_TEXT",
+            "MORE_LIKE_THIS_USE_NAME",
+            "MORE_LIKE_THIS_USE_TEASER",
+            "MORE_LIKE_THIS_USE_ADDITIONAL_INFO",
+            "MORE_LIKE_THIS_USE_TAGS",
+            "MORE_LIKE_THIS_USE_AUTHORS",
+            "MORE_LIKE_THIS_USE_SUBJECTS",
+            "MORE_LIKE_THIS_BOOST_TEXT",
+            "MORE_LIKE_THIS_BOOST_NAME",
+            "MORE_LIKE_THIS_BOOST_TEASER",
+            "MORE_LIKE_THIS_BOOST_ADDITIONAL_INFO",
+            "MORE_LIKE_THIS_BOOST_TAGS",
+            "MORE_LIKE_THIS_BOOST_AUTHORS",
+            "MORE_LIKE_THIS_BOOST_SUBJECTS",
+            "MORE_LIKE_THIS_COUNT",
+            "MORE_LIKE_THIS_SCORE_CUTOFF",
+        ),
+        "collapse": True,
+    },
+    "Umfragen": ("SURVEY_THANK_YOU_TEXT",),
+}
 CONSTANCE_CONFIG = {
     # Content Teaser
     "MORE_LIKE_THIS_USE_TEXT": (
@@ -489,32 +516,11 @@ CONSTANCE_CONFIG = {
         """,
         float,
     ),
-}
-CONSTANCE_CONFIG_FIELDSETS = {
-    """
-    Vorgeschlagene Inhalte (Content Teaser) - Einstellungen für die 'More Like This (MLT)' Funktionalität von Solr, \
-    auf der vorgeschlagene Inhalte ermittelt werden
-    """: {
-        "fields": (
-            "MORE_LIKE_THIS_USE_TEXT",
-            "MORE_LIKE_THIS_USE_NAME",
-            "MORE_LIKE_THIS_USE_TEASER",
-            "MORE_LIKE_THIS_USE_ADDITIONAL_INFO",
-            "MORE_LIKE_THIS_USE_TAGS",
-            "MORE_LIKE_THIS_USE_AUTHORS",
-            "MORE_LIKE_THIS_USE_SUBJECTS",
-            "MORE_LIKE_THIS_BOOST_TEXT",
-            "MORE_LIKE_THIS_BOOST_NAME",
-            "MORE_LIKE_THIS_BOOST_TEASER",
-            "MORE_LIKE_THIS_BOOST_ADDITIONAL_INFO",
-            "MORE_LIKE_THIS_BOOST_TAGS",
-            "MORE_LIKE_THIS_BOOST_AUTHORS",
-            "MORE_LIKE_THIS_BOOST_SUBJECTS",
-            "MORE_LIKE_THIS_COUNT",
-            "MORE_LIKE_THIS_SCORE_CUTOFF",
-        ),
-        "collapse": True,
-    },
+    "SURVEY_THANK_YOU_TEXT": (
+        "Vielen Dank für Ihre Teilnahme an unserer Umfrage!",
+        "Dankes-Nachricht bei Umfragen",
+        str,
+    ),
 }
 
 WAGTAIL_SITE_NAME = "digital.learning.lab"

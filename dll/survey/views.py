@@ -1,3 +1,4 @@
+from constance import config
 from crispy_forms.utils import render_crispy_form
 from django.http import JsonResponse
 from django.views.generic import DetailView
@@ -15,6 +16,7 @@ class SurveyDetailView(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(SurveyDetailView, self).get_context_data(**kwargs)
         ctx["form"] = SurveyResultForm(survey=self.get_object())
+        ctx["thank_you_text"] = config.SURVEY_THANK_YOU_TEXT
         return ctx
 
     def post(self, request, *args, **kwargs):

@@ -1,0 +1,13 @@
+.survey {
+  .custom-control-label {
+    font-weight: 400;
+  }
+}
+
+@media (min-width: 768px) {
+  .survey {
+    .modal-dialog {
+      max-width: 700px;
+    }
+  }
+}
