@@ -1,0 +1,10 @@
+.djn-group-nested {
+    padding-bottom: 60px;
+    padding-left: 30px;
+}
+.djn-group-nested h2  {
+    display: none;
+}
+.djn-drag-handler {
+    pointer-events: none;
+}

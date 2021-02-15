@@ -21,7 +21,6 @@ class TriggerAdmin(admin.ModelAdmin):
 
 class SurveyQuestionChoiceAdmin(nested_admin.NestedStackedInline):
     model = SurveyQuestionChoice
-    sortable_field_name = "position"
     extra = 0
     min_num = 0
 
@@ -29,7 +28,6 @@ class SurveyQuestionChoiceAdmin(nested_admin.NestedStackedInline):
 class SurveyQuestionInlineAdmin(nested_admin.NestedStackedInline):
     model = SurveyQuestion
     inlines = [SurveyQuestionChoiceAdmin]
-    sortable_field_name = "position"
     extra = 0
     min_num = 1
 
@@ -38,6 +36,9 @@ class SurveyAdmin(nested_admin.NestedModelAdmin):
     actions = ["export_xlsx"]
     inlines = [SurveyQuestionInlineAdmin]
     list_display = ("title", "get_answer_count")
+
+    class Media:
+        css = {"all": ("admin/css/survey_admin.css",)}
 
     def get_answer_count(self, obj):
         return SurveyResult.objects.filter(survey=obj).count()
