@@ -24,19 +24,24 @@
   <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/icons/favicon-16x16.png' %}">
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="msapplication-TileImage" content="{% static 'img/icons/favicon/ms-icon-144x144.png' %}">
+  <!-- Matomo -->
   <script type="text/javascript">
-    var _paq = _paq || [];
+    var _paq = window._paq = window._paq || [];
     /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(["setDocumentTitle", document.domain + "/" + document.title]);
+    _paq.push(["setCookieDomain", "*.digitallearninglab.de"]);
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function() {
-      var u="//fizban06.rz.tu-harburg.de/";
-      _paq.push(['setTrackerUrl', u+'piwik.php']);
+      var u="https://wanalytics.rz.tuhh.de/";
+      _paq.push(['setTrackerUrl', u+'matomo.php']);
       _paq.push(['setSiteId', '15']);
       var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-      g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+      g.type='text/javascript'; g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
     })();
   </script>
+  <noscript><p><img src="https://wanalytics.rz.tuhh.de/matomo.php?idsite=15&amp;rec=1" style="border:0;" alt="" /></p></noscript>
+  <!-- End Matomo Code -->
   <script type='application/ld+json'>
     {
         "@context": "http://www.schema.org",
