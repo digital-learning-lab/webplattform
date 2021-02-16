@@ -1,4 +1,6 @@
 {% load static %}
+{% load menu_tags %}
+
 <header class="header fixed-top js-header">
   <a href="/" class="logo">
       <img class="logo__claim" src="{% static 'img/logo/dll_logo_rgb_claim_rechts.png' %}" srcset="{% static 'img/logo/dll_logo_rgb_claim_rechts.png' %} 1x, {% static 'img/logo/dll_logo_rgb_claim_rechts_large.png' %} 2x" alt="digital.learning.lab Logo">
@@ -51,6 +53,7 @@
           </li>
         {% endif %}
       {% endif %}
+      {% flat_menu handle='dll' template='dll/includes/navigation_menu.html'%}
       <li class="navigation__item js-navigation__item">
         <a href="/#dll-aufbau"{% if request.path == '/' %}class="js-navigation-scroll"{% endif %}>Was ist das dll?</a>
       </li>
