@@ -58,25 +58,6 @@ hr {
   border: 1px dashed gray;
 }
 
-a[rel*=external]:after {
-  font-family: "Font Awesome 5 Free";
-  speak: none;
-  font-style: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  font-size: 0.8rem;
-  margin-left: 5px;
-  display: inline-block;
-  vertical-align: middle;
-  font-weight: 600!important;
-  /* Better Font Rendering =========== */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  content: "\f35d";
-
-}
-
 @media (min-width: 992px) {
   body {
     padding-bottom: 350px;

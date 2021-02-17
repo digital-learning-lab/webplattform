@@ -45,14 +45,22 @@ $info-box__left-spacing: 1.5rem;
   bottom: 1rem;
   vertical-align: middle;
   left: $info-box__left-spacing;
-  &:before {
-    font-family: $font-family-icons;
-    content: "\e908";
-    font-size: 1.5rem;
+  &:after {
+    font-family: "Font Awesome 5 Free";
+    speak: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    font-size: 0.8rem;
+    margin-left: 5px;
     display: inline-block;
-    margin-top: -2px;
-    margin-right: 3px;
     vertical-align: middle;
+    font-weight: 600!important;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\f054";
   }
 }
 .info-box__link--inline {
