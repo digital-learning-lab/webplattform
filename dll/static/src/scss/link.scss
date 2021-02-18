@@ -16,3 +16,22 @@
     color: darken($color--tool, 10%);
   }
 }
+.link--arrow {
+  &:after {
+    font-family: "Font Awesome 5 Free";
+    speak: none;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    font-size: 0.8rem;
+    margin-left: 5px;
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: 600!important;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: "\f054";
+  }
+}
