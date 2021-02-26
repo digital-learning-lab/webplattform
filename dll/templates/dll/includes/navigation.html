@@ -53,7 +53,7 @@
           </li>
         {% endif %}
       {% endif %}
-      {% flat_menu handle='dll' template='dll/includes/navigation_menu.html'%}
+      {% flat_menu handle=config.MENU_HANDLE template='dll/includes/navigation_menu.html'%}
       <li class="navigation__item js-navigation__item">
         <a href="/#dll-aufbau"{% if request.path == '/' %}class="js-navigation-scroll"{% endif %}>Was ist das dll?</a>
       </li>

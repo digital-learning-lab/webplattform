@@ -9,7 +9,12 @@ $('.js-navigation__item').click(function (e) {
   $('.navigation-toggle').removeClass('navigation-toggle--is-active')
 })
 $('.js-navigation-scroll').click(function (e) {
-  e.preventDefault();
-  $('html, body').animate({scrollTop: $('#dll-aufbau').offset().top - $('.js-header').height() - 20})
+  if (e.target && e.target.href) {
+    const url = new URL(e.target.href)
+    if (url.hash && window.location.pathname === url.pathname && window.location.hostname === url.hostname) {
+      e.preventDefault();
+      $('html, body').animate({scrollTop: $(url.hash).offset().top - $('.js-header').height() - 20})
+    }
+  }
 })
 $('.navigation').addClass('navigation--transition')

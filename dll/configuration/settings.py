@@ -121,6 +121,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "wagtail.contrib.settings.context_processors.settings",
                 "wagtailmenus.context_processors.wagtailmenus",
+                "constance.context_processors.config",
             ],
         },
     },
@@ -412,6 +413,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
         "collapse": True,
     },
     "Umfragen": ("SURVEY_THANK_YOU_TEXT",),
+    "Menüs": ("MENU_HANDLE",),
 }
 CONSTANCE_CONFIG = {
     # Content Teaser
@@ -525,6 +527,7 @@ CONSTANCE_CONFIG = {
         "Dankes-Nachricht bei Umfragen",
         str,
     ),
+    "MENU_HANDLE": ("menu", str),
 }
 
 WAGTAIL_SITE_NAME = "digital.learning.lab"
