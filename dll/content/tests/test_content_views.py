@@ -47,6 +47,11 @@ class BaseTestCase(TestCase):
                 "teaser": "Nam adipiscing. In auctor lobortis lacus.",
             },
             {
+                "model": TeachingModule,
+                "name": "TeachingModule äöüß",
+                "teaser": "Nam adipiscing. In auctor lobortis lacus.",
+            },
+            {
                 "model": Trend,
                 "name": "Trend Integer tincidunt",
                 "teaser": "Duis vel nibh at velit scelerisque suscipit. ",
@@ -200,7 +205,7 @@ class ContentViewTests(BaseTestCase):
         list_view = reverse("public-content-list")
         response = self.client.get(list_view)
         data = response.json()
-        self.assertTrue(len(data["results"]) == 8)
+        self.assertTrue(len(data["results"]) == 9)
         self.assertEqual(
             set(data["results"][0].keys()),
             {
@@ -223,9 +228,9 @@ class ContentViewTests(BaseTestCase):
         response = self.client.get(f"{list_view}?teachingModules=false")
         self.assertTrue(len(response.json()["results"]) == 4)
         response = self.client.get(f"{list_view}?trends=false")
-        self.assertTrue(len(response.json()["results"]) == 6)
+        self.assertTrue(len(response.json()["results"]) == 7)
         response = self.client.get(f"{list_view}?tools=false")
-        self.assertTrue(len(response.json()["results"]) == 6)
+        self.assertTrue(len(response.json()["results"]) == 7)
 
     def test_teaching_modules_filter_view(self):
         url = reverse("teaching-modules-filter")
@@ -256,7 +261,7 @@ class ContentViewTests(BaseTestCase):
         response = self.client.get(url)
         data = response.json()
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(data["results"]), 4)
+        self.assertEqual(len(data["results"]), 5)
 
     def test_trends_data_filter_view(self):
         url = reverse("trends-data-filter")
@@ -495,3 +500,31 @@ class TeachingModuleCreationTests(BaseTestCase):
         data = response.json()
         self.assertEqual(response.status_code, 201)
         self.assertTrue(data["author"]["username"] == "Alice Doe")
+
+    def test_content_name_exists_fails(self):
+        self.client.login(username="test+alice@blueshoe.de", password="password")
+
+        create_view = reverse("draft-content-list")
+        post_data = {
+            "name": "TeachingModule äöüß",
+            "teaser": "Nunc interdum lacus sit amet orci.",
+            "learning_goals": ["a", "b", "c"],
+            "related_content": [
+                {"pk": pk} for pk in random.choices(self.published_content, k=2)
+            ],
+            "competences": [{"pk": self.competence.pk}],
+            "sub_competences": [{"pk": self.sub_competence.pk}],
+            "resourcetype": "TeachingModule",
+            "contentlink_set": [
+                {"url": "https://www.foo.com", "name": "Foo", "type": "href"},
+                {"url": "https://www.bar.com", "name": "Bar", "type": "video"},
+            ],
+            "subjects": [{"pk": self.subject.pk}],
+            "school_types": [{"pk": self.school_type.pk}],
+        }
+        response = self.client.post(
+            create_view, data=post_data, content_type="application/json"
+        )
+        data = response.json()
+        self.assertEqual(response.status_code, 400)
+        self.assertTrue("name" in data)  # "content with name already exists"
