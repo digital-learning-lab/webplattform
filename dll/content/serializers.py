@@ -4,6 +4,7 @@ from time import strftime
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
+from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils.translation import ugettext_lazy as _
 from psycopg2._range import NumericRange
@@ -397,9 +398,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
 
     def validate_name(self, data):
         """Make sure the slug of this name will be unique too."""
-        expected_slug = custom_slugify(data)[
-            :50
-        ]  # corresponds to DllSlugField max_length
+        expected_slug = slugify(data)[:200]  # corresponds to field's max_length
         if (
             self.instance is None
             and Content.objects.drafts().filter(slug=expected_slug).count() >= 1
