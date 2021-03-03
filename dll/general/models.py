@@ -120,8 +120,7 @@ class PublisherModel(PublisherModelBase):
 
 
 class DllSlugField(AutoSlugField):
-    def slugify_function(self, value):
-        return custom_slugify(value)
+    pass
 
 
 class NewsletterSubscription(TimeStampedModel):
