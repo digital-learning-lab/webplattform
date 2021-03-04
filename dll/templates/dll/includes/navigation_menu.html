@@ -1,5 +1,5 @@
 {% for item in menu_items %}
   <li class="navigation__item js-navigation__item">
-    <a href="{{ item.href }}">{{ item.text }}</a>
+    <a href="{{ item.href }}"{% if '#' in item.href %} class="js-navigation-scroll"{% endif %}>{{ item.text }}</a>
   </li>
 {% endfor %}
