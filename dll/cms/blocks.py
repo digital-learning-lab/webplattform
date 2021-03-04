@@ -66,6 +66,9 @@ class SingleElementBlock(ImageVideoBlock):
         default="center",
     )
 
+    link_text = blocks.CharBlock(required=False)
+    url = blocks.URLBlock(required=False)
+
     advanced_options = blocks.StructBlock(
         local_blocks=(
             (
@@ -81,6 +84,17 @@ class SingleElementBlock(ImageVideoBlock):
         label=_("Erweiterte Einstellungen"),
         form_classname="collapse collapse--custom",
     )
+
+    def clean(self, value):
+        result = super(SingleElementBlock, self).clean(value)
+        if bool(value["link_text"]) != bool(value["url"]):
+            raise ValidationError(
+                "ValidationError in DllElementBlock",
+                params={
+                    "link_text": ErrorList(["Link Text muss mit URL verwendet werden."])
+                },
+            )
+        return result
 
     class Meta:
         template = "blocks/single_element_block.html"
