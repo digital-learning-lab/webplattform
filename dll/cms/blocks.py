@@ -266,6 +266,7 @@ class MultiElementBlock(blocks.StructBlock):
             ("two_column_block", TwoColumnLayout()),
             ("three_column_block", ThreeColumnLayout()),
             ("iframe_block", IFrameBlock()),
+            ("dll_element_block", DllElementBlock()),
         ],
     )
 

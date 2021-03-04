@@ -10,7 +10,9 @@
   {% endif %}
   <div class="row">
     {% for block in value.elements %}
+      {% with is_sub_block=True %}
         {% include_block block %}
+      {% endwith %}
     {% endfor %}
   </div>
 {% endblock block_content %}

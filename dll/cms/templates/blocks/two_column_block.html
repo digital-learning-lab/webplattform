@@ -1,6 +1,8 @@
 {% load wagtailcore_tags %}
 {% for block in value.content %}
 <div class="col-12 col-lg-6">
-  {% include_block block %}
+  {% with is_sub_block=False %}
+    {% include_block block %}
+  {% endwith %}
 </div>
 {% endfor %}

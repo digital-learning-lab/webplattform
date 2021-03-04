@@ -2,6 +2,10 @@
 {% load wagtailcore_tags %}
 {% load wagtailimages_tags %}
 
+{% if is_sub_block %}
+<div class="col-12">
+{% endif %}
+
 {% if value.image %}
   {% image value.image width-600 class="img-fluid" alt=value.alt_text|default:value.image.default_alt_text %}
 {% endif %}
@@ -16,4 +20,8 @@
 </div>
 {% if value.url %}
   <a class="link--arrow" href="{{ value.url }}">{{ value.link_text }}</a>
+{% endif %}
+
+{% if is_sub_block %}
+</div>
 {% endif %}
