@@ -83,13 +83,13 @@ INSTALLED_APPS = [
     "wagtail.documents",
     "wagtail.images",
     "wagtail.search",
-    "nested_admin",
-    "dll.cms",
-    "dll.survey",
     "wagtail.admin",
     "wagtail.contrib.modeladmin",
     "wagtailmenus",
     "wagtail.core",
+    "nested_admin",
+    "dll.cms",
+    "dll.survey",
     "modelcluster",
 ]
 
