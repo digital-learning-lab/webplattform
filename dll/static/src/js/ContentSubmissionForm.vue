@@ -104,7 +104,7 @@
       submit () {
         const submissionEvent = new Event('content-submission')
         window.dispatchEvent(submissionEvent)
-        this.$emit('submit')
+        this.$emit('update')
       }
     }
   }
