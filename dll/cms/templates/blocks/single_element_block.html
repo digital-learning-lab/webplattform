@@ -6,7 +6,8 @@
   {{ block.super }}
   {% if value.image %}
     {% image value.image width-1200 class="img-fluid" alt=value.alt_text|default:value.image.default_alt_text %}
-  {% else %}
+  {% endif %}
+  {% if value.video %}
     <div class="embed-responsive embed-responsive-16by9">
       {% embed value.video.url %}
     </div>
