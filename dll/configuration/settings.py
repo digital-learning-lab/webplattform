@@ -413,7 +413,11 @@ CONSTANCE_CONFIG_FIELDSETS = {
         "collapse": True,
     },
     "Umfragen": ("SURVEY_THANK_YOU_TEXT",),
-    "Menüs": ("MENU_HANDLE",),
+    "Menüs": (
+        "GUEST_MENU_HANDLE",
+        "LOGGED_IN_MENU_HANDLE",
+        "REVIEWER_MENU_HANDLE",
+    ),
 }
 CONSTANCE_CONFIG = {
     # Content Teaser
