@@ -72,6 +72,10 @@ def forward_func(apps, schema_editor):
         {"link_url": "/logout/", "url_append": "", "link_text": "Logout"},
     ]
 
+    guest_items.reverse()
+    logged_in_items.reverse()
+    reviewer_items.reverse()
+
     for item in guest_items:
         FlatMenuItem.objects.create(
             link_url=item["link_url"],
