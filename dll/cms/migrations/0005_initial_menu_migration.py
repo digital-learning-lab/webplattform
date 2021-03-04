@@ -4,17 +4,26 @@ from django.db import migrations
 def forward_func(apps, schema_editor):
     FlatMenu = apps.get_model("wagtailmenus", "FlatMenu")
     FlatMenuItem = apps.get_model("wagtailmenus", "FlatMenuItem")
+    Site = apps.get_model("wagtailcore", "Site")
+
+    site = Site.objects.first()
 
     guest_menu = FlatMenu.objects.create(
-        site_id=1, title="Navigation - Guest", handle="guest_menu", heading=""
+        site_id=site.pk, title="Navigation - Guest", handle="guest_menu", heading=""
     )
 
     logged_in_menu = FlatMenu.objects.create(
-        site_id=1, title="Navigation - Logged In", handle="logged_in_menu", heading=""
+        site_id=site.pk,
+        title="Navigation - Logged In",
+        handle="logged_in_menu",
+        heading="",
     )
 
     reviewer_menu = FlatMenu.objects.create(
-        site_id=1, title="Navigation - Reviewer", handle="reviewer_menu", heading=""
+        site_id=site.pk,
+        title="Navigation - Reviewer",
+        handle="reviewer_menu",
+        heading="",
     )
 
     guest_items = [
