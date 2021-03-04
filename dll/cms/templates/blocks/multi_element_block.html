@@ -3,6 +3,11 @@
 
 {% block block_content %}
   {{ block.super }}
+  {% if value.url %}
+  <div class="text-{{ value.text_alignment|default:"center" }} mb-5">
+    <a class="link--arrow" href="{{ value.url }}">{{ value.link_text }}</a>
+  </div>
+  {% endif %}
   <div class="row">
     {% for block in value.elements %}
         {% include_block block %}
