@@ -7,7 +7,9 @@
 {% endif %}
 
 {% if value.image %}
-  {% image value.image width-600 class="img-fluid" alt=value.alt_text|default:value.image.default_alt_text %}
+  <div class="text-{{ value.image_alignment|default:"center" }}">
+    {% image value.image width-1200 class="img-fluid" alt=value.alt_text|default:value.image.default_alt_text %}
+  </div>
 {% endif %}
 {% if value.video %}
   <div class="embed-responsive embed-responsive-16by9">

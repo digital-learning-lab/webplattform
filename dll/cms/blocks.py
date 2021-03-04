@@ -134,6 +134,17 @@ class DllElementBlock(ImageVideoBlock):
         default="center",
     )
 
+    image_alignment = blocks.ChoiceBlock(
+        label=_("Bild Ausrichtung"),
+        choices=(
+            ("left", _("Links")),
+            ("center", _("Zentriert")),
+            ("right", _("Rechts")),
+        ),
+        required=False,
+        default="center",
+    )
+
     link_text = blocks.CharBlock(required=False)
     url = blocks.URLBlock(required=False)
 
