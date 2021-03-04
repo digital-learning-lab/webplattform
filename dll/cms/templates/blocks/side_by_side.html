@@ -11,6 +11,9 @@
       <div class="text-{{ value.text_alignment|default:"left" }}">
        {{ value.text|richtext }}
       </div>
+      <div class="text-{{ value.text_alignment|default:"center" }} mt-5">
+        <a class="link--arrow" href="{{ value.url }}">{{ value.link_text }}</a>
+      </div>
     </div>
     <div class="col-lg-6{% if value.layout == "image_left" %} order-1{% endif %}">
       {% if value.image %}
