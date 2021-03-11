@@ -27,49 +27,127 @@ def forward_func(apps, schema_editor):
     )
 
     guest_items = [
-        {"link_url": "/", "url_append": "", "link_text": "Home"},
-        {"link_url": "/login", "url_append": "", "link_text": "Login"},
-        {"link_url": "/", "url_append": "#dll-aufbau", "link_text": "Was ist das dll?"},
-        {"link_url": "/kontakt", "url_append": "", "link_text": "Kontakt"},
-        {"link_url": "/newsletter", "url_append": "", "link_text": "Newsletter"},
-        {"link_url": "/faq", "url_append": "", "link_text": "FAQ"},
+        {"link_url": "/", "url_append": "", "link_text": "Home", "sort_order": 0},
+        {"link_url": "/login", "url_append": "", "link_text": "Login", "sort_order": 1},
+        {
+            "link_url": "/",
+            "url_append": "#dll-aufbau",
+            "link_text": "Was ist das dll?",
+            "sort_order": 2,
+        },
+        {
+            "link_url": "/kontakt",
+            "url_append": "",
+            "link_text": "Kontakt",
+            "sort_order": 3,
+        },
+        {
+            "link_url": "/newsletter",
+            "url_append": "",
+            "link_text": "Newsletter",
+            "sort_order": 4,
+        },
+        {"link_url": "/faq", "url_append": "", "link_text": "FAQ", "sort_order": 5},
     ]
 
     logged_in_items = [
-        {"link_url": "/", "url_append": "", "link_text": "Home"},
-        {"link_url": "/profil/", "url_append": "", "link_text": "Mein Profil"},
+        {"link_url": "/", "url_append": "", "link_text": "Home", "sort_order": 0},
+        {
+            "link_url": "/profil/",
+            "url_append": "",
+            "link_text": "Mein Profil",
+            "sort_order": 1,
+        },
         {
             "link_url": "/mein-merkzettel",
             "url_append": "",
             "link_text": "Mein Merkzettel",
+            "sort_order": 2,
         },
-        {"link_url": "/meine-inhalte", "url_append": "", "link_text": "Meine Inhalte"},
-        {"link_url": "/", "url_append": "#dll-aufbau", "link_text": "Was ist das dll?"},
-        {"link_url": "/kontakt", "url_append": "", "link_text": "Kontakt"},
-        {"link_url": "/newsletter", "url_append": "", "link_text": "Newsletter"},
-        {"link_url": "/faq", "url_append": "", "link_text": "FAQ"},
-        {"link_url": "/logout/", "url_append": "", "link_text": "Logout"},
+        {
+            "link_url": "/meine-inhalte",
+            "url_append": "",
+            "link_text": "Meine Inhalte",
+            "sort_order": 3,
+        },
+        {
+            "link_url": "/",
+            "url_append": "#dll-aufbau",
+            "link_text": "Was ist das dll?",
+            "sort_order": 4,
+        },
+        {
+            "link_url": "/kontakt",
+            "url_append": "",
+            "link_text": "Kontakt",
+            "sort_order": 5,
+        },
+        {
+            "link_url": "/newsletter",
+            "url_append": "",
+            "link_text": "Newsletter",
+            "sort_order": 6,
+        },
+        {"link_url": "/faq", "url_append": "", "link_text": "FAQ", "sort_order": 7},
+        {
+            "link_url": "/logout/",
+            "url_append": "",
+            "link_text": "Logout",
+            "sort_order": 8,
+        },
     ]
 
     reviewer_items = [
-        {"link_url": "/", "url_append": "", "link_text": "Home"},
-        {"link_url": "/profil/", "url_append": "", "link_text": "Mein Profil"},
+        {"link_url": "/", "url_append": "", "link_text": "Home", "sort_order": 0},
+        {
+            "link_url": "/profil/",
+            "url_append": "",
+            "link_text": "Mein Profil",
+            "sort_order": 1,
+        },
         {
             "link_url": "/mein-merkzettel",
             "url_append": "",
             "link_text": "Mein Merkzettel",
+            "sort_order": 2,
         },
-        {"link_url": "/meine-inhalte", "url_append": "", "link_text": "Meine Inhalte"},
+        {
+            "link_url": "/meine-inhalte",
+            "url_append": "",
+            "link_text": "Meine Inhalte",
+            "sort_order": 3,
+        },
         {
             "link_url": "/review-inhalte",
             "url_append": "",
             "link_text": "Review Inhalte",
+            "sort_order": 4,
         },
-        {"link_url": "/", "url_append": "#dll-aufbau", "link_text": "Was ist das dll?"},
-        {"link_url": "/kontakt", "url_append": "", "link_text": "Kontakt"},
-        {"link_url": "/newsletter", "url_append": "", "link_text": "Newsletter"},
-        {"link_url": "/faq", "url_append": "", "link_text": "FAQ"},
-        {"link_url": "/logout/", "url_append": "", "link_text": "Logout"},
+        {
+            "link_url": "/",
+            "url_append": "#dll-aufbau",
+            "link_text": "Was ist das dll?",
+            "sort_order": 5,
+        },
+        {
+            "link_url": "/kontakt",
+            "url_append": "",
+            "link_text": "Kontakt",
+            "sort_order": 6,
+        },
+        {
+            "link_url": "/newsletter",
+            "url_append": "",
+            "link_text": "Newsletter",
+            "sort_order": 7,
+        },
+        {"link_url": "/faq", "url_append": "", "link_text": "FAQ", "sort_order": 8},
+        {
+            "link_url": "/logout/",
+            "url_append": "",
+            "link_text": "Logout",
+            "sort_order": 9,
+        },
     ]
 
     guest_items.reverse()
@@ -82,6 +160,7 @@ def forward_func(apps, schema_editor):
             url_append=item["url_append"],
             link_text=item["link_text"],
             menu=guest_menu,
+            sort_order=item["sort_order"],
         )
 
     for item in logged_in_items:
@@ -90,6 +169,7 @@ def forward_func(apps, schema_editor):
             url_append=item["url_append"],
             link_text=item["link_text"],
             menu=logged_in_menu,
+            sort_order=item["sort_order"],
         )
 
     for item in reviewer_items:
@@ -98,6 +178,7 @@ def forward_func(apps, schema_editor):
             url_append=item["url_append"],
             link_text=item["link_text"],
             menu=reviewer_menu,
+            sort_order=item["sort_order"],
         )
 
 
