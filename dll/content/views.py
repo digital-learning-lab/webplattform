@@ -57,6 +57,7 @@ from dll.content.serializers import (
     ReviewSerializer,
     SubjectSerializer,
     FileSerializer,
+    ImageFileSerializer,
 )
 from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
@@ -687,6 +688,7 @@ class StateSearchView(APIView):
 
 class FileUploadBaseView(APIView):
     parser_class = (FileUploadParser,)
+    serializer_klaas = FileSerializer
 
     def put(self, request, *args, **kwargs):
         slug = kwargs.get("slug", None)
@@ -694,18 +696,20 @@ class FileUploadBaseView(APIView):
             raise Http404
 
         obj = Content.objects.drafts().get(slug=slug)
-        file_serializer = FileSerializer(data=request.data)
+        file_serializer = self.serializer_klaas(data=request.data)
 
         return obj, file_serializer
 
 
 class ImageUploadView(FileUploadBaseView):
+    serializer_klaas = ImageFileSerializer
+
     def put(self, request, *args, **kwargs):
         obj, file_serializer = super(ImageUploadView, self).put(
             request, *args, **kwargs
         )
         if file_serializer.is_valid():
-            image = file_serializer.validated_data["file"]
+            image = file_serializer.validated_data["image"]
             filer_folder = obj.get_folder()
             filer_image = Image.objects.create(
                 original_filename=image.name,

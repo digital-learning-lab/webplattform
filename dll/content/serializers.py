@@ -726,8 +726,21 @@ class ContentPolymorphicSerializer(PolymorphicSerializer):
     }
 
 
+class FileExtensionValidator:
+    def __init__(self, file_extensions):
+        self.file_extensions = file_extensions
+
+    def __call__(self, value):
+        extension = value.name.split(".")[-1]
+        if extension and extension.lower() not in self.file_extensions:
+            message = "Bild hat ein ungültiges Dateiformat."
+            raise serializers.ValidationError(message)
+
+
 class ImageFileSerializer(serializers.Serializer):
-    image = serializers.FileField()
+    image = serializers.FileField(
+        validators=[FileExtensionValidator(["png", "jpg", "jpeg", "gif"])]
+    )
 
 
 class FileSerializer(serializers.Serializer):

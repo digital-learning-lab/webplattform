@@ -196,7 +196,7 @@ export const submissionMixin = {
       if (this.previewImage) {
         let formData = new FormData()
 
-        formData.append('file', this.previewImage, this.previewImage.name)
+        formData.append('image', this.previewImage, this.previewImage.name)
         axiosInstance.put('/api/inhalt-bearbeiten/' + this.data.slug + '/vorschau-bild', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
@@ -204,8 +204,11 @@ export const submissionMixin = {
         }).then(res => {
         }).catch(err => {
           if (err.response.status === 400) {
-            for (let i = 0; i < err.response.data.length; i++) {
-              this.errors.push(err.response.data[i])
+            for (const field in err.response.data) {
+              for (let i = 0; i < err.response.data[field].length; i++) {
+                this.errors.push(err.response.data[field][i])
+              }
+              this.errorFields.push(field)
             }
           }
         })
