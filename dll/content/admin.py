@@ -100,6 +100,7 @@ class CompetenceAdditionalInformationInlineAdmin(admin.StackedInline):
 class ContentAdmin(SimpleHistoryAdmin, admin.ModelAdmin, DynamicArrayMixin):
     exclude = ("json_data", "tags")
     inlines = [ContentLinkInlineAdmin]
+    search_fields = ["name"]
 
 
 @admin.register(TeachingModule)
@@ -178,6 +179,7 @@ class ToolAdmin(ImportExportMixin, admin.ModelAdmin):
     exclude = ("json_data", "tags")
     resource_class = ToolResource
     inlines = [ContentLinkInlineAdmin]
+    search_fields = ["name"]
 
     def get_export_queryset(self, request):
         qs = super(ToolAdmin, self).get_export_queryset(request)
