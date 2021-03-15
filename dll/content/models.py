@@ -423,29 +423,13 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
             "content_type": instance.type_verbose,
             "content_title": instance.name,
         }
-        # TODO check if review mail is suited for these causes
-        #  maybe sending to a single mail address will be reverted with previous code that sends emails to all users in
-        #  the group
-        if isinstance(self, TeachingModule):
-            group = get_bsb_reviewer_group()
-            # bsb_reviewers = DllUser.objects.filter(groups__pk=group.pk)
-            send_mail.delay(
-                event_type_code="CONTENT_SUBMITTED_FOR_REVIEW",
-                ctx=context,
-                email=settings.BSB_REVIEW_MAIL,
-                sender_id=getattr(by_user, "pk", None),
-                # recipient_ids=list(bsb_reviewers.values_list('pk', flat=True))
-            )
-        elif isinstance(self, Trend) or isinstance(self, Tool):
-            group = get_tuhh_reviewer_group()
-            # tuhh_reviewers = DllUser.objects.filter(groups__pk=group.pk)
-            send_mail.delay(
-                event_type_code="CONTENT_SUBMITTED_FOR_REVIEW",
-                ctx=context,
-                email=settings.TUHH_REVIEW_MAIL,
-                sender_id=getattr(by_user, "pk", None),
-                # recipient_ids=list(tuhh_reviewers.values_list('pk', flat=True))
-            )
+
+        send_mail.delay(
+            event_type_code="CONTENT_SUBMITTED_FOR_REVIEW",
+            ctx=context,
+            email=settings.REVIEW_MAIL,
+            sender_id=getattr(by_user, "pk", None),
+        )
 
     def get_image(self):
         if self.image is not None:

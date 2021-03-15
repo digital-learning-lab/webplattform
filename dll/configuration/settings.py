@@ -324,8 +324,7 @@ META_SITE_PROTOCOL = env.str("META_SITE_PROTOCOL")
 META_SITE_DOMAIN = env.str("META_SITE_DOMAIN")
 META_USE_OG_PROPERTIES = True
 
-BSB_REVIEW_MAIL = os.getenv("EMAIL_RECEIVER_DLL", "dll@blueshoe.de")
-TUHH_REVIEW_MAIL = os.getenv("EMAIL_RECEIVER_BSB", "dll@blueshoe.de")
+REVIEW_MAIL = os.getenv("EMAIL_RECEIVER_DLL", "dll@blueshoe.de")
 
 LOCALE_PATHS = [os.path.join(BASE_DIR, "locales")]
 
