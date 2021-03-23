@@ -8,8 +8,8 @@
           <div class="row justify-content-center">
             <div class="col-12 col-md-11">
               {% block block_content %}
-              <h1 class="section-info__headline text-{{ value.text_alignment|default:"center" }}">{{ value.headline }}</h1>
-              <div class="text-{{ value.text_alignment|default:"center" }}">
+              {% if value.headline %}<h1 class="section-info__headline text-{{ value.text_alignment|default:"center" }}">{{ value.headline }}</h1>{% endif %}
+              <div class="text-{{ value.text_alignment|default:"center" }} section-info__richtext">
                 {{ value.text|richtext }}
               </div>
               {% endblock block_content %}

@@ -28,6 +28,14 @@
 .section-info__iframe {
   width: 100%;
 }
+.section-info__richtext {
+  h1 {
+    @extend .section-info__headline;
+  }
+  h2 {
+    @extend .section-info__subheadline;
+  }
+}
 @media (min-width: 768px) {
   .section-info {
     padding: 1.5rem 3rem 3rem 3rem;

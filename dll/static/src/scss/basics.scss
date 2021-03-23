@@ -1,3 +1,5 @@
+@import "headings";
+
 html, body {
   min-height: 100vh;
   position: relative;
@@ -20,32 +22,6 @@ a {
 }
 p {
   font-weight: $font-weight-light;
-}
-h1 {
-  font-size: 28px;
-  font-weight: $font-weight-light;
-  line-height: 1.3em;
-  margin: 0.67em 0;
-}
-h2 {
-  font-size: 23px;
-  font-weight: $font-weight-bold;
-  margin-top: 2rem;
-  margin-bottom: 1rem;
-  line-height: 1.3em;
-}
-h3 {
-  font-size: 18px;
-  font-weight: $font-weight-semi-bold;
-  line-height: 1.3em;
-  margin-bottom: 1rem;
-}
-h4 {
-  font-size: 18px;
-  font-weight: $font-weight-light;
-  line-height: 1.3em;
-  margin-top: 1.33rem;
-  margin-bottom: 1.33rem;
 }
 ul {
   font-weight: $font-weight-regular;
