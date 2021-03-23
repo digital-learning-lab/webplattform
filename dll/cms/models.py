@@ -20,9 +20,12 @@ class DllPageMixin:
     @cached_property
     def breadcrumbs(self):
         """Returns ancestors - leaving out the root node."""
-        return list(self.get_ancestors()[1:]) + [self]
+        if self.request.is_preview:
+            return list(self.get_ancestors()[1:]) + [self]
+        return self.get_ancestors(inclusive=True)[1:]
 
     def get_context(self, request, *args, **kwargs):
+        self.request = request
         ctx = super(DllPageMixin, self).get_context(request, *args, **kwargs)
         ctx["breadcrumbs"] = self.breadcrumbs
 
