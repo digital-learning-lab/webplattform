@@ -21,7 +21,9 @@
   {{ value.text|richtext }}
 </div>
 {% if value.url %}
+<div class="text-{{ value.text_alignment|default:"center" }}">
   <a class="link--arrow" href="{{ value.url }}">{{ value.link_text }}</a>
+</div>
 {% endif %}
 
 {% if is_sub_block %}
