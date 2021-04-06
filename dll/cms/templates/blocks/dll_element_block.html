@@ -16,7 +16,9 @@
     {% embed value.video.url %}
   </div>
 {% endif %}
+{% if value.subline %}
 <p class="text-{{ value.text_alignment|default:"center" }} font-weight-semi-bold">{{ value.subline }}</p>
+{% endif %}
 <div class="text-{{ value.text_alignment|default:"center" }}">
   {{ value.text|richtext }}
 </div>
