@@ -429,6 +429,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
             ctx=context,
             email=settings.REVIEW_MAIL,
             sender_id=getattr(by_user, "pk", None),
+            bcc=settings.EMAIL_SENDER,
         )
 
     def get_image(self):

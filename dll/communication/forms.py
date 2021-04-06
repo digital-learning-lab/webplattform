@@ -56,6 +56,7 @@ class ContactForm(forms.Form):
             event_type_code=event_type_official,
             ctx=context,
             email=CONTACT_OPTIONS[self.cleaned_data["subject"]]["email"],
+            bcc=settings.EMAIL_SENDER,
         )
         send_mail.delay(
             event_type_code="USER_CONTACT_SUCCESSFUL",
