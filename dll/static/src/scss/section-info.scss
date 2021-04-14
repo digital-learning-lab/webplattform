@@ -19,9 +19,6 @@
 .section-info__body {
   font-weight: $font-weight-light;
 }
-.section-info p {
-  padding: 17px 0;
-}
 .section-info img, .section-info .embed-responsive {
   margin: 17px 0;
 }
@@ -38,6 +35,6 @@
 }
 @media (min-width: 768px) {
   .section-info {
-    padding: 1.5rem 3rem 3rem 3rem;
+    padding: 1.5rem 3rem;
   }
 }
