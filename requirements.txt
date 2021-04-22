@@ -34,6 +34,6 @@ coverage~=5.2.1
 pytest-django~=3.8.0
 django-simple-history~=2.11.0
 django-constance[database]~=2.8.0
-wagtail==2.12.3
+wagtail==2.12.4
 wagtailmenus==3.0.2
 django-nested-admin==3.3.3
