@@ -50,7 +50,7 @@ const assetRule = {
 };
 
 const plugins = [
-  new BundleTracker({ filename: 'webpack-stats.json', path: path.resolve(__dirname, './static/dist/') }),
+  new BundleTracker({ filename: './static/dist/webpack-stats.json', path: __dirname }),
   new webpack.ProvidePlugin({
     $: "jquery",
     jQuery: "jquery"
