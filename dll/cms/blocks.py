@@ -1,8 +1,8 @@
-from django.core.exceptions import ValidationError
 from django.forms.utils import ErrorList
 from django.utils.functional import lazy
 from django.utils.translation import ugettext_lazy as _
 from wagtail.core import blocks
+from wagtail.core.blocks.struct_block import StructBlockValidationError
 from wagtail.embeds.blocks import EmbedBlock
 from wagtail.images.blocks import ImageChooserBlock
 
@@ -26,9 +26,7 @@ class ImageVideoBlock(blocks.StructBlock):
                 ["Es ist kein Bild für den Alt Text hinterlegt."]
             )
         if errors:
-            raise ValidationError(
-                "ValidationError in SingleElementBlock", params=errors
-            )
+            raise StructBlockValidationError(errors)
         return self._to_struct_value(result)
 
 
@@ -86,15 +84,11 @@ class SingleElementBlock(ImageVideoBlock):
     )
 
     def clean(self, value):
-        result = super(SingleElementBlock, self).clean(value)
-        if bool(value["link_text"]) != bool(value["url"]):
-            raise ValidationError(
-                "ValidationError in DllElementBlock",
-                params={
-                    "link_text": ErrorList(["Link Text muss mit URL verwendet werden."])
-                },
+        if bool(value.get("link_text")) != bool(value.get("url")):
+            raise StructBlockValidationError(
+                {"link_text": ErrorList(["Link Text muss mit URL verwendet werden."])},
             )
-        return result
+        return super().clean(value)
 
     class Meta:
         template = "blocks/single_element_block.html"
@@ -151,11 +145,8 @@ class DllElementBlock(ImageVideoBlock):
     def clean(self, value):
         result = super(DllElementBlock, self).clean(value)
         if bool(value["link_text"]) != bool(value["url"]):
-            raise ValidationError(
-                "ValidationError in DllElementBlock",
-                params={
-                    "link_text": ErrorList(["Link Text muss mit URL verwendet werden."])
-                },
+            raise StructBlockValidationError(
+                {"link_text": ErrorList(["Link Text muss mit URL verwendet werden."])},
             )
         return result
 
@@ -264,11 +255,8 @@ class MultiElementBlock(blocks.StructBlock):
     def clean(self, value):
         result = super(MultiElementBlock, self).clean(value)
         if bool(value["link_text"]) != bool(value["url"]):
-            raise ValidationError(
-                "ValidationError in DllElementBlock",
-                params={
-                    "link_text": ErrorList(["Link Text muss mit URL verwendet werden."])
-                },
+            raise StructBlockValidationError(
+                {"link_text": ErrorList(["Link Text muss mit URL verwendet werden."])},
             )
         return result
 
@@ -348,11 +336,8 @@ class SideBySideBlock(ImageVideoBlock):
     def clean(self, value):
         result = super(SideBySideBlock, self).clean(value)
         if bool(value["link_text"]) != bool(value["url"]):
-            raise ValidationError(
-                "ValidationError in DllElementBlock",
-                params={
-                    "link_text": ErrorList(["Link Text muss mit URL verwendet werden."])
-                },
+            raise StructBlockValidationError(
+                {"link_text": ErrorList(["Link Text muss mit URL verwendet werden."])},
             )
         return result
 
