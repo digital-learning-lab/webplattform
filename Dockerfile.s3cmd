@@ -1,0 +1,13 @@
+FROM alpine:3.13
+
+RUN apk update && apk add python3 git && ln -sf python3 /usr/bin/python
+RUN python -m ensurepip && pip3 install python-dateutil
+
+RUN git clone https://github.com/s3tools/s3cmd.git /opt/s3cmd
+RUN ln -s /opt/s3cmd/s3cmd /usr/bin/s3cmd
+
+COPY ./s3cmd/s3cfg /opt/.s3cfg
+COPY ./s3cmd/setup-s3cmd.sh /opt/setup-s3cmd.sh
+COPY ./s3cmd/create-backup.sh /opt/create-backup.sh
+
+RUN chmod +x /opt/setup-s3cmd.sh && chmod +x /opt/create-backup.sh
