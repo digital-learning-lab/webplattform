@@ -175,7 +175,7 @@ class TeachingModuleAdmin(ImportExportMixin, ContentAdmin):
 
 
 @admin.register(Tool)
-class ToolAdmin(ImportExportMixin, admin.ModelAdmin):
+class ToolAdmin(SimpleHistoryAdmin, ImportExportMixin, admin.ModelAdmin):
     exclude = ("json_data", "tags")
     resource_class = ToolResource
     inlines = [ContentLinkInlineAdmin]
