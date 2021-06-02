@@ -1,0 +1,9 @@
+[default]
+host_base = s3-de-central.profitbricks.com
+bucket_location = de
+use_https = True
+
+# following values need to be set with env variables
+# host_bucket
+# access_key
+# secret_key
