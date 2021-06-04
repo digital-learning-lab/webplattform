@@ -501,6 +501,16 @@ class TeachingModuleCreationTests(BaseTestCase):
         self.assertEqual(response.status_code, 201)
         self.assertTrue(data["author"]["username"] == "Alice Doe")
 
+    def test_content_submission_invalid(self):
+        self.client.login(username="test+alice@blueshoe.de", password="password")
+        tm = TeachingModule.objects.create(
+            name="Simple Submission Content Fail", author=self.author
+        )
+        submit_view = reverse("submit-content", kwargs={"slug": tm.slug})
+        response = self.client.post(submit_view, content_type="application/json")
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("message", response.json())
+
     def test_content_name_exists_fails(self):
         self.client.login(username="test+alice@blueshoe.de", password="password")
 

@@ -58,6 +58,7 @@ from dll.content.serializers import (
     SubjectSerializer,
     FileSerializer,
     ImageFileSerializer,
+    ContentPolymorphicSubmissionSerializer,
 )
 from dll.general.utils import GERMAN_STATES
 from dll.user.models import DllUser
@@ -344,10 +345,30 @@ class SubmitContentView(GenericAPIView):
     def post(self, *args, **kwargs):
         obj = self.get_object()
         user = self.request.user
+        if not self.is_valid(obj):
+            return JsonResponse(
+                status=400,
+                data={
+                    "message": "Einreichung nicht erfolgreich. Bitte prüfen Sie Ihre Angaben."
+                },
+            )
         if user.has_perm("content.change_content", obj):
             obj.submit_for_review(user)
             return HttpResponse(status=200)
         return HttpResponse(status=403)
+
+    def is_valid(self, obj: Content):
+        """Validate with the 'SubmissionSerializer'.
+
+        From the models perspective there is not much validation - just a name is required.
+        As soon as the content is submitted we need to validate whether all required fields are actually
+        filled out. If they continue, if not raise an error.
+        """
+        instance = obj.get_real_instance()
+        instance.validate_required = True
+        serializer = ContentPolymorphicSerializer(instance)
+        data_serializer = ContentPolymorphicSubmissionSerializer(data=serializer.data)
+        return data_serializer.is_valid()
 
 
 class ReviewViewSet(

@@ -757,3 +757,68 @@ class FavoriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Favorite
         fields = ["content", "created"]
+
+
+class TeachingModuleSubmissionSerializer(TeachingModuleSerializer):
+    def validate_name(self, data):
+        return data
+
+    def __init__(self, *args, **kwargs):
+        super(TeachingModuleSubmissionSerializer, self).__init__(*args, **kwargs)
+        FIELDS = [
+            "name",
+            "teaser",
+            "image",
+            "competences",
+            "description",
+            "school_types",
+            "subjects",
+        ]
+
+        for field in FIELDS:
+            setattr(self.fields[field], "allow_blank", False)
+            setattr(self.fields[field], "allow_null", False)
+            setattr(self.fields[field], "required", True)
+
+
+class ToolSubmissionSerializer(ToolSerializer):
+    def validate_name(self, data):
+        return data
+
+    def __init__(self, *args, **kwargs):
+        super(ToolSubmissionSerializer, self).__init__(*args, **kwargs)
+        FIELDS = ["name", "teaser", "image", "competences", "url"]
+
+        for field in FIELDS:
+            setattr(self.fields[field], "allow_blank", False)
+            setattr(self.fields[field], "allow_null", False)
+            setattr(self.fields[field], "required", True)
+
+
+class TrendSubmissionSerializer(TrendSerializer):
+    def validate_name(self, data):
+        return data
+
+    def __init__(self, *args, **kwargs):
+        super(TrendSubmissionSerializer, self).__init__(*args, **kwargs)
+        FIELDS = ["name", "teaser", "image", "competences"]
+
+        for field in FIELDS:
+            setattr(self.fields[field], "allow_blank", False)
+            setattr(self.fields[field], "allow_null", False)
+            setattr(self.fields[field], "required", True)
+
+
+class ContentPolymorphicSubmissionSerializer(ContentPolymorphicSerializer):
+    """Serializer to validatge content when submitted for review.
+
+    In contrast to the "saving" of instance - during the submission for review
+    some validation needs to be done. At the moment it is only checked whether
+    all required fields are filled.
+    """
+
+    model_serializer_mapping = {
+        Tool: ToolSubmissionSerializer,
+        Trend: TrendSubmissionSerializer,
+        TeachingModule: TeachingModuleSubmissionSerializer,
+    }

@@ -133,6 +133,7 @@ export const submissionMixin = {
             this.loading = false
           })
           .catch(err => {
+            this.errors.push(err.response.data.message)
             this.loading = false
           })
       })
