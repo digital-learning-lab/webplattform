@@ -30,6 +30,7 @@ from .models import (
     ToolFunction,
     CompetenceAdditionalInformation,
     ContentFile,
+    ToolLink,
 )
 
 admin.site.unregister(FlatPage)
@@ -174,11 +175,15 @@ class TeachingModuleAdmin(ImportExportMixin, ContentAdmin):
     export_xlsx.short_description = "Unterrichtsbausteine als XLSX exportieren"
 
 
+class ToolLinkInline(admin.TabularInline):
+    model = ToolLink
+
+
 @admin.register(Tool)
 class ToolAdmin(SimpleHistoryAdmin, ImportExportMixin, admin.ModelAdmin):
     exclude = ("json_data", "tags")
     resource_class = ToolResource
-    inlines = [ContentLinkInlineAdmin]
+    inlines = [ToolLinkInline, ContentLinkInlineAdmin]
     search_fields = ["name"]
 
     def get_export_queryset(self, request):
