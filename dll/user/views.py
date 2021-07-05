@@ -16,6 +16,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView, RedirectView
 from django.views.generic.base import View
 from rest_framework.generics import ListAPIView
+from wagtail.core.templatetags.wagtailcore_tags import slugurl
 
 from dll.communication.models import CoAuthorshipInvitation, NewsletterSubscrption
 from dll.communication.tasks import send_mail
@@ -238,6 +239,12 @@ class SignUpView(FormView):
     form_class = SignUpForm
     email_template = "dll/user/email/account_activation_email.html"
     success_url = reverse_lazy("user:signup-success")
+
+    def get_form_kwargs(self):
+        kwargs = super(SignUpView, self).get_form_kwargs()
+        kwargs["privacy_url"] = slugurl({"request": self.request}, "datenschutz")
+        kwargs["terms"] = slugurl({"request": self.request}, "terms")
+        return kwargs
 
     def form_valid(self, form):
         user = form.save(commit=False)

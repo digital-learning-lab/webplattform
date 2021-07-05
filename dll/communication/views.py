@@ -7,6 +7,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
 from django.views.generic import FormView, TemplateView
+from wagtail.core.templatetags.wagtailcore_tags import slugurl
 
 from dll.content.models import Content
 from dll.communication.forms import ContactForm, NewsletterForm
@@ -102,7 +103,9 @@ class NewsletterUnregisterView(FormView, BreadcrumbMixin):
     breadcrumb_title = "Newsletterabmeldung"
     breadcrumb_url = reverse_lazy("communication:newsletter-unregister")
     form_class = NewsletterForm
-    success_url = reverse_lazy("home")
+
+    def get_success_url(self):
+        return slugurl({"request": self.request}, "home")
 
     def post(self, request, *args, **kwargs):
         if settings.VALIDATE_RECAPTCHA:
@@ -140,7 +143,7 @@ def newsletter_registration_confirm(request, nl_id_b64, token):
             _("Newsletter Anmeldung nicht erfolgreich. Versuchen Sie es erneut."),
         )
 
-    return redirect("home")
+    return redirect(slugurl({"request": request}, "home"))
 
 
 class CoAuthorInvitationConfirmView(View):
@@ -188,7 +191,7 @@ class CoAuthorInvitationConfirmView(View):
             messages.error(
                 request, _("Sie sind nicht berechtigt die Anfrage zu akzeptieren")
             )
-            return redirect("home")
+            return redirect(slugurl({"request": request}, "home"))
 
         if invitation is not None and (
             co_author_invitation_token.check_token(
@@ -202,7 +205,7 @@ class CoAuthorInvitationConfirmView(View):
                 return redirect(content.get_real_instance().get_edit_url())
             elif user_response == "No":
                 invitation.decline()
-                return redirect("home")
+                return redirect(slugurl({"request": request}, "home"))
             else:
                 messages.error(request, _("Bestätigen Sie mit Ja oder Nein"))
                 return render(request, "dll/communication/invitation.html")

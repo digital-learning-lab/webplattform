@@ -1,7 +1,7 @@
 import datetime
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, ButtonHolder, Field, Fieldset
+from crispy_forms.layout import Submit, Layout, ButtonHolder, Fieldset
 
 from django import forms
 from django.contrib.auth.forms import (
@@ -10,10 +10,8 @@ from django.contrib.auth.forms import (
     PasswordResetForm,
 )
 from django.core.exceptions import ValidationError
-from django.core.mail import EmailMultiAlternatives
-from django.template import loader
-from django.urls import reverse_lazy
 from django.utils.translation import ugettext_lazy as _
+from wagtail.core.templatetags.wagtailcore_tags import slugurl
 
 from .models import DllUser
 
@@ -34,14 +32,15 @@ class SignUpForm(UserCreationForm):
     )
 
     def __init__(self, *args, **kwargs):
+        data_privacy_url = kwargs.pop("privacy_url")
+        terms = kwargs.pop("terms")
         super(SignUpForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.add_input(
             Submit("submit", "Absenden", css_class="button button--primary")
         )
-        data_privacy_url = reverse_lazy("data-privacy")
         self.fields["terms_accepted"].label = (
-            f'Ja, ich stimme den <a href="/">Nutzungsbedingungen</a>- und den '
+            f'Ja, ich stimme den <a href="{terms}">Nutzungsbedingungen</a>- und den '
             f'<a href="{data_privacy_url}">Datenschutzbestimmungen</a> des digital.learning.lab zu.'
         )
         self.fields["first_name"].required = True
