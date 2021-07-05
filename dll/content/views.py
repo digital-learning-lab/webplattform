@@ -111,52 +111,6 @@ class BreadcrumbMixin(ContextMixin):
         ]
 
 
-class HomePageView(TemplateView):
-    template_name = "dll/home.html"
-
-    def get_context_data(self, **kwargs):
-        ctx = super(HomePageView, self).get_context_data(**kwargs)
-        content_objs = get_random_content(2, 2, 2)
-        ctx["contents"] = content_objs
-        try:
-            ctx["training_trend"] = Trend.objects.published().get(
-                slug="fortbildung-digitallearninglab"
-            )
-        except Trend.DoesNotExist:
-            pass
-        return ctx
-
-
-class ImprintView(TemplateView, BreadcrumbMixin):
-    template_name = "dll/imprint.html"
-    breadcrumb_title = "Impressum"
-    breadcrumb_url = reverse_lazy("imprint")
-
-
-class DataPrivacyView(TemplateView, BreadcrumbMixin):
-    template_name = "dll/data_privacy.html"
-    breadcrumb_title = "Datenschutz"
-    breadcrumb_url = reverse_lazy("data-privacy")
-
-
-class StructureView(TemplateView, BreadcrumbMixin):
-    template_name = "dll/structure.html"
-    breadcrumb_title = "Struktur"
-    breadcrumb_url = reverse_lazy("structure")
-
-
-class UsageView(TemplateView, BreadcrumbMixin):
-    template_name = "dll/usage.html"
-    breadcrumb_title = "Nutzung"
-    breadcrumb_url = reverse_lazy("usage")
-
-
-class DevelopmentView(TemplateView, BreadcrumbMixin):
-    template_name = "dll/development.html"
-    breadcrumb_title = "Entwicklung"
-    breadcrumb_url = reverse_lazy("development")
-
-
 class ContentDetailBase(DetailView):
     def get(self, request, *args, **kwargs):
         try:
