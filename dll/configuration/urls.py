@@ -92,7 +92,7 @@ router.register(r"review", ReviewViewSet, basename="review")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", HomePageView.as_view(), name="home"),
+    path("", include(wagtail_urls)),
     path("tools/rss", ToolsFeed(), name="tools-feed"),
     path(
         "unterrichtsbausteine/rss", TeachingModulesFeed(), name="teaching-modules-feed"
@@ -274,7 +274,6 @@ urlpatterns = [
     path("suche", search_view, name="search"),
     path("cms/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
-    path("", include(wagtail_urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
