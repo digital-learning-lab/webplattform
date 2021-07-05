@@ -1,4 +1,6 @@
 {% load static %}
+{% load wagtailcore_tags %}
+
 <footer class="footer">
   <div class="row no-gutters">
     <div class="col col-12">
@@ -33,9 +35,9 @@
                 </div>
                 <div class="mb-3 col col-12 col-lg-4 col-xl-5 text-center">
                   <div class="pb-5 pt-4">
-                    <a href="{% url 'imprint' %}" class="footer__link">Impressum</a>
-                    <a href="{% url 'terms' %}" class="footer__link">Nutzungsbedingungen</a>
-                    <a href="{% url 'data-privacy' %}" class="footer__link">Datenschutz</a>
+                    <a href="{% slugurl 'impressum' %}" class="footer__link">Impressum</a>
+                    <a href="{% slugurl 'terms' %}" class="footer__link">Nutzungsbedingungen</a>
+                    <a href="{% slugurl 'datenschutz' %}" class="footer__link">Datenschutz</a>
                   </div>
                   <p class="">Weitere Informationen im
                       <a href="{% url 'communication:newsletter' %}" class="footer__link-newsletter">Newsletter<br></a>
@@ -51,7 +53,6 @@
                 <div class="mb-3 col col-12 col-lg-4 col-xl-3 pb-5 text-center text-lg-right footer__text">
                     <div class="d-flex flex-column flex-lg-row pb-5 justify-content-lg-end justify-content-sm-center align-items-center">
                         <div class="d-inline">Ausgezeichnet mit dem <br>
-                            {# TODO: add link to flatpage that does not exist yet #}
                             <a class="footer__link-newsletter" href="https://digitallearninglab.de/auszeichnungen/" target="_blank">Comenius EduMedia Siegel</a>
                         </div>
                         <div class="d-inline ml-3"><img class="d-inline" src="{% static "img/icons/siegel.png" %}"></div>

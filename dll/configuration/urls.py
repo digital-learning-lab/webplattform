@@ -93,13 +93,6 @@ router.register(r"review", ReviewViewSet, basename="review")
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", HomePageView.as_view(), name="home"),
-    path("impressum", views.flatpage, {"url": "/impressum/"}, name="imprint"),
-    path("datenschutz", views.flatpage, {"url": "/datenschutz/"}, name="data-privacy"),
-    path("struktur", StructureView.as_view(), name="structure"),
-    path("nutzung", UsageView.as_view(), name="usage"),
-    path("entwicklung", DevelopmentView.as_view(), name="development"),
-    path("faq", views.flatpage, {"url": "/faq/"}, name="faq"),
-    path("terms", views.flatpage, {"url": "/terms/"}, name="terms"),
     path("tools/rss", ToolsFeed(), name="tools-feed"),
     path(
         "unterrichtsbausteine/rss", TeachingModulesFeed(), name="teaching-modules-feed"
@@ -181,7 +174,6 @@ urlpatterns = [
     ),
     path("", include("dll.user.urls", namespace="user")),
     path("", include("dll.communication.urls", namespace="communication")),
-    # path('', include('django.contrib.flatpages.urls')),
     path("api/", include(router.urls)),
     path(
         "api/unterrichtsbausteine",
@@ -284,6 +276,6 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("", include(wagtail_urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += [re_path(r"^(?P<url>.*/)$", views.flatpage)]
+
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
