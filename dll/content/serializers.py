@@ -613,9 +613,12 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
 
 
 class ToolLinkSerializer(serializers.ModelSerializer):
+    url = serializers.URLField(required=False, allow_blank=True)
+    url_name = serializers.CharField(required=False, allow_blank=True, source="name")
+
     class Meta:
         model = ToolLink
-        fields = ["url", "name"]
+        fields = ["url", "url_name"]
 
 
 class ToolSerializer(BaseContentSubclassSerializer):

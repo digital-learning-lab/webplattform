@@ -230,14 +230,24 @@ export const submissionMixin = {
       }).catch(err => {
         this.loading = false
         if (err.response.status === 400) {
+          // TODO sometimes fields are wrapped - find out why to declutter this piece of code
           for (let field in err.response.data) {
-            for (let i = 0; i < err.response.data[field].length; i++) {
-              this.errors.push(err.response.data[field][i])
-              this.errorFields.push(field)
-              console.log(field)
+            if (Array.isArray(err.response.data[field])) {
+              for (let i = 0; i < err.response.data[field].length; i++) {
+                this.errors.push(err.response.data[field][i])
+                this.errorFields.push(field)
+              }
+            } else {
+              for (let field2 in err.response.data[field]) {
+                for (let i = 0; i < err.response.data[field][field2].length; i++) {
+                  this.errors.push(err.response.data[field][field2][i])
+                  this.errorFields.push(field)
+                }
+              }
             }
           }
         }
+        throw new Error('Submission failed');
       })
     },
     validate () {

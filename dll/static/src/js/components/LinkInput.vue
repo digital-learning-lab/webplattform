@@ -4,7 +4,7 @@
       <button class="button--neutral button--smallSquare button--help ml-1 float-right" type="button" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText"></button>
     <div class="form__links-input">
       <div class="d-flex align-items-baseline ">
-        <input type="text" class="form-control mr-3" :class="{'form__field--error': error}" :id="id" placeholder="Linktext" v-model="internalLink.name" :readonly="readonly">
+        <input type="text" class="form-control mr-3" :class="{'form__field--error': error}" :id="id" placeholder="Linktext" v-model="internalLink.url_name" :readonly="readonly">
         <input type="text" class="form-control mr-3" :class="{'form__field--error': !internalLink.validUrl || error}" :id="id" placeholder="https://example.org" v-model="internalLink.url" :readonly="readonly" @blur="checkLinkValid(internalLink)">
         <select class="form-control mr-3" name="types" v-model="internalLink.type" v-if="types">
           <option value="video">Video / Audio</option>
@@ -60,7 +60,7 @@
       link: {
         type: Object,
         default: () => {
-          return {url: '', name: '',  validUrl: true}
+          return {url: '', url_name: '',  validUrl: true}
         },
         required: false
       },
@@ -93,7 +93,7 @@
       },
       checkLinkValid (link) {
         link.validUrl = this.isValidUrl(link.url)
-        this.incomplete  = !link.url || !link.name
+        this.incomplete  = !link.url || !link.url_name
         this.$forceUpdate()
       }
     },
@@ -102,7 +102,7 @@
         this.internalLink = this.link
         this.internalLink.validUrl = true
       } else {
-        this.internalLink = {url: '', name: '',  validUrl: true}
+        this.internalLink = {url: '', url_name: '',  validUrl: true}
       }
     },
     watch: {
