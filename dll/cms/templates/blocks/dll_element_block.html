@@ -8,7 +8,14 @@
 
 {% if value.image %}
   <div class="text-{{ value.image_alignment|default:"center" }}">
-    {% image value.image width-1200 class="img-fluid" alt=value.alt_text|default:value.image.default_alt_text %}
+    {% if value.mobile_image %}
+      {% image value.image width-1200 as desktop_image %}
+      {% image value.mobile_image width-600 as mobile_image %}
+      <img src="{{ desktop_image.url }}" alt="{{ value.alt_text|default:value.image.default_alt_text }}" width="{{ desktop_image.width }}" height="{{ desktop_image.height }}" class="img-fluid d-none d-{{ value.image_breakpoint }}-block">
+      <img src="{{ mobile_image.url }}" alt="{{ value.alt_text|default:value.mobile_image.default_alt_text }}" width="{{ mobile_image.width }}" height="{{ mobile_image.height }}" class="img-fluid d-block d-{{ value.image_breakpoint }}-none">
+    {% else %}
+      {% image value.image width-1200 class="img-fluid" alt=value.alt_text|default:value.image.default_alt_text %}
+    {% endif %}
   </div>
 {% endif %}
 {% if value.video %}

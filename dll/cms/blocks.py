@@ -10,6 +10,22 @@ from wagtail.images.blocks import ImageChooserBlock
 class ImageVideoBlock(blocks.StructBlock):
     image = ImageChooserBlock(required=False)
 
+    mobile_image = ImageChooserBlock(label=_("Mobiles Bild"), required=False)
+
+    image_breakpoint = blocks.ChoiceBlock(
+        label=_("Bild Breakpoint"),
+        help_text=_(
+            "Anzahl an Pixel, bei der vom mobilen Bild zum Bild umgebrochen wird."
+        ),
+        required=False,
+        choices=(
+            ("sm", ">=576px"),
+            ("md", ">=768px"),
+            ("lg", ">=992px"),
+            ("xl", ">=1200px"),
+        ),
+    )
+
     alt_text = blocks.CharBlock(
         label=_("Alt Text"),
         required=False,
@@ -25,6 +41,8 @@ class ImageVideoBlock(blocks.StructBlock):
             errors["alt_text"] = ErrorList(
                 ["Es ist kein Bild für den Alt Text hinterlegt."]
             )
+        if value["mobile_image"] and not value["image_breakpoint"]:
+            errors["mobile_image"] = ErrorList(["Breakpoint für mobiles Bild fehlt."])
         if errors:
             raise StructBlockValidationError(errors)
         return self._to_struct_value(result)
