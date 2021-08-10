@@ -341,9 +341,11 @@ class RelatedContentField(DllM2MField):
         return {"pk": pk, "label": label}
 
     def to_internal_value(self, data):
-        pk = data["pk"]
-        content = Content.objects.get(pk=pk)
-        return content.get_draft().pk
+        if "pk" in data:
+            pk = data["pk"]
+            content = Content.objects.get(pk=pk)
+            return content.get_draft().pk
+        return None
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -421,9 +423,10 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
     def validate_related_content(self, data):
         res = []
         for x in data:
-            obj = Content.objects.get(pk=x)
-            if obj.is_draft:
-                res.append(x)
+            if x:
+                obj = Content.objects.get(pk=x)
+                if obj.is_draft:
+                    res.append(x)
         return res
 
     def get_content_files(self, obj):
