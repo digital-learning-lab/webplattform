@@ -80,6 +80,9 @@ class PublisherModel(PublisherModelBase):
             draft_obj = self
             if draft_obj.publisher_linked:
                 draft_obj.publisher_linked.delete()
+                draft_obj._change_reason = _(
+                    "Veröffentlichte Version wurde im Rahmen einer Neuveröffentlichung entfernt."
+                )
 
             publish_obj = self.__class__.objects.get(pk=self.pk)
             publish_obj.pk = None

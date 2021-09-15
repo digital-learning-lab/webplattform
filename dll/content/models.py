@@ -1003,6 +1003,9 @@ class Review(TimeStampedModel):
             )
             instance.save()
             instance.publish()
+            instance._change_reason = _(
+                "Inhalt wurde von {} veröffentlicht.".format(by_user)
+            )
             self.send_review_accepted_mail()
 
     def decline(self, by_user: DllUser):
