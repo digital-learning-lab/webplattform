@@ -7,7 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import IntegerRangeField, JSONField
 from django.contrib.sites.models import Site
 from django.core.files import File
-from django.db import models, IntegrityError
+from django.db import models, IntegrityError, transaction
 from django.db.models import Q
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -992,33 +992,35 @@ class Review(TimeStampedModel):
         """
         Accept the content and publish it.
         """
-        if by_user.has_perm("content.change_review", self):
-            self.status = self.ACCEPTED
-            self.is_active = False
-            self.accepted_by = by_user
-            self.save()
-            instance = self.content.get_real_instance()
-            instance._change_reason = _(
-                "Reviewer {} hat den Inhalt akzeptiert.".format(by_user)
-            )
-            instance.save()
-            instance.publish()
-            instance._change_reason = _(
-                "Inhalt wurde von {} veröffentlicht.".format(by_user)
-            )
-            self.send_review_accepted_mail()
+        with transaction.atomic():
+            if by_user.has_perm("content.change_review", self):
+                self.status = self.ACCEPTED
+                self.is_active = False
+                self.accepted_by = by_user
+                self.save()
+                instance = self.content.get_real_instance()
+                instance._change_reason = _(
+                    "Reviewer {} hat den Inhalt akzeptiert.".format(by_user)
+                )
+                instance.save()
+                instance.publish()
+                instance._change_reason = _(
+                    "Inhalt wurde von {} veröffentlicht.".format(by_user)
+                )
+                self.send_review_accepted_mail()
 
     def decline(self, by_user: DllUser):
-        if by_user.has_perm("content.change_review", self):
-            self.declined_by = by_user
-            self.status = self.DECLINED
-            self.save()
-            instance = self.content.get_real_instance()
-            instance._change_reason = _(
-                "Reviewer {} hat den Inhalt abgelehnt.".format(by_user)
-            )
-            instance.save()
-            self.send_review_declined_mail()
+        with transaction.atomic():
+            if by_user.has_perm("content.change_review", self):
+                self.declined_by = by_user
+                self.status = self.DECLINED
+                self.save()
+                instance = self.content.get_real_instance()
+                instance._change_reason = _(
+                    "Reviewer {} hat den Inhalt abgelehnt.".format(by_user)
+                )
+                instance.save()
+                self.send_review_declined_mail()
 
     def send_review_accepted_mail(self):
         from dll.communication.tasks import send_mail
