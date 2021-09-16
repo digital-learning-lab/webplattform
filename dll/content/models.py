@@ -134,7 +134,9 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
 
     tags = TaggableManager(verbose_name=_("Tags"))
     objects = PolymorphicManager.from_queryset(ContentQuerySet)()
-    history = HistoricalRecords(inherit=True)
+    history = HistoricalRecords(
+        inherit=True, history_change_reason_field=models.TextField(null=True)
+    )
 
     _metadata = {
         "title": "name",
