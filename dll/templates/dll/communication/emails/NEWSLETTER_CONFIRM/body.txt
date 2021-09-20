@@ -3,5 +3,5 @@ Guten Tag,
 bitte bestätigen Sie Ihre Anmeldung für den Newsletter des digital.learning.lab:
 {{ token }}
 
-Viele Grüße,
+Viele Grüße
 Ihr digital.learning.lab Team
