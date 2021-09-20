@@ -90,7 +90,6 @@ class NewsletterRegisterView(FormView, BreadcrumbMixin):
                 "E-Mail, um die Newsletter-Anmeldung zu bestätigen."
             ),
         )
-        messages.success(self.request, "test")
         return super(NewsletterRegisterView, self).form_valid(form)
 
 
