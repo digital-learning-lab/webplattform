@@ -4,7 +4,6 @@ from django.test import TestCase
 from django.core import mail
 from django.urls import reverse
 
-from dll.communication.forms import NewsletterForm
 from dll.communication.models import CommunicationEventType, NewsletterSubscrption
 
 
@@ -30,7 +29,8 @@ class NewsletterSubscribeTests(TestCase):
             mail.outbox[0].body,
         )
         confirmation_link = link.group(0)
-        self.client.get(confirmation_link)
+        confirmation_response = self.client.get(confirmation_link)
+        self.assertRedirects(confirmation_response, "/?newsletter=true")
         self.assertTrue(NewsletterSubscrption.objects.get().doi_confirmed)
 
 

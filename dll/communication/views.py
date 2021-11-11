@@ -125,6 +125,7 @@ class NewsletterUnregisterView(FormView, BreadcrumbMixin):
 
 
 def newsletter_registration_confirm(request, nl_id_b64, token):
+    success = False
     try:
         uid = force_text(urlsafe_base64_decode(nl_id_b64))
         subscription = NewsletterSubscrption.objects.get(pk=uid)
@@ -136,13 +137,17 @@ def newsletter_registration_confirm(request, nl_id_b64, token):
     ):
         subscription.activate()
         messages.success(request, _("Newsletter Anmeldung erfolgreich"))
+        success = True
     else:
         messages.error(
             request,
             _("Newsletter Anmeldung nicht erfolgreich. Versuchen Sie es erneut."),
         )
 
-    return redirect(slugurl({"request": request}, "home"))
+    return redirect(
+        (slugurl({"request": request}, "home") + "?newsletter=")
+        + ("true" if success else "false")
+    )
 
 
 class CoAuthorInvitationConfirmView(View):

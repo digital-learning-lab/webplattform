@@ -68,6 +68,14 @@
 {% endblock %}
 {% include 'dll/includes/footer.html' %}
 {% block extra_scripts %}{% endblock %}
+123
+{{ request }}
+{% if request.newsletter_subscription_done %}
+  <script>
+    window.newsletterRegistrationDone = true;
+  </script>
+{% endif %}
+{% include 'dll/includes/toast.html' %}
 {% render_bundle 'main' 'js' %}
 {% include 'survey/survey_trigger.html' %}
 </body>
