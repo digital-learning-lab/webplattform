@@ -14,6 +14,8 @@ import logging
 import os
 from environs import Env
 from django.utils.translation import ugettext_lazy as _
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 env = Env()
 logger = logging.getLogger("dll.settings")
@@ -545,3 +547,12 @@ TRIGGER_EVENTS = (
     ("scroll", _("Scroll")),
     ("login", _("Login")),
 )
+
+SENTRY_DSN = os.getenv("SENTRY_DSN", None)
+
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        environment=os.getenv("SENTRY_ENVIRONMENT", ""),
+        integrations=[DjangoIntegration()],
+    )

@@ -119,3 +119,29 @@ extended and executed:
 ```bash
 docker-compose exec web coverage run --source=/code/dll/ -m pytest /code/dll/
 ```
+
+## Hints for running digital.learning.lab in production
+
+### General
+
+We're running the digital.learning.platform on Kubernetes. However a simply docker-compose 
+setup may be sufficient for your purposes. Simply run:
+
+```bash
+docker-compose up
+```
+
+Make sure you follow the steps from "Container Setup" above.
+
+### Sentry
+
+To keep track of errors you can enable Sentry. 
+Simply add `SENTRY_DSN` environment variable to the running `web` container.
+If you have a specific name for your environment simply add `SENTRY_ENVIRONMENT` to
+your container's environment variables.
+
+Example of `.env` file (which is used by the `docker-compose` setup):
+```dotenv
+SENTRY_DSN=https://34567894567890567890@yoursentry.com/42
+SENTRY_ENVIRONMENT=production
+```
