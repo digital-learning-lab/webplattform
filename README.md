@@ -43,9 +43,10 @@ Longer term items - working on this soon!
 
 ## Local Development Setup
 ### 🛳 Container Setup 
-1. Run `docker-compose up` to setup project.
-2. Run `docker-compose run --rm web python manage.py migrate`
-3. Create an `.env` file from `sample.env`
+1. Run `docker-compose build` to build the required images.
+2. Run `docker-compose up` to setup project.
+3. Run `docker-compose run --rm web python manage.py migrate`
+4. Create an `.env` file from `sample.env`
 
 ### 📦 Database Restore
 
@@ -53,8 +54,9 @@ If you'd like to restore a database dump leave out step 2 of the setup. Instead 
 database dump into the database container and restore it:
 
 ```bash
+docker exec [db-container-name] psql -U postgres -c "CREATE ROLE dll_admin;"
 docker cp ./local_path/to/db/dump [db-container-name]:/db_dump.bin
-docker exec [db-container-name] pg_restore -U postgres -d postgres /backup/db_dump
+docker exec [db-container-name] pg_restore -U postgres -d postgres /db_dump.bin
 ```
 
 The database container name can be retrieved by runnning `docker ps`.
