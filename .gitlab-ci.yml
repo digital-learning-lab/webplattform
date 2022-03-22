@@ -16,7 +16,7 @@ stages:
 
 black:
   stage: lint
-  image: python:3.10-alpine
+  image: python:3.8-slim
   tags:
     - dll-docker
   before_script:
