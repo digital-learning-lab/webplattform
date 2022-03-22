@@ -16,9 +16,11 @@ stages:
 
 black:
   stage: lint
-  image: ${CONTAINER_REGISTRY}/itbh/tnt/digital-learning-lab/python-black:latest
+  image: python:3.10-alpine
   tags:
     - dll-docker
+  before_script:
+    - pip install black
   script:
     - black --check .
 
