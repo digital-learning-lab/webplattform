@@ -1,10 +1,11 @@
 FROM python:3.8-slim
 ENV PYTHONUNBUFFERED 1
 
-COPY requirements.txt /usr/src/
+COPY pyproject.toml poetry.lock /usr/src/
 RUN apt update \
     && apt install -y libpq-dev gcc git python3-dev mime-support gettext libgettextpo-dev optipng jpegoptim \
-    && pip install -r /usr/src/requirements.txt \
+    && pip install poetry \
+		&& cd /usr/src && poetry install \
     && apt purge -y gcc python3-dev \
     && apt autoremove -y --purge
 
