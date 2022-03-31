@@ -55,5 +55,5 @@ requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = dll.configuration.settings
-python_files = tests.py test_*.py *_tests.py
+DJANGO_SETTINGS_MODULE = "dll.configuration.settings"
+python_files = "tests.py test_*.py *_tests.py"
