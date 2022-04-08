@@ -178,3 +178,16 @@ register_prod_solr_image:
     only:
         - master
     when: manual
+
+update_deps:
+    stage: lint
+    image: renovate/renovate:latest
+    variables:
+      RENOVATE_PLATFORM: gitlab
+      RENOVATE_ENDPOINT: https://collaborating.tuhh.de/api/v4
+      RENOVATE_TOKEN: $GITLAB_ACCESS_TOKEN
+      RENOVATE_REPOSITORIES: itbh/tnt/digital-learning-lab/codebasis_plattform
+      RENOVATE_BASE_BRANCHES: develop
+    rules:
+      - if: $CI_PIPELINE_SOURCE == "schedule"
+    script: renovate
