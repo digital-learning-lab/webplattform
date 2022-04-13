@@ -16,12 +16,17 @@ RUN npm run build
 ### Stage 2: The release image
 
 FROM python:3.8-slim
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED 1 \
+	# Poetry
+	POETRY_VIRTUALENV_CREATE=false \
+	POETRY_CACHE_DIR='/var/cache/pypoetry'
 
-COPY requirements.txt /usr/src/
+COPY pyproject.toml poetry.lock /usr/src/
 RUN apt update \
     && apt install -y libpq-dev gcc git python3-dev mime-support gettext libgettextpo-dev optipng jpegoptim \
-    && pip install -r /usr/src/requirements.txt \
+    && pip install poetry \
+		&& cd /usr/src && poetry install --no-dev \
+		&& rm -rf "$POETRY_CACHE_DIR" \
     && apt purge -y gcc python3-dev \
     && apt autoremove -y --purge
 
@@ -33,6 +38,5 @@ EXPOSE 80
 COPY dll /code/dll
 COPY solr /code/solr
 COPY manage.py /code
-COPY tox.ini /code
 COPY .coveragerc /code
 COPY --from=webpack /node_deps/static/dist /code/dll/static/dist
