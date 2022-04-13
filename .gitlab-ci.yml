@@ -61,8 +61,8 @@ test_staging_image:
         alias: solr
 
     script:
-      - poetry run coverage run --source=/code/dll/ -m pytest /code/dll/
-      - poetry run coverage report
+      - coverage run --source=/code/dll/ -m pytest /code/dll/
+      - coverage report
     tags:
         - dll-docker
     variables:
@@ -124,8 +124,8 @@ test_prod_python_image:
       alias: solr
 
   script:
-    - poetry run coverage run --source=/code/dll/ -m pytest /code/dll/
-    - poetry run coverage report
+    - coverage run --source=/code/dll/ -m pytest /code/dll/
+    - coverage report
   tags:
     - dll-docker
   variables:
