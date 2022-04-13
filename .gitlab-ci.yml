@@ -60,6 +60,8 @@ test_staging_image:
       - name: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-latest
         alias: solr
 
+    before_script:
+      - poetry install
     script:
       - coverage run --source=/code/dll/ -m pytest /code/dll/
       - coverage report
@@ -123,6 +125,8 @@ test_prod_python_image:
     - name: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-latest
       alias: solr
 
+  before_script:
+    - poetry install
   script:
     - coverage run --source=/code/dll/ -m pytest /code/dll/
     - coverage report

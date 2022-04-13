@@ -16,9 +16,8 @@ RUN npm run build
 ### Stage 2: The release image
 
 FROM python:3.8-slim
-ENV PYTHONUNBUFFERED 1 \
-	# Poetry
-	POETRY_VIRTUALENV_CREATE=false \
+ENV PYTHONUNBUFFERED=1 \
+	POETRY_VIRTUALENVS_CREATE=false \
 	POETRY_CACHE_DIR='/var/cache/pypoetry'
 
 COPY pyproject.toml poetry.lock /usr/src/
