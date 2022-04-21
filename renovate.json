@@ -1,4 +1,10 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
-	"prConcurrentLimit": 10
+	"prConcurrentLimit": 10,
+	"packageRules": [
+		{
+			"matchDatasources": ["npm"],
+			"enabled": false
+		}
+	]
 }
