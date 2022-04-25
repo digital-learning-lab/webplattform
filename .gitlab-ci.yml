@@ -22,26 +22,12 @@ black:
   script:
     - black --check .
 
-build_solr_image:
-  stage: build
-  before_script:
-      - docker system prune -a -f
-      - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
-  script:
-      - docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
-      - docker push ${CONTAINER_STAGING_SOLR_IMAGE}
-  tags:
-      - dll-shell
-  rules:
-    - if: $CI_COMMIT_REF_NAME == "develop"
-      when: always
-
 test_python:
     stage: test
     image: ${TEST_IMAGE_NAME}
     services:
       - postgres:12-alpine
-      - name: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-latest
+      - name: ${CONTAINER_STAGING_SOLR_IMAGE}
         alias: solr
 
     before_script:
@@ -111,13 +97,26 @@ register_prod_python_image:
     - if: $CI_COMMIT_REF_NAME == "master"
       when: manual
 
-register_prod_solr_image:
-  stage: deploy
+build_solr_image:
+  stage: build
   before_script:
       - docker system prune -a -f
       - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
   script:
-      - docker build --no-cache -t ${CONTAINER_RELEASE_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
+      - docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
+      - docker push ${CONTAINER_STAGING_SOLR_IMAGE}
+  tags:
+      - dll-shell
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_REF_NAME == "master"
+      when: always
+
+register_prod_solr_image:
+  stage: deploy
+  before_script:
+      - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
+  script:
+      - docker tag ${CONTAINER_STAGING_SOLR_IMAGE} ${CONTAINER_RELEASE_SOLR_IMAGE}
       - docker push ${CONTAINER_RELEASE_SOLR_IMAGE}
   tags:
       - dll-shell
