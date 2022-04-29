@@ -2,8 +2,8 @@ variables:
     TEST_IMAGE_NAME: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
     STAGING_IMAGE_NAME: ${CI_REGISTRY_IMAGE}:release-staging
     PRODUCTION_IMAGE_NAME: ${CI_REGISTRY_IMAGE}:release
-    CONTAINER_STAGING_SOLR_IMAGE: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-latest
-    CONTAINER_RELEASE_SOLR_IMAGE: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-release
+    STAGING_SOLR_IMAGE_NAME: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-latest
+    RELEASE_SOLR_IMAGE_NAME: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-release
     DOCKER_FILE_PATH: .
 
 stages:
@@ -27,7 +27,7 @@ test_python:
     image: ${TEST_IMAGE_NAME}
     services:
       - postgres:12-alpine
-      - name: ${CONTAINER_STAGING_SOLR_IMAGE}
+      - name: ${STAGING_SOLR_IMAGE_NAME}
         alias: solr
 
     before_script:
@@ -103,8 +103,8 @@ build_solr_image:
       - docker system prune -a -f
       - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
   script:
-      - docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
-      - docker push ${CONTAINER_STAGING_SOLR_IMAGE}
+      - docker build --no-cache -t ${STAGING_SOLR_IMAGE_NAME} ${DOCKER_FILE_PATH} -f Dockerfile.solr
+      - docker push ${STAGING_SOLR_IMAGE_NAME}
   tags:
       - dll-shell
   rules:
@@ -116,8 +116,8 @@ register_prod_solr_image:
   before_script:
       - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
   script:
-      - docker tag ${CONTAINER_STAGING_SOLR_IMAGE} ${CONTAINER_RELEASE_SOLR_IMAGE}
-      - docker push ${CONTAINER_RELEASE_SOLR_IMAGE}
+      - docker tag ${STAGING_SOLR_IMAGE_NAME} ${RELEASE_SOLR_IMAGE_NAME}
+      - docker push ${RELEASE_SOLR_IMAGE_NAME}
   tags:
       - dll-shell
   rules:
