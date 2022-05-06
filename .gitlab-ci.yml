@@ -1,16 +1,14 @@
 variables:
-    CONTAINER_REGISTRY: collaborating.tuhh.de:5005
-    CONTAINER_TEST_IMAGE: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:${CI_COMMIT_REF_SLUG}
-    CONTAINER_STAGING_IMAGE: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:latest
-    CONTAINER_STAGING_SOLR_IMAGE: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-latest
-    CONTAINER_RELEASE_IMAGE: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:release
-    CONTAINER_RELEASE_SOLR_IMAGE: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-release
-    BASE_IMAGE: ${CONTAINER_REGISTRY}/itbh/tnt/digital-learning-lab/dll-docker
+    TEST_IMAGE_NAME: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+    STAGING_IMAGE_NAME: ${CI_REGISTRY_IMAGE}:latest-staging
+    PRODUCTION_IMAGE_NAME: ${CI_REGISTRY_IMAGE}:release
+    STAGING_SOLR_IMAGE_NAME: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-latest
+    RELEASE_SOLR_IMAGE_NAME: ${CI_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-release
     DOCKER_FILE_PATH: .
 
 stages:
     - lint
-    - register
+    - build
     - test
     - deploy
 
@@ -24,40 +22,12 @@ black:
   script:
     - black --check .
 
-
-register_staging_test_python_image:
-    stage: register
-    before_script:
-        - docker system prune -a -f
-        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
-    script:
-        - docker build --no-cache -t ${CONTAINER_STAGING_IMAGE}-staging-test ${DOCKER_FILE_PATH}
-        - docker push ${CONTAINER_STAGING_IMAGE}-staging-test
-    tags:
-        - dll-shell
-    only:
-        - develop
-
-register_staging_solr_image:
-    stage: register
-    before_script:
-        - docker system prune -a -f
-        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
-    script:
-        - docker build --no-cache -t ${CONTAINER_STAGING_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
-        - docker push ${CONTAINER_STAGING_SOLR_IMAGE}
-    tags:
-        - dll-shell
-    only:
-        - develop
-    when: manual
-
-test_staging_image:
+test_python:
     stage: test
-    image: ${CONTAINER_STAGING_IMAGE}-staging-test
+    image: ${TEST_IMAGE_NAME}
     services:
       - postgres:12-alpine
-      - name: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-latest
+      - name: ${STAGING_SOLR_IMAGE_NAME}
         alias: solr
 
     before_script:
@@ -88,100 +58,71 @@ test_staging_image:
         META_SITE_PROTOCOL: https
         META_SITE_DOMAIN: staging.digitallearninglab.de
         DEFAULT_USER_EMAIL: digital.learning.lab@tuhh.de
-    only:
-        - develop
 
 register_staging_python_image:
   stage: deploy
   before_script:
-    - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
+    - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
   script:
     - echo "Reached deployment stage. Retagging staging-test image for automatic deployment via keel."
-    - docker tag ${CONTAINER_STAGING_IMAGE}-staging-test ${CONTAINER_STAGING_IMAGE}-staging
-    - docker push ${CONTAINER_STAGING_IMAGE}-staging
+    - docker tag ${TEST_IMAGE_NAME} ${STAGING_IMAGE_NAME}
+    - docker push ${STAGING_IMAGE_NAME}
   tags:
     - dll-shell
-  only:
-    - develop
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "develop"
+      when: always
 
-register_prod_test_python_image:
-    stage: register
-    before_script:
-        - docker system prune -a -f
-        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
-    script:
-        - docker build --no-cache -t ${CONTAINER_RELEASE_IMAGE}-test ${DOCKER_FILE_PATH}
-        - docker push ${CONTAINER_RELEASE_IMAGE}-test
-    tags:
-        - dll-shell
-    only:
-        - master
-
-test_prod_python_image:
-  stage: test
-  image: ${CONTAINER_RELEASE_IMAGE}-test
-  services:
-    - postgres:12-alpine
-    - name: ${CONTAINER_REGISTRY}/${CI_PROJECT_NAMESPACE}/${CI_PROJECT_NAME}:solr-latest
-      alias: solr
-
+build_python_image:
+  stage: build
   before_script:
-    - poetry install
+      - docker system prune -a -f
+      - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
   script:
-    - coverage run --source=/code/dll/ -m pytest /code/dll/
-    - coverage report
+      - docker build --no-cache -t ${TEST_IMAGE_NAME} ${DOCKER_FILE_PATH}
+      - docker push ${TEST_IMAGE_NAME}
   tags:
-    - dll-docker
-  variables:
-    POSTGRES_DB: "postgres"
-    POSTGRES_USER: "postgres"
-    POSTGRES_PASSWORD: ""
-    POSTGRES_HOST_AUTH_METHOD: trust
-    REDIS_HOSTNAME: "redis"
-    DATABASE_USER: "postgres"
-    DATABASE_NAME: "postgres"
-    DATABASE_HOST: "postgres"
-    DJANGO_DEBUG: "True"
-    CELERY_TASK_ALWAYS_EAGER: "True"
-    SOLR_HOSTNAME: "solr"
-    EMAIL_HOST: "floki.rz.tuhh.de"
-    EMAIL_PORT: "25"
-    EMAIL_USE_TLS: "False"
-    EMAIL_SENDER: "j.doe@example.com"
-    CONTACT_EMAIL_BSB: "j.doe@example.com"
-    CONTACT_EMAIL_DLL: "j.doe@example.com"
-    META_SITE_PROTOCOL: https
-    META_SITE_DOMAIN: staging.digitallearninglab.de
-    DEFAULT_USER_EMAIL: digital.learning.lab@tuhh.de
-  only:
-    - master
+      - dll-shell
 
 register_prod_python_image:
-    stage: deploy
-    before_script:
-        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
-    script:
-        - docker tag ${CONTAINER_RELEASE_IMAGE}-test ${CONTAINER_RELEASE_IMAGE}
-        - docker push ${CONTAINER_RELEASE_IMAGE}
-    tags:
-        - dll-shell
-    only:
-        - master
-    when: manual
+  stage: deploy
+  before_script:
+      - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
+  script:
+      - docker tag ${TEST_IMAGE_NAME} ${PRODUCTION_IMAGE_NAME}
+      - docker push ${PRODUCTION_IMAGE_NAME}
+  tags:
+      - dll-shell
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "master"
+      when: manual
+
+build_solr_image:
+  stage: build
+  before_script:
+      - docker system prune -a -f
+      - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
+  script:
+      - docker build --no-cache -t ${STAGING_SOLR_IMAGE_NAME} ${DOCKER_FILE_PATH} -f Dockerfile.solr
+      - docker push ${STAGING_SOLR_IMAGE_NAME}
+  tags:
+      - dll-shell
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_REF_NAME == "master"
+      when: always
 
 register_prod_solr_image:
-    stage: deploy
-    before_script:
-        - docker system prune -a -f
-        - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CONTAINER_REGISTRY}
-    script:
-        - docker build --no-cache -t ${CONTAINER_RELEASE_SOLR_IMAGE} ${DOCKER_FILE_PATH} -f Dockerfile.solr
-        - docker push ${CONTAINER_RELEASE_SOLR_IMAGE}
-    tags:
-        - dll-shell
-    only:
-        - master
-    when: manual
+  stage: deploy
+  before_script:
+      - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
+  script:
+      - docker tag ${STAGING_SOLR_IMAGE_NAME} ${RELEASE_SOLR_IMAGE_NAME}
+      - docker push ${RELEASE_SOLR_IMAGE_NAME}
+  tags:
+      - dll-shell
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "master"
+      when: manual
 
 update_deps:
     stage: lint
