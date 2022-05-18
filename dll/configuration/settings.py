@@ -532,9 +532,9 @@ CONSTANCE_CONFIG = {
         "Dankes-Nachricht bei Umfragen",
         str,
     ),
-    "GUEST_MENU_HANDLE": ("guest_menu", str),
-    "LOGGED_IN_MENU_HANDLE": ("logged_in_menu", str),
-    "REVIEWER_MENU_HANDLE": ("reviewer_menu", str),
+    "GUEST_MENU_HANDLE": ("", "guest_menu", str),
+    "LOGGED_IN_MENU_HANDLE": ("", "logged_in_menu", str),
+    "REVIEWER_MENU_HANDLE": ("", "reviewer_menu", str),
 }
 
 WAGTAIL_SITE_NAME = "digital.learning.lab"
