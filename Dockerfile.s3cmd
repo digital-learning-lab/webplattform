@@ -1,4 +1,4 @@
-FROM alpine:3.13
+FROM alpine:3.15
 
 RUN apk update && apk add python3 git && ln -sf python3 /usr/bin/python
 RUN python -m ensurepip && pip3 install python-dateutil
