@@ -47,7 +47,7 @@ wagtailmenus = {git = "https://github.com/jazzband/wagtailmenus", rev = "8399708
 
 [tool.poetry.dev-dependencies]
 pytest = "6.0.1"
-coverage = "~=5.2.1"
+coverage = "~=5.5.0"
 pytest-django = "~=3.8.0"
 
 [build-system]
