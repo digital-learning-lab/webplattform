@@ -213,16 +213,23 @@ toml = ["toml"]
 
 [[package]]
 name = "curtsies"
-version = "0.3.0"
+version = "0.3.10"
 description = "Curses-like terminal wrapper, with colored strings!"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
 
 [package.dependencies]
 blessings = ">=1.5"
-typing = "*"
-wcwidth = ">=0.1.4"
+cwcwidth = "*"
+
+[[package]]
+name = "cwcwidth"
+version = "0.1.6"
+description = "Python bindings for wc(s)width"
+category = "main"
+optional = false
+python-versions = ">=3.7"
 
 [[package]]
 name = "defusedxml"
@@ -1090,14 +1097,6 @@ optional = false
 python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
-name = "typing"
-version = "3.7.4.3"
-description = "Type Hints for Python"
-category = "main"
-optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
-
-[[package]]
 name = "unidecode"
 version = "1.0.23"
 description = "ASCII transliterations of Unicode text"
@@ -1189,14 +1188,6 @@ reference = "8399708faa618b2ca21f014d047bf8e41b84ca6e"
 resolved_reference = "8399708faa618b2ca21f014d047bf8e41b84ca6e"
 
 [[package]]
-name = "wcwidth"
-version = "0.2.5"
-description = "Measures the displayed width of unicode strings in a terminal"
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "webencodings"
 version = "0.5.1"
 description = "Character encoding aliases for legacy web content"
@@ -1242,7 +1233,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "092ecab5bb5e74c9234265f849c361e9813c75ef0ff52c2949e072457c2068b5"
+content-hash = "6b701f0d9d358a540dcb7b86ac668cc08636252dfc561f41eb976e57708c468c"
 
 [metadata.files]
 amqp = [
@@ -1358,7 +1349,38 @@ coverage = [
     {file = "coverage-5.5.tar.gz", hash = "sha256:ebe78fe9a0e874362175b02371bdfbee64d8edc42a044253ddf4ee7d3c15212c"},
 ]
 curtsies = [
-    {file = "curtsies-0.3.0.tar.gz", hash = "sha256:89c802ec051d01dec6fc983e9856a3706e4ea8265d2940b1f6d504a9e26ed3a9"},
+    {file = "curtsies-0.3.10.tar.gz", hash = "sha256:11efbb153d9cb22223dd9a44041ea0c313b8411e246e7f684aa843f6aa9c1600"},
+]
+cwcwidth = [
+    {file = "cwcwidth-0.1.6-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:7305221ef6947f8d6f8b3f1b2a0f478d65d2cc39135bd9ba6549cc4f42d4d9e7"},
+    {file = "cwcwidth-0.1.6-cp310-cp310-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:b0b6c0a7de6948a7d752feafd9c16fb83fefa8bcd97cc6b167b4696e9eb2e1bf"},
+    {file = "cwcwidth-0.1.6-cp310-cp310-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ae92ec83ae7d89af20886b0537efcb5e0417da1604a6b1d298dbba5c36105669"},
+    {file = "cwcwidth-0.1.6-cp310-cp310-musllinux_1_1_i686.whl", hash = "sha256:952899622df3348282a1992f0d58c1362e1d4cce7d5a4e32a7b0ec24ee5a3b14"},
+    {file = "cwcwidth-0.1.6-cp310-cp310-musllinux_1_1_x86_64.whl", hash = "sha256:f7687cbd0c4726c86016cad077c8a96ec2901d32c39242b92796a6e9d2c894bb"},
+    {file = "cwcwidth-0.1.6-cp310-cp310-win32.whl", hash = "sha256:d32cbdd7484a52e8c6f8b22307eb5fa4803c8a48bf853061ffc178d89852d039"},
+    {file = "cwcwidth-0.1.6-cp310-cp310-win_amd64.whl", hash = "sha256:1265d1123c2028ade3a56b5a016972151d994eceff6fbeb00b28144688796108"},
+    {file = "cwcwidth-0.1.6-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:165cbb3ff4ce1925f6a22179c1bbe8d0262cee8a2009e6e344e209c58e09daaf"},
+    {file = "cwcwidth-0.1.6-cp37-cp37m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:e3a9fa329fdf88f3f40b9fbd5c3b874adafd40266072b9de58ee152ccf8613e4"},
+    {file = "cwcwidth-0.1.6-cp37-cp37m-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:860c4983bdf6aabc74ae2bf0dc207d23dc6f0bd955a4c00e4963c70498f1ee28"},
+    {file = "cwcwidth-0.1.6-cp37-cp37m-musllinux_1_1_i686.whl", hash = "sha256:43a9d5abe88829c68fb602ea96fbab8c66be9f64a5898de848dff37d1ffe84ef"},
+    {file = "cwcwidth-0.1.6-cp37-cp37m-musllinux_1_1_x86_64.whl", hash = "sha256:d8d8a7178a6620df6e1342621149bf5c85336bce5a85f9cd7934d892dd53cb74"},
+    {file = "cwcwidth-0.1.6-cp37-cp37m-win32.whl", hash = "sha256:0158e76eb243067226c5b91014b1ae110f0df00b767419f3b3c125f336366734"},
+    {file = "cwcwidth-0.1.6-cp37-cp37m-win_amd64.whl", hash = "sha256:b3953218f8281edc21785b7013ec22e47257b60bbf463617e639344dbbfbe798"},
+    {file = "cwcwidth-0.1.6-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:9ccf17edc97a043e583a3a57c8a3b3ffb7b318ac3dd369c93db3242a18be1c1a"},
+    {file = "cwcwidth-0.1.6-cp38-cp38-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:23dc965cb194214bdc85ae8bc13e8dba8431055ecb2bd9213f98839e497459c3"},
+    {file = "cwcwidth-0.1.6-cp38-cp38-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:cdfba86564cfccd71b87878d2a000004c9288b29a83f8c503f8c2031e94b373f"},
+    {file = "cwcwidth-0.1.6-cp38-cp38-musllinux_1_1_i686.whl", hash = "sha256:dd371b2a50e0e80698ab70e7ad2e62dbb7619647da0c8b1be5a022290f006d15"},
+    {file = "cwcwidth-0.1.6-cp38-cp38-musllinux_1_1_x86_64.whl", hash = "sha256:13fde3628adc13cd90ef417f3bd9f2e8c0293efd67d090b1614816fcd879643a"},
+    {file = "cwcwidth-0.1.6-cp38-cp38-win32.whl", hash = "sha256:198562c228481c2b73a4a7ad4fd4f7ae9514c8384bfedd0ddbebf52a58a00a27"},
+    {file = "cwcwidth-0.1.6-cp38-cp38-win_amd64.whl", hash = "sha256:fbac2595c937e58e095c0e99c152dcc3f95f8d82809a95c8e05f1829306da373"},
+    {file = "cwcwidth-0.1.6-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:f4a2cbd458f56ca41b8e4f29df0f1d56e92ba4f689c90b7138bc21fbd2210c0d"},
+    {file = "cwcwidth-0.1.6-cp39-cp39-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:a4422dc5bb29545a5c58929ce2b782054bde819784ce791d96b060e5b6d35fe6"},
+    {file = "cwcwidth-0.1.6-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:688398f2772ab6587afd3dc603e8cead65b5654a88deb5a6f0b778808b554441"},
+    {file = "cwcwidth-0.1.6-cp39-cp39-musllinux_1_1_i686.whl", hash = "sha256:ad8f30dcff614d1a148ccebc48a6b98630724e221cb663404cdb618f61a4169b"},
+    {file = "cwcwidth-0.1.6-cp39-cp39-musllinux_1_1_x86_64.whl", hash = "sha256:ebab036466e469f1a3969e5b731c6ec68e2b1b392c032acd738c5a526531d56a"},
+    {file = "cwcwidth-0.1.6-cp39-cp39-win32.whl", hash = "sha256:98b26ed225c7b505d50d2dafb2b43a165543616dacd4b7fbfb3c08db45a91fa0"},
+    {file = "cwcwidth-0.1.6-cp39-cp39-win_amd64.whl", hash = "sha256:64c30b51af8c37e5deb40daf8529c56a154cca6a82b4ae7ae032dab86ce91ac0"},
+    {file = "cwcwidth-0.1.6.tar.gz", hash = "sha256:1b31da599c9f0cf41f39ed10c1ceaa01d6024e31c6cd9aea2885b1f2a6d15fba"},
 ]
 defusedxml = [
     {file = "defusedxml-0.7.1-py2.py3-none-any.whl", hash = "sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61"},
@@ -1774,10 +1796,6 @@ toml = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
     {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
 ]
-typing = [
-    {file = "typing-3.7.4.3-py2-none-any.whl", hash = "sha256:283d868f5071ab9ad873e5e52268d611e851c870a2ba354193026f2dfb29d8b5"},
-    {file = "typing-3.7.4.3.tar.gz", hash = "sha256:1187fb9c82fd670d10aa07bbb6cfcfe4bdda42d6fab8d5134f04e8c4d0b71cc9"},
-]
 unidecode = [
     {file = "Unidecode-1.0.23-py2.py3-none-any.whl", hash = "sha256:092cdf7ad9d1052c50313426a625b717dab52f7ac58f859e09ea020953b1ad8f"},
     {file = "Unidecode-1.0.23.tar.gz", hash = "sha256:8b85354be8fd0c0e10adbf0675f6dc2310e56fda43fa8fe049123b6c475e52fb"},
@@ -1798,10 +1816,6 @@ wagtail = [
     {file = "wagtail-2.13.4.tar.gz", hash = "sha256:5ea948715c34c81a13610951a78ec5a3d913ae463fbc2b6a333c9bab66847887"},
 ]
 wagtailmenus = []
-wcwidth = [
-    {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},
-    {file = "wcwidth-0.2.5.tar.gz", hash = "sha256:c4d647b99872929fdb7bdcaa4fbe7f01413ed3d98077df798530e5b04f116c83"},
-]
 webencodings = [
     {file = "webencodings-0.5.1-py2.py3-none-any.whl", hash = "sha256:a0af1213f3c2226497a97e2b3aa01a7e4bee4f403f95be16fc9acd2947514a78"},
     {file = "webencodings-0.5.1.tar.gz", hash = "sha256:b36a1c245f2d304965eb4e0a82848379241dc04b865afcc4aab16748587e1923"},
