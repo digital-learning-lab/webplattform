@@ -613,7 +613,7 @@ pillow = {version = "*", markers = "python_version >= \"2.7\""}
 
 [[package]]
 name = "environs"
-version = "5.2.0"
+version = "5.2.1"
 description = "simplified environment variable parsing"
 category = "main"
 optional = false
@@ -1252,7 +1252,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "28e9c7531474a6338faa6c0c521bcd5f80913a0c104452244ce2eced952536e4"
+content-hash = "7f7405c087eeb7373c942f7a30141688a094e0c251620e4a2fac93352eb2d4c0"
 
 [metadata.files]
 amqp = [
@@ -1523,8 +1523,8 @@ easy-thumbnails = [
     {file = "easy-thumbnails-2.6.tar.gz", hash = "sha256:23fbe3415c93b2369ece8ebdfb5faa05540943bef8b941b3118ce769ba95e275"},
 ]
 environs = [
-    {file = "environs-5.2.0-py2.py3-none-any.whl", hash = "sha256:59a24b9619e225c0da784ccfd13ae7763a3889bb53eb7e6fb5689290a731183f"},
-    {file = "environs-5.2.0.tar.gz", hash = "sha256:045eb19ebe73604546d0c6c0c050c73c72be34c51c19994856c7b388d9ac3439"},
+    {file = "environs-5.2.1-py2.py3-none-any.whl", hash = "sha256:ab4362c638aa67177a832aedf1609a95b46179ea9f5b1af8c90cbfe70ca7e6cf"},
+    {file = "environs-5.2.1.tar.gz", hash = "sha256:d92784bdeb6fe038688b19128b5d9a4d9eda4d33f1a38c21be8cad54c769a763"},
 ]
 et-xmlfile = [
     {file = "et_xmlfile-1.1.0-py3-none-any.whl", hash = "sha256:a2ba85d1d6a74ef63837eed693bcb89c3f752169b0e3e7ae5b16ca5e1b3deada"},
