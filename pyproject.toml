@@ -11,7 +11,7 @@ Django = ">=2.0,<3.0"
 psycopg2 = {version = "2.8.6", extras = ["binary"]}
 django-meta = "2.0.0"
 django-webpack-loader = "~=1.0.0"
-django-extensions = "2.2.1"
+django-extensions = "2.2.9"
 django-filer = "1.5.0"
 django-polymorphic = "2.0.3"
 blessings = "1.7"
