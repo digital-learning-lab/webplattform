@@ -326,11 +326,11 @@ redis = ["redis"]
 
 [[package]]
 name = "django-crispy-forms"
-version = "1.9.2"
+version = "1.14.0"
 description = "Best way to have Django DRY forms"
 category = "main"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.7"
 
 [[package]]
 name = "django-extensions"
@@ -1253,7 +1253,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "319554496477bba6dd1cbf03383affb81d9a79448d87b62884bf238e7af637a9"
+content-hash = "ca88d460a5e00fe769397512b2cc3b8909543b6dcb67341e8fef08a14d58966c"
 
 [metadata.files]
 amqp = [
@@ -1435,8 +1435,8 @@ django-constance = [
     {file = "django_constance-2.9.0-py3-none-any.whl", hash = "sha256:c78eed0f75eb003836db84345fa7df0c529b47b2c4e04ac84fdf8558b3338a28"},
 ]
 django-crispy-forms = [
-    {file = "django-crispy-forms-1.9.2.tar.gz", hash = "sha256:f2f1e0fbb458851636447cfb6be1a611b40c8ac9e41a74ba923011378670b43b"},
-    {file = "django_crispy_forms-1.9.2-py3-none-any.whl", hash = "sha256:888bb316db89b60050a42ec35080facb361d823eec38010ccb0702f45642d3b8"},
+    {file = "django-crispy-forms-1.14.0.tar.gz", hash = "sha256:35887b8851a931374dd697207a8f56c57a9c5cb9dbf0b9fa54314da5666cea5b"},
+    {file = "django_crispy_forms-1.14.0-py3-none-any.whl", hash = "sha256:bc4d2037f6de602d39c0bc452ac3029d1f5d65e88458872cc4dbc01c3a400604"},
 ]
 django-extensions = [
     {file = "django-extensions-2.2.9.tar.gz", hash = "sha256:2f81b618ba4d1b0e58603e25012e5c74f88a4b706e0022a3b21f24f0322a6ce6"},
