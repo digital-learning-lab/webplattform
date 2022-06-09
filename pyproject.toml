@@ -38,7 +38,7 @@ django-select2 = "<8"
 django-better-admin-arrayfield = "<2"
 django-storages = "~=1.9.1"
 boto3 = "~=1.24.4"
-django-simple-history = "~=2.11.0"
+django-simple-history = "~=2.12.0"
 django-constance = {version = "~=2.9.0", extras = ["database"]}
 wagtail = "2.13.4"
 django-nested-admin = "3.4.0"

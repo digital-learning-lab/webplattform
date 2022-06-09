@@ -518,7 +518,7 @@ test = ["pytest", "pytest-cov", "pytest-django", "selenium"]
 
 [[package]]
 name = "django-simple-history"
-version = "2.11.0"
+version = "2.12.0"
 description = "Store model history and view/revert changes from admin site."
 category = "main"
 optional = false
@@ -1254,7 +1254,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "c2ec0c714d7dbe5150b6585f8246ae74ae5af964c6e9393de42248b7615b7135"
+content-hash = "ada709c94b7ac55112c58eb87dd2b93ed8844f8fd8055075a2abcc1b94361cb8"
 
 [metadata.files]
 amqp = [
@@ -1494,8 +1494,8 @@ django-select2 = [
     {file = "django_select2-7.10.0-py2.py3-none-any.whl", hash = "sha256:fd78095b0eef02f990a56f887ada3d6bc3d0ffa858a73ec29498ec86988dc90d"},
 ]
 django-simple-history = [
-    {file = "django-simple-history-2.11.0.tar.gz", hash = "sha256:d147d441165b802082647c86ca14776fe3574986053bbba90a9eaee1b315b826"},
-    {file = "django_simple_history-2.11.0-py2.py3-none-any.whl", hash = "sha256:b46191e97bb59b82e0ef20ae316021f7337fec50e5acbbd5a757b37910759af0"},
+    {file = "django-simple-history-2.12.0.tar.gz", hash = "sha256:3b7bf6bfbcf973afca123c5786c72b917ed4d92d7bf3b6cb70fe2e3850e763a3"},
+    {file = "django_simple_history-2.12.0-py2.py3-none-any.whl", hash = "sha256:e7e830cb7a768dc90d6ba0507f8023f889bcb62fe31a08f18fac102c55eec539"},
 ]
 django-storages = [
     {file = "django-storages-1.9.1.tar.gz", hash = "sha256:a59e9923cbce7068792f75344ed7727021ee4ac20f227cf17297d0d03d141e91"},
