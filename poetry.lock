@@ -578,14 +578,15 @@ python-versions = "*"
 
 [[package]]
 name = "djangorestframework"
-version = "3.12.2"
+version = "3.13.1"
 description = "Web APIs for Django, made easy."
 category = "main"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.6"
 
 [package.dependencies]
 django = ">=2.2"
+pytz = "*"
 
 [[package]]
 name = "draftjs-exporter"
@@ -1254,7 +1255,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "1b6be1d9009ec380cc772937682672177aa57da05cc9581e4f49d2ef07b53999"
+content-hash = "279447e7f439f6a1196de07c1c8a87cbc5bedb267d3c8bc441fb6f06a0f0eb5c"
 
 [metadata.files]
 amqp = [
@@ -1514,8 +1515,8 @@ django-webpack-loader = [
     {file = "django_webpack_loader-1.5.0-py3-none-any.whl", hash = "sha256:5e199ab2e069cc747088e9d017409a2adb7b7bdea4aad37ebcfde3b29f66b2e4"},
 ]
 djangorestframework = [
-    {file = "djangorestframework-3.12.2-py3-none-any.whl", hash = "sha256:0209bafcb7b5010fdfec784034f059d512256424de2a0f084cb82b096d6dd6a7"},
-    {file = "djangorestframework-3.12.2.tar.gz", hash = "sha256:0898182b4737a7b584a2c73735d89816343369f259fea932d90dc78e35d8ac33"},
+    {file = "djangorestframework-3.13.1-py3-none-any.whl", hash = "sha256:24c4bf58ed7e85d1fe4ba250ab2da926d263cd57d64b03e8dcef0ac683f8b1aa"},
+    {file = "djangorestframework-3.13.1.tar.gz", hash = "sha256:0c33407ce23acc68eca2a6e46424b008c9c02eceb8cf18581921d0092bc1f2ee"},
 ]
 draftjs-exporter = [
     {file = "draftjs_exporter-2.1.7-py3-none-any.whl", hash = "sha256:d415a9964690a2cddb66a31ef32dd46c277e9b80434b94e39e3043188ed83e33"},
