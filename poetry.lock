@@ -478,7 +478,7 @@ tests = ["tox"]
 
 [[package]]
 name = "django-polymorphic"
-version = "2.0.3"
+version = "2.1.2"
 description = "Seamless polymorphic inheritance for Django models"
 category = "main"
 optional = false
@@ -1254,7 +1254,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "f2ece90ab5613526e5114811b471c7f97b3fbcc78a6bd6b5c4baa5e64a6d0cdd"
+content-hash = "c2ec0c714d7dbe5150b6585f8246ae74ae5af964c6e9393de42248b7615b7135"
 
 [metadata.files]
 amqp = [
@@ -1482,8 +1482,8 @@ django-picklefield = [
     {file = "django_picklefield-3.0.1-py3-none-any.whl", hash = "sha256:3c702a54fde2d322fe5b2f39b8f78d9f655b8f77944ab26f703be6c0ed335a35"},
 ]
 django-polymorphic = [
-    {file = "django-polymorphic-2.0.3.tar.gz", hash = "sha256:1fb5505537bcaf71cfc951ff94c4e3ba83c761eaca04b7b2ce9cb63937634ea5"},
-    {file = "django_polymorphic-2.0.3-py2.py3-none-any.whl", hash = "sha256:79e7df455fdc8c3d28d38b7ab8323fc21d109a162b8ca282119e0e9ce8db7bdb"},
+    {file = "django-polymorphic-2.1.2.tar.gz", hash = "sha256:6e08a76c91066635ccb7ef3ebbe9a0ad149febae6b30be2579716ec16d3c6461"},
+    {file = "django_polymorphic-2.1.2-py2.py3-none-any.whl", hash = "sha256:0a25058e95e5e99fe0beeabb8f4734effe242d7b5b77dca416fba9fd3062da6a"},
 ]
 django-rest-polymorphic = [
     {file = "django-rest-polymorphic-0.1.9.tar.gz", hash = "sha256:43d7f8c5b43a225fe792ac40e98d196d4c8d6872a796b61246085819b1b5f1c6"},
