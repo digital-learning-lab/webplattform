@@ -27,7 +27,7 @@ pysolr<4
 django-haystack<3
 django-select2<8
 django-better-admin-arrayfield<2
-django-storages~=1.9.1
+django-storages~=1.12.3
 boto3~=1.24.4
 pytest==6.0.1
 coverage~=5.5.0
