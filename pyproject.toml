@@ -41,7 +41,7 @@ boto3 = "~=1.24.4"
 django-simple-history = "~=2.11.0"
 django-constance = {version = "~=2.9.0", extras = ["database"]}
 wagtail = "2.13.4"
-django-nested-admin = "3.3.3"
+django-nested-admin = "3.4.0"
 sentry-sdk = "1.5.12"
 wagtailmenus = {git = "https://github.com/jazzband/wagtailmenus", rev = "8399708faa618b2ca21f014d047bf8e41b84ca6e"}
 

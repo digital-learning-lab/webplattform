@@ -452,7 +452,7 @@ tests = ["coverage", "mock-django"]
 
 [[package]]
 name = "django-nested-admin"
-version = "3.3.3"
+version = "3.4.0"
 description = "Django admin classes that allow for nested inlines"
 category = "main"
 optional = false
@@ -1254,7 +1254,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "bff940d5a3f7815eda14ac3f21431f225f8d6dcb73852ffe0224140a17913606"
+content-hash = "f2ece90ab5613526e5114811b471c7f97b3fbcc78a6bd6b5c4baa5e64a6d0cdd"
 
 [metadata.files]
 amqp = [
@@ -1474,8 +1474,8 @@ django-mptt = [
     {file = "django_mptt-0.13.4-py3-none-any.whl", hash = "sha256:75745b621ae31d97957ed924155a750dfa8cacd9543799ada2d713fd6bc3f5c7"},
 ]
 django-nested-admin = [
-    {file = "django-nested-admin-3.3.3.tar.gz", hash = "sha256:f1773c4d1be0a19e4b7a510734e88b81f551f831ed7b0641f63ad13cef3ee08c"},
-    {file = "django_nested_admin-3.3.3-py2.py3-none-any.whl", hash = "sha256:440d06055d5c114b354c6bbd040ab878a1bfbea02692cb40ec8fd1e5a071e99b"},
+    {file = "django-nested-admin-3.4.0.tar.gz", hash = "sha256:fbcf20d75a73dcbcc6285793ff936eff8df4deba5b169e0c1ab765394c562805"},
+    {file = "django_nested_admin-3.4.0-py2.py3-none-any.whl", hash = "sha256:c6852c5ac632f4e698b6beda455006fd464c852459e5e858a6db832cdb23d9e1"},
 ]
 django-picklefield = [
     {file = "django-picklefield-3.0.1.tar.gz", hash = "sha256:15ccba592ca953b9edf9532e64640329cd47b136b7f8f10f2939caa5f9ce4287"},

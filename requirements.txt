@@ -36,5 +36,5 @@ django-simple-history~=2.11.0
 django-constance[database]~=2.9.0
 wagtail==2.13.4
 git+git://github.com/rkhleics/wagtailmenus@b0a6acb281227c93b3b4f11265366da0dada4248#egg=wagtailmenus
-django-nested-admin==3.3.3
+django-nested-admin==3.4.0
 sentry-sdk==1.5.12
