@@ -15,7 +15,7 @@ RUN npm run build
 
 ### Stage 2: The release image
 
-FROM python:3.8-slim
+FROM python:3.10-slim
 ENV PYTHONUNBUFFERED=1 \
 	POETRY_VIRTUALENVS_CREATE=false \
 	POETRY_CACHE_DIR='/var/cache/pypoetry'
