@@ -21,7 +21,7 @@ django-filter==2.4.0
 django-rest-polymorphic==0.1.9
 XlsxWriter==1.4.5
 rules<3
-celery>=4.4.5,<5
+celery>=5.2.7,<6
 redis<4
 pysolr<4
 django-haystack<3
