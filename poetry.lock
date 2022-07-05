@@ -386,14 +386,14 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "django-extensions"
-version = "2.2.9"
+version = "3.1.5"
 description = "Extensions for Django"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
 
 [package.dependencies]
-six = ">=1.2"
+Django = ">=2.2"
 
 [[package]]
 name = "django-filer"
@@ -1317,7 +1317,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "83d7f79bc4c380b8be196fce02cbdf9457f9caa476665b5883d302670ee6bf87"
+content-hash = "338cc76cb5cc62121b2424a5a09b04063f2bc1be9d1a667fd4639fc623756d6a"
 
 [metadata.files]
 amqp = [
@@ -1508,8 +1508,8 @@ django-crispy-forms = [
     {file = "django_crispy_forms-1.14.0-py3-none-any.whl", hash = "sha256:bc4d2037f6de602d39c0bc452ac3029d1f5d65e88458872cc4dbc01c3a400604"},
 ]
 django-extensions = [
-    {file = "django-extensions-2.2.9.tar.gz", hash = "sha256:2f81b618ba4d1b0e58603e25012e5c74f88a4b706e0022a3b21f24f0322a6ce6"},
-    {file = "django_extensions-2.2.9-py2.py3-none-any.whl", hash = "sha256:b19182d101a441fe001c5753553a901e2ef3ff60e8fbbe38881eb4a61fdd17c4"},
+    {file = "django-extensions-3.1.5.tar.gz", hash = "sha256:28e1e1bf49f0e00307ba574d645b0af3564c981a6dfc87209d48cb98f77d0b1a"},
+    {file = "django_extensions-3.1.5-py3-none-any.whl", hash = "sha256:9238b9e016bb0009d621e05cf56ea8ce5cce9b32e91ad2026996a7377ca28069"},
 ]
 django-filer = [
     {file = "django-filer-1.7.1.tar.gz", hash = "sha256:7bf8cda6cbdd02c30198c59dfe2027624ee70a204f2d4f6cc2a0a8563df9b286"},
