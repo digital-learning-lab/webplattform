@@ -24,7 +24,7 @@ rules<3
 celery>=5.2.7,<6
 redis<4
 pysolr<4
-django-haystack<3
+django-haystack<4
 django-select2<8
 django-better-admin-arrayfield<2
 django-storages~=1.12.3
