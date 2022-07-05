@@ -424,14 +424,17 @@ Django = ">=2.2"
 
 [[package]]
 name = "django-haystack"
-version = "2.8.1"
+version = "3.2.1"
 description = "Pluggable search for Django."
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-Django = ">=1.11"
+Django = ">=2.2"
+
+[package.extras]
+elasticsearch = ["elasticsearch (>=5,<8)"]
 
 [[package]]
 name = "django-import-export"
@@ -1317,7 +1320,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "338cc76cb5cc62121b2424a5a09b04063f2bc1be9d1a667fd4639fc623756d6a"
+content-hash = "0df5e88f9e8059b04ecb3077d8cbc080a4de7a706e71428dca32dd9fc6cafb99"
 
 [metadata.files]
 amqp = [
@@ -1519,7 +1522,7 @@ django-filter = [
     {file = "django_filter-2.4.0-py3-none-any.whl", hash = "sha256:e00d32cebdb3d54273c48f4f878f898dced8d5dfaad009438fe61ebdf535ace1"},
 ]
 django-haystack = [
-    {file = "django-haystack-2.8.1.tar.gz", hash = "sha256:8b54bcc926596765d0a3383d693bcdd76109c7abb6b2323b3984a39e3576028c"},
+    {file = "django-haystack-3.2.1.tar.gz", hash = "sha256:97e3197aefc225fe405b6f17600a2534bf827cb4d6743130c20bc1a06f7293a4"},
 ]
 django-import-export = [
     {file = "django-import-export-2.5.0.tar.gz", hash = "sha256:c39c003bfc803fb63ba7742562f1667603a4a8d7426261845d75ce8582d40f48"},
