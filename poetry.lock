@@ -667,21 +667,21 @@ pillow = {version = "*", markers = "python_version >= \"2.7\""}
 
 [[package]]
 name = "environs"
-version = "5.2.1"
+version = "9.5.0"
 description = "simplified environment variable parsing"
 category = "main"
 optional = false
-python-versions = ">=3.5"
+python-versions = ">=3.6"
 
 [package.dependencies]
-marshmallow = ">=2.7.0"
+marshmallow = ">=3.0.0"
 python-dotenv = "*"
 
 [package.extras]
-dev = ["pytest", "dj-database-url", "dj-email-url", "flake8 (==3.7.8)", "flake8-bugbear (==19.3.0)", "pre-commit (>=1.17,<2.0)", "tox"]
-django = ["dj-database-url", "dj-email-url"]
-lint = ["flake8 (==3.7.8)", "flake8-bugbear (==19.3.0)", "pre-commit (>=1.17,<2.0)"]
-tests = ["pytest", "dj-database-url", "dj-email-url"]
+dev = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url", "flake8 (==4.0.1)", "flake8-bugbear (==21.9.2)", "mypy (==0.910)", "pre-commit (>=2.4,<3.0)", "tox"]
+django = ["dj-database-url", "dj-email-url", "django-cache-url"]
+lint = ["flake8 (==4.0.1)", "flake8-bugbear (==21.9.2)", "mypy (==0.910)", "pre-commit (>=2.4,<3.0)"]
+tests = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url"]
 
 [[package]]
 name = "et-xmlfile"
@@ -1317,7 +1317,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "7c9f3088ff8d31772cc706d7f539c248a9526a4bd3c478348259230f281d7a69"
+content-hash = "5f24690f49c1aceb220f3dd86928d4762ea41d64e13363d61933ea458328e7a6"
 
 [metadata.files]
 amqp = [
@@ -1592,8 +1592,8 @@ easy-thumbnails = [
     {file = "easy-thumbnails-2.6.tar.gz", hash = "sha256:23fbe3415c93b2369ece8ebdfb5faa05540943bef8b941b3118ce769ba95e275"},
 ]
 environs = [
-    {file = "environs-5.2.1-py2.py3-none-any.whl", hash = "sha256:ab4362c638aa67177a832aedf1609a95b46179ea9f5b1af8c90cbfe70ca7e6cf"},
-    {file = "environs-5.2.1.tar.gz", hash = "sha256:d92784bdeb6fe038688b19128b5d9a4d9eda4d33f1a38c21be8cad54c769a763"},
+    {file = "environs-9.5.0-py2.py3-none-any.whl", hash = "sha256:1e549569a3de49c05f856f40bce86979e7d5ffbbc4398e7f338574c220189124"},
+    {file = "environs-9.5.0.tar.gz", hash = "sha256:a76307b36fbe856bdca7ee9161e6c466fd7fcffc297109a118c59b54e27e30c9"},
 ]
 et-xmlfile = [
     {file = "et_xmlfile-1.1.0-py3-none-any.whl", hash = "sha256:a2ba85d1d6a74ef63837eed693bcb89c3f752169b0e3e7ae5b16ca5e1b3deada"},
