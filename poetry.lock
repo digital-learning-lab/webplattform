@@ -544,7 +544,7 @@ Django = ">=1.11"
 
 [[package]]
 name = "django-rest-polymorphic"
-version = "0.1.9"
+version = "0.1.10"
 description = "Polymorphic serializers for Django REST Framework."
 category = "main"
 optional = false
@@ -1317,7 +1317,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "5f24690f49c1aceb220f3dd86928d4762ea41d64e13363d61933ea458328e7a6"
+content-hash = "413f13baf2b853c44eba4edc2d3bee82132694df344f38521e40a1b233b85f5c"
 
 [metadata.files]
 amqp = [
@@ -1554,8 +1554,8 @@ django-polymorphic = [
     {file = "django_polymorphic-2.1.2-py2.py3-none-any.whl", hash = "sha256:0a25058e95e5e99fe0beeabb8f4734effe242d7b5b77dca416fba9fd3062da6a"},
 ]
 django-rest-polymorphic = [
-    {file = "django-rest-polymorphic-0.1.9.tar.gz", hash = "sha256:43d7f8c5b43a225fe792ac40e98d196d4c8d6872a796b61246085819b1b5f1c6"},
-    {file = "django_rest_polymorphic-0.1.9-py2.py3-none-any.whl", hash = "sha256:ae9dd7a104bd6d2faac3bb7cdc31d3c3c768a4bb25f75451e866d9fab66fb6eb"},
+    {file = "django-rest-polymorphic-0.1.10.tar.gz", hash = "sha256:2960f58ed9a8bb0d42bc72c8ffaadfbd7f37d2573d42a1cd9a6460f3d572b519"},
+    {file = "django_rest_polymorphic-0.1.10-py2.py3-none-any.whl", hash = "sha256:f3980e3e2af73357e7913f9b1410ef856866bcfcc46903b70fe9621118bb538c"},
 ]
 django-select2 = [
     {file = "django-select2-7.10.0.tar.gz", hash = "sha256:f3387ba43db4a137b5f17d30b3465dd328d01fb4b5d08a017ba0b76a7c7bbbbf"},
