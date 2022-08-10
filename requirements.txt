@@ -22,7 +22,7 @@ django-rest-polymorphic==0.1.10
 XlsxWriter==1.4.5
 rules<3
 celery>=5.2.7,<6
-redis<4
+redis<5
 pysolr<4
 django-haystack<4
 django-select2<8
