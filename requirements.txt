@@ -1,6 +1,6 @@
 Django>=2.0,<3.0
 psycopg2==2.8.6
-django-meta==2.0.0
+django-meta==2.1.0
 django-webpack-loader~=1.6.0
 django-extensions==3.1.5
 django-filer==1.7.1
