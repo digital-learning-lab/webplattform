@@ -31,7 +31,7 @@ django-storages~=1.12.3
 boto3~=1.24.4
 pytest==7.1.2
 coverage~=6.4.1
-pytest-django~=3.10.0
+pytest-django~=4.5.2
 django-simple-history~=3.1.1
 django-constance[database]~=2.9.0
 wagtail==2.13.4
