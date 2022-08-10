@@ -46,7 +46,7 @@ sentry-sdk = "1.9.3"
 wagtailmenus = {git = "https://github.com/jazzband/wagtailmenus", rev = "8399708faa618b2ca21f014d047bf8e41b84ca6e"}
 
 [tool.poetry.dev-dependencies]
-pytest = "6.2.5"
+pytest = "7.1.2"
 coverage = "~=6.4.1"
 pytest-django = "~=3.10.0"
 
