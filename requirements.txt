@@ -20,7 +20,7 @@ djangorestframework==3.13.1
 django-filter==2.4.0
 django-rest-polymorphic==0.1.10
 XlsxWriter==1.4.5
-rules<3
+rules<4
 celery>=5.2.7,<6
 redis<5
 pysolr<4
