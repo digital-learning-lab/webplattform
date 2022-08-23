@@ -42,10 +42,10 @@ optional = false
 python-versions = ">=3.5"
 
 [package.extras]
-tests_no_zope = ["cloudpickle", "pytest-mypy-plugins", "mypy (>=0.900,!=0.940)", "pytest (>=4.3.0)", "pympler", "hypothesis", "coverage[toml] (>=5.0.2)"]
-tests = ["cloudpickle", "zope.interface", "pytest-mypy-plugins", "mypy (>=0.900,!=0.940)", "pytest (>=4.3.0)", "pympler", "hypothesis", "coverage[toml] (>=5.0.2)"]
-docs = ["sphinx-notfound-page", "zope.interface", "sphinx", "furo"]
-dev = ["cloudpickle", "pre-commit", "sphinx-notfound-page", "sphinx", "furo", "zope.interface", "pytest-mypy-plugins", "mypy (>=0.900,!=0.940)", "pytest (>=4.3.0)", "pympler", "hypothesis", "coverage[toml] (>=5.0.2)"]
+dev = ["cloudpickle", "coverage[toml] (>=5.0.2)", "furo", "hypothesis", "mypy (>=0.900,!=0.940)", "pre-commit", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins", "sphinx", "sphinx-notfound-page", "zope.interface"]
+docs = ["furo", "sphinx", "sphinx-notfound-page", "zope.interface"]
+tests = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy (>=0.900,!=0.940)", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins", "zope.interface"]
+tests_no_zope = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy (>=0.900,!=0.940)", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins"]
 
 [[package]]
 name = "beautifulsoup4"
@@ -59,8 +59,8 @@ python-versions = "*"
 soupsieve = {version = ">1.2", markers = "python_version >= \"3.0\""}
 
 [package.extras]
-lxml = ["lxml"]
 html5lib = ["html5lib"]
+lxml = ["lxml"]
 
 [[package]]
 name = "billiard"
@@ -240,7 +240,7 @@ python-versions = "*"
 click = ">=4.0"
 
 [package.extras]
-dev = ["coveralls", "wheel", "pytest-cov", "pytest (>=3.6)"]
+dev = ["coveralls", "pytest (>=3.6)", "pytest-cov", "wheel"]
 
 [[package]]
 name = "click-repl"
@@ -314,7 +314,7 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 wrapt = ">=1.10,<2"
 
 [package.extras]
-dev = ["tox", "bump2version (<1)", "sphinx (<2)", "importlib-metadata (<3)", "importlib-resources (<4)", "configparser (<5)", "sphinxcontrib-websupport (<2)", "zipp (<2)", "PyTest (<5)", "PyTest-Cov (<2.6)", "pytest", "pytest-cov"]
+dev = ["PyTest (<5)", "PyTest-Cov (<2.6)", "bump2version (<1)", "configparser (<5)", "importlib-metadata (<3)", "importlib-resources (<4)", "pytest", "pytest-cov", "sphinx (<2)", "sphinxcontrib-websupport (<2)", "tox", "zipp (<2)"]
 
 [[package]]
 name = "diff-match-patch"
@@ -337,8 +337,8 @@ pytz = "*"
 sqlparse = ">=0.2.2"
 
 [package.extras]
-bcrypt = ["bcrypt"]
 argon2 = ["argon2-cffi (>=16.1.0)"]
+bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-appconf"
@@ -379,9 +379,9 @@ optional = false
 python-versions = ">=3.4"
 
 [package.extras]
+development = ["Django (>=2.0,<2.1)", "django-extensions", "ipdb", "werkzeug"]
+docs = ["Sphinx (>=1.7.4)", "pyenchant (>=2.0)", "sphinx-rtd-theme (>=0.3)", "sphinxcontrib-spelling (>=1.4)"]
 testing = ["coverage"]
-docs = ["sphinx-rtd-theme (>=0.3)", "sphinxcontrib-spelling (>=1.4)", "Sphinx (>=1.7.4)", "pyenchant (>=2.0)"]
-development = ["django-extensions", "werkzeug", "ipdb", "Django (>=2.0,<2.1)"]
 
 [[package]]
 name = "django-constance"
@@ -525,7 +525,7 @@ python-versions = ">=3.6"
 django-js-asset = "*"
 
 [package.extras]
-tests = ["mock-django", "coverage"]
+tests = ["coverage", "mock-django"]
 
 [[package]]
 name = "django-nested-admin"
@@ -673,7 +673,7 @@ python-versions = "*"
 [package.extras]
 html5lib = ["beautifulsoup4 (>=4.4.1,<5)", "html5lib (>=0.999,<=1.0.1)"]
 lxml = ["lxml (>=4.2.0,<5)"]
-testing = ["tox (>=2.3.1)", "markov-draftjs (==0.1.1)", "memory-profiler (==0.47)", "psutil (==5.4.1)", "coverage (>=4.1.0)", "flake8 (>=3.2.0)", "isort (==4.2.5)", "beautifulsoup4 (>=4.4.1,<5)", "html5lib (>=0.999,<=1.0.1)", "lxml (>=4.2.0,<5)"]
+testing = ["beautifulsoup4 (>=4.4.1,<5)", "coverage (>=4.1.0)", "flake8 (>=3.2.0)", "html5lib (>=0.999,<=1.0.1)", "isort (==4.2.5)", "lxml (>=4.2.0,<5)", "markov-draftjs (==0.1.1)", "memory-profiler (==0.47)", "psutil (==5.4.1)", "tox (>=2.3.1)"]
 
 [[package]]
 name = "easy-thumbnails"
@@ -703,10 +703,10 @@ marshmallow = ">=3.0.0"
 python-dotenv = "*"
 
 [package.extras]
-dev = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url", "flake8 (==4.0.1)", "flake8-bugbear (==21.9.2)", "mypy (==0.910)", "pre-commit (>=2.4,<3.0)", "tox"]
+dev = ["dj-database-url", "dj-email-url", "django-cache-url", "flake8 (==4.0.1)", "flake8-bugbear (==21.9.2)", "mypy (==0.910)", "pre-commit (>=2.4,<3.0)", "pytest", "tox"]
 django = ["dj-database-url", "dj-email-url", "django-cache-url"]
 lint = ["flake8 (==4.0.1)", "flake8-bugbear (==21.9.2)", "mypy (==0.910)", "pre-commit (>=2.4,<3.0)"]
-tests = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url"]
+tests = ["dj-database-url", "dj-email-url", "django-cache-url", "pytest"]
 
 [[package]]
 name = "et-xmlfile"
@@ -740,10 +740,10 @@ six = ">=1.9"
 webencodings = "*"
 
 [package.extras]
-lxml = ["lxml"]
-genshi = ["genshi"]
+all = ["chardet (>=2.2)", "genshi", "lxml"]
 chardet = ["chardet (>=2.2)"]
-all = ["lxml", "chardet (>=2.2)", "genshi"]
+genshi = ["genshi"]
+lxml = ["lxml"]
 
 [[package]]
 name = "idna"
@@ -829,10 +829,10 @@ python-versions = ">=3.7"
 packaging = ">=17.0"
 
 [package.extras]
-tests = ["simplejson", "pytz", "pytest"]
-lint = ["pre-commit (>=2.4,<3.0)", "flake8-bugbear (==22.6.22)", "flake8 (==4.0.1)", "mypy (==0.961)"]
-docs = ["autodocsumm (==0.2.8)", "sphinx-version-warning (==1.1.2)", "alabaster (==0.7.12)", "sphinx-issues (==3.0.1)", "sphinx (==4.5.0)"]
-dev = ["tox", "pre-commit (>=2.4,<3.0)", "flake8-bugbear (==22.6.22)", "flake8 (==4.0.1)", "mypy (==0.961)", "simplejson", "pytz", "pytest"]
+dev = ["flake8 (==4.0.1)", "flake8-bugbear (==22.6.22)", "mypy (==0.961)", "pre-commit (>=2.4,<3.0)", "pytest", "pytz", "simplejson", "tox"]
+docs = ["alabaster (==0.7.12)", "autodocsumm (==0.2.8)", "sphinx (==4.5.0)", "sphinx-issues (==3.0.1)", "sphinx-version-warning (==1.1.2)"]
+lint = ["flake8 (==4.0.1)", "flake8-bugbear (==22.6.22)", "mypy (==0.961)", "pre-commit (>=2.4,<3.0)"]
+tests = ["pytest", "pytz", "simplejson"]
 
 [[package]]
 name = "odfpy"
@@ -884,8 +884,8 @@ optional = false
 python-versions = ">=3.6"
 
 [package.extras]
-testing = ["pytest-benchmark", "pytest"]
-dev = ["tox", "pre-commit"]
+dev = ["pre-commit", "tox"]
+testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "prompt-toolkit"
@@ -966,7 +966,7 @@ py = ">=1.8.2"
 tomli = ">=1.0.0"
 
 [package.extras]
-testing = ["xmlschema", "requests", "pygments (>=2.7.2)", "nose", "mock", "hypothesis (>=3.56)", "argcomplete"]
+testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
 
 [[package]]
 name = "pytest-django"
@@ -980,8 +980,8 @@ python-versions = ">=3.5"
 pytest = ">=5.4.0"
 
 [package.extras]
-testing = ["django-configurations (>=2.0)", "django"]
-docs = ["sphinx-rtd-theme", "sphinx"]
+docs = ["sphinx", "sphinx-rtd-theme"]
+testing = ["django", "django-configurations (>=2.0)"]
 
 [[package]]
 name = "python-dateutil"
@@ -1072,8 +1072,8 @@ idna = ">=2.5,<4"
 urllib3 = ">=1.21.1,<1.27"
 
 [package.extras]
-use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 socks = ["PySocks (>=1.5.6,!=1.5.7)"]
+use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "rules"
@@ -1099,7 +1099,7 @@ crt = ["botocore[crt] (>=1.20.29,<2.0a.0)"]
 
 [[package]]
 name = "sentry-sdk"
-version = "1.9.4"
+version = "1.9.5"
 description = "Python client for Sentry (https://sentry.io)"
 category = "main"
 optional = false
@@ -1108,29 +1108,29 @@ python-versions = "*"
 [package.dependencies]
 certifi = "*"
 urllib3 = [
-    {version = ">=1.26.11", markers = "python_version >= \"3.6\""},
     {version = ">=1.26.9", markers = "python_version >= \"3.5\""},
+    {version = ">=1.26.11", markers = "python_version >= \"3.6\""},
 ]
 
 [package.extras]
-tornado = ["tornado (>=5)"]
-starlette = ["starlette (>=0.19.1)"]
-sqlalchemy = ["sqlalchemy (>=1.2)"]
-sanic = ["sanic (>=0.8)"]
-rq = ["rq (>=0.6)"]
-quart = ["blinker (>=1.1)", "quart (>=0.16.1)"]
-pyspark = ["pyspark (>=2.4.4)"]
-pure_eval = ["asttokens", "executing", "pure-eval"]
-httpx = ["httpx (>=0.16.0)"]
-flask = ["blinker (>=1.1)", "flask (>=0.11)"]
-fastapi = ["fastapi (>=0.79.0)"]
-falcon = ["falcon (>=1.4)"]
-django = ["django (>=1.8)"]
-chalice = ["chalice (>=1.16.0)"]
-celery = ["celery (>=3)"]
-bottle = ["bottle (>=0.12.13)"]
-beam = ["apache-beam (>=2.12)"]
 aiohttp = ["aiohttp (>=3.5)"]
+beam = ["apache-beam (>=2.12)"]
+bottle = ["bottle (>=0.12.13)"]
+celery = ["celery (>=3)"]
+chalice = ["chalice (>=1.16.0)"]
+django = ["django (>=1.8)"]
+falcon = ["falcon (>=1.4)"]
+fastapi = ["fastapi (>=0.79.0)"]
+flask = ["blinker (>=1.1)", "flask (>=0.11)"]
+httpx = ["httpx (>=0.16.0)"]
+pure_eval = ["asttokens", "executing", "pure-eval"]
+pyspark = ["pyspark (>=2.4.4)"]
+quart = ["blinker (>=1.1)", "quart (>=0.16.1)"]
+rq = ["rq (>=0.6)"]
+sanic = ["sanic (>=0.8)"]
+sqlalchemy = ["sqlalchemy (>=1.2)"]
+starlette = ["starlette (>=0.19.1)"]
+tornado = ["tornado (>=5)"]
 
 [[package]]
 name = "six"
@@ -1191,7 +1191,7 @@ optional = false
 python-versions = ">=3.5"
 
 [package.extras]
-docs = ["mkdocs-material (>=6.2,<6.3)", "mkdocs (>=1.1,<1.2)"]
+docs = ["mkdocs (>=1.1,<1.2)", "mkdocs-material (>=6.2,<6.3)"]
 
 [[package]]
 name = "tomli"
@@ -1226,9 +1226,9 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*, <4"
 
 [package.extras]
+brotli = ["brotli (>=1.0.9)", "brotlicffi (>=0.8.0)", "brotlipy (>=0.6.0)"]
+secure = ["certifi", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "ipaddress", "pyOpenSSL (>=0.14)"]
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
-secure = ["ipaddress", "certifi", "idna (>=2.0.0)", "cryptography (>=1.3.4)", "pyOpenSSL (>=0.14)"]
-brotli = ["brotlipy (>=0.6.0)", "brotli (>=1.0.9)", "brotlicffi (>=0.8.0)"]
 
 [[package]]
 name = "uwsgi"
@@ -1274,8 +1274,8 @@ Willow = ">=1.4,<1.5"
 xlsxwriter = ">=1.2.8,<2.0"
 
 [package.extras]
-testing = ["django-taggit (>=1.3.0,<2.0)", "docutils (==0.15)", "jinjalint (>=0.5)", "doc8 (==0.8.1)", "flake8-print (==2.0.2)", "flake8-blind-except (==0.1.1)", "isort (==5.6.4)", "flake8 (>=3.6.0)", "coverage (>=3.7.0)", "Unidecode (>=0.04.14,<2.0)", "openpyxl (>=2.6.4)", "freezegun (>=0.3.8)", "boto3 (>=1.16,<1.17)", "Jinja2 (>=2.11,<3.0)", "elasticsearch (>=5.0,<6.0)", "pytz (>=2014.7)", "python-dateutil (>=2.2)"]
-docs = ["recommonmark (>=0.7.1)", "sphinx-wagtail-theme (==5.0.4)", "sphinx-autobuild (>=0.6.0)", "Sphinx (>=1.5.2)", "sphinxcontrib-spelling (>=5.4.0,<6)", "pyenchant (>=3.1.1,<4)"]
+docs = ["Sphinx (>=1.5.2)", "pyenchant (>=3.1.1,<4)", "recommonmark (>=0.7.1)", "sphinx-autobuild (>=0.6.0)", "sphinx-wagtail-theme (==5.0.4)", "sphinxcontrib-spelling (>=5.4.0,<6)"]
+testing = ["Jinja2 (>=2.11,<3.0)", "Unidecode (>=0.04.14,<2.0)", "boto3 (>=1.16,<1.17)", "coverage (>=3.7.0)", "django-taggit (>=1.3.0,<2.0)", "doc8 (==0.8.1)", "docutils (==0.15)", "elasticsearch (>=5.0,<6.0)", "flake8 (>=3.6.0)", "flake8-blind-except (==0.1.1)", "flake8-print (==2.0.2)", "freezegun (>=0.3.8)", "isort (==5.6.4)", "jinjalint (>=0.5)", "openpyxl (>=2.6.4)", "python-dateutil (>=2.2)", "pytz (>=2014.7)"]
 
 [[package]]
 name = "wagtailmenus"
@@ -1290,8 +1290,8 @@ develop = false
 django-cogwheels = "0.3"
 
 [package.extras]
-development = ["wagtail (>=2.4,<=2.9)", "django-debug-toolbar", "django-extensions", "ipdb", "werkzeug", "beautifulsoup4 (>=4.5.1,<4.6.1)", "coverage (>=4.5)", "django-webtest (>=1.9,<1.10)"]
-docs = ["pyenchant (>=2.0)", "Sphinx (>=1.7.4)", "sphinxcontrib-spelling (>=1.4)", "sphinx-rtd-theme (>=0.3)"]
+development = ["beautifulsoup4 (>=4.5.1,<4.6.1)", "coverage (>=4.5)", "django-debug-toolbar", "django-extensions", "django-webtest (>=1.9,<1.10)", "ipdb", "wagtail (>=2.4,<=2.9)", "werkzeug"]
+docs = ["Sphinx (>=1.7.4)", "pyenchant (>=2.0)", "sphinx-rtd-theme (>=0.3)", "sphinxcontrib-spelling (>=1.4)"]
 testing = ["beautifulsoup4 (>=4.5.1,<4.6.1)", "coverage (>=4.5)", "django-webtest (>=1.9,<1.10)"]
 
 [package.source]
@@ -1325,7 +1325,7 @@ optional = false
 python-versions = ">=2.7,!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*"
 
 [package.extras]
-testing = ["mock (>=3.0,<4.0)", "Wand (>=0.6,<1.0)", "Pillow (>=6.0.0,<10.0.0)"]
+testing = ["Pillow (>=6.0.0,<10.0.0)", "Wand (>=0.6,<1.0)", "mock (>=3.0,<4.0)"]
 
 [[package]]
 name = "wrapt"
@@ -1344,9 +1344,9 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
 
 [package.extras]
-test = ["pytest-cov", "pytest"]
-docs = ["sphinx"]
 build = ["twine", "wheel"]
+docs = ["sphinx"]
+test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "xlsxwriter"
@@ -1367,7 +1367,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "5cb8d57dbb8bb113b8862373ffbe76f8a4f635103a57a6538fc3168569aed1a2"
+content-hash = "7d1abced2f67e4f609ea531ff3000b79997d6ffb13e495fbbef1a48c057ce073"
 
 [metadata.files]
 amqp = [
@@ -1920,8 +1920,8 @@ s3transfer = [
     {file = "s3transfer-0.6.0.tar.gz", hash = "sha256:2ed07d3866f523cc561bf4a00fc5535827981b117dd7876f036b0c1aca42c947"},
 ]
 sentry-sdk = [
-    {file = "sentry-sdk-1.9.4.tar.gz", hash = "sha256:f1e2333d1922dca3f91e57dad872c73b3cc449ac8542867664fb898b2eec342f"},
-    {file = "sentry_sdk-1.9.4-py2.py3-none-any.whl", hash = "sha256:02b7bf195f209f51c9f9458098a8f541dbf82314d21477e68ad841668fcf9a46"},
+    {file = "sentry-sdk-1.9.5.tar.gz", hash = "sha256:2d7ec7bc88ebbdf2c4b6b2650b3257893d386325a96c9b723adcd31033469b63"},
+    {file = "sentry_sdk-1.9.5-py2.py3-none-any.whl", hash = "sha256:b4b41f90951ed83e7b4c176eef021b19ecba39da5b73aca106c97a9b7e279a90"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
