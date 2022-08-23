@@ -12,7 +12,7 @@ django-taggit==1.5.1
 xlrd==2.0.1  # pandas extension
 environs==9.5.0
 uwsgi==2.0.20
-easy-thumbnails==2.6.0
+easy-thumbnails==2.8.3
 django-ckeditor==5.9.0
 django-crispy-forms==1.14.0
 django-import-export~=2.5.0
