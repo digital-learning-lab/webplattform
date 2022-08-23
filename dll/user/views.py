@@ -9,9 +9,9 @@ from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
-from django.utils.encoding import force_bytes, force_text
+from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView, RedirectView
 from django.views.generic.base import View
@@ -71,7 +71,7 @@ class MyContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
 
     def get_context_data(self, **kwargs):
         ctx = super(MyContentView, self).get_context_data(**kwargs)
-        referrer = self.request.META.get("HTTP_REFERER")
+        referrer = self.request.headers.get("Referer")
         if referrer and "/login" in referrer:
             ctx["login_trigger"] = True
         return ctx
@@ -345,7 +345,7 @@ def activate_user(
     request, uidb64, token, backend="django.contrib.auth.backends.ModelBackend"
 ):
     try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
+        uid = force_str(urlsafe_base64_decode(uidb64))
         user = USER_MODEL.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, USER_MODEL.DoesNotExist):
         user = None
@@ -481,7 +481,7 @@ class ProfileViewEmails(BaseProfileView):
 
 def confirm_email(request, cr_idb64, token):
     try:
-        cr_id = force_text(urlsafe_base64_decode(cr_idb64))
+        cr_id = force_str(urlsafe_base64_decode(cr_idb64))
         cr = EmailChangeRequest.objects.get(pk=cr_id)
     except (TypeError, ValueError, OverflowError, USER_MODEL.DoesNotExist):
         cr = None

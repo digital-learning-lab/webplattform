@@ -10,7 +10,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy, resolve
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django_filters.rest_framework import DjangoFilterBackend
 from django_select2.views import AutoResponseView
 from filer.models import Image, File

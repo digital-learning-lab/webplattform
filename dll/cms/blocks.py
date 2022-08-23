@@ -1,6 +1,6 @@
 from django.forms.utils import ErrorList
 from django.utils.functional import lazy
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from wagtail.core import blocks
 from wagtail.core.blocks.struct_block import StructBlockValidationError
 from wagtail.embeds.blocks import EmbedBlock

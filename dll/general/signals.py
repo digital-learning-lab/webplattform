@@ -2,8 +2,8 @@ from django.db.models import signals
 from django.dispatch import Signal
 
 
-post_publish = Signal(providing_args=["instance"])
-post_unpublish = Signal(providing_args=["instance"])
+post_publish = Signal()
+post_unpublish = Signal()
 
 
 def unpublish(sender, instance, using, **kwargs):

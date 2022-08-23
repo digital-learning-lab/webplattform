@@ -7,13 +7,13 @@ license = "GPL-3.0-only"
 
 [tool.poetry.dependencies]
 python = "~=3.8"
-Django = ">=2.0,<3.0"
+Django = "3.2"
 psycopg2 = {version = "2.8.6", extras = ["binary"]}
 django-meta = "2.1.0"
 django-webpack-loader = "~=1.6.0"
 django-extensions = "3.1.5"
-django-filer = "1.7.1"
-django-polymorphic = "2.1.2"
+django-filer = "2.0.2"
+django-polymorphic = "3.0.0"
 blessings = "1.7"
 curtsies = "0.3.10"
 bpython = "0.22.1"

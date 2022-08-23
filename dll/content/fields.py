@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import inspect
 
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework.exceptions import ValidationError
 from rest_framework.fields import Field

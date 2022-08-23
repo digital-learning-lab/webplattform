@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.http import Http404
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.utils.encoding import force_bytes, force_text
+from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
 from django.views.generic import FormView, TemplateView
@@ -18,7 +18,7 @@ from dll.communication.tokens import (
 )
 from dll.communication.utils import validate_recaptcha
 from dll.content.views import BreadcrumbMixin
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class ContactView(FormView, BreadcrumbMixin):
@@ -127,7 +127,7 @@ class NewsletterUnregisterView(FormView, BreadcrumbMixin):
 def newsletter_registration_confirm(request, nl_id_b64, token):
     success = False
     try:
-        uid = force_text(urlsafe_base64_decode(nl_id_b64))
+        uid = force_str(urlsafe_base64_decode(nl_id_b64))
         subscription = NewsletterSubscrption.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, NewsletterSubscrption.DoesNotExist):
         subscription = None
@@ -159,7 +159,7 @@ class CoAuthorInvitationConfirmView(View):
 
     def get_context(self, *args, **kwargs):
         if kwargs.get("inv_id_b64", None):
-            invitation_id = force_text(urlsafe_base64_decode(kwargs["inv_id_b64"]))
+            invitation_id = force_str(urlsafe_base64_decode(kwargs["inv_id_b64"]))
             invitation = CoAuthorshipInvitation.objects.get(pk=invitation_id)
         else:
             pk = kwargs.get("pk", None)
@@ -177,7 +177,7 @@ class CoAuthorInvitationConfirmView(View):
         pk = kwargs.get("pk", None)
         try:
             if kwargs.get("inv_id_b64", None):
-                invitation_id = force_text(urlsafe_base64_decode(kwargs["inv_id_b64"]))
+                invitation_id = force_str(urlsafe_base64_decode(kwargs["inv_id_b64"]))
                 invitation = CoAuthorshipInvitation.objects.get(pk=invitation_id)
             else:
                 invitation = get_object_or_404(
