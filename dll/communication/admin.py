@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils import formats
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.urls import path
 
 from dll.communication.forms import CsvImportForm

@@ -4,7 +4,8 @@ import os
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.postgres.fields import IntegerRangeField, JSONField
+from django.db.models import JSONField
+from django.contrib.postgres.fields import IntegerRangeField
 from django.contrib.sites.models import Site
 from django.core.files import File
 from django.db import models, IntegrityError, transaction
@@ -13,7 +14,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 from django_better_admin_arrayfield.models.fields import ArrayField
