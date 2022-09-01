@@ -14,7 +14,7 @@ stages:
 
 black:
   stage: lint
-  image: python:3.8-slim
+  image: python:3.10-slim
   tags:
     - dll-docker
   before_script:
@@ -22,7 +22,7 @@ black:
   script:
     - black --check .
   rules:
-    - if: $CI_PIPELINE_SOURCE != "schedule"
+    - if: $CI_PIPELINE_SOURCE != "schedule" && $CI_PIPELINE_SOURCE != "merge_request_event"
 
 test_python:
     stage: test
@@ -61,7 +61,7 @@ test_python:
         META_SITE_DOMAIN: staging.digitallearninglab.de
         DEFAULT_USER_EMAIL: digital.learning.lab@tuhh.de
     rules:
-      - if: $CI_PIPELINE_SOURCE != "schedule"
+      - if: $CI_PIPELINE_SOURCE != "schedule" && $CI_PIPELINE_SOURCE != "merge_request_event"
 
 register_staging_python_image:
   stage: deploy
@@ -74,10 +74,10 @@ register_staging_python_image:
   tags:
     - dll-shell
   rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
     - if: $CI_COMMIT_REF_NAME == "develop"
       when: always
-  rules:
-    - if: $CI_PIPELINE_SOURCE != "schedule"
 
 build_python_image:
   stage: build
@@ -90,7 +90,7 @@ build_python_image:
   tags:
       - dll-shell
   rules:
-    - if: $CI_PIPELINE_SOURCE != "schedule"
+    - if: $CI_PIPELINE_SOURCE != "schedule" && $CI_PIPELINE_SOURCE != "merge_request_event"
 
 register_prod_python_image:
   stage: deploy
@@ -116,9 +116,10 @@ build_solr_image:
   tags:
       - dll-shell
   rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
     - if: $CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_REF_NAME == "master"
       when: always
-    - if: $CI_PIPELINE_SOURCE != "schedule"
 
 register_prod_solr_image:
   stage: deploy

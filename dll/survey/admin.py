@@ -3,7 +3,7 @@ from django.contrib import admin
 
 import nested_admin
 from django.http import HttpResponse
-from django.utils.six import BytesIO
+from io import BytesIO
 
 from dll.survey.models import (
     Trigger,

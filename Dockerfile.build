@@ -1,4 +1,4 @@
-FROM node:12.7.0
+FROM node:12.22.12
 
 RUN mkdir /node_deps
 

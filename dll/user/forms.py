@@ -10,7 +10,7 @@ from django.contrib.auth.forms import (
     PasswordResetForm,
 )
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from wagtail.core.templatetags.wagtailcore_tags import slugurl
 
 from .models import DllUser

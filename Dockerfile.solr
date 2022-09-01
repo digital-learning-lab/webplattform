@@ -1,4 +1,4 @@
-FROM solr:8.2.0
+FROM solr:8.11.2
 
 COPY solr/conf /opt/solr/server/solr/configsets/dll
 

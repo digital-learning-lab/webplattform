@@ -147,3 +147,15 @@ Example of `.env` file (which is used by the `docker-compose` setup):
 SENTRY_DSN=https://34567894567890567890@yoursentry.com/42
 SENTRY_ENVIRONMENT=production
 ```
+
+### Admin Access
+
+There are two different Layers of Admin Access. The full admin interface is
+available by adding `/admin` to your installations URL. For our production
+deployment its available at
+[https://digitallearninglab.de/admin](https://digitallearninglab.de/admin).
+
+To change the content of the site, use the CMS Interface, which is available by
+adding `/cms` to your installations URL. For our production deployments its
+available at 
+[https://digitallearninglab.de/cms](https://digitallearninglab.de/cms).

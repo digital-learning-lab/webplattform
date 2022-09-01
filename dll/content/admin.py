@@ -4,8 +4,8 @@ from django.contrib import admin
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
 from django.http import JsonResponse, HttpResponse
-from django.utils.six import BytesIO
-from django.utils.translation import ugettext_lazy as _
+from io import BytesIO
+from django.utils.translation import gettext_lazy as _
 
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
 from import_export import resources, fields

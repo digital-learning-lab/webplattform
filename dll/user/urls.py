@@ -33,7 +33,7 @@ urlpatterns = [
     ),
     path("profil/email/", login_required(ProfileViewEmails.as_view()), name="email"),
     re_path(
-        r"^profil/email-bestaetigen/(?P<cr_idb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
+        r"^profil/email-bestaetigen/(?P<cr_idb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,32})/$",
         confirm_email,
         name="email_confirm",
     ),
@@ -49,7 +49,7 @@ urlpatterns = [
     ),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     re_path(
-        r"^account-activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
+        r"^account-activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,32})/$",
         activate_user,
         name="activate",
     ),
@@ -72,7 +72,7 @@ urlpatterns = [
         name="password_reset_done",
     ),
     re_path(
-        r"^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
+        r"^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,32})/$",
         auth_views.PasswordResetConfirmView.as_view(
             template_name="dll/user/password_reset_confirm.html",
             success_url=reverse_lazy("user:password_reset_complete"),

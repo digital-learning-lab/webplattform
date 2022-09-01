@@ -9,9 +9,9 @@ from django.template.loader import get_template
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.http import urlsafe_base64_encode
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django_extensions.db.models import TimeStampedModel
-from django.utils.encoding import smart_text as u, force_bytes
+from django.utils.encoding import smart_str as u, force_bytes
 
 from dll.communication.managers import CommunicationEventTypeManager
 from dll.communication.tokens import co_author_invitation_token

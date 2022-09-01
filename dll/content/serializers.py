@@ -6,7 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 from django.template.defaultfilters import slugify
 from django.urls import reverse
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from psycopg2._range import NumericRange
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
