@@ -5,7 +5,6 @@ import 'bootstrap/js/dist/tab'
 import 'bootstrap/js/dist/tooltip'
 import 'bootstrap/js/dist/toast'
 import 'bootstrap/js/dist/modal'
-import '../scss/main.scss'
 
 import './externalLinks'
 import './header'
