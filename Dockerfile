@@ -24,7 +24,7 @@ COPY pyproject.toml poetry.lock /code/dll/
 RUN apt update \
     && apt install -y libpq-dev gcc git python3-dev mime-support gettext libgettextpo-dev optipng jpegoptim \
     && pip install poetry \
-		&& cd /code/dll && poetry install --no-dev \
+		&& cd /code/dll && poetry install --only main \
 		&& rm -rf "$POETRY_CACHE_DIR" \
     && apt purge -y gcc python3-dev \
     && apt autoremove -y --purge
