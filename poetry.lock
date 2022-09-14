@@ -385,14 +385,15 @@ python-versions = "*"
 
 [[package]]
 name = "django-ckeditor"
-version = "5.9.0"
+version = "6.5.1"
 description = "Django admin CKEditor integration."
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 
 [package.dependencies]
-django-js-asset = ">=1.2.2"
+Django = ">=3.2"
+django-js-asset = ">=2.0"
 
 [[package]]
 name = "django-cogwheels"
@@ -1385,7 +1386,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "c2d1bb0097fdde661191811d84fa84cb3802d3ff07d8a6a99ddfffa2aa9514f0"
+content-hash = "2ae358d24076eca98d4b2f229218e9e10f9eacfeefd25455a0997f57afbf08c7"
 
 [metadata.files]
 amqp = [
@@ -1585,8 +1586,8 @@ django-better-admin-arrayfield = [
     {file = "django_better_admin_arrayfield-1.4.2-py2.py3-none-any.whl", hash = "sha256:bfeaa0fa8210a7ea95ee996a6caaa59ecd0c923269f573e6d8319c28dcac5c88"},
 ]
 django-ckeditor = [
-    {file = "django-ckeditor-5.9.0.tar.gz", hash = "sha256:e4d112851a72c5bf8b586e1c674d34084cab16d28f2553ad15cc770d1e9639c7"},
-    {file = "django_ckeditor-5.9.0-py2.py3-none-any.whl", hash = "sha256:71c3c7bb46b0cbfb9712ef64af0d2a406eab233f44ecd7c42c24bdfa39ae3bde"},
+    {file = "django-ckeditor-6.5.1.tar.gz", hash = "sha256:57cd8fb7cd150adca354cd4e5c35a743fadaab7073f957d2b7167f0d9fe1fcaf"},
+    {file = "django_ckeditor-6.5.1-py3-none-any.whl", hash = "sha256:1321f24df392f30698513930ce5c9f6d899f9bd0ef734c3b64fe936d809e11b3"},
 ]
 django-cogwheels = [
     {file = "django-cogwheels-0.3.tar.gz", hash = "sha256:848a4d9f2c96c582a4a4f2e7c276dfd95ab3905748cae13bb7c4b365a6717e94"},
