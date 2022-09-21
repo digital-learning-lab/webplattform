@@ -495,10 +495,15 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
             return False
 
     def get_favor_url(self):
-        return reverse("draft-content-favor", kwargs={"slug": self.slug})
+        # TODO this doesn't make sense, if we want to have favors in DLT, we
+        # should have the endpoint there as well
+        return reverse("draft-content-favor",
+                urlconf="dll.configuration.dll-urls", kwargs={"slug": self.slug})
 
     def get_unfavor_url(self):
-        return reverse("draft-content-unfavor", kwargs={"slug": self.slug})
+        return reverse("draft-content-unfavor",
+                urlconf="dll.configuration.dll-urls", kwargs={"slug": self.slug})
+
 
     @property
     def sharing_text(self):
@@ -607,7 +612,8 @@ class TeachingModule(Content):
         public_instance.school_types.add(*draft_instance.school_types.all())
 
     def get_absolute_url(self):
-        return reverse("teaching-module-detail", kwargs={"slug": self.slug})
+        return reverse("teaching-module-detail",
+                urlconf="dll.configuration.dll-urls", kwargs={"slug": self.slug})
 
     def get_preview_url(self):
         return reverse("teaching-module-detail-preview", kwargs={"slug": self.slug})
