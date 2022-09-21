@@ -32,7 +32,7 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
-from wagtail.core import models
+from django.contrib.sites import models
 
 from dll.content.filters import SolrTagFilter, SortingFilter
 from dll.content.models import (
@@ -191,15 +191,12 @@ class ToolDetailView(ContentDetailView):
     template_name = "dll/content/tool_detail.html"
 
     def get(self, *args, **kwargs):
-        if "dlt" in settings.ROOT_URLCONF:
+        if settings.SITE_ID == 2:
             return super().get(self.request)
         else:
-            # TODO How to select the "right" site here? What to do if its not
-            # available?
-            site = models.Site.objects.get(site_name="DLT")
-            hostname = site.hostname
-            port = site.port
-            return redirect(f"http://{hostname}:{port}{self.request.path}")
+            site = models.Site.objects.get(pk=2)
+            domain = site.domain
+            return redirect(f"//{domain}{self.request.path}")
 
 
 class TrendDetailView(ContentDetailView):
