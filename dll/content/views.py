@@ -199,7 +199,7 @@ class ToolDetailView(ContentDetailView):
             site = models.Site.objects.get(site_name="DLT")
             hostname = site.hostname
             port = site.port
-            return redirect(f'http://{hostname}:{port}{self.request.path}')
+            return redirect(f"http://{hostname}:{port}{self.request.path}")
 
 
 class TrendDetailView(ContentDetailView):
