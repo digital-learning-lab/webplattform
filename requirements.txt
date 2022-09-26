@@ -16,7 +16,7 @@ easy-thumbnails==2.8.3
 django-ckeditor==6.5.1
 django-crispy-forms==1.14.0
 django-import-export~=2.9.0
-djangorestframework==3.13.1
+djangorestframework==3.14.0
 django-filter==2.4.0
 django-rest-polymorphic==0.1.10
 XlsxWriter==1.4.5
