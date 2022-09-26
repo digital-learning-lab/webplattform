@@ -122,6 +122,16 @@ extended and executed:
 docker-compose exec web coverage run --source=/code/dll/ -m pytest /code/dll/
 ```
 
+### Update Changelog
+
+```
+git log master.. --pretty=format:"* %s" --no-merges | cat - CHANGELOG.md > temp && mv temp CHANGELOG.md
+```
+
+Don't forget to fix the `CHANGELOG.md` afterwards, newlines might need to be
+adjusted as well as some commit messages might require clarification or can even
+be removed.
+
 ## Hints for running digital.learning.lab in production
 
 ### General
