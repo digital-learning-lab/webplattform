@@ -12,7 +12,7 @@ psycopg2 = {version = "2.9.3", extras = ["binary"]}
 django-meta = "2.1.0"
 django-webpack-loader = "~=1.6.0"
 django-extensions = "3.2.1"
-django-filer = "2.0.2"
+django-filer = "2.2.3"
 django-polymorphic = "3.0.0"
 blessings = "1.7"
 curtsies = "0.4.0"
