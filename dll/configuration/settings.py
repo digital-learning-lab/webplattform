@@ -124,6 +124,7 @@ TEMPLATES = [
                 "wagtail.contrib.settings.context_processors.settings",
                 "wagtailmenus.context_processors.wagtailmenus",
                 "constance.context_processors.config",
+                "dll.general.context_processors.platform_variables",
             ],
         },
     },

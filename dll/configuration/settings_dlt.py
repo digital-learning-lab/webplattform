@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-
-import dll.configuration.settings
+from dll.configuration.settings import *
 
 SITE_ID = 2
+
+TEMPLATES[0]["DIRS"] = [os.path.join(BASE_DIR, "dlt/templates")] + TEMPLATES[0]["DIRS"]

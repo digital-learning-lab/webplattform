@@ -1,0 +1,35 @@
+$general-width: 700px;
+
+.potentials-grid {
+  width: $general-width;
+  flex-wrap: wrap;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: rgba(120, 120, 120, 0.5) 0 0 10px;
+}
+.potential-box {
+  width: $general-width / 4;
+  height: $general-width / 4;
+  background-color: rgb(34, 42, 76);
+  flex-basis: 25%;
+  border: 8px solid white;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+}
+.potential-box-image {
+  height: 50px;
+  width: 50px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.potential-center {
+  box-shadow: inset rgba(120, 120, 120, 0.5) 0 0 10px;
+  width: $general-width / 2;
+  text-align: center;
+  background-color: rgba(204, 216, 224, 1);
+}

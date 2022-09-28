@@ -1575,3 +1575,13 @@ class Favorite(TimeStampedModel):
 
     class Meta:
         unique_together = ("user", "content")
+
+
+class Potential(TimeStampedModel):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=600)
+    slug = DllSlugField(
+        max_length=512,
+        populate_from="name",
+        slugify_function=remove_number_custom_slugify,
+    )
