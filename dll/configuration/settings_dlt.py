@@ -12,5 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 from dll.configuration.settings import *
 
 SITE_ID = 2
+ROOT_URLCONF = "dll.configuration.urls_dlt"
+
 
 TEMPLATES[0]["DIRS"] = [os.path.join(BASE_DIR, "dlt/templates")] + TEMPLATES[0]["DIRS"]

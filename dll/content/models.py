@@ -609,7 +609,7 @@ class TeachingModule(Content):
     def get_absolute_url(self):
         return reverse(
             "teaching-module-detail",
-            urlconf="dll.configuration.dll-urls",
+            urlconf="dll.configuration.urls_dll",
             kwargs={"slug": self.slug},
         )
 

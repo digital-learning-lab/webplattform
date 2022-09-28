@@ -20,7 +20,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8001
     env_file: .env
     environment:
-      - DJANGO_SETTINGS_MODULE=dll.configuration.dlt-settings
+      - DJANGO_SETTINGS_MODULE=dll.configuration.settings_dlt
     image: dll_web
     volumes:
       - .:/code
@@ -37,32 +37,13 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     env_file: .env
     environment:
-      - DJANGO_SETTINGS_MODULE=dll.configuration.dll-settings
-    image: dll_web
-    environment:
       - DJANGO_SETTINGS_MODULE=dll.configuration.settings
+    image: dll_web
     volumes:
       - .:/code
     user: "1000:1000"
     ports:
       - "8000:8000"
-    depends_on:
-      - db
-      - solr
-  web_dlt:
-    build:
-        context: .
-        dockerfile: Dockerfile.dev
-    command: python manage.py runserver 0.0.0.0:8000
-    env_file: .env
-    environment:
-      - DJANGO_SETTINGS_MODULE=dll.configuration.settings_dlt
-    image: dll_web
-    volumes:
-      - .:/code
-    user: "1000:1000"
-    ports:
-      - "9000:8000"
     depends_on:
       - db
       - solr
