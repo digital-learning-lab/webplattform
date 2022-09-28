@@ -7,7 +7,7 @@
       <img class="logo__no-claim" src="{% static 'img/logo/dll_logo_rgb_ohne_claim.png' %}" srcset="{% static 'img/logo/dll_logo_rgb_ohne_claim.png' %} 1x, {% static 'img/logo/dll_logo_rgb_ohne_claim_large.png' %} 2x" alt="digital.learning.lab Logo">
   </a>
   <div class="float-right">
-    <form class="search-form" action="TODO WHERE IS THE SEARCH?" method="get" accept-charset="utf-8" role="search" autocomplete="off">
+		<form class="search-form" action="{% url 'search' %}" method="get" accept-charset="utf-8" role="search" autocomplete="off">
       <input type="hidden" autocomplete="false">
       <button class="search-form__submit" type="submit">
         <i class="fa fa-search"></i>
