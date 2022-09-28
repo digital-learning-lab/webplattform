@@ -3,7 +3,7 @@ psycopg2==2.9.3
 django-meta==2.1.0
 django-webpack-loader~=1.6.0
 django-extensions==3.2.1
-django-filer==1.7.1
+django-filer==2.2.3
 django-polymorphic==2.1.2
 blessings==1.7
 curtsies==0.4.0
