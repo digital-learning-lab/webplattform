@@ -1,6 +1,6 @@
 import random
 
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from dll.content.models import (
@@ -96,6 +96,8 @@ class BaseTestCase(TestCase):
 
 
 class ContentViewTests(BaseTestCase):
+    fixtures = ["dll/fixtures/sites.json"]
+
     def test_content_retrieve(self):
         public_tool = Tool.objects.published().first()
         detail_view = reverse("public-content-detail", kwargs={"pk": public_tool.pk})
@@ -106,7 +108,14 @@ class ContentViewTests(BaseTestCase):
         public_tool = Tool.objects.published().first()
         detail_view = reverse("tool-detail", kwargs={"slug": public_tool.slug})
         response = self.client.get(detail_view)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.url, f"//dlt.local/tools/{public_tool.slug}")
+
+    @override_settings(SITE_ID=2)
+    def test_tool_detail_dlt(self):
+        public_tool = Tool.objects.published().first()
+        detail_view = reverse("tool-detail", kwargs={"slug": public_tool.slug})
+        response = self.client.get(detail_view)
         self.assertContains(
             response, f'<h1 class="content-info__title">{public_tool.name}</h1>'
         )
