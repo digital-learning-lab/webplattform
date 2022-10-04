@@ -1,6 +1,7 @@
 import json
 import random
 
+from django.conf import settings
 from django.contrib.syndication.views import Feed
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
@@ -31,6 +32,7 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
+from django.contrib.sites import models
 
 from dll.content.filters import SolrTagFilter, SortingFilter
 from dll.content.models import (
@@ -187,6 +189,14 @@ class ContentPreviewView(ContentDetailBase):
 class ToolDetailView(ContentDetailView):
     model = Tool
     template_name = "dll/content/tool_detail.html"
+
+    def get(self, *args, **kwargs):
+        if settings.SITE_ID == 2:
+            return super().get(self.request)
+        else:
+            site = models.Site.objects.get(pk=2)
+            domain = site.domain
+            return redirect(f"//{domain}{self.request.path}")
 
 
 class TrendDetailView(ContentDetailView):

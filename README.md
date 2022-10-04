@@ -47,6 +47,10 @@ Longer term items - working on this soon!
 2. Run `docker-compose up` to setup project.
 3. Run `docker-compose run --rm web python manage.py migrate`
 4. Create an `.env` file from `sample.env`
+5. You need to have two sites configured in order to have DLL and DLT served.
+	 There is a fixture in `dll/fixture/sites.json` you can load with
+	 `docker-compose run --rm web-dll python manage.py loaddata
+	 dll/fixtures/sites.json`
 
 ### 📦 Database Restore
 

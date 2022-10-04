@@ -13,12 +13,31 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.build
-  web:
+  web-dlt:
+    build:
+        context: .
+        dockerfile: Dockerfile.dev
+    command: python manage.py runserver 0.0.0.0:8001
+    env_file: .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=dll.configuration.settings_dlt
+    image: dll_web
+    volumes:
+      - .:/code
+    user: "1000:1000"
+    ports:
+      - "8001:8001"
+    depends_on:
+      - db
+      - solr
+  web-dll:
     build:
         context: .
         dockerfile: Dockerfile.dev
     command: python manage.py runserver 0.0.0.0:8000
     env_file: .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=dll.configuration.settings
     image: dll_web
     volumes:
       - .:/code
@@ -31,6 +50,7 @@ services:
   redis:
     image: "redis:alpine"
     hostname: redis
+
   celery:
     image: dll_web
     env_file: .env
@@ -41,7 +61,8 @@ services:
     depends_on:
       - db
       - redis
-      - web
+      - web-dll
+      - web-dlt
   solr:
     build:
       context: .

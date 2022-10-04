@@ -91,10 +91,7 @@ build_python_image:
   tags:
       - dll-shell
   rules:
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
-    - if: $CI_COMMIT_REF_NAME == "develop" || $CI_COMMIT_REF_NAME == "master"
-      when: always
+    - if: $CI_PIPELINE_SOURCE != "schedule" && $CI_PIPELINE_SOURCE != "merge_request_event"
 
 register_prod_python_image:
   stage: deploy

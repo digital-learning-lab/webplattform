@@ -607,7 +607,11 @@ class TeachingModule(Content):
         public_instance.school_types.add(*draft_instance.school_types.all())
 
     def get_absolute_url(self):
-        return reverse("teaching-module-detail", kwargs={"slug": self.slug})
+        return reverse(
+            "teaching-module-detail",
+            urlconf="dll.configuration.urls_dll",
+            kwargs={"slug": self.slug},
+        )
 
     def get_preview_url(self):
         return reverse("teaching-module-detail-preview", kwargs={"slug": self.slug})
@@ -1575,3 +1579,13 @@ class Favorite(TimeStampedModel):
 
     class Meta:
         unique_together = ("user", "content")
+
+
+class Potential(TimeStampedModel):
+    name = models.CharField(max_length=100)
+    description = models.CharField(max_length=600)
+    slug = DllSlugField(
+        max_length=512,
+        populate_from="name",
+        slugify_function=remove_number_custom_slugify,
+    )

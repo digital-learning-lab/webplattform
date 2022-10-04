@@ -57,3 +57,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "dll.configuration.settings"
 python_files = "tests.py test_*.py *_tests.py"
+
+[tool.black]
+	extend-exclude = "migrations"

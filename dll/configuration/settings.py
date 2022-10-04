@@ -108,8 +108,6 @@ MIDDLEWARE = [
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
-ROOT_URLCONF = "dll.configuration.urls"
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -124,6 +122,7 @@ TEMPLATES = [
                 "wagtail.contrib.settings.context_processors.settings",
                 "wagtailmenus.context_processors.wagtailmenus",
                 "constance.context_processors.config",
+                "dll.general.context_processors.platform_variables",
             ],
         },
     },
@@ -242,7 +241,6 @@ SHELL_PLUS = "bpython"  # bpython does not work on pycharm terminal. use plain
 
 TAGGIT_CASE_INSENSITIVE = True
 
-SITE_ID = 1  # this is for django-flatpages
 
 LOGGING = {
     "version": 1,
@@ -323,8 +321,9 @@ HAYSTACK_SIGNAL_PROCESSOR = "dll.content.signals.ContentSignalProcessor"
 # ---------------------- Django Meta --------------------
 
 META_SITE_PROTOCOL = env.str("META_SITE_PROTOCOL")
-META_SITE_DOMAIN = env.str("META_SITE_DOMAIN")
+# META_SITE_DOMAIN = env.str("META_SITE_DOMAIN")
 META_USE_OG_PROPERTIES = True
+META_USE_SITES = True
 
 REVIEW_MAIL = os.getenv("EMAIL_RECEIVER_DLL", "dll@blueshoe.de")
 
@@ -556,3 +555,7 @@ if SENTRY_DSN:
         environment=os.getenv("SENTRY_ENVIRONMENT", ""),
         integrations=[DjangoIntegration()],
     )
+
+
+SITE_ID = 1
+ROOT_URLCONF = "dll.configuration.urls_dll"

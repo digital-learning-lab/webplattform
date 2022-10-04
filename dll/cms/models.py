@@ -1,5 +1,6 @@
 import random
 
+from django.contrib.sites.models import Site
 from django.db.models import TextField
 from django.utils.functional import cached_property
 from meta.views import Meta
@@ -141,16 +142,22 @@ class Frontpage(DllPageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         ctx = super(Frontpage, self).get_context(request, *args, **kwargs)
         content_pks = []
+        site = Site.objects.get_current(request)
         try:
-            content_pks += random.choices(
-                TeachingModule.objects.published().values_list("pk", flat=True), k=2
-            )
-            content_pks += random.choices(
-                Trend.objects.published().values_list("pk", flat=True), k=2
-            )
-            content_pks += random.choices(
-                Tool.objects.published().values_list("pk", flat=True), k=2
-            )
+            if site.id == 1:
+                content_pks += random.choices(
+                    TeachingModule.objects.published().values_list("pk", flat=True), k=2
+                )
+                content_pks += random.choices(
+                    Trend.objects.published().values_list("pk", flat=True), k=2
+                )
+                content_pks += random.choices(
+                    Tool.objects.published().values_list("pk", flat=True), k=2
+                )
+            elif site.id == 2:
+                content_pks += random.choices(
+                    Tool.objects.published().values_list("pk", flat=True), k=6
+                )
         except IndexError:
             pass  # no content yet
         ctx["contents"] = Content.objects.filter(pk__in=content_pks)
