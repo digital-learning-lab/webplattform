@@ -59,7 +59,7 @@ class SharedSessionView(View):
                         expires=expires,
                         domain=settings.SESSION_COOKIE_DOMAIN,
                         path=settings.SESSION_COOKIE_PATH,
-                        secure=False,
+                        secure=True,
                         httponly=settings.SESSION_COOKIE_HTTPONLY or None,
                     )
                     response.cookies["sessionid"]["samesite"] = "None"
