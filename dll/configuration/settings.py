@@ -93,6 +93,7 @@ INSTALLED_APPS = [
     "dll.cms",
     "dll.survey",
     "modelcluster",
+    "dll.shared_session",
 ]
 
 MIDDLEWARE = [
@@ -559,3 +560,8 @@ if SENTRY_DSN:
 
 SITE_ID = 1
 ROOT_URLCONF = "dll.configuration.urls_dll"
+SHARED_SESSION_SITES = [
+    "staging.digitallearninglab.de",
+    "staging.digitallearningtools.de",
+]
+SHARED_SESSION_ALWAYS_REPLACE = True

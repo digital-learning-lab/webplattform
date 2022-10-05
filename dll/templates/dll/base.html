@@ -1,11 +1,13 @@
 {% spaceless %}
 {% load render_bundle from webpack_loader %}
 {% load meta %}
+{% load shared_session %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head {% meta_namespaces %}>
   <meta charset="UTF-8">
+  {% shared_session_loader %}
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
   <title>{% block title %}{{ title }}{% endblock %}</title>
   {% render_bundle main_css 'css' %}
@@ -68,8 +70,6 @@
 {% endblock %}
 {% include 'dll/includes/footer.html' %}
 {% block extra_scripts %}{% endblock %}
-123
-{{ request }}
 {% if request.newsletter_subscription_done %}
   <script>
     window.newsletterRegistrationDone = true;
