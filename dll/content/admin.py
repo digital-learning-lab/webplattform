@@ -31,6 +31,8 @@ from .models import (
     CompetenceAdditionalInformation,
     ContentFile,
     ToolLink,
+    DataPrivacyAssessment,
+    Testimonial,
 )
 
 admin.site.unregister(FlatPage)
@@ -179,16 +181,25 @@ class ToolLinkInline(admin.TabularInline):
     model = ToolLink
 
 
+class DataPrivacyAssessmentAdmin(admin.StackedInline):
+    model = DataPrivacyAssessment
+
+
 @admin.register(Tool)
 class ToolAdmin(SimpleHistoryAdmin, ImportExportMixin, admin.ModelAdmin):
     exclude = ("json_data", "tags")
     resource_class = ToolResource
-    inlines = [ToolLinkInline, ContentLinkInlineAdmin]
+    inlines = [DataPrivacyAssessmentAdmin, ToolLinkInline, ContentLinkInlineAdmin]
     search_fields = ["name"]
 
     def get_export_queryset(self, request):
         qs = super(ToolAdmin, self).get_export_queryset(request)
         return qs.drafts()
+
+
+@admin.register(Testimonial)
+class TestimonialAdmin(admin.ModelAdmin):
+    pass
 
 
 class HelpTextFieldInline(admin.TabularInline):

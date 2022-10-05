@@ -698,7 +698,10 @@ class Tool(Content):
 
     # digital.learning.tools fields
     disclaimer = models.TextField(
-        verbose_name=_("Disclaimer"), default=config.DISCLAIMER, blank=True, null=True
+        verbose_name=_("Disclaimer"),
+        default=config.DISCLAIMER_DEFAULT_TEXT,
+        blank=True,
+        null=True,
     )
     subjects = models.ManyToManyField(
         "Subject", verbose_name=_("Fächerbezug"), blank=True
@@ -1638,44 +1641,44 @@ class Testimonial(TimeStampedModel):
 
 
 class DataPrivacyAssessment(TimeStampedModel):
-    COMPLIANT = "compliant"
-    NOT_COMPLIANT = "not_compliant"
-    UNKNOWN = "unknown"
+    COMPLIANT = ("compliant", _("Compliant"))
+    NOT_COMPLIANT = ("not_compliant", _("Not Compliant"))
+    UNKNOWN = ("unknown", _("Unknown"))
 
     SERVER_LOCATION_CHOICES = (
-        (COMPLIANT, config.SERVER_LOCATION_COMPLIANT),
-        (NOT_COMPLIANT, config.SERVER_LOCATION_NOT_COMPLIANT),
-        (UNKNOWN, config.SERVER_LOCATION_UNKNOWN),
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
     )
 
     PROVIDER_CHOICES = (
-        (COMPLIANT, config.PROVIDER_COMPLIANT),
-        (NOT_COMPLIANT, config.PROVIDER_NOT_COMPLIANT),
-        (UNKNOWN, config.PROVIDER_UNKNOWN),
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
     )
 
     USER_REGISTRATION_CHOICES = (
-        (COMPLIANT, config.USER_REGISTRATION_COMPLIANT),
-        (NOT_COMPLIANT, config.USER_REGISTRATION_NOT_COMPLIANT),
-        (UNKNOWN, config.USER_REGISTRATION_UNKNOWN),
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
     )
 
-    DATA_PRIVACY_CHOICES = (
-        (COMPLIANT, config.DATA_PRIVACY_COMPLIANT),
-        (NOT_COMPLIANT, config.DATA_PRIVACY_NOT_COMPLIANT),
-        (UNKNOWN, config.DATA_PRIVACY_UNKNOWN),
+    DATA_PRIVACY_TERMS_CHOICES = (
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
     )
 
     TERMS_AND_CONDITIONS_CHOICES = (
-        (COMPLIANT, config.TERMS_AND_CONDITIONS_COMPLIANT),
-        (NOT_COMPLIANT, config.TERMS_AND_CONDITIONS_NOT_COMPLIANT),
-        (UNKNOWN, config.TERMS_AND_CONDITIONS_UNKNOWN),
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
     )
 
     SECURITY_CHOICES = (
-        (COMPLIANT, config.SECURITY_COMPLIANT),
-        (NOT_COMPLIANT, config.SECURITY_NOT_COMPLIANT),
-        (UNKNOWN, config.SECURITY_UNKNOWN),
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
     )
 
     server_location = models.CharField(
@@ -1686,7 +1689,7 @@ class DataPrivacyAssessment(TimeStampedModel):
         _("Benutzeranmeldung"), max_length=32, choices=USER_REGISTRATION_CHOICES
     )
     data_privacy_terms = models.CharField(
-        _("Datenschutzerklärung"), max_length=32, choices=DATA_PRIVACY_CHOICES
+        _("Datenschutzerklärung"), max_length=32, choices=DATA_PRIVACY_TERMS_CHOICES
     )
     terms_and_conditions = models.CharField(
         _("AGB"), max_length=32, choices=TERMS_AND_CONDITIONS_CHOICES
@@ -1696,34 +1699,64 @@ class DataPrivacyAssessment(TimeStampedModel):
     )
 
     server_location_text = models.TextField(
-        verbose_name=_(""),
+        verbose_name=_("Server Standort Text"),
         blank=True,
         help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
     )
     provider_text = models.TextField(
-        verbose_name=_(""),
+        verbose_name=_("Anbieter Text"),
         blank=True,
         help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
     )
     user_registration_text = models.TextField(
-        verbose_name=_(""),
+        verbose_name=_("Benutzeranmeldung Text"),
         blank=True,
         help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
     )
     data_privacy_terms_text = models.TextField(
-        verbose_name=_(""),
+        verbose_name=_("Datenschutzerklärung Text"),
         blank=True,
         help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
     )
     terms_and_conditions_text = models.TextField(
-        verbose_name=_(""),
+        verbose_name=_("AGB Text"),
         blank=True,
         help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
     )
     security_text = models.TextField(
-        verbose_name=_(""),
+        verbose_name=_("Sicherheit Text"),
         blank=True,
         help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
     )
 
     conclusion = models.TextField(_("Fazit"), blank=False)
+
+    tool = models.OneToOneField(
+        "Tool",
+        verbose_name=_("Tool"),
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+    )
+
+    def save(self, **kwargs):
+        FIELDS = [
+            "server_location",
+            "provider",
+            "user_registration",
+            "data_privacy_terms",
+            "terms_and_conditions",
+            "security",
+        ]
+        for field in FIELDS:
+            if not getattr(self, f"{field}_text"):
+                value = getattr(self, field)
+                setattr(
+                    self,
+                    f"{field}_text",
+                    getattr(config, f"{field.upper()}_{value.upper()}"),
+                )
+        super(DataPrivacyAssessment, self).save(**kwargs)
+
+    def __str__(self):
+        return self.tool.name
