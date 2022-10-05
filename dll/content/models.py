@@ -16,7 +16,7 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-
+from constance import config
 from django_better_admin_arrayfield.models.fields import ArrayField
 from django_extensions.db.fields import CreationDateTimeField
 from django_extensions.db.models import TimeStampedModel, TitleSlugDescriptionModel
@@ -29,7 +29,6 @@ from meta.models import ModelMeta
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 from rules.contrib.models import RulesModelMixin, RulesModelBaseMixin
-from simple_history.utils import get_history_model_for_model
 from taggit.managers import TaggableManager
 from simple_history.models import HistoricalRecords
 from wagtail.snippets.models import register_snippet
@@ -38,8 +37,6 @@ from .managers import ContentQuerySet
 from dll.general.models import DllSlugField, PublisherModel
 from dll.user.utils import (
     get_default_tuhh_user,
-    get_bsb_reviewer_group,
-    get_tuhh_reviewer_group,
 )
 from dll.general.utils import (
     GERMAN_STATES,
@@ -697,6 +694,20 @@ class Tool(Content):
     usage = models.TextField(_("Nutzung"), null=True, blank=True)
     functions = models.ManyToManyField(
         to="content.ToolFunction", verbose_name=_("Tool-Funktionen"), blank=True
+    )
+
+    # digital.learning.tools fields
+    disclaimer = models.TextField(
+        verbose_name=_("Disclaimer"), default=config.DISCLAIMER, blank=True, null=True
+    )
+    subjects = models.ManyToManyField(
+        "Subject", verbose_name=_("Fächerbezug"), blank=True
+    )
+
+    with_costs = models.BooleanField(_("Kostenpflichtig"), default=False)
+
+    video_tutorials = models.ManyToManyField(
+        "ToolVideoTutorial", verbose_name=_("Video Anleitungen"), null=True, blank=True
     )
 
     class Meta(Content.Meta):
@@ -1589,3 +1600,130 @@ class Potential(TimeStampedModel):
         populate_from="name",
         slugify_function=remove_number_custom_slugify,
     )
+
+    def __str__(self):
+        return self.name
+
+
+class ToolVideoTutorial(TimeStampedModel):
+
+    title = models.CharField(verbose_name=_("Titel"), max_length=512)
+
+    url = models.CharField(verbose_name=_("URL"), max_length=2048)
+
+    def __str__(self):
+        return self.title
+
+
+class Testimonial(TimeStampedModel):
+    author = models.ForeignKey(
+        DllUser, on_delete=models.SET_NULL, verbose_name=_("Author"), null=True
+    )
+
+    subject = models.ForeignKey(
+        "Subject",
+        verbose_name=_("Unterrichtsfach"),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+
+    school_class = models.IntegerField(verbose_name=_("Jahrgangsstufe"))
+
+    comment = models.TextField(verbose_name=_("Kommentar"), blank=True, null=True)
+
+    content = models.ForeignKey(
+        "Content", verbose_name=_("Content"), on_delete=models.CASCADE
+    )
+
+
+class DataPrivacyAssessment(TimeStampedModel):
+    COMPLIANT = "compliant"
+    NOT_COMPLIANT = "not_compliant"
+    UNKNOWN = "unknown"
+
+    SERVER_LOCATION_CHOICES = (
+        (COMPLIANT, config.SERVER_LOCATION_COMPLIANT),
+        (NOT_COMPLIANT, config.SERVER_LOCATION_NOT_COMPLIANT),
+        (UNKNOWN, config.SERVER_LOCATION_UNKNOWN),
+    )
+
+    PROVIDER_CHOICES = (
+        (COMPLIANT, config.PROVIDER_COMPLIANT),
+        (NOT_COMPLIANT, config.PROVIDER_NOT_COMPLIANT),
+        (UNKNOWN, config.PROVIDER_UNKNOWN),
+    )
+
+    USER_REGISTRATION_CHOICES = (
+        (COMPLIANT, config.USER_REGISTRATION_COMPLIANT),
+        (NOT_COMPLIANT, config.USER_REGISTRATION_NOT_COMPLIANT),
+        (UNKNOWN, config.USER_REGISTRATION_UNKNOWN),
+    )
+
+    DATA_PRIVACY_CHOICES = (
+        (COMPLIANT, config.DATA_PRIVACY_COMPLIANT),
+        (NOT_COMPLIANT, config.DATA_PRIVACY_NOT_COMPLIANT),
+        (UNKNOWN, config.DATA_PRIVACY_UNKNOWN),
+    )
+
+    TERMS_AND_CONDITIONS_CHOICES = (
+        (COMPLIANT, config.TERMS_AND_CONDITIONS_COMPLIANT),
+        (NOT_COMPLIANT, config.TERMS_AND_CONDITIONS_NOT_COMPLIANT),
+        (UNKNOWN, config.TERMS_AND_CONDITIONS_UNKNOWN),
+    )
+
+    SECURITY_CHOICES = (
+        (COMPLIANT, config.SECURITY_COMPLIANT),
+        (NOT_COMPLIANT, config.SECURITY_NOT_COMPLIANT),
+        (UNKNOWN, config.SECURITY_UNKNOWN),
+    )
+
+    server_location = models.CharField(
+        _("Serverstandort"), max_length=32, choices=SERVER_LOCATION_CHOICES
+    )
+    provider = models.CharField(_("Anbieter"), max_length=32, choices=PROVIDER_CHOICES)
+    user_registration = models.CharField(
+        _("Benutzeranmeldung"), max_length=32, choices=USER_REGISTRATION_CHOICES
+    )
+    data_privacy_terms = models.CharField(
+        _("Datenschutzerklärung"), max_length=32, choices=DATA_PRIVACY_CHOICES
+    )
+    terms_and_conditions = models.CharField(
+        _("AGB"), max_length=32, choices=TERMS_AND_CONDITIONS_CHOICES
+    )
+    security = models.CharField(
+        _("Sicherheit"), max_length=32, choices=SECURITY_CHOICES
+    )
+
+    server_location_text = models.TextField(
+        verbose_name=_(""),
+        blank=True,
+        help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
+    )
+    provider_text = models.TextField(
+        verbose_name=_(""),
+        blank=True,
+        help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
+    )
+    user_registration_text = models.TextField(
+        verbose_name=_(""),
+        blank=True,
+        help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
+    )
+    data_privacy_terms_text = models.TextField(
+        verbose_name=_(""),
+        blank=True,
+        help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
+    )
+    terms_and_conditions_text = models.TextField(
+        verbose_name=_(""),
+        blank=True,
+        help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
+    )
+    security_text = models.TextField(
+        verbose_name=_(""),
+        blank=True,
+        help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
+    )
+
+    conclusion = models.TextField(_("Fazit"), blank=False)

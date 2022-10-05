@@ -418,6 +418,27 @@ CONSTANCE_CONFIG_FIELDSETS = {
         "LOGGED_IN_MENU_HANDLE",
         "REVIEWER_MENU_HANDLE",
     ),
+    "Datenschutz Standard-Texte": (
+        "DISCLAIMER_DEFAULT_TEXT",
+        "SERVER_LOCATION_COMPLIANT",
+        "SERVER_LOCATION_NOT_COMPLIANT",
+        "SERVER_LOCATION_UNKNOWN",
+        "PROVIDER_COMPLIANT",
+        "PROVIDER_NOT_COMPLIANT",
+        "PROVIDER_UNKNOWN",
+        "DATA_PRIVACY_TERMS_COMPLIANT",
+        "DATA_PRIVACY_TERMS_NOT_COMPLIANT",
+        "DATA_PRIVACY_TERMS_UNKNOWN",
+        "TERMS_AND_CONDITIONS_COMPLIANT",
+        "TERMS_AND_CONDITIONS_NOT_COMPLIANT",
+        "TERMS_AND_CONDITIONS_UNKNOWN",
+        "USER_REGISTRATION_COMPLIANT",
+        "USER_REGISTRATION_NOT_COMPLIANT",
+        "USER_REGISTRATION_UNKNOWN",
+        "SECURITY_COMPLIANT",
+        "SECURITY_NOT_COMPLIANT",
+        "SECURITY_UNKNOWN",
+    ),
 }
 CONSTANCE_CONFIG = {
     # Content Teaser
@@ -534,6 +555,62 @@ CONSTANCE_CONFIG = {
     "GUEST_MENU_HANDLE": ("", "guest_menu", str),
     "LOGGED_IN_MENU_HANDLE": ("", "logged_in_menu", str),
     "REVIEWER_MENU_HANDLE": ("", "reviewer_menu", str),
+    "DISCLAIMER_DEFAULT_TEXT": (
+        """Die Hinweise und Inhalte zu dieser Anwendung (Tool, App, IT-Verfahren etc.)
+     wurden mit größtmöglicher Sorgfalt erstellt. Bei diesen Ausführungen handelt es sich um unverbindliche Hinweise, 
+     für deren Korrektheit, Vollständigkeit und Aktualität keine Haftung und Gewähr übernommen wird. Dies gilt auch 
+     für verlinkte (externe) Webseiten Dritter, auf deren Inhalte keine Einflussmöglichkeit besteht. In 
+     datenschutzrechtlicher Hinsicht hat lediglich eine Prüfung auf bestimmte Kernaspekte wie etwaige Übermittlungen 
+     von personenbezogenen Daten in Drittländer (DSGVO Art 13-14, 30, 40, 42, 44-49, 82-83) oder die Möglichkeit zum 
+     Abschluss eines Auftragsverarbeitungsvertrags (DSGVO Art. 28) stattgefunden. Jeder verantwortliche Stelle hat 
+     anlässlich der Nutzung der Anwendung selbst dafür Sorge zu tragen, dass die datenschutzrechtlichen Bestimmungen 
+     eingehalten und insbesondere die eigenen Rechenschafts- /Dokumentationspflichten (Verzeichnis über 
+     Verarbeitungstätigkeiten gem. DSGVO Art. 30 und ggfs. Datenschutzfolgeabschätzung gemäß DSGVO Art. 35) sowie 
+     Informations- (DSGVO Art. 11 ff.) und Vertragspflichten (DSGVO Art. 28) erfüllt werden. Dies beinhaltet auch 
+     die eigenverantwortliche Prüfung der Anwendung auf Datenschutzkonformität und Datensicherheit unter 
+     Berücksichtigung der jeweiligen IT-Infrastruktur sowie der für das jeweilige (Bundes-)Land geltenden 
+     datenschutzrechtlichen Bestimmungen. Die Verwendung bzw. Berücksichtigung dieser Hinweise erfolgt in eigener 
+     Verantwortung der Nutzerinnen und Nutzer. Bei der unentgeltlichen Zurverfügungstellung der Hinweise und Inhalte 
+     handelt sich um ein Gefälligkeitsverhältnis, aus dem für Dritte – insbesondere die Nutzerinnen und Nutzer dieser 
+     Website – keine Rechte ableitbar sind. Es ist zu beachten, dass sich die Ausführungen auf den Zeitpunkt der 
+     Prüfung der Anwendung beziehen. Es kann daher vorkommen, dass es zwischenzeitlich Änderungen, Ergänzungen oder 
+     Anpassungen an den Produkten sowie in technischer als auch rechtlicher bzw. vertraglicher Hinsicht gegeben hat, 
+     die noch nicht berücksichtigt werden konnten. Bitte informieren Sie sich selbst über den aktuellen Stand.""",
+        "",
+        str,
+    ),
+    "SERVER_LOCATION_COMPLIANT": (
+        "Der Serverstandort liegt in der EU bzw. EWR und ist damit DSGVO-konform",
+        "",
+        str,
+    ),
+    "SERVER_LOCATION_NOT_COMPLIANT": (
+        "Der Serverstandort liegt nicht in der EU bzw. EWR und ist damit nicht "
+        "DSGVO-konform",
+        "",
+        str,
+    ),
+    "SERVER_LOCATION_UNKNOWN": (
+        "Der Serverstandort ist nicht bekannt. Nähere Informationen können aus der Website "
+        "des Tool-Anbieters entnommen werden.",
+        "",
+        str,
+    ),
+    "PROVIDER_COMPLIANT": ("", "", str),
+    "PROVIDER_NOT_COMPLIANT": ("", "", str),
+    "PROVIDER_UNKNOWN": ("", "", str),
+    "DATA_PRIVACY_TERMS_COMPLIANT": ("", "", str),
+    "DATA_PRIVACY_TERMS_NOT_COMPLIANT": ("", "", str),
+    "DATA_PRIVACY_TERMS_UNKNOWN": ("", "", str),
+    "TERMS_AND_CONDITIONS_COMPLIANT": ("", "", str),
+    "TERMS_AND_CONDITIONS_NOT_COMPLIANT": ("", "", str),
+    "TERMS_AND_CONDITIONS_UNKNOWN": ("", "", str),
+    "USER_REGISTRATION_COMPLIANT": ("", "", str),
+    "USER_REGISTRATION_NOT_COMPLIANT": ("", "", str),
+    "USER_REGISTRATION_UNKNOWN": ("", "", str),
+    "SECURITY_COMPLIANT": ("", "", str),
+    "SECURITY_NOT_COMPLIANT": ("", "", str),
+    "SECURITY_UNKNOWN": ("", "", str),
 }
 
 WAGTAIL_SITE_NAME = "digital.learning.lab"
