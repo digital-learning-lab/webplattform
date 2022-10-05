@@ -22,6 +22,7 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
+from dll import shared_session
 from dll.content.views import (
     ToolDetailView,
     ToolDataFilterView,
@@ -59,6 +60,7 @@ urlpatterns = [
     path("suche", search_view, name="search"),
     path("cms/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
+    path("shared-session/", shared_session.urls),
     path("", include(wagtail_urls)),
     path("", include("dll.communication.urls", namespace="communication")),
     path("", include("dll.user.urls", namespace="user")),
