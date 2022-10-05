@@ -29,6 +29,7 @@ from dll.content.views import (
     ToolApplicationSearchView,
     ToolDetailPreviewView,
     ToolsFeed,
+    search_view,
 )
 from dll.survey.views import SurveyDetailView, TriggerListApiView
 from dll.user.views import (
@@ -55,6 +56,7 @@ urlpatterns = [
     path("tools", ToolFilterView.as_view(), name="tools-filter"),
     path("api/", include(router.urls)),
     path("api/tools", ToolDataFilterView.as_view(), name="tools-data-filter"),
+    path("suche", search_view, name="search"),
     path("cms/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("", include(wagtail_urls)),
