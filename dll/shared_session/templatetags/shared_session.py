@@ -31,7 +31,9 @@ class LoaderNode(template.Node):
         super(LoaderNode, self).__init__()
 
     def get_domains(self, request):
-        host = request.META["HTTP_HOST"]
+        host = request.META.get("HTTP_HOST")
+        if not host:
+            return []
 
         # Build domain list, with support for subdomains
         domains = copy.copy(settings.SHARED_SESSION_SITES)
@@ -53,19 +55,20 @@ class LoaderNode(template.Node):
         return box.encrypt(message, nonce)
 
     def get_message(self, request, domain):
+        host = request.META.get("HTTP_HOST", None)
+        if not host:
+            return {}
         enc_payload = self.encrypt_payload(
             {
                 "key": request.session.session_key,
-                "src": request.META["HTTP_HOST"],
+                "src": host,
                 "dst": domain,
                 "ts": timezone.now().isoformat(),
             }
         )
         data = urlsafe_base64_encode(enc_payload)
         try:
-            return data.decode(
-                "ascii"
-            )  # Django versions prior to 2.2 don't return `str` automatically
+            return data.decode("ascii")
         except AttributeError:
             return data
 
@@ -75,9 +78,9 @@ class LoaderNode(template.Node):
         )
 
     def render(self, context):
-        request = context["request"]
+        request = context.get("request", None)
 
-        if request.session.is_empty():
+        if not request or request.session.is_empty():
             return ""
 
         try:
