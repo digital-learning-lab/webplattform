@@ -61,9 +61,9 @@ urlpatterns = [
     path("cms/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("shared-session/", shared_session.urls),
-    path("", include(wagtail_urls)),
     path("", include("dll.communication.urls", namespace="communication")),
     path("", include("dll.user.urls", namespace="user")),
+    path("", include(wagtail_urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
