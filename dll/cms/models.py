@@ -14,7 +14,7 @@ from dll.cms.blocks import (
     MultiElementBlock,
     SideBySideBlock,
 )
-from dll.content.models import TeachingModule, Trend, Tool, Content
+from dll.content.models import TeachingModule, Trend, Tool, Content, Potential
 
 
 class DllPageMixin:
@@ -157,6 +157,21 @@ class Frontpage(DllPageMixin, Page):
             elif site.id == 2:
                 content_pks += random.choices(
                     Tool.objects.published().values_list("pk", flat=True), k=6
+                )
+                ctx["potentials"] = zip(
+                    Potential.objects.all()[:10],
+                    [
+                        "img/icons/dlt/dlt_Potenzialkategorien_VisualisierenAnimierenSimulieren_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_Kommunizieren_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_InhalteTeilen_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_Zusammenarbeiten_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_Reflektieren_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_StrukturierenSystematisieren_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_TestenBewerten_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_SpielerischLernen_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_InhalteProduzieren_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_ProblemeLoesen_weiß.svg",
+                    ],
                 )
         except IndexError:
             pass  # no content yet
