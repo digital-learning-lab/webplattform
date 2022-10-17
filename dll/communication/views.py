@@ -205,6 +205,7 @@ class CoAuthorInvitationConfirmView(View):
         ):
             if user_response == "Yes":
                 invitation.accept()
+                pk = invitation.content_id
                 content = get_object_or_404(Content, pk=pk)
                 return redirect(content.get_real_instance().get_edit_url())
             elif user_response == "No":

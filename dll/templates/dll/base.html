@@ -10,7 +10,9 @@
   {% shared_session_loader %}
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
   <title>{% block title %}{{ title }}{% endblock %}</title>
+  {% block css %}
   {% render_bundle main_css 'css' %}
+  {% endblock %}
   <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/icons/apple-icon-57x57.png' %}">
   <link rel="apple-touch-icon" sizes="60x60" href="{% static 'img/icons/apple-icon-60x60.png' %}">
   <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/icons/apple-icon-72x72.png' %}">
@@ -76,7 +78,9 @@
   </script>
 {% endif %}
 {% include 'dll/includes/toast.html' %}
+{% block js %}
 {% render_bundle main_js 'js' %}
+{% endblock %}
 {% include 'survey/survey_trigger.html' %}
 </body>
 </html>
