@@ -713,6 +713,10 @@ class Tool(Content):
         "ToolVideoTutorial", verbose_name=_("Video Anleitungen"), null=True, blank=True
     )
 
+    potentials = models.ManyToManyField(
+        "Potential", verbose_name=_("Potential Kategorien"), null=True, blank=True
+    )
+
     class Meta(Content.Meta):
         verbose_name = _("Tool")
         verbose_name_plural = _("Tools")

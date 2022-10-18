@@ -10,6 +10,8 @@ def platform_variables(request):
         "title": "digital.learning.lab",
         "logo_desktop_1x": "img/logo/dll_logo_rgb_claim_rechts.png",
         "logo_desktop_2x": "img/logo/dll_logo_rgb_claim_rechts_large.png",
+        "logo_mobile_1x": "img/logo/dll_logo_rgb_ohne_claim.png",
+        "logo_mobile_2x": "img/logo/dll_logo_rgb_ohne_claim_large.png",
     }
     if site.id == 1:
         return DEFAULTS
@@ -21,5 +23,7 @@ def platform_variables(request):
             "title": "digital.learning.tools",
             "logo_desktop_1x": "img/logo/logo_dlt.svg",
             "logo_desktop_2x": "img/logo/logo_dlt.svg",
+            "logo_mobile_1x": "img/logo/logo_dlt_mobile.svg",
+            "logo_mobile_2x": "img/logo/logo_dlt_mobile.svg",
         }
     return DEFAULTS

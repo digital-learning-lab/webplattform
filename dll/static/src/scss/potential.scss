@@ -1,3 +1,4 @@
+
 $general-width: 700px;
 
 .potentials-grid {
@@ -27,9 +28,41 @@ $general-width: 700px;
   margin-left: auto;
   margin-right: auto;
 }
+.potential-center,
+.potential-center--mobile {
+  text-align: center;
+}
 .potential-center {
+  background-color: rgba(204, 216, 224, 1);
   box-shadow: inset rgba(120, 120, 120, 0.5) 0 0 10px;
   width: $general-width / 2;
-  text-align: center;
-  background-color: rgba(204, 216, 224, 1);
+}
+.potential-center--mobile {
+  display: none;
+  width: 100%;
+}
+
+
+@media (max-width: 732px) {
+  .potentials-grid {
+    width: 100%;
+  }
+  .potential-center {
+    display: none;
+  }
+  .potential-center--mobile {
+    display: block;
+  }
+  .potential-box {
+    width: 50%;
+    flex-basis: 50%;
+    padding-bottom: 10px;
+  }
+}
+
+@media (max-width: 610px) {
+
+  .potential-box {
+    width: 100%;
+  }
 }

@@ -1,50 +1,24 @@
 {% load static %}
 <section class="section-competence section-potentials">
     <div class="potentials-grid d-flex">
-        <div class="potential-box">
-            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_VisualisierenAnimierenSimulieren_weiß.svg' %}" class="potential-box-image" alt="">
-            Visualisieren, Animieren und Simulieren
-        </div>
-        <div class="potential-box">
-            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_Kommunizieren_weiß.svg' %}" class="potential-box-image" alt="">
-            Kommunizieren
-        </div>
-        <div class="potential-box">
-            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_InhalteTeilen_weiß.svg' %}" class="potential-box-image" alt="">
-            Inhalte teilen
-        </div>
-        <div class="potential-box">
-            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_Zusammenarbeiten_weiß.svg' %}" class="potential-box-image" alt="">
-            Zusammenarbeiten und Kooperieren
-        </div>
-        <div class="potential-box">
-            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_Reflektieren_weiß.svg' %}" class="potential-box-image" alt="">
-            Reflektieren
-        </div>
-        <div class="potential-center">
+        <div class="potential-center--mobile">
             <h2>
                 Entdecke passende Unterrichtstools
             </h2>
         </div>
-        <div class="potential-box">
-            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_StrukturierenSystematisieren_weiß.svg' %}" class="potential-box-image" alt="">
-            Strukturieren und Systematisieren
-        </div>
-        <div class="potential-box">
-            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_TestenBewerten_weiß.svg' %}" class="potential-box-image" alt="">
-            Testen und Bewerten
-        </div>
-        <div class="potential-box">
-            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_SpielerischLernen_weiß.svg' %}" class="potential-box-image" alt="">
-            Spielerisch lernen
-        </div>
-        <div class="potential-box">
-            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_InhalteProduzieren_weiß.svg' %}" class="potential-box-image" alt="">
-            Inhalte produzieren
-        </div>
-        <div class="potential-box">
-            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_ProblemeLoesen_weiß.svg' %}" class="potential-box-image" alt="">
-            Probleme lösen
-        </div>
+        {% for potential in potentials %}
+            <div class="potential-box">
+                <img src="{% static potential.1 %}" class="potential-box-image" alt="">
+                {{ potential.0.name }}
+            </div>
+            {% if forloop.counter == 5%}
+
+            <div class="potential-center">
+                <h2>
+                    Entdecke passende Unterrichtstools
+                </h2>
+            </div>
+            {% endif %}
+        {% endfor %}
     </div>
 </section>

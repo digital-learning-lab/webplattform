@@ -33,6 +33,7 @@ from .models import (
     ToolLink,
     DataPrivacyAssessment,
     Testimonial,
+    Potential,
 )
 
 admin.site.unregister(FlatPage)
@@ -261,9 +262,10 @@ class CompetenceAdmin(admin.ModelAdmin):
     inlines = [CompetenceAdditionalInformationInlineAdmin]
 
 
-admin.site.register(ToolFunction)
+admin.site.register(OperatingSystem)
+admin.site.register(Potential)
+admin.site.register(SchoolType)
 admin.site.register(SubCompetence)
 admin.site.register(Subject)
-admin.site.register(SchoolType)
-admin.site.register(OperatingSystem)
 admin.site.register(ToolApplication)
+admin.site.register(ToolFunction)
