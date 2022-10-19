@@ -763,6 +763,10 @@ class Tool(Content):
         public_instance.operating_systems.add(*draft_instance.operating_systems.all())
         public_instance.applications.add(*draft_instance.applications.all())
         public_instance.functions.add(*draft_instance.functions.all())
+        assessment = draft_instance.t.dataprivacyassessment
+        assessment.pk = None
+        assessment.tool = public_instance
+        assessment.save()
 
         url_clone = draft_instance.url
         url_clone.pk = None
@@ -1776,6 +1780,25 @@ class DataPrivacyAssessment(TimeStampedModel):
                     getattr(config, f"{field.upper()}_{value.upper()}"),
                 )
         super(DataPrivacyAssessment, self).save(**kwargs)
+
+    @property
+    def render_dict(self):
+        FIELDS = [
+            "server_location",
+            "provider",
+            "user_registration",
+            "data_privacy_terms",
+            "terms_and_conditions",
+            "security",
+        ]
+        return {
+            field: {
+                "title": self._meta.get_field(field).verbose_name,
+                "text": self._meta.get_field(f"{field}_text").value_from_object(self),
+                "compliance": getattr(self, field),
+            }
+            for field in FIELDS
+        }.items()
 
     def __str__(self):
         return self.tool.name
