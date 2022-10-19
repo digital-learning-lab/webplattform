@@ -763,11 +763,13 @@ class Tool(Content):
         public_instance.operating_systems.add(*draft_instance.operating_systems.all())
         public_instance.applications.add(*draft_instance.applications.all())
         public_instance.functions.add(*draft_instance.functions.all())
-        assessment = draft_instance.dataprivacyassessment
-        if assessment:
+        try:
+            assessment = draft_instance.dataprivacyassessment
             assessment.pk = None
             assessment.tool = public_instance
             assessment.save()
+        except DataPrivacyAssessment.DoesNotExist:
+            pass
 
         url_clone = draft_instance.url
         url_clone.pk = None
