@@ -45,7 +45,7 @@ Longer term items - working on this soon!
 ### 🛳 Container Setup 
 1. Run `docker-compose build` to build the required images.
 2. Run `docker-compose up` to setup project.
-3. Run `docker-compose run --rm web python manage.py migrate`
+3. Run `docker-compose run --rm dll-web python manage.py migrate`
 4. Create an `.env` file from `sample.env`
 5. You need to have two sites configured in order to have DLL and DLT served.
 	 There is a fixture in `dll/fixture/sites.json` you can load with
@@ -71,14 +71,14 @@ you're experiencing a `ProgrammingError` after restoring a database dump.
 
 In that simply execute Django's migration command in the web container:
 ```bash
-docker-compose run --rm web python manage.py migrate
+docker-compose run --rm dll-web python manage.py migrate
 ```
 
 At this point all content is available but not yet indexed for the search.
 Setup Solr and run following command to index all contents:
 
 ```bash
-docker-compose run --rm web python manage.py rebuild_index
+docker-compose run --rm dll-web python manage.py rebuild_index
 ```
 
 ### 🖼 Media File Restore
@@ -90,7 +90,7 @@ a directory called `media` within the `dll` directory (`project_dir/dll/media/`)
 
 You can create a super user by running the following command:
 ```bash
-docker-compose run --rm web python manage.py createsuperuser
+docker-compose run --rm dll-web python manage.py createsuperuser
 ```
 
 Please note the first and last name are mandatory fields. Leaving both fields empty may
@@ -101,7 +101,7 @@ cause problems.
 In some cases it is useful to be able to access the Python shell of the web container:
 
 ```bash
-docker-compose run --rm web python manage.py shell_plus
+docker-compose run --rm dll-web python manage.py shell_plus
 ```
 
 The `shell_plus` is a part of the `django-extensions` package. It automatically imports 
@@ -123,7 +123,7 @@ The digital.learning.lab platform comes with a testsuite, which can simply be
 extended and executed:
 
 ```bash
-docker-compose exec web coverage run --source=/code/dll/ -m pytest /code/dll/
+docker-compose exec dll-web coverage run --source=/code/dll/ -m pytest /code/dll/
 ```
 
 ### Update Changelog
