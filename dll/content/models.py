@@ -1622,7 +1622,7 @@ class ToolVideoTutorial(TimeStampedModel):
         return self.title
 
 
-class Testimonial(TimeStampedModel):
+class Testimonial(PublisherModel):
     author = models.ForeignKey(
         DllUser, on_delete=models.SET_NULL, verbose_name=_("Author"), null=True
     )
@@ -1640,8 +1640,23 @@ class Testimonial(TimeStampedModel):
     comment = models.TextField(verbose_name=_("Kommentar"), blank=True, null=True)
 
     content = models.ForeignKey(
-        "Content", verbose_name=_("Content"), on_delete=models.CASCADE
+        "Content",
+        verbose_name=_("Content"),
+        on_delete=models.CASCADE,
+        related_name="testimonials",
+        related_query_name="testimonial",
     )
+
+    def __str__(self):
+        if self.is_public:
+            return f"{self.author} - {self.content.name} (public)"
+        return f"{self.author} - {self.content.name}"
+
+    def copy_relations(self, draft_instance, public_instance):
+        super(Testimonial, self).copy_relations(draft_instance, public_instance)
+        public_instance.subjects.add(*draft_instance.subjects.all())
+        public_instance.content = draft_instance.content.get_published()
+        public_instance.author = draft_instance.author
 
 
 class DataPrivacyAssessment(TimeStampedModel):
