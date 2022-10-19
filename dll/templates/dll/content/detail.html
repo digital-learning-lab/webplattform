@@ -58,17 +58,18 @@
                 {{ object.type_verbose }} - Informationen
             </h3>
               <ul class="sidebar__information">
-                {% if object.competences.all.count %}
-                  <li class="sidebar__information-item">
-                    <span class="sidebar__information-icon icon-hexagon"></span>
-                    <ul class="list-unstyled">
-                      {% for competence in object.competences.all %}
-                        <li>{{ competence.name }}</li>
-                      {% endfor %}
-                    </ul>
-                  </li>
-                {% endif %}
-                {% block sidebar_information %}{% endblock %}
+                {% block sidebar_information %}
+                    {% if object.competences.all.count %}
+                      <li class="sidebar__information-item">
+                        <span class="sidebar__information-icon icon-hexagon"></span>
+                        <ul class="list-unstyled">
+                          {% for competence in object.competences.all %}
+                            <li>{{ competence.name }}</li>
+                          {% endfor %}
+                        </ul>
+                      </li>
+                    {% endif %}
+                {% endblock %}
               </ul>
               <ul class="nav flex-column sidebar__nav" role="tablist" aria-orientation="vertical">
                 {% block sidebar_navigation_items %}{% endblock %}
@@ -83,6 +84,7 @@
                   <div class="clearfix"></div>
                   {% if not preview %}
                   {% include "dll/content/includes/sharing.html" %}
+                  {% if SITE_ID == 1 %}
                   <div class="content-info__favor">
                     {% if user.is_authenticated %}
                     <button type="button" class="button button--secondary button--small m-0 js-favor{% if favored %} d-none{% endif %}" data-url="{{ object.get_favor_url }}">
@@ -100,6 +102,7 @@
                     </a>
                     {% endif %}
                   </div>
+                  {% endif %}
                   {% endif %}
                   <div class="clearfix m-5"></div>
                   <div class="content-info__type">{{ object.type_verbose }}</div>
