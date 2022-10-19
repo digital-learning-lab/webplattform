@@ -49,6 +49,7 @@ from dll.content.models import (
     ToolApplication,
     HelpText,
     ContentFile,
+    Potential,
 )
 from dll.content.serializers import (
     AuthorSerializer,
@@ -149,6 +150,7 @@ class ContentDetailBase(DetailView):
         ctx = super(ContentDetailBase, self).get_context_data(**kwargs)
         ctx["competences"] = Competence.objects.all()
         ctx["functions"] = ToolFunction.objects.all()
+        ctx["potentials"] = Potential.objects.all()
         ctx["recommended_content"] = more_like_this(self.object)
         if self.request.user.is_authenticated:
             ctx["favored"] = Favorite.objects.filter(

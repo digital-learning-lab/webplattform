@@ -12,6 +12,7 @@ def platform_variables(request):
         "logo_desktop_2x": "img/logo/dll_logo_rgb_claim_rechts_large.png",
         "logo_mobile_1x": "img/logo/dll_logo_rgb_ohne_claim.png",
         "logo_mobile_2x": "img/logo/dll_logo_rgb_ohne_claim_large.png",
+        "SITE_ID": 1,
     }
     if site.id == 1:
         return DEFAULTS
@@ -25,5 +26,6 @@ def platform_variables(request):
             "logo_desktop_2x": "img/logo/logo_dlt.svg",
             "logo_mobile_1x": "img/logo/logo_dlt_mobile.svg",
             "logo_mobile_2x": "img/logo/logo_dlt_mobile.svg",
+            "SITE_ID": 2,
         }
     return DEFAULTS

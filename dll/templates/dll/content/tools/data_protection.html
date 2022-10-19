@@ -1,0 +1,53 @@
+<h2>Hinweise</h2>
+
+<div class="information-area information-area--{{ object.type }}">
+  <div class="information-area__title information-area__title">
+    Registrierung
+  </div>
+  <div class="information-area__body">
+    {% if object.requires_registration %}
+      Erforderlich
+    {% else %}
+      Nicht erforderlich
+    {% endif %}
+  </div>
+</div>
+
+{% if object.usk %}
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Altersbeschränkung
+    </div>
+    <div class="information-area__body">
+      {{ object.get_usk_display }}
+    </div>
+  </div>
+{% endif %}
+
+{% if object.usage %}
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Nutzung
+    </div>
+    <div class="information-area__body">
+      {{ object.usage }}
+    </div>
+  </div>
+{% endif %}
+
+{% if object.additional_info %}
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Anmerkungen
+    </div>
+    <div class="information-area__body">
+      {{ object.additional_info|linebreaksbr }}
+    </div>
+  </div>
+{% endif %}
+
+{% if object.has_tutorial_links %}
+  <h2>Tutorials</h2>
+  {% include 'dll/content/includes/links.html' with literature_title='Schriftliche Anleitungen' video_title='Video-Anleitungen' %}
+{% endif %}
+
