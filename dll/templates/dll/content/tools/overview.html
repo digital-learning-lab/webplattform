@@ -129,21 +129,21 @@
     </div>
   </div>
 {% endif %}
-{##}
-{#{% if object.contra.0 %}#}
-{#  <div class="information-area information-area--{{ object.type }}">#}
-{#    <div class="information-area__title information-area__title">#}
-{#      Kontra#}
-{#    </div>#}
-{#    <div class="information-area__body">#}
-{#      <ul class="list-unstyled">#}
-{#        {% for contra in object.contra %}#}
-{#          <li>{{ contra }}</li>#}
-{#        {% endfor %}#}
-{#      </ul>#}
-{#    </div>#}
-{#  </div>#}
-{#{% endif %}#}
+
+{% if object.contra.0 %}
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Kontra
+    </div>
+    <div class="information-area__body">
+      <ul class="list-unstyled">
+        {% for contra in object.contra %}
+          <li>{{ contra }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endif %}
 
 {% include 'dll/content/includes/links.html' with literature_title='Weiterführende Literatur und Links' video_title='Video-Anleitungen' %}
 
