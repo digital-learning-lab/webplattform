@@ -205,10 +205,26 @@ class TrendDetailView(ContentDetailView):
     model = Trend
     template_name = "dll/content/trend_detail.html"
 
+    def get(self, *args, **kwargs):
+        if settings.SITE_ID == 1:
+            return super().get(self.request)
+        else:
+            site = models.Site.objects.get(pk=1)
+            domain = site.domain
+            return redirect(f"//{domain}{self.request.path}")
+
 
 class TeachingModuleDetailView(ContentDetailView):
     model = TeachingModule
     template_name = "dll/content/teaching_module_detail.html"
+
+    def get(self, *args, **kwargs):
+        if settings.SITE_ID == 1:
+            return super().get(self.request)
+        else:
+            site = models.Site.objects.get(pk=1)
+            domain = site.domain
+            return redirect(f"//{domain}{self.request.path}")
 
 
 class ToolDetailPreviewView(ContentPreviewView):
