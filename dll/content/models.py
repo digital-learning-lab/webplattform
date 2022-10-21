@@ -1794,11 +1794,17 @@ class DataPrivacyAssessment(TimeStampedModel):
             "terms_and_conditions",
             "security",
         ]
+        COLOR_MAP = {
+            self.COMPLIANT[0]: "green",
+            self.NOT_COMPLIANT[0]: "red",
+            self.UNKNOWN[0]: "grey",
+        }
         return {
             field: {
                 "title": self._meta.get_field(field).verbose_name,
                 "text": self._meta.get_field(f"{field}_text").value_from_object(self),
                 "compliance": getattr(self, field),
+                "color": COLOR_MAP[getattr(self, field)],
             }
             for field in FIELDS
         }.items()

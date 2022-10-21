@@ -3,14 +3,16 @@
   width: 30px;
   display: inline-block;
   background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
 }
-.icon--dlt.icon-AGB--grey {
+.icon--dlt.icon-agb--grey {
   background-image: url("/static/img/icons/dlt/dlt_Datenschutz_AGB_grau.svg")
 }
-.icon--dlt.icon-AGB--green {
+.icon--dlt.icon-agb--green {
   background-image: url("/static/img/icons/dlt/dlt_Datenschutz_AGB_gruen.svg")
 }
-.icon--dlt.icon-AGB--red {
+.icon--dlt.icon-agb--red {
   background-image: url("/static/img/icons/dlt/dlt_Datenschutz_AGB_rot.svg")
 }
 .icon--dlt.icon-aenderungen--grey {
@@ -34,13 +36,13 @@
 .icon--dlt.icon-benutzeranmeldung--red {
   background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Benutzeranmeldung_rot.svg")
 }
-.icon--dlt.icon-datenschutzerklärung--grey {
+.icon--dlt.icon-datenschutzerklarung--grey {
   background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Datenschutzerklärung_grau.svg")
 }
-.icon--dlt.icon-datenschutzerklärung--green {
+.icon--dlt.icon-datenschutzerklarung--green {
   background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Datenschutzerklärung_gruen.svg")
 }
-.icon--dlt.icon-datenschutzerklärung--red {
+.icon--dlt.icon-datenschutzerklarung--red {
   background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Datenschutzerklärung_rot.svg")
 }
 .icon--dlt.icon-fazit--grey {
