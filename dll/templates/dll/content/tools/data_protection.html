@@ -8,11 +8,12 @@
         <div id="accordion-data-privacy">
             {% for name, field in object.dataprivacyassessment.render_dict %}
 
-                <div class="card">
+                <div class="accordion card">
                     <div class="card-header" id="heading-{{ field.title|slugify }}">
                         <h5 class="mb-0">
                             <button class="btn btn-link collpased" data-toggle="collapse" data-target="#{{ field.title|slugify }}"
                                     aria-expanded="false" aria-controls="{{ field.title|slugify }}">
+                                <span class="icon--dlt icon-{{ field.title|slugify }}--{{ field.color }}"></span>
                                 {{ field.title }}
                             </button>
                         </h5>

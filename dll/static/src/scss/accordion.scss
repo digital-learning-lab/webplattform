@@ -1,0 +1,53 @@
+.accordion.card {
+  border: 1px solid black;
+  border-radius: 0;
+  &:not(:first-child) {
+    margin-top: -2px;
+  }
+  .card-header {
+    .icon--dlt {
+      margin-bottom: -9px;
+    }
+    border: 0;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+    background-color: transparent;
+    border-radius: 0;
+    color: black;
+    &:hover {
+      background-color: $color--smalt-blue;
+      color: white;
+    }
+  }
+  .btn {
+    color: inherit;
+    width: 100%;
+    text-align: left;
+    padding-left: 0;
+    padding-right: 0;
+    &:hover {
+      text-decoration: none;
+      &:after {
+        border-color: white transparent transparent transparent;
+      }
+      &[aria-expanded="true"]:after {
+        border-width: 0 5px 5px 5px;
+        border-color: transparent transparent white transparent;
+      }
+    }
+    &:after {
+      content: '';
+      float: right;
+      margin-top: 12px;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-width: 5px 5px 0 5px;
+      border-color: $color--pale transparent transparent transparent;
+    }
+    &[aria-expanded="true"]:after {
+      border-width: 0 5px 5px 5px;
+      border-color: transparent transparent $color--pale transparent;
+    }
+  }
+}
