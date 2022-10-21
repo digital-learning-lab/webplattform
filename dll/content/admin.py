@@ -3,8 +3,10 @@ from django.contrib import admin
 
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from io import BytesIO
+
+from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
@@ -37,6 +39,23 @@ from .models import (
 )
 
 admin.site.unregister(FlatPage)
+
+
+class PublishAdminMixin:
+    change_form_template = "admin/publish_change_form.html"
+
+    def response_change(self, request, obj):
+        if "_publish" in request.POST:
+            obj.publish()
+            return HttpResponseRedirect(".")
+        elif "_unpublish" in request.POST:
+            if obj.is_public:
+                info = self.model._meta.app_label, self.model._meta.model_name
+                view_name = "admin:%s_%s_changelist" % info
+                obj.delete()
+                return redirect(view_name)
+
+        return super().response_change(request, obj)
 
 
 class TeachingModuleResource(resources.ModelResource):
@@ -101,7 +120,9 @@ class CompetenceAdditionalInformationInlineAdmin(admin.StackedInline):
 
 
 @admin.register(Trend)
-class ContentAdmin(SimpleHistoryAdmin, admin.ModelAdmin, DynamicArrayMixin):
+class ContentAdmin(
+    PublishAdminMixin, SimpleHistoryAdmin, admin.ModelAdmin, DynamicArrayMixin
+):
     exclude = ("json_data", "tags")
     inlines = [ContentLinkInlineAdmin]
     search_fields = ["name"]
@@ -187,7 +208,9 @@ class DataPrivacyAssessmentAdmin(admin.StackedInline):
 
 
 @admin.register(Tool)
-class ToolAdmin(SimpleHistoryAdmin, ImportExportMixin, admin.ModelAdmin):
+class ToolAdmin(
+    PublishAdminMixin, SimpleHistoryAdmin, ImportExportMixin, admin.ModelAdmin
+):
     exclude = ("json_data", "tags")
     resource_class = ToolResource
     inlines = [DataPrivacyAssessmentAdmin, ToolLinkInline, ContentLinkInlineAdmin]
