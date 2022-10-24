@@ -18,7 +18,7 @@
           </div>
           <div>
             <h3 class="form-subhead">Fächerbezug</h3>
-            <select name="subjects" id="subjects" v-model="subjects" @change="updateContents" class="form-control">
+            <select name="subject" id="subject" v-model="subject" @change="updateContents" class="form-control">
               <option value="" selected>--------</option>
               <option v-for="subject in getSubjects()" :value="subject.value">{{ subject.name }}</option>
             </select>
@@ -129,7 +129,7 @@
       return {
         dataUrl: '/api/tools',
         applications: [],
-        subjects: [],
+        subject: null,
         toolFunctions: [],
         potentials: [],
         operatingSystems: [],
@@ -152,7 +152,7 @@
           toolFunctions: this.toolFunctions,
           withCosts: this.withCosts,
           potentials: this.potentials,
-          subjects: this.subjects
+          subject: this.subject
         }
       },
       getToolFunctions () {
@@ -172,7 +172,7 @@
       operatingSystems () {
         this.debouncedUpdate()
       },
-      subjects () {
+      subject () {
         this.debouncedUpdate()
       },
       withCosts () {

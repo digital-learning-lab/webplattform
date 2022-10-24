@@ -35,7 +35,13 @@ from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 from django.contrib.sites import models
 
-from dll.content.filters import SolrTagFilter, SortingFilter
+from dll.content.filters import (
+    SolrTagFilter,
+    SortingFilter,
+    ToolPotentialFilter,
+    ToolSubjectFilter,
+    ToolWithCostsFilter,
+)
 from dll.content.models import (
     Content,
     TeachingModule,
@@ -583,6 +589,9 @@ class ToolDataFilterView(ContentDataFilterView):
         ToolDataPrivacyFilter,
         ToolOperationSystemFilter,
         ToolFunctionFilter,
+        ToolPotentialFilter,
+        ToolSubjectFilter,
+        ToolWithCostsFilter,
     ] + ContentDataFilterView.filter_backends
 
 

@@ -76,10 +76,37 @@ class ToolFunctionFilter(PolymorphicAttributeFilter):
     field_name = "functions__pk__in"
 
 
+class ToolPotentialFilter(PolymorphicAttributeFilter):
+    model = "Tool"
+    query_parameter_name = "potentials[]"
+    field_name = "potentials__pk__in"
+
+
+class ToolSubjectFilter(PolymorphicAttributeFilter):
+    model = "Tool"
+    query_parameter_name = "subject"
+    field_name = "subjects"
+
+
 class ToolDataPrivacyFilter(PolymorphicAttributeFilter):
     model = "Tool"
     query_parameter_name = "dataPrivacy"
-    field_name = "privacy"
+    field_name = "dataprivacyassessment__overall"
+
+
+class ToolWithCostsFilter(PolymorphicAttributeFilter):
+    model = "Tool"
+    query_parameter_name = "withCosts"
+    field_name = "with_costs"
+
+    def filter_queryset(self, request, queryset, view):
+        value = request.GET.get(self.query_parameter_name)
+        VALUE_MAP = {"0": False, "1": True}
+        res = VALUE_MAP[value] if value in VALUE_MAP.keys() else None
+        if res is not None:
+            query = {f"{self.model}___{self.field_name}": res}
+            queryset = queryset.filter(**query)
+        return queryset.distinct()
 
 
 class TeachingModuleSubjectFilter(PolymorphicAttributeFilter):

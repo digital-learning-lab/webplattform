@@ -1671,6 +1671,12 @@ class DataPrivacyAssessment(TimeStampedModel):
     NOT_COMPLIANT = ("not_compliant", _("Not Compliant"))
     UNKNOWN = ("unknown", _("Unknown"))
 
+    OVERALL_CHOICES = (
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
+    )
+
     SERVER_LOCATION_CHOICES = (
         COMPLIANT,
         NOT_COMPLIANT,
@@ -1763,6 +1769,13 @@ class DataPrivacyAssessment(TimeStampedModel):
         null=False,
         blank=False,
         on_delete=models.CASCADE,
+    )
+
+    overall = models.CharField(
+        verbose_name=_("Gesamteindruck"),
+        max_length=32,
+        choices=OVERALL_CHOICES,
+        null=True,
     )
 
     def save(self, **kwargs):
