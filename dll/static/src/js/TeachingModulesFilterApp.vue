@@ -90,9 +90,6 @@
       }
     },
     methods: {
-      getSubjects ()  {
-        return window.subjectFilter
-      },
       getSchoolTypes () {
         return window.schoolFilter
       },

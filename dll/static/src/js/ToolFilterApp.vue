@@ -4,35 +4,32 @@
       <div class="section-info">
         <form action="" id="filterForm" class="collapse d-lg-block">
           <h2>Filtern nach</h2>
-
-          <h3 class="form-subhead">Sortierung</h3>
-          <select name="sortby" id="sortby-select" v-model="sorting" @change="updateContents" class="form-control">
-            <option value="-latest">Neustes zuerst</option>
-            <option value="latest">Ältestes zuerst</option>
-            <option value="az">A-Z</option>
-            <option value="za">Z-A</option>
-          </select>
           <h3 class="form-subhead">Schlagwortsuche</h3>
           <input type="text" v-model="q" name="searchTerm" class="form-control" @keydown="preventEnter">
+
           <div>
-            <h3 class="form-subhead">Tool-Funktionen</h3>
+            <h3 class="form-subhead">Tool-Kategorien</h3>
             <ul class="list-unstyled">
-              <li class="form-check" v-for="toolFunction in getToolFunctions()">
-                <input type="checkbox" class="form-check-input" :value="toolFunction.id" name="toolFunction" :id="'toolFunction' + toolFunction.id" v-model="toolFunctions">
-                <label class="form-check-label" :for="'toolFunction' + toolFunction.id">{{ toolFunction.title }}</label>
+              <li class="form-check" v-for="potential in getPotentials()">
+                <input type="checkbox" class="form-check-input" :value="potential.value" name="potential" :id="'potential' + potential.value" v-model="potentials">
+                <label class="form-check-label" :for="'potential' + potential.value">{{ potential.name }}</label>
               </li>
             </ul>
           </div>
-          <h3 class="form-subhead">Datenschutz</h3>
-          <select name="data-privacy" id="data-privacy" v-model="dataPrivacy" @change="updateContents" class="form-control">
-            <option value="" selected>--------</option>
-            <option value="0">Unbekannt</option>
-            <option value="1">Es werden keinerlei Daten erhoben</option>
-            <option value="2">Personenbezogene Daten wie z.B. Logins werden geschützt auf dem Server abgelegt. Es greift die EU-Datenschutz-Grundverordnung.</option>
-            <option value="3">Personenbezogene Daten werden erhoben. Dritte haben Zugriff auf diese Daten. Es greift die EU-Datenschutz-Grundverordnung.</option>
-            <option value="4">Personenbezogene Daten werden erhoben. Es greift NICHT die EU-Datenschutz-Grundverordnung.</option>
-          </select>
-          <app-competence-filter :competences.sync="competences"></app-competence-filter>
+          <div>
+            <h3 class="form-subhead">Fächerbezug</h3>
+            <select name="subjects" id="subjects" v-model="subjects" @change="updateContents" class="form-control">
+              <option value="" selected>--------</option>
+              <option v-for="subject in getSubjects()" :value="subject.value">{{ subject.name }}</option>
+            </select>
+          </div>
+          <div>
+            <h3 class="form-subhead">Datenschutz</h3>
+            <select name="dataPrivacy" id="dataPrivacy" v-model="dataPrivacy" @change="updateContents" class="form-control">
+              <option value="" selected>--------</option>
+              <option v-for="privacy in getDataPrivacyOptions()" :value="privacy.value">{{ privacy.name }}</option>
+            </select>
+          </div>
            <div>
             <h3 class="form-subhead">Anwendung:</h3>
             <ul class="list-unstyled">
@@ -89,14 +86,14 @@
           </div>
 
           <div>
-            <h3 class="form-subhead">Status</h3>
-            <select name="status" id="status-dropdown" v-model="status" @change="updateContents" class="form-control">
-                <option id="status-0" value="" name="status" selected>--------</option>
-                <option id="status-1" value="on" name="status">Online</option>
-                <option id="status-2" value="off" name="status">Offline</option>
-                <option id="status-3" value="onoff" name="status">Online & Offline</option>
+            <h3 class="form-subhead">Kostenpflichtig</h3>
+            <select name="withCosts" id="withCosts" v-model="withCosts" @change="updateContents" class="form-control">
+              <option value="" selected>--------</option>
+              <option value="0" selected>Nein</option>
+              <option value="1" selected>Ja</option>
             </select>
           </div>
+
         </form>
         <div class="text-center">
           <button class="button button--primary d-lg-none" type="button" data-toggle="collapse" data-target="#filterForm" aria-expanded="false" aria-controls="filterForm">
@@ -131,21 +128,31 @@
     data () {
       return {
         dataUrl: '/api/tools',
-        status: '',
         applications: [],
+        subjects: [],
         toolFunctions: [],
+        potentials: [],
         operatingSystems: [],
-        dataPrivacy: null
+        dataPrivacy: null,
+        withCosts: null
       }
     },
     methods: {
+      getPotentials () {
+        return window.potentialFilter
+      },
+      getDataPrivacyOptions () {
+        return window.dataPrivacyFilter
+      },
       getQueryParams () {
         return {
-          status: this.status,
           dataPrivacy: this.dataPrivacy,
           applications: this.applications,
           operatingSystems: this.operatingSystems,
-          toolFunctions: this.toolFunctions
+          toolFunctions: this.toolFunctions,
+          withCosts: this.withCosts,
+          potentials: this.potentials,
+          subjects: this.subjects
         }
       },
       getToolFunctions () {
@@ -163,6 +170,15 @@
         this.debouncedUpdate()
       },
       operatingSystems () {
+        this.debouncedUpdate()
+      },
+      subjects () {
+        this.debouncedUpdate()
+      },
+      withCosts () {
+        this.debouncedUpdate()
+      },
+      potentials () {
         this.debouncedUpdate()
       }
     }
