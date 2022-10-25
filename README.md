@@ -123,7 +123,7 @@ The digital.learning.lab platform comes with a testsuite, which can simply be
 extended and executed:
 
 ```bash
-docker-compose exec dll-web coverage run --source=/code/dll/ -m pytest /code/dll/
+docker-compose exec web-dll coverage run --source=/code/dll/ -m pytest /code/dll/
 ```
 
 ### Update Changelog
