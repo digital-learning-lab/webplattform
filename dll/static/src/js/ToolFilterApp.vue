@@ -205,6 +205,9 @@
       subject () {
         this.debouncedUpdate()
       },
+      potentials () {
+        this.debouncedUpdate()
+      },
       activePotentials (newVal) {
         this.$nextTick(() => {
           if (!this.slider) {
