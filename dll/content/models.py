@@ -67,6 +67,54 @@ def get_default_created_time():
     return timezone.now()
 
 
+class VideoEmbedMixin(models.Model):
+    video_url = models.URLField(
+        _("Video URL"),
+        help_text=_(
+            "Es werden YouTube und Vimeo Videos unterstützt. Kopieren Sie einfach die URL des Videos in dieses"
+            " Feld. Diese wird automatisch in die Embed-URL umgewandelt."
+        ),
+        null=True,
+        blank=False,
+    )
+
+    @property
+    def video_embed_code(self):
+        if not self.video_url:
+            return ""
+        if "vimeo.com" in self.video_url:
+            return render_to_string(
+                "dll/filter/partials/vimeo_embed.html", {"embed_url": self.video_url}
+            )
+        if "youtube.com" in self.video_url:
+            return render_to_string(
+                "dll/filter/partials/youtube_embed.html", {"embed_url": self.video_url}
+            )
+        return ""
+
+    def clean(self):
+        """
+        Check video url. Depending on the link generate the embed URL.
+        """
+        if not self.video_url:
+            return
+
+        if "vimeo.com" in self.video_url:
+            if "https://player.vimeo.com/video/" in self.video_url:
+                return
+            self.video_url = self.video_url.replace(
+                "https://vimeo.com/", "https://player.vimeo.com/video/"
+            )
+
+        if "youtube.com" in self.video_url:
+            if "https://www.youtube.com/embed/" in self.video_url:
+                return
+            self.video_url = self.video_url.replace("watch?v=", "embed/")
+
+    class Meta:
+        abstract = True
+
+
 class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
     name = models.CharField(
         _("Titel des Tools/Trends/Unterrichtsbausteins"), max_length=200
@@ -1214,7 +1262,7 @@ class Competence(TimeStampedModel):
 
 
 @register_snippet
-class CompetenceAdditionalInformation(models.Model):
+class CompetenceAdditionalInformation(VideoEmbedMixin):
     competence = models.OneToOneField(
         Competence,
         verbose_name=_("Kompentenz"),
@@ -1228,49 +1276,8 @@ class CompetenceAdditionalInformation(models.Model):
 
     description = models.TextField(verbose_name=_("Beschreibung"))
 
-    video_url = models.URLField(
-        _("Video URL"),
-        help_text=_(
-            "Es werden YouTube und Vimeo Videos unterstützt. Kopieren Sie einfach die URL des Videos in dieses"
-            " Feld. Diese wird automatisch in die Embed-URL umgewandelt."
-        ),
-        null=True,
-        blank=False,
-    )
-
     def __str__(self):
         return "{} - {}".format(self.competence.name, self.title)
-
-    def clean(self):
-        """
-        Check video url. Depending on the link generate the embed URL.
-        """
-        if not self.video_url:
-            return
-
-        if "vimeo.com" in self.video_url:
-            if "https://player.vimeo.com/video/" in self.video_url:
-                return
-            self.video_url = self.video_url.replace(
-                "https://vimeo.com/", "https://player.vimeo.com/video/"
-            )
-
-        if "youtube.com" in self.video_url:
-            if "https://www.youtube.com/embed/" in self.video_url:
-                return
-            self.video_url = self.video_url.replace("watch?v=", "embed/")
-
-    @property
-    def video_embed_code(self):
-        if "vimeo.com" in self.video_url:
-            return render_to_string(
-                "dll/filter/partials/vimeo_embed.html", {"embed_url": self.video_url}
-            )
-        if "youtube.com" in self.video_url:
-            return render_to_string(
-                "dll/filter/partials/youtube_embed.html", {"embed_url": self.video_url}
-            )
-        return ""
 
     class Meta:
         verbose_name = _("Zusätzliche Kompetenz Information")
@@ -1606,7 +1613,7 @@ class Favorite(TimeStampedModel):
         unique_together = ("user", "content")
 
 
-class Potential(TimeStampedModel):
+class Potential(TimeStampedModel, VideoEmbedMixin):
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=600)
     slug = DllSlugField(

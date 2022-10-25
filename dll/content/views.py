@@ -559,7 +559,12 @@ class ToolFilterView(SiteRedirectMixin, BaseFilterView):
         ]
         ctx["subject_filter"] = json.dumps(subject_filter)
         potential_filter = [
-            {"value": potential.pk, "name": potential.name}
+            {
+                "value": potential.pk,
+                "name": potential.name,
+                "description": potential.description,
+                "video_embed": potential.video_embed_code,
+            }
             for potential in Potential.objects.all()
         ]
         ctx["potential_filter"] = json.dumps(potential_filter)
