@@ -55,6 +55,13 @@
   flex: 0 0 68%;
   max-width: 68%;
   vertical-align: top;
+
+  [class*=--blue] {
+    display: inline-block;
+  }
+  [class*=--white] {
+    display: none;
+  }
   &:hover {
     color: rgba(255, 255, 255, 1);
     .content-teaser__type {
@@ -62,6 +69,12 @@
     }
     .content-teaser__favor .favor-icon {
       color: rgba(255, 255, 255, 1);
+    }
+    [class*=--blue] {
+      display: none;
+    }
+    [class*=--white] {
+      display: inline-block;
     }
   }
 }

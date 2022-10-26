@@ -98,7 +98,7 @@ class FavorTestCase(BaseTestCase):
         response = self.client.get(
             reverse("user-favorites-overview"),
         )
-        self.assertTemplateUsed(response, "dll/includes/content_teaser.html")
+        self.assertTemplateUsed(response, "overwrites/content_teaser.html")
         self.assertContains(response, "Auf dem Merkzettel")
 
     def test_double_favor(self):
