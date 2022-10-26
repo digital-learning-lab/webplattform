@@ -9,6 +9,9 @@
 
 {% block extra_scripts %}
   <script>
+  window.subjectFilter = {{ subject_filter|safe }};
   window.functionsFilter = {{ functions_filter|safe }};
+  window.potentialFilter = {{ potential_filter|safe }};
+  window.dataPrivacyFilter = {{ data_privacy_filter|safe }};
   </script>
 {% endblock %}

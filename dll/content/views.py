@@ -9,6 +9,7 @@ from django.http import JsonResponse, Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy, resolve
+from django.views import View
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.base import ContextMixin
 from django.utils.translation import gettext_lazy as _
@@ -34,7 +35,13 @@ from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 from django.contrib.sites import models
 
-from dll.content.filters import SolrTagFilter, SortingFilter
+from dll.content.filters import (
+    SolrTagFilter,
+    SortingFilter,
+    ToolPotentialFilter,
+    ToolSubjectFilter,
+    ToolWithCostsFilter,
+)
 from dll.content.models import (
     Content,
     TeachingModule,
@@ -50,6 +57,7 @@ from dll.content.models import (
     HelpText,
     ContentFile,
     Potential,
+    DataPrivacyAssessment,
 )
 from dll.content.serializers import (
     AuthorSerializer,
@@ -96,6 +104,16 @@ class ReviewerMixin(GenericAPIView):
         permission = super(ReviewerMixin, self).get_permissions()
         permission.append(ReviewerPermission())
         return permission
+
+
+class SiteRedirectMixin(View):
+    def get(self, *args, **kwargs):
+        if settings.SITE_ID == 2:
+            return super().get(self.request)
+        else:
+            site = models.Site.objects.get(pk=2)
+            domain = site.domain
+            return redirect(f"//{domain}{self.request.path}")
 
 
 class BreadcrumbMixin(ContextMixin):
@@ -188,17 +206,9 @@ class ContentPreviewView(ContentDetailBase):
         return qs.drafts()
 
 
-class ToolDetailView(ContentDetailView):
+class ToolDetailView(SiteRedirectMixin, ContentDetailView):
     model = Tool
     template_name = "dll/content/tool_detail.html"
-
-    def get(self, *args, **kwargs):
-        if settings.SITE_ID == 2:
-            return super().get(self.request)
-        else:
-            site = models.Site.objects.get(pk=2)
-            domain = site.domain
-            return redirect(f"//{domain}{self.request.path}")
 
 
 class TrendDetailView(ContentDetailView):
@@ -533,7 +543,7 @@ class TeachingModuleDataFilterView(ContentDataFilterView):
         return qs.distinct()
 
 
-class ToolFilterView(BaseFilterView):
+class ToolFilterView(SiteRedirectMixin, BaseFilterView):
     template_name = "dll/filter/tools.html"
     rss_feed_url = reverse_lazy("tools-feed")
 
@@ -543,6 +553,36 @@ class ToolFilterView(BaseFilterView):
             {"id": function.id, "title": function.title}
             for function in ToolFunction.objects.all()
         ]
+        subject_filter = [
+            {"value": subject.pk, "name": subject.name}
+            for subject in Subject.objects.all()
+        ]
+        ctx["subject_filter"] = json.dumps(subject_filter)
+        potential_filter = [
+            {
+                "value": potential.pk,
+                "name": potential.name,
+                "description": potential.description,
+                "video_embed": potential.video_embed_code,
+            }
+            for potential in Potential.objects.all()
+        ]
+        ctx["potential_filter"] = json.dumps(potential_filter)
+        data_privacy_filter = [
+            {
+                "value": DataPrivacyAssessment.COMPLIANT[0],
+                "name": str(DataPrivacyAssessment.COMPLIANT[1]),
+            },
+            {
+                "value": DataPrivacyAssessment.NOT_COMPLIANT[0],
+                "name": str(DataPrivacyAssessment.NOT_COMPLIANT[1]),
+            },
+            {
+                "value": DataPrivacyAssessment.UNKNOWN[0],
+                "name": str(DataPrivacyAssessment.UNKNOWN[1]),
+            },
+        ]
+        ctx["data_privacy_filter"] = json.dumps(data_privacy_filter)
         return ctx
 
 
@@ -554,6 +594,9 @@ class ToolDataFilterView(ContentDataFilterView):
         ToolDataPrivacyFilter,
         ToolOperationSystemFilter,
         ToolFunctionFilter,
+        ToolPotentialFilter,
+        ToolSubjectFilter,
+        ToolWithCostsFilter,
     ] + ContentDataFilterView.filter_backends
 
 

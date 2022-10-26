@@ -28,6 +28,9 @@ export const contentFilter = {
     getQueryParams () {
       return {}
     },
+    getSubjects ()  {
+      return window.subjectFilter
+    },
     updateContents (page) {
       this.loading = true
       if (!page || typeof page === 'object') {
