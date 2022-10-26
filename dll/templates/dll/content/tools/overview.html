@@ -23,7 +23,7 @@
                 {% endfor %}
             </ul>
         {% for potential in potentials %}
-          <span class="information-area__icon icon--dlt icon-{{ potential.slug }}-- {% if potential in object.potentials.all %}blue{% else %}grey{% endif %}" data-toggle="tooltip" title="{{ potential.name }}"></span>
+          <span class="information-area__icon icon--dlt icon-{{ potential.slug }}--{% if potential in object.potentials.all %}blue{% else %}grey{% endif %}" data-toggle="tooltip" title="{{ potential.name }}"></span>
         {% endfor %}
         </div>
     </div>
