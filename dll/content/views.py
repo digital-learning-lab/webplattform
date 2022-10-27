@@ -10,7 +10,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy, resolve
 from django.views import View
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, FormView
 from django.views.generic.base import ContextMixin
 from django.utils.translation import gettext_lazy as _
 from django_filters.rest_framework import DjangoFilterBackend
@@ -83,6 +83,7 @@ from .filters import (
     TeachingModuleSchoolTypeFilter,
     ToolFunctionFilter,
 )
+from .forms import TestimonialForm
 from .models import ToolFunction, Favorite
 from .more_like_this import more_like_this
 from .serializers import (
@@ -164,8 +165,12 @@ class ContentDetailBase(DetailView):
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
+    def get_testimonial_form(self):
+        return TestimonialForm(author=self.request.user, content=self.object)
+
     def get_context_data(self, **kwargs):
         ctx = super(ContentDetailBase, self).get_context_data(**kwargs)
+        ctx["testimonial_form"] = self.get_testimonial_form()
         ctx["competences"] = Competence.objects.all()
         ctx["functions"] = ToolFunction.objects.all()
         ctx["potentials"] = Potential.objects.all()
@@ -914,3 +919,27 @@ class FavoriteListApiView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Favorite.objects.filter(user=user)
+
+
+class TestimonialView(FormView):
+    form_class = TestimonialForm
+    template_name = "dll/content/includes/testimonial_form.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super(TestimonialView, self).get_context_data(**kwargs)
+        ctx["testimonial_form"] = self.get_form()
+        return ctx
+
+    def get_form_kwargs(self):
+        kwargs = super(TestimonialView, self).get_form_kwargs()
+        kwargs["author"] = self.request.user
+        if c_id := self.request.POST.get("content"):
+            kwargs["content"] = Content.objects.get(pk=c_id)
+        return kwargs
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form), status=400)
+
+    def form_valid(self, form):
+        form.save()
+        return HttpResponse()

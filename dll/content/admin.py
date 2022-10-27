@@ -222,7 +222,7 @@ class ToolAdmin(
 
 
 @admin.register(Testimonial)
-class TestimonialAdmin(admin.ModelAdmin):
+class TestimonialAdmin(PublishAdminMixin, admin.ModelAdmin):
     pass
 
 

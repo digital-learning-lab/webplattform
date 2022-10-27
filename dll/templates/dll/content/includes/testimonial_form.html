@@ -1,0 +1,22 @@
+{% load crispy_forms_tags %}
+
+<div class="information-area information-area--{{ object.type }} js-testimonialSection">
+    <div class="information-area__title">
+       Persönliche Erfahrungen
+    </div>
+    <div class="information-area__body">
+        <div id="div_id_author" class="form-group">
+            <div class="row form-group">
+                <div class="col-lg-4">
+                    <label for="id_author" class=" requiredField">
+                        Autor<span class="asteriskField">*</span>
+                    </label>
+                </div>
+                <div class="col-lg-8">
+                    {{ request.user.full_name }}
+                </div>
+            </div>
+        {% crispy testimonial_form %}
+        </div>
+    </div>
+</div>

@@ -44,7 +44,7 @@ from dll.general.utils import (
     remove_number_custom_slugify,
 )
 from dll.user.models import DllUser
-
+from ..general.managers import PublisherQuerySet
 
 logger = logging.getLogger("dll.content.models")
 
@@ -1637,6 +1637,7 @@ class ToolVideoTutorial(TimeStampedModel):
 
 
 class Testimonial(PublisherModel):
+    objects = PublisherQuerySet.as_manager()
     author = models.ForeignKey(
         DllUser, on_delete=models.SET_NULL, verbose_name=_("Author"), null=True
     )
@@ -1668,7 +1669,7 @@ class Testimonial(PublisherModel):
 
     def copy_relations(self, draft_instance, public_instance):
         super(Testimonial, self).copy_relations(draft_instance, public_instance)
-        public_instance.subjects.add(*draft_instance.subjects.all())
+        public_instance.subject = draft_instance.subject
         public_instance.content = draft_instance.content.get_published()
         public_instance.author = draft_instance.author
 
