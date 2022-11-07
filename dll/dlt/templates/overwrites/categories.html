@@ -7,10 +7,10 @@
             </h2>
         </div>
         {% for potential in potentials %}
-            <div class="potential-box">
+            <a class="potential-box" href="{% url 'tools-filter' %}?potentials={{ potential.0.pk }}">
                 <img src="{% static potential.1 %}" class="potential-box-image" alt="">
                 {{ potential.0.name }}
-            </div>
+            </a>
             {% if forloop.counter == 5%}
 
             <div class="potential-center">
