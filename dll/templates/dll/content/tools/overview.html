@@ -97,14 +97,14 @@
     </div>
   </div>
 {% endif %}
-{% if object.testimonials.all|length > 0 %}
+{% if object.testimonials.published|length > 0 %}
   <div class="information-area information-area--{{ object.type }}">
     <div class="information-area__title information-area__title">
       Praxiserfahrung
     </div>
     <div class="information-area__body">
       <div class="testimonials js-testimonials">
-        {% for testimonial in object.testimonials.all %}
+        {% for testimonial in object.testimonials.published %}
           <div class="testimonial">
             <table class="testimonial-header">
                 <tr>
@@ -129,6 +129,8 @@
     </div>
   </div>
 {% endif %}
+
+{% include "dll/content/includes/testimonial_form.html" %}
 
 {% if object.contra.0 %}
   <div class="information-area information-area--{{ object.type }}">

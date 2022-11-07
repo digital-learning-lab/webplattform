@@ -64,6 +64,7 @@ from dll.content.views import (
     TrendsFeed,
     FavoriteListApiView,
     ToolFunctionSearchView,
+    TestimonialView,
 )
 from dll.survey.views import SurveyDetailView, TriggerListApiView
 from dll.user.views import (
@@ -267,6 +268,7 @@ urlpatterns = [
         name="trigger-list",
     ),
     path("suche", search_view, name="search"),
+    path("testimonial", TestimonialView.as_view(), name="testimonial"),
     path("cms/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("shared-session/", shared_session.urls),

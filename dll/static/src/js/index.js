@@ -25,4 +25,5 @@ import './trendSubmission'
 import './recaptcha'
 import './survey'
 import './slick'
+import './testimonial'
 

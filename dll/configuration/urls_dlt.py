@@ -17,6 +17,7 @@ from dll.content.views import (
     search_view,
     TrendDetailView,
     TeachingModuleDetailView,
+    TestimonialView,
 )
 
 router = DefaultRouter()
@@ -43,6 +44,7 @@ urlpatterns = [
     path("cms/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
     path("shared-session/", shared_session.urls),
+    path("testimonial", TestimonialView.as_view(), name="testimonial"),
     path("", include("dll.communication.urls", namespace="communication")),
     path("", include("dll.user.urls", namespace="user")),
     path("", include(wagtail_urls)),
