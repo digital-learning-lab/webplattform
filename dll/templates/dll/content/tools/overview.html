@@ -129,8 +129,9 @@
     </div>
   </div>
 {% endif %}
-
-{% include "dll/content/includes/testimonial_form.html" %}
+{% if request.user.is_authenticated %}
+  {% include "dll/content/includes/testimonial_form.html" %}
+{% endif %}
 
 {% if object.contra.0 %}
   <div class="information-area information-area--{{ object.type }}">

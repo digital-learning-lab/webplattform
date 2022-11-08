@@ -1,0 +1,10 @@
+{% extends "dll/user/content/overview.html" %}
+
+{% block add_buttons %}
+  <a class="button button--teaching-module mr-3" href="{% url 'add-teaching-module' %}">
+    Unterrichtsbaustein erstellen <span class="fas fa-plus"></span>
+  </a>
+  <a class="button button--trend mr-3" href="{% url 'add-trend' %}">
+    Trend erstellen <span class="fas fa-plus"></span>
+  </a>
+{% endblock add_buttons %}

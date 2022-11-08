@@ -7,15 +7,7 @@
     <p>Die digitalen Unterrichtsbausteine werden von erfahrenen Lehrerinnen und Lehrern aus Hamburg einer inhaltlichen und urheberrechtlichen Sichtung unterzogen. Die Tool- und Trendbeschreibungen werden vom wissenschaftlichen Personal der Technischen Universität Hamburg gesichtet. Nach erfolgreicher Sichtung der eingereichten Inhalte werden die Inhalte veröffentlicht.</p>
 
   <div class="text-center">
-    <a class="button button--teaching-module mr-3" href="{% url 'add-teaching-module' %}">
-      Unterrichtsbaustein erstellen <span class="fas fa-plus"></span>
-    </a>
-    <a class="button button--tool mr-3" href="{% url 'add-tool' %}">
-      Tool erstellen <span class=" fas fa-plus"></span>
-    </a>
-    <a class="button button--trend mr-3" href="{% url 'add-trend' %}">
-      Trend erstellen <span class="fas fa-plus"></span>
-    </a>
+    {% block add_buttons %}{% endblock add_buttons %}
   </div>
 
   <div id="overview-app"></div>

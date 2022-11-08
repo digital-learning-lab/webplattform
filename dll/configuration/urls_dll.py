@@ -156,7 +156,6 @@ urlpatterns = [
         ReviewTrendView.as_view(),
         name="review-trend",
     ),
-    path("meine-inhalte/tools/", CreateEditToolView.as_view(), name="add-tool"),
     path(
         "meine-inhalte/tools/<slug:slug>",
         CreateEditToolView.as_view(),

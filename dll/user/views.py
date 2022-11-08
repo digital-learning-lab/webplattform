@@ -65,7 +65,7 @@ class TestView(TemplateView):
 
 
 class MyContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
-    template_name = "dll/user/content/overview.html"
+    template_name = "overwrites/my_content.html"
     breadcrumb_title = "Meine Inhalte"
     breadcrumb_url = reverse_lazy("user-content-overview")
 
