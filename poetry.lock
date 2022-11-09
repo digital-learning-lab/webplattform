@@ -1414,7 +1414,7 @@ testing = ["Jinja2 (>=2.11,<3.0)", "Unidecode (>=0.04.14,<2.0)", "boto3 (>=1.16,
 
 [[package]]
 name = "wagtailmenus"
-version = "3.1.2"
+version = "3.1.3"
 description = "An app to help you manage menus in your Wagtail projects more consistently."
 category = "main"
 optional = false
@@ -1495,7 +1495,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "3099e805d7b47bb493d06ce12436c8964b563204b89a766636496200e678bb27"
+content-hash = "ba84e3e313ffec55bd9371c74d52e885504bc00c23a93627b64e269855af94b6"
 
 [metadata.files]
 amqp = [
@@ -2324,8 +2324,7 @@ wagtail = [
     {file = "wagtail-2.13.4.tar.gz", hash = "sha256:5ea948715c34c81a13610951a78ec5a3d913ae463fbc2b6a333c9bab66847887"},
 ]
 wagtailmenus = [
-    {file = "wagtailmenus-3.1.2-py3-none-any.whl", hash = "sha256:1f5d9c7e620782d176f7c18c321c6b4358c6634425c586f58ddaf4c0474f1a42"},
-    {file = "wagtailmenus-3.1.2.tar.gz", hash = "sha256:7b357c2926c4b104a4a1cc9811965aad6d081c5103c72cc8895a7e8367571947"},
+    {file = "wagtailmenus-3.1.3-py3-none-any.whl", hash = "sha256:0f5669f160d788b1ab8c2b412cb95411e9c07f83e4b52dddc92991752c6fa397"},
 ]
 wcwidth = [
     {file = "wcwidth-0.2.5-py2.py3-none-any.whl", hash = "sha256:beb4802a9cebb9144e99086eff703a642a13d6a0052920003a230f3294bbe784"},
