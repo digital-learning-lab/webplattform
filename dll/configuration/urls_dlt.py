@@ -36,6 +36,7 @@ from dll.content.views import (
 from dll.user.views import (
     MyContentView,
     CreateEditToolView,
+    UserContentView,
 )
 
 router = DefaultRouter()
@@ -60,6 +61,11 @@ urlpatterns = [
     ),
     path("meine-inhalte", MyContentView.as_view(), name="user-content-overview"),
     path("meine-inhalte/tools/", CreateEditToolView.as_view(), name="add-tool"),
+    path(
+        "meine-inhalte/tools/<slug:slug>",
+        CreateEditToolView.as_view(),
+        name="edit-tool",
+    ),
     path("tools", ToolFilterView.as_view(), name="tools-filter"),
     path(
         "api/inhalt-bearbeiten/<slug:slug>/vorschau-bild",
@@ -116,6 +122,7 @@ urlpatterns = [
         OperatingSystemSearchView.as_view(),
         name="operating-system-search",
     ),
+    path("api/meine-inhalte", UserContentView.as_view(), name="user-contents"),
     path("api/", include(router.urls)),
     path("api/tools", ToolDataFilterView.as_view(), name="tools-data-filter"),
     path("suche", search_view, name="search"),
