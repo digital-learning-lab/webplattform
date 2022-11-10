@@ -232,3 +232,4 @@ typings/
 .npm
 ore.io/api/node,linux,macos,python,django,pycharm
 /.idea/.gitignore
+.devcontainer/devcontainer.json
