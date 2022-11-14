@@ -23,6 +23,7 @@ from .models import (
     SubCompetence,
     Subject,
     SchoolType,
+    ToolVideoTutorial,
     Trend,
     Tool,
     ToolApplication,
@@ -203,6 +204,10 @@ class ToolLinkInline(admin.TabularInline):
     model = ToolLink
 
 
+class ToolVideoTutorialInline(admin.TabularInline):
+    model = ToolVideoTutorial
+
+
 class DataPrivacyAssessmentAdmin(admin.StackedInline):
     model = DataPrivacyAssessment
 
@@ -213,7 +218,12 @@ class ToolAdmin(
 ):
     exclude = ("json_data", "tags")
     resource_class = ToolResource
-    inlines = [DataPrivacyAssessmentAdmin, ToolLinkInline, ContentLinkInlineAdmin]
+    inlines = [
+        DataPrivacyAssessmentAdmin,
+        ToolLinkInline,
+        ContentLinkInlineAdmin,
+        ToolVideoTutorialInline,
+    ]
     search_fields = ["name"]
 
     def get_export_queryset(self, request):

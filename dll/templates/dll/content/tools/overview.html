@@ -129,7 +129,7 @@
     </div>
   </div>
 {% endif %}
-{% if request.user.is_authenticated %}
+{% if request.user.is_authenticated and not preview %}
   {% include "dll/content/includes/testimonial_form.html" %}
 {% endif %}
 

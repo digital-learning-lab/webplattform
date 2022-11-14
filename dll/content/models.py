@@ -757,10 +757,6 @@ class Tool(Content):
 
     with_costs = models.BooleanField(_("Kostenpflichtig"), default=False)
 
-    video_tutorials = models.ManyToManyField(
-        "ToolVideoTutorial", verbose_name=_("Video Anleitungen"), null=True, blank=True
-    )
-
     potentials = models.ManyToManyField(
         "Potential", verbose_name=_("Potential Kategorien"), null=True, blank=True
     )
@@ -1631,6 +1627,14 @@ class ToolVideoTutorial(TimeStampedModel):
     title = models.CharField(verbose_name=_("Titel"), max_length=512)
 
     url = models.CharField(verbose_name=_("URL"), max_length=2048)
+
+    tool = models.ForeignKey(
+        "Tool",
+        on_delete=models.CASCADE,
+        related_name="video_tutorials",
+        null=True,
+        blank=False,
+    )
 
     def __str__(self):
         return self.title

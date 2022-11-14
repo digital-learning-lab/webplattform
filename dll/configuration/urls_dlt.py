@@ -9,6 +9,7 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from dll import shared_session
 from dll.content.views import (
+    SubjectSearchView,
     ToolDetailView,
     ToolDataFilterView,
     ToolFilterView,
@@ -30,6 +31,7 @@ from dll.content.views import (
     DraftsContentViewSet,
     ReviewViewSet,
     ToolFunctionSearchView,
+    ToolPotentialSearchView,
     ToolApplicationSearchView,
     OperatingSystemSearchView,
 )
@@ -113,6 +115,11 @@ urlpatterns = [
         name="tool-function-search",
     ),
     path(
+        "api/potentials",
+        ToolPotentialSearchView.as_view(),
+        name="tool-potential-search",
+    ),
+    path(
         "api/applications",
         ToolApplicationSearchView.as_view(),
         name="application-search",
@@ -122,6 +129,7 @@ urlpatterns = [
         OperatingSystemSearchView.as_view(),
         name="operating-system-search",
     ),
+    path("api/subjects", SubjectSearchView.as_view(), name="subject-search"),
     path("api/meine-inhalte", UserContentView.as_view(), name="user-contents"),
     path("api/", include(router.urls)),
     path("api/tools", ToolDataFilterView.as_view(), name="tools-data-filter"),

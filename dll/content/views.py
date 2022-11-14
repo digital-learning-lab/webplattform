@@ -90,6 +90,7 @@ from .serializers import (
     ContentListSerializer,
     ContentPolymorphicSerializer,
     FavoriteSerializer,
+    PotentialSerializer,
 )
 from .utils import get_random_content
 
@@ -673,6 +674,13 @@ class ToolFunctionSearchView(ListAPIView):
     serializer_class = ToolFunctionSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     search_fields = ["title"]
+
+
+class ToolPotentialSearchView(ListAPIView):
+    queryset = Potential.objects.all()
+    serializer_class = PotentialSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ["name"]
 
 
 class SubCompetencesSearchView(ListAPIView):
