@@ -161,6 +161,7 @@ urlpatterns = [
         CreateEditToolView.as_view(),
         name="edit-tool",
     ),
+    path("meine-inhalte/tools/", CreateEditToolView.as_view(), name="add-tool"),
     path("meine-inhalte/trends/", CreateEditTrendView.as_view(), name="add-trend"),
     path(
         "meine-inhalte/trends/<slug:slug>",
