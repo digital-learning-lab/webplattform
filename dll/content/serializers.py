@@ -24,6 +24,7 @@ from dll.content.models import (
     SubCompetence,
     Subject,
     OperatingSystem,
+    TestimonialReview,
     ToolApplication,
     HelpText,
     Content,
@@ -360,6 +361,17 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ["status", "json_data"]
+
+
+class TestimonialReviewSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+
+    def get_name(self, object):
+        return object.testimonial.content.name
+
+    class Meta:
+        model = TestimonialReview
+        fields = ["status", "comment", "pk", "name"]
 
 
 class AdditionalToolsField(RelatedField):

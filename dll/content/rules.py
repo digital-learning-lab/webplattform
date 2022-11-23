@@ -1,6 +1,6 @@
 import rules
 
-from dll.content.models import Review, TeachingModule, Tool, Trend, Content
+from dll.content.models import Review, TeachingModule, Testimonial, Tool, Trend, Content
 
 
 @rules.predicate
@@ -59,6 +59,10 @@ def can_review_content(user, content: Content):
     return check_content_for_review(user, content)
 
 
+def can_review_testimonial(user, obj: Testimonial):
+    return is_bsb_reviewer(user) or is_tuhh_reviewer(user)
+
+
 rules.add_perm(
     "content.view_content",
     is_authenticated,
@@ -104,3 +108,7 @@ rules.add_perm("content.change_review", can_review & review_in_progress)
 
 rules.add_perm("content.assign_reviewer", can_assign_reviewer)
 rules.add_perm("content.claim_review", can_review)
+
+
+rules.add_perm("testimonial.view_review", is_authenticated)
+rules.add_perm("testimonial.can_review", can_review_testimonial)

@@ -46,6 +46,7 @@ from dll.content.views import (
     ToolApplicationSearchView,
     OperatingSystemSearchView,
     ReviewViewSet,
+    TestimonialReviewViewSet,
     ToolDetailPreviewView,
     TeachingModuleDetailPreviewView,
     TrendDetailPreviewView,
@@ -85,7 +86,10 @@ from dll.user.views import (
 router = DefaultRouter()
 router.register(r"inhalte", PublishedContentViewSet, basename="public-content")
 router.register(r"inhalt-bearbeiten", DraftsContentViewSet, basename="draft-content")
-router.register(r"review", ReviewViewSet, basename="review")
+router.register(r"review", ReviewViewSet, basename="review"),
+router.register(
+    r"testimonial-review", TestimonialReviewViewSet, basename="testimonial-review"
+),
 
 urlpatterns = [
     path("admin/", admin.site.urls),

@@ -3,7 +3,11 @@ import random
 
 from django.conf import settings
 from django.contrib.syndication.views import Feed
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import (
+    ObjectDoesNotExist,
+    MultipleObjectsReturned,
+    PermissionDenied,
+)
 from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -84,13 +88,14 @@ from .filters import (
     ToolFunctionFilter,
 )
 from .forms import TestimonialForm
-from .models import ToolFunction, Favorite
+from .models import TestimonialReview, ToolFunction, Favorite
 from .more_like_this import more_like_this
 from .serializers import (
     ContentListSerializer,
     ContentPolymorphicSerializer,
     FavoriteSerializer,
     PotentialSerializer,
+    TestimonialReviewSerializer,
 )
 from .utils import get_random_content
 
@@ -949,5 +954,87 @@ class TestimonialView(FormView):
         return self.render_to_response(self.get_context_data(form=form), status=400)
 
     def form_valid(self, form):
-        form.save()
+        instance = form.save()
+        instance.submit_for_review(self.request.user)
+
         return HttpResponse()
+
+
+class TestimonialReviewViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
+    """Authors have only view permission, reviewers have view and edit permission"""
+
+    serializer_class = TestimonialReviewSerializer
+    queryset = TestimonialReview.objects.filter(
+        testimonial__publisher_is_draft=True, is_active=True
+    )
+    permission_classes = [DjangoObjectPermissions]
+    lookup_field = "pk"
+    lookup_url_kwarg = "pk"
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        user = self.request.user
+        if not user.has_perm("testimonial.view_review"):
+            # user should have permission to view reviews
+            raise Http404
+        if not user.has_perm("testimonial.can_review"):
+            # if not allowed to review - only show own reviews
+            qs = qs.filter(submitted_by=user)
+
+        return qs
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def accept(self, request, pk):
+        error = JsonResponse(
+            status=400,
+            data={"error": _("Fehler beim freigeben des Erfahrungsberichts.")},
+        )
+        user = self.request.user
+        if not user.has_perm("testimonial.can_review"):
+            return error
+        testimonial_review = self.get_object()
+        result = testimonial_review.accept(user)
+        if result:
+            return HttpResponse()
+        return error
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def decline(self, request, pk):
+        error = JsonResponse(
+            status=400,
+            data={"error": _("Fehler beim freigeben des Erfahrungsberichts.")},
+        )
+        user = self.request.user
+        if not user.has_perm("testimonial.can_review"):
+            return error
+        testimonial_review = self.get_object()
+        result = testimonial_review.decline(user)
+        if result:
+            return HttpResponse()
+        return error
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def request_changes(self, request, pk):
+        error = JsonResponse(
+            status=400,
+            data={"error": _("Fehler beim freigeben des Erfahrungsberichts.")},
+        )
+        user = self.request.user
+        if not user.has_perm("testimonial.can_review"):
+            return error
+        comment = request.data.get("comment")
+        testimonial_review = self.get_object()
+        result = testimonial_review.request_changes(comment, user)
+        if result:
+            return HttpResponse()
+        return error
+
+    def perform_update(self, serializer):
+        if not self.request.user.has_perm("testimonial.can_review"):
+            raise PermissionDenied
+        serializer.save()

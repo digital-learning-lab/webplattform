@@ -23,6 +23,7 @@ from .models import (
     SubCompetence,
     Subject,
     SchoolType,
+    TestimonialReview,
     ToolVideoTutorial,
     Trend,
     Tool,
@@ -234,6 +235,12 @@ class ToolAdmin(
 @admin.register(Testimonial)
 class TestimonialAdmin(PublishAdminMixin, admin.ModelAdmin):
     pass
+
+
+@admin.register(TestimonialReview)
+class TestimonialReviewAdmin(admin.ModelAdmin):
+    search_fields = ["testimonial__content__name"]
+    list_filter = ("status",)
 
 
 class HelpTextFieldInline(admin.TabularInline):

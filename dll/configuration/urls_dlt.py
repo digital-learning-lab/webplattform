@@ -10,6 +10,7 @@ from wagtail.documents import urls as wagtaildocs_urls
 from dll import shared_session
 from dll.content.views import (
     SubjectSearchView,
+    TestimonialReviewViewSet,
     ToolDetailView,
     ToolDataFilterView,
     ToolFilterView,
@@ -44,7 +45,10 @@ from dll.user.views import (
 router = DefaultRouter()
 router.register(r"inhalte", PublishedContentViewSet, basename="public-content")
 router.register(r"inhalt-bearbeiten", DraftsContentViewSet, basename="draft-content")
-router.register(r"review", ReviewViewSet, basename="review")
+router.register(r"review", ReviewViewSet, basename="review"),
+router.register(
+    r"testimonial-review", TestimonialReviewViewSet, basename="testimonial-review"
+),
 
 urlpatterns = [
     path("admin/", admin.site.urls),
