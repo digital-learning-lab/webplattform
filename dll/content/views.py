@@ -1,5 +1,4 @@
 import json
-import random
 
 from django.conf import settings
 from django.contrib.syndication.views import Feed
@@ -8,6 +7,7 @@ from django.core.exceptions import (
     MultipleObjectsReturned,
     PermissionDenied,
 )
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -46,6 +46,7 @@ from dll.content.filters import (
     ToolSubjectFilter,
     ToolWithCostsFilter,
 )
+from dll.content.rules import is_bsb_reviewer, is_tuhh_reviewer
 from dll.content.models import (
     Content,
     TeachingModule,
@@ -969,15 +970,14 @@ class TestimonialReviewViewSet(
     """Authors have only view permission, reviewers have view and edit permission"""
 
     serializer_class = TestimonialReviewSerializer
-    queryset = TestimonialReview.objects.filter(
-        testimonial__publisher_is_draft=True, is_active=True
-    )
+    queryset = TestimonialReview.objects.all()
     permission_classes = [DjangoObjectPermissions]
     lookup_field = "pk"
     lookup_url_kwarg = "pk"
+    filter_backends = [DjangoFilterBackend]
 
     def get_queryset(self):
-        qs = super().get_queryset()
+        qs = super(TestimonialReviewViewSet, self).get_queryset()
         user = self.request.user
         if not user.has_perm("testimonial.view_review"):
             # user should have permission to view reviews
@@ -1038,3 +1038,22 @@ class TestimonialReviewViewSet(
         if not self.request.user.has_perm("testimonial.can_review"):
             raise PermissionDenied
         serializer.save()
+
+
+class TestimonialReviewsOverview(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
+    template_name = "dll/user/content/review_testimonial.html"
+    breadcrumb_title = "Review Erfahrungsberichte"
+    breadcrumb_url = reverse_lazy("user-content-overview")
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if not any([is_bsb_reviewer(user), is_tuhh_reviewer(user), user.is_superuser]):
+            raise Http404
+        return super(TestimonialReviewsOverview, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(TestimonialReviewsOverview, self).get_context_data(**kwargs)
+        ctx["testimonial_reviews"] = TestimonialReview.objects.filter(
+            status__in=[TestimonialReview.NEW, TestimonialReview.IN_PROGRESS]
+        ).select_related("testimonial")
+        return ctx

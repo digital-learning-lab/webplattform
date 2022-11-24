@@ -365,13 +365,26 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class TestimonialReviewSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
+    author = serializers.SerializerMethodField()
+    testimonial_comment = serializers.SerializerMethodField()
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret["status"] = instance.get_status_display()
+        return ret
+
+    def get_testimonial_comment(self, obj):
+        return obj.testimonial.comment
+
+    def get_author(self, obj):
+        return str(obj.submitted_by.full_name) if obj.submitted_by else ""
 
     def get_name(self, object):
         return object.testimonial.content.name
 
     class Meta:
         model = TestimonialReview
-        fields = ["status", "comment", "pk", "name"]
+        fields = ["status", "comment", "pk", "name", "author", "testimonial_comment"]
 
 
 class AdditionalToolsField(RelatedField):

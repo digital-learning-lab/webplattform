@@ -24,6 +24,7 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from dll import shared_session
 from dll.content.views import (
+    TestimonialReviewsOverview,
     ToolDetailView,
     TrendDetailView,
     TeachingModuleDetailView,
@@ -134,6 +135,11 @@ urlpatterns = [
     path("trends", TrendFilterView.as_view(), name="trends-filter"),
     path("meine-inhalte", MyContentView.as_view(), name="user-content-overview"),
     path("mein-merkzettel", UserFavoriteView.as_view(), name="user-favorites-overview"),
+    path(
+        "review-erfahrungsberichte",
+        TestimonialReviewsOverview.as_view(),
+        name="content-testimonial-review",
+    ),
     path("review-inhalte", MyReviewsView.as_view(), name="user-content-review"),
     path(
         "meine-inhalte/unterrichtsbausteine/",

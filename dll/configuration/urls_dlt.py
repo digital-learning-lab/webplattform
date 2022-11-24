@@ -11,6 +11,7 @@ from dll import shared_session
 from dll.content.views import (
     SubjectSearchView,
     TestimonialReviewViewSet,
+    TestimonialReviewsOverview,
     ToolDetailView,
     ToolDataFilterView,
     ToolFilterView,
@@ -64,6 +65,11 @@ urlpatterns = [
         "tools/<slug:slug>/vorschau",
         ToolDetailPreviewView.as_view(),
         name="tool-detail-preview",
+    ),
+    path(
+        "review-erfahrungsberichte",
+        TestimonialReviewsOverview.as_view(),
+        name="content-testimonial-review",
     ),
     path("meine-inhalte", MyContentView.as_view(), name="user-content-overview"),
     path("meine-inhalte/tools/", CreateEditToolView.as_view(), name="add-tool"),
