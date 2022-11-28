@@ -24,7 +24,7 @@
     <div class="content-box" :class="'content-box--' + review.type" v-for="review in reviews">
       <div class="row">
         <div class="col-sm-3">
-          <div class="content-box__type">{{ review.type_verbose }} ({{ review.status }})</div>
+          <div class="content-box__type">{{ review.type_verbose }} ({{ review.status_display }})</div>
           <div class="content-box__title">{{ review.name }}</div>
           <div class="content-box__author">
             <span class="fas fa-user"></span> {{ review.author }}
@@ -33,7 +33,12 @@
             <span>Einreichungsdatum: {{ review.submitted }}</span>
           </div>
         </div>
-        <div class="col" v-text="review.testimonial_comment"></div>
+        <div class="col">
+          <p class="font-weight-bold">Erfahrungsbericht</p>
+          <p>
+            {{ review.testimonial_comment }}
+          </p>
+        </div>
         <div class="col">
           <ul class="content-box__actions" v-if="review.status == 0 || review.status === 1">
             <li class="content-box__action">
@@ -47,11 +52,24 @@
               </a>
             </li>
             <li class="content-box__action">
-              <a class="content-box__link content-box__link--action" @click="requestChange(review)">
+              <a class="content-box__link content-box__link--action" @click="changeComment(review)">
                 <span class="far fa-edit"></span>
               </a>
             </li>
           </ul>
+          <div v-else-if="review.status === 4">
+            <p class="font-weight-bold">Review Kommentar</p>
+            <p>{{ review.comment }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-3"  v-if="(review.status === 0 || review.status === 1) && review.change">
+        <div class="col-12">
+          <textarea name="review-comment" class="form-control" v-model="review.comment"></textarea>
+          <div class="alert alert-danger mt-2" v-if="review.commentError" v-text="review.commentError"></div>
+        </div>
+        <div class="col-12 mt-2">
+          <button class="btn btn-primary" @click="requestChange(review)">Änderungen anfragen</button>
         </div>
       </div>
     </div>
@@ -63,6 +81,7 @@
 </template>
 
 <script>
+  import Vue from 'vue'
   import vSelect from 'vue-select'
   import debounce from 'lodash/debounce'
   import axios from 'axios'
@@ -98,6 +117,13 @@
       }
     },
     methods: {
+      changeComment(review) {
+        if (review.change === undefined) {
+          Vue.set(review, 'change', true)
+        } else {
+          Vue.set(review, 'change', !review.change)
+        }
+      },
       updateReviews (page) {
         axios.get(this.retrieveUrl, {
           params: {
@@ -135,8 +161,14 @@
         this.sendChange(url)
       },
       requestChange(review) {
+        if (!review.comment) {
+          Vue.set(review, 'commentError', 'Bitte gib einen Kommentar ein.')
+          return
+        }
         const url = `${this.retrieveUrl}${review.pk}/request_changes/`
-        const body = ""
+        const body = {
+          comment: review.comment
+        }
         this.sendChange(url, body)
       },
     },

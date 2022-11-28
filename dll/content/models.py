@@ -1728,6 +1728,9 @@ class TestimonialReview(TimeStampedModel):
     )
     is_active = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ["created"]
+
     def __str__(self) -> str:
         return f"{self.testimonial.content.name} ({self.get_status_display()})"
 
