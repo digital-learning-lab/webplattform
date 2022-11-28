@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row mb-4 text-center">-
+    <div class="row mb-4 text-center">
       <div class="col">
         <div>
           <label for="status">Status:</label>
