@@ -974,7 +974,9 @@ class TestimonialReviewViewSet(
     permission_classes = [DjangoObjectPermissions]
     lookup_field = "pk"
     lookup_url_kwarg = "pk"
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ["status"]
+    search_fields = ["testimonial__content__name"]
 
     def get_queryset(self):
         qs = super(TestimonialReviewViewSet, self).get_queryset()

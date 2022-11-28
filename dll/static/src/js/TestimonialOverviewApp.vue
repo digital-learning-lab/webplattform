@@ -9,8 +9,8 @@
           <option value="">Alle</option>
           <option value="0">Neu</option>
           <option value="4">Änderungen angefragt</option>
-          <option value="1">Freigegeben</option>
-          <option value="2">Abgelehnt</option>
+          <option value="2">Akzeptiert</option>
+          <option value="3">Abgelehnt</option>
         </select>
       </div>
       <div class="col">
