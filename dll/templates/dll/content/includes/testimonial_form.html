@@ -1,5 +1,5 @@
 {% load crispy_forms_tags %}
-
+{% if can_add_testimonial %}
 <div class="information-area information-area--{{ object.type }} js-testimonialSection">
     <div class="information-area__title">
        Persönliche Erfahrungen
@@ -16,7 +16,17 @@
                     {{ request.user.full_name }}
                 </div>
             </div>
-        {% crispy testimonial_form %}
+            {% crispy testimonial_form %}
         </div>
     </div>
 </div>
+{% else %}
+<div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+        Praxiserfahrung
+    </div>
+    <div class="information-area__body">
+        <p>Sie haben bereits einen Erfahrungsbericht zu diesem Inhalt abgegeben.</p>
+    </div>
+</div>
+{% endif %}

@@ -89,7 +89,7 @@ from .filters import (
     ToolFunctionFilter,
 )
 from .forms import TestimonialForm
-from .models import TestimonialReview, ToolFunction, Favorite
+from .models import Testimonial, TestimonialReview, ToolFunction, Favorite
 from .more_like_this import more_like_this
 from .serializers import (
     ContentListSerializer,
@@ -178,6 +178,9 @@ class ContentDetailBase(DetailView):
     def get_context_data(self, **kwargs):
         ctx = super(ContentDetailBase, self).get_context_data(**kwargs)
         ctx["testimonial_form"] = self.get_testimonial_form()
+        ctx["can_add_testimonial"] = not Testimonial.objects.filter(
+            author=self.request.user, content=self.object
+        ).exists()
         ctx["competences"] = Competence.objects.all()
         ctx["functions"] = ToolFunction.objects.all()
         ctx["potentials"] = Potential.objects.all()
