@@ -39,7 +39,7 @@
             {{ review.testimonial_comment }}
           </p>
         </div>
-        <div class="col">
+        <div class="col" v-if="mode === 'reviewer' && review.status !== 4">
           <ul class="content-box__actions" v-if="review.status == 0 || review.status === 1">
             <li class="content-box__action">
               <a class="content-box__link content-box__link--action" @click="accept(review)">
@@ -57,13 +57,21 @@
               </a>
             </li>
           </ul>
-          <div v-else-if="review.status === 4">
-            <p class="font-weight-bold">Review Kommentar</p>
-            <p>{{ review.comment }}</p>
-          </div>
+        </div>
+        <div class="col" v-else-if="review.status === 4">
+          <p class="font-weight-bold">Review Kommentar</p>
+          <p>{{ review.comment }}</p>
         </div>
       </div>
-      <div class="row mt-3"  v-if="(review.status === 0 || review.status === 1) && review.change">
+      <div class="row mt-3" v-if="mode === 'user' && review.status === 4">
+        <div class="col">
+          <textarea class="form-control" v-model="review.testimonial_comment"></textarea> 
+        </div>
+        <div class="col-12 mt-2">
+          <button class="btn btn-primary" @click="submitChange(review)">Änderungen einreichen</button>
+        </div>
+      </div>
+      <div class="row mt-3"  v-if="(review.status === 0 || review.status === 1) && review.change && mode === 'reviewer'">
         <div class="col-12">
           <textarea name="review-comment" class="form-control" v-model="review.comment"></textarea>
           <div class="alert alert-danger mt-2" v-if="review.commentError" v-text="review.commentError"></div>
@@ -97,6 +105,7 @@
         type: null,
         searchTerm: null,
         status: null,
+        mode: 'user',
         retrieveUrl: null,
         invitationContents: [],
         reviewers: []
@@ -146,7 +155,7 @@
         body = body || {}
         axios.post(url, body, {
             headers: {
-              'X-CSRFToken': window.dllData.csrfToken
+              'X-CSRFToken': window.dllData.csrfToken,
             },
         }).then(res => {
           this.updateReviews()
@@ -171,13 +180,28 @@
         }
         this.sendChange(url, body)
       },
+      submitChange(review) {
+        const url = `${this.updateUrl}${review.testimonial_pk}/`
+        const body = {
+          comment: review.testimonial_comment
+        }
+        
+        axios.patch(url, body, {
+            headers: {
+              'X-CSRFToken': window.dllData.csrfToken,
+            },
+        }).then(res => {
+          this.updateReviews()
+        })
+      }
     },
     created () {
       if (!window.dllData.retrieveUrl) {
         throw Error('Retrieve URL is not defined.')
       }
       this.retrieveUrl = window.dllData.retrieveUrl
-      this.csrfToken = window.dllData.csrfToken
+      this.updateUrl = window.dllData.updateUrl
+      this.mode = window.dllData.mode
       this.updateReviews()
       this.debouncedUpdate = debounce(this.updateReviews, 500)
     }

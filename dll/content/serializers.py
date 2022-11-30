@@ -24,6 +24,7 @@ from dll.content.models import (
     SubCompetence,
     Subject,
     OperatingSystem,
+    Testimonial,
     TestimonialReview,
     ToolApplication,
     HelpText,
@@ -363,10 +364,19 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ["status", "json_data"]
 
 
+class TestimonialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Testimonial
+        fields = [
+            "comment",
+        ]
+
+
 class TestimonialReviewSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField()
     author = serializers.SerializerMethodField()
     testimonial_comment = serializers.SerializerMethodField()
+    testimonial_pk = serializers.SerializerMethodField()
     status_display = serializers.SerializerMethodField()
 
     def get_status_display(self, obj):
@@ -374,6 +384,9 @@ class TestimonialReviewSerializer(serializers.ModelSerializer):
 
     def get_testimonial_comment(self, obj):
         return obj.testimonial.comment
+
+    def get_testimonial_pk(self, obj):
+        return obj.testimonial.pk
 
     def get_author(self, obj):
         return str(obj.submitted_by.full_name) if obj.submitted_by else ""
@@ -390,7 +403,9 @@ class TestimonialReviewSerializer(serializers.ModelSerializer):
             "name",
             "author",
             "testimonial_comment",
+            "testimonial_pk",
             "status_display",
+            "is_active",
         ]
 
 

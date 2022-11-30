@@ -1,5 +1,6 @@
 import json
 
+from constance import config
 from django.conf import settings
 from django.contrib.syndication.views import Feed
 from django.core.exceptions import (
@@ -14,7 +15,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy, resolve
 from django.views import View
-from django.views.generic import TemplateView, DetailView, FormView
+from django.views.generic import TemplateView, DetailView, FormView, UpdateView
 from django.views.generic.base import ContextMixin
 from django.utils.translation import gettext_lazy as _
 from django_filters.rest_framework import DjangoFilterBackend
@@ -26,7 +27,12 @@ from haystack.query import SearchQuerySet
 from psycopg2._range import NumericRange
 from rest_framework import viewsets, filters, mixins, status
 from rest_framework.decorators import action
-from rest_framework.generics import ListAPIView, GenericAPIView, DestroyAPIView
+from rest_framework.generics import (
+    ListAPIView,
+    GenericAPIView,
+    DestroyAPIView,
+    UpdateAPIView,
+)
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import FileUploadParser
 from rest_framework.permissions import (
@@ -97,6 +103,7 @@ from .serializers import (
     FavoriteSerializer,
     PotentialSerializer,
     TestimonialReviewSerializer,
+    TestimonialSerializer,
 )
 from .utils import get_random_content
 
@@ -177,10 +184,11 @@ class ContentDetailBase(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ContentDetailBase, self).get_context_data(**kwargs)
-        ctx["testimonial_form"] = self.get_testimonial_form()
-        ctx["can_add_testimonial"] = not Testimonial.objects.filter(
-            author=self.request.user, content=self.object
-        ).exists()
+        if self.request.user.is_authenticated:
+            ctx["testimonial_form"] = self.get_testimonial_form()
+            ctx["can_add_testimonial"] = not Testimonial.objects.filter(
+                author=self.request.user, content=self.object
+            ).exists()
         ctx["competences"] = Competence.objects.all()
         ctx["functions"] = ToolFunction.objects.all()
         ctx["potentials"] = Potential.objects.all()
@@ -200,6 +208,12 @@ class ContentDetailView(ContentDetailBase):
     def get_context_data(self, **kwargs):
         ctx = super(ContentDetailView, self).get_context_data(**kwargs)
         ctx["meta"] = self.get_object().as_meta(self.request)
+        if (
+            self.request.user.is_authenticated and config.TESTIMONIAL_DLL
+            if settings.SITE_ID == 1
+            else config.TESTIMONIAL_DLT
+        ):
+            ctx["show_testimonial_form"] = True
         return ctx
 
 
@@ -964,6 +978,23 @@ class TestimonialView(FormView):
         return HttpResponse()
 
 
+class TestimonialUpdateView(UpdateAPIView):
+    serializer_class = TestimonialSerializer
+    queryset = Testimonial.objects.all()
+    lookup_field = "pk"
+    lookup_url_kwarg = "pk"
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        review = TestimonialReview.objects.filter(testimonial=instance).latest(
+            "created"
+        )
+        review.is_active = True
+        review.status = TestimonialReview.NEW
+        review.save()
+        return super().partial_update(request, *args, **kwargs)
+
+
 class TestimonialReviewViewSet(
     mixins.RetrieveModelMixin,
     mixins.ListModelMixin,
@@ -1048,7 +1079,7 @@ class TestimonialReviewViewSet(
 class TestimonialReviewsOverview(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
     template_name = "dll/user/content/review_testimonial.html"
     breadcrumb_title = "Review Erfahrungsberichte"
-    breadcrumb_url = reverse_lazy("user-content-overview")
+    breadcrumb_url = reverse_lazy("content-testimonial-review")  # TODO
 
     def get(self, request, *args, **kwargs):
         user = request.user
@@ -1058,7 +1089,20 @@ class TestimonialReviewsOverview(LoginRequiredMixin, TemplateView, BreadcrumbMix
 
     def get_context_data(self, **kwargs):
         ctx = super(TestimonialReviewsOverview, self).get_context_data(**kwargs)
+        ctx["mode"] = "reviewer"
         ctx["testimonial_reviews"] = TestimonialReview.objects.filter(
             status__in=[TestimonialReview.NEW, TestimonialReview.IN_PROGRESS]
         ).select_related("testimonial")
+        return ctx
+
+
+class TestimonialOverview(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
+    template_name = "dll/user/content/review_testimonial.html"
+    breadcrumb_title = "Meine Erfahrungsberichte"
+    breadcrumb_url = reverse_lazy("my-content-testimonials")  # TODO
+
+    def get_context_data(self, **kwargs):
+        ctx = super(TestimonialOverview, self).get_context_data(**kwargs)
+        ctx["testimmonials"] = Testimonial.objects.filter(author=self.request.user)
+        ctx["mode"] = "user"
         return ctx

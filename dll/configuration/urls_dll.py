@@ -25,6 +25,8 @@ from wagtail.documents import urls as wagtaildocs_urls
 from dll import shared_session
 from dll.content.views import (
     TestimonialReviewsOverview,
+    TestimonialOverview,
+    TestimonialUpdateView,
     ToolDetailView,
     TrendDetailView,
     TeachingModuleDetailView,
@@ -139,6 +141,16 @@ urlpatterns = [
         "review-erfahrungsberichte",
         TestimonialReviewsOverview.as_view(),
         name="content-testimonial-review",
+    ),
+    path(
+        "api/testimonial/<int:pk>/",
+        TestimonialUpdateView.as_view(),
+        name="testimonial-update",
+    ),
+    path(
+        "meine-erfahrungsberichte",
+        TestimonialOverview.as_view(),
+        name="my-content-testimonials",
     ),
     path("review-inhalte", MyReviewsView.as_view(), name="user-content-review"),
     path(
