@@ -952,20 +952,21 @@ class FavoriteListApiView(ListAPIView):
         return Favorite.objects.filter(user=user)
 
 
-class TestimonialView(FormView):
+class TestimonialView(LoginRequiredMixin, FormView):
     form_class = TestimonialForm
     template_name = "dll/content/includes/testimonial_form.html"
 
     def get_context_data(self, **kwargs):
         ctx = super(TestimonialView, self).get_context_data(**kwargs)
         ctx["testimonial_form"] = self.get_form()
+        ctx["can_add_testimonial"] = True
         return ctx
 
     def get_form_kwargs(self):
         kwargs = super(TestimonialView, self).get_form_kwargs()
         kwargs["author"] = self.request.user
         if c_id := self.request.POST.get("content"):
-            kwargs["content"] = Content.objects.get(pk=c_id)
+            kwargs["content"] = get_object_or_404(Content, pk=c_id)
         return kwargs
 
     def form_invalid(self, form):

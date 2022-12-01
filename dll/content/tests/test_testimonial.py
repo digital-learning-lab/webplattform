@@ -2,7 +2,7 @@ from constance.test import override_config
 from django.urls import reverse
 from django.test import TestCase, override_settings
 
-from dll.content.models import Testimonial, Tool
+from dll.content.models import Testimonial, Tool, Subject
 from dll.content.tests.test_content_views import BaseTestCase
 
 
@@ -14,6 +14,7 @@ class TestimonialTests(BaseTestCase):
     def setUp(self):
         super().setUp()
         self.tool = Tool.objects.published().first()
+        self.subject = Subject.objects.create(name="Test")
         Testimonial.objects.all().delete()
 
     def _login(self):
@@ -37,39 +38,45 @@ class TestimonialTests(BaseTestCase):
         post_url = reverse("testimonial")
         return self.client.post(post_url, payload)
 
-    def test_testimonial_submission(self):
-        print(Testimonial.objects.all())
+    def test_testimonial_submission_error(self):
+        self._login()
         payload = {
-            "subject": 1,
+            "subject": self.subject.pk,
+            "comment": "Tolles Tool!",
+            "school_class": 1,
+            "content": "123213",
+        }
+        response = self._submit_testimonial(payload)
+        self.assertEqual(response.status_code, 404)
+
+    def test_testimonial_submission(self):
+        self._login()
+        payload = {
+            "subject": self.subject.pk,
             "comment": "Tolles Tool!",
             "school_class": 1,
             "content": self.tool.pk,
         }
         response = self._submit_testimonial(payload)
         self.assertEqual(response.status_code, 200)
-        Testimonial.objects.all().delete()
-
-    def test_testimonial_submission_error(self):
-        payload = {
-            "subject": 1,
-            "comment": "Tolles Tool!",
-            "school_class": 1,
-            "content": "123213",
-        }
-        response = self._submit_testimonial(payload)
-        self.assertEqual(response.status_code, 400)
 
     def test_testimonial_submission_once_per_content(self):
+        self._login()
         payload = {
-            "subject": 1,
+            "subject": self.subject.pk,
             "comment": "Tolles Tool!",
             "school_class": 1,
             "content": self.tool.pk,
         }
+
         response1 = self._submit_testimonial(payload)
+        print(response1.content)
         self.assertEqual(response1.status_code, 200)
 
+        print(Testimonial.objects.all())
+
         response2 = self._submit_testimonial(payload)
+        print(response2.content)
         self.assertEqual(response2.status_code, 400)
 
     def test_testimonial_accept(self):
