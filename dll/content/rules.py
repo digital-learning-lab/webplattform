@@ -60,7 +60,7 @@ def can_review_content(user, content: Content):
 
 
 def can_review_testimonial(user, obj: Testimonial):
-    return is_bsb_reviewer(user) or is_tuhh_reviewer(user)
+    return is_bsb_reviewer(user) or is_tuhh_reviewer(user) or rules.is_superuser(user)
 
 
 rules.add_perm(
