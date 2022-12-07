@@ -4,7 +4,7 @@ django-meta==2.1.0
 django-webpack-loader~=1.7.0
 django-extensions==3.2.1
 django-filer==2.2.3
-django-polymorphic==2.1.2
+django-polymorphic==3.1.0
 blessings==1.7
 curtsies==0.4.1
 bpython==0.23
