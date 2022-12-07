@@ -635,11 +635,11 @@ six = "*"
 
 [[package]]
 name = "django-select2"
-version = "7.11.1"
-description = "Select2 option fields for Django"
+version = "8.0.0"
+description = "This is a Django_ integration of Select2_."
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.8"
 
 [package.dependencies]
 django = ">=3.2"
@@ -1503,7 +1503,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "~=3.8"
-content-hash = "2312e815af18ddaf2125b3b997fc5945a757fe365d1522f227f0405e8e3efd88"
+content-hash = "2a5d8dbf19a8302922393491c5cf8495062fe0bd82441f8cffd266c8c01d4d4b"
 
 [metadata.files]
 amqp = [
@@ -1847,8 +1847,8 @@ django-rest-polymorphic = [
     {file = "django_rest_polymorphic-0.1.10-py2.py3-none-any.whl", hash = "sha256:f3980e3e2af73357e7913f9b1410ef856866bcfcc46903b70fe9621118bb538c"},
 ]
 django-select2 = [
-    {file = "django-select2-7.11.1.tar.gz", hash = "sha256:6c56749ca5dd11be9a78a0861086973170c605ace27126c109f3d722cea3c32e"},
-    {file = "django_select2-7.11.1-py2.py3-none-any.whl", hash = "sha256:e558f79fd932fc9013a9dca5e680412403ad8b8a9b5b09754e97c8ce1849c4e1"},
+    {file = "django-select2-8.0.0.tar.gz", hash = "sha256:0145c9cb34a8c0813f68d7165ed6b034ac03fbdbf145aea203d15ae1653cf7d9"},
+    {file = "django_select2-8.0.0-py3-none-any.whl", hash = "sha256:38e2c91c99f0da07bb43addfa1ac3a2cd6a209154a93edbf4564b9203fa32a4d"},
 ]
 django-simple-history = [
     {file = "django-simple-history-3.2.0.tar.gz", hash = "sha256:bff0a756238b2fa048ea3ffe8224b4edd421559123ff9ce5c27682c37c6a7702"},
