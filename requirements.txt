@@ -8,7 +8,7 @@ django-polymorphic==3.1.0
 blessings==1.7
 curtsies==0.4.1
 bpython==0.23
-django-taggit==1.5.1
+django-taggit==3.1.0
 xlrd==2.0.1  # pandas extension
 environs==9.5.0
 uwsgi==2.0.21
