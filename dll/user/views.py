@@ -36,7 +36,7 @@ from dll.content.serializers import (
     ContentListInternalReviewSerializer,
     ContentListInvitationSerializer,
 )
-from dll.content.views import BreadcrumbMixin
+from dll.content.views import BreadcrumbMixin, SiteRedirectMixin
 from dll.user.models import EmailChangeRequest
 from dll.user.tokens import account_activation_token, email_confirmation_token
 from .forms import SignUpForm
@@ -65,7 +65,7 @@ class TestView(TemplateView):
 
 
 class MyContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
-    template_name = "dll/user/content/overview.html"
+    template_name = "overwrites/my_content.html"
     breadcrumb_title = "Meine Inhalte"
     breadcrumb_url = reverse_lazy("user-content-overview")
 
@@ -186,7 +186,7 @@ class ReviewTeachingModuleView(CreateEditTeachingModuleView):
         return result
 
 
-class CreateEditToolView(CreateEditContentView):
+class CreateEditToolView(SiteRedirectMixin, CreateEditContentView):
     template_name = "dll/user/content/add_tool.html"
     breadcrumb_title = "Tool {}"
     breadcrumb_url = reverse_lazy("add-tool")

@@ -31,6 +31,11 @@
       <app-text-area id="additional-info" :readonly="readonly" :review="review" label="Anmerkungen" :value.sync="data.additional_info" :review-value.sync="reviewValue.additional_info" :error="errorFields.includes('additional_info')" :character-counter="true" :maximal-chars="700" :rows="10" :help-text="getHelpText('additional_info')"></app-text-area>
       <app-text-area id="description" :readonly="readonly" :review="review" label="Detaillierte Beschreibung" :value.sync="data.description" :review-value.sync="reviewValue.description" :error="errorFields.includes('description')" :character-counter="true" :maximal-chars="500" :rows="10" :help-text="getHelpText('description')"></app-text-area>
       <app-dropdown id="operating_systems" :readonly="readonly" :review="review" label="Betriebssystem" :value.sync="data.operating_systems" :review-value.sync="reviewValue.operating_systems" :error="errorFields.includes('operating_systems')" fetch-url="/api/operatingSystems" :multiple="true" :prefetch="true" :help-text="getHelpText('operating_systems')"></app-dropdown>
+      <app-dropdown id="subject" :readonly="readonly" :review="review" :required="true" label="Unterrichtsfach" :value.sync="data.subjects" :review-value.sync="reviewValue.subjects" :error="errorFields.includes('subjects')" fetch-url="/api/subjects" :multiple="true" :prefetch="true" :help-text="getHelpText('subjects')"></app-dropdown>
+      <app-select id="with_costs" :readonly="readonly" :review="review" label="Kostenpflichtig" :options="with_costsOptions" :value.sync="data.with_costs" :review-value.sync="reviewValue.with_costs" :error="errorFields.includes('with_costs')" :default-val="data.with_costs" :help-text="getHelpText('with_costs')"></app-select>
+      <app-dropdown id="tool-potentials" :readonly="readonly" :review="review" label="Potential Kategorien" :required="true" :value.sync="data.potentials" :review-value.sync="reviewValue.potentials" :error="errorFields.includes('potentials')" fetch-url="/api/potentials" :multiple="true" :prefetch="true" :help-text="getHelpText('potentials')"></app-dropdown>
+      <app-text-area id="disclaimer" :readonly="readonly" :review="review" label="Kurzzusammenfassung" :required="true" :value.sync="data.disclaimer" :review-value.sync="reviewValue.disclaimer" :error="errorFields.includes('disclaimer')" :rows="3" :help-text="getHelpText('disclaimer')"></app-text-area>
+      <app-links-input id="video_tutorials" :readonly="readonly" :review="review" :links.sync="data.video_tutorials" :review-value.sync="reviewValue.video_tutorials" :error="errorFields.includes('video_tutorials')" label="Video Anleitungen" :type="'video'" :help-text="getHelpText('video_tutorials')" :types="false"></app-links-input>
     </div>
   </app-content-submission-form>
 </template>
@@ -72,14 +77,19 @@
           educational_plan_reference: '',
           differentiating_attribute: '',
           sub_competences: [],
+          subjects: [],
           tools: [],
           trends: [],
           teaching_modules: [],
           additional_info: '',
           related_content: [],
           mediaLinks: [],
+          video_tutorials: [],
           literatureLinks: [],
-          license: null
+          license: null,
+          with_costs: false,
+          potentials: [],
+          disclaimer: '',
         },
         dataPrivacyOptions: [
           {value: 0, label: 'Unbekannt'},
@@ -103,6 +113,10 @@
           {value: 'on', label: 'Online'},
           {value: 'off', label: 'Offline'},
           {value: 'onoff', label: 'Online & Offline'}
+        ],
+        with_costsOptions: [
+          {value: true, label: 'Ja'},
+          {value: false, label: 'Nein'}
         ]
       }
     },

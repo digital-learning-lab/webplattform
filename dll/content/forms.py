@@ -128,8 +128,16 @@ class TestimonialForm(forms.ModelForm):
 
     def save(self, commit=True):
         self.instance.author = self.author
-        print(self.instance)
         return super(TestimonialForm, self).save(commit=commit)
+
+    def clean(self):
+        if Testimonial.objects.filter(
+            content=self.content, author=self.author
+        ).exists():
+            raise forms.ValidationError(
+                "Sie haben bereits einen Erfahrungsbericht für diesen Inhalt abgegeben."
+            )
+        return super().clean()
 
     class Meta:
         model = Testimonial

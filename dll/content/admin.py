@@ -23,6 +23,8 @@ from .models import (
     SubCompetence,
     Subject,
     SchoolType,
+    TestimonialReview,
+    ToolVideoTutorial,
     Trend,
     Tool,
     ToolApplication,
@@ -203,6 +205,10 @@ class ToolLinkInline(admin.TabularInline):
     model = ToolLink
 
 
+class ToolVideoTutorialInline(admin.TabularInline):
+    model = ToolVideoTutorial
+
+
 class DataPrivacyAssessmentAdmin(admin.StackedInline):
     model = DataPrivacyAssessment
 
@@ -213,7 +219,12 @@ class ToolAdmin(
 ):
     exclude = ("json_data", "tags")
     resource_class = ToolResource
-    inlines = [DataPrivacyAssessmentAdmin, ToolLinkInline, ContentLinkInlineAdmin]
+    inlines = [
+        DataPrivacyAssessmentAdmin,
+        ToolLinkInline,
+        ContentLinkInlineAdmin,
+        ToolVideoTutorialInline,
+    ]
     search_fields = ["name"]
 
     def get_export_queryset(self, request):
@@ -224,6 +235,12 @@ class ToolAdmin(
 @admin.register(Testimonial)
 class TestimonialAdmin(PublishAdminMixin, admin.ModelAdmin):
     pass
+
+
+@admin.register(TestimonialReview)
+class TestimonialReviewAdmin(admin.ModelAdmin):
+    search_fields = ["testimonial__content__name"]
+    list_filter = ("status",)
 
 
 class HelpTextFieldInline(admin.TabularInline):

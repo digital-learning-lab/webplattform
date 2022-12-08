@@ -440,6 +440,10 @@ CONSTANCE_CONFIG_FIELDSETS = {
         "SECURITY_NOT_COMPLIANT",
         "SECURITY_UNKNOWN",
     ),
+    "Erfahrungsberichte": (
+        "TESTIMONIAL_DLL",
+        "TESTIMONIAL_DLT",
+    ),
 }
 CONSTANCE_CONFIG = {
     # Content Teaser
@@ -612,6 +616,8 @@ CONSTANCE_CONFIG = {
     "SECURITY_COMPLIANT": ("", "", str),
     "SECURITY_NOT_COMPLIANT": ("", "", str),
     "SECURITY_UNKNOWN": ("", "", str),
+    "TESTIMONIAL_DLT": (False, "Erfahrungsberichte für's DLT aktivieren.", bool),
+    "TESTIMONIAL_DLL": (False, "Erfahrungsberichte für's DLL aktivieren.", bool),
 }
 
 WAGTAIL_SITE_NAME = "digital.learning.lab"

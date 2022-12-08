@@ -18,15 +18,19 @@ from dll.content.utils import is_favored
 from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
 from dll.content.models import (
+    Potential,
     SchoolType,
     Competence,
     SubCompetence,
     Subject,
     OperatingSystem,
+    Testimonial,
+    TestimonialReview,
     ToolApplication,
     HelpText,
     Content,
     Tool,
+    ToolVideoTutorial,
     Trend,
     TeachingModule,
     ContentLink,
@@ -299,6 +303,12 @@ class ToolFunctionSerializer(serializers.ModelSerializer):
         fields = ["name", "title", "pk"]
 
 
+class PotentialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Potential
+        fields = ["name", "description", "pk"]
+
+
 class SubCompetenceSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCompetence
@@ -352,6 +362,51 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = ["status", "json_data"]
+
+
+class TestimonialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Testimonial
+        fields = [
+            "comment",
+        ]
+
+
+class TestimonialReviewSerializer(serializers.ModelSerializer):
+    name = serializers.SerializerMethodField()
+    author = serializers.SerializerMethodField()
+    testimonial_comment = serializers.SerializerMethodField()
+    testimonial_pk = serializers.SerializerMethodField()
+    status_display = serializers.SerializerMethodField()
+
+    def get_status_display(self, obj):
+        return obj.get_status_display()
+
+    def get_testimonial_comment(self, obj):
+        return obj.testimonial.comment
+
+    def get_testimonial_pk(self, obj):
+        return obj.testimonial.pk
+
+    def get_author(self, obj):
+        return str(obj.submitted_by.full_name) if obj.submitted_by else ""
+
+    def get_name(self, object):
+        return object.testimonial.content.name
+
+    class Meta:
+        model = TestimonialReview
+        fields = [
+            "status",
+            "comment",
+            "pk",
+            "name",
+            "author",
+            "testimonial_comment",
+            "testimonial_pk",
+            "status_display",
+            "is_active",
+        ]
 
 
 class AdditionalToolsField(RelatedField):
@@ -563,6 +618,7 @@ class BaseContentSubclassSerializer(serializers.ModelSerializer):
         """
         update_methods = {
             "contentlink_set": "_update_content_links",
+            "video_tutorials": "_update_tutorials",
             "co_authors": "_update_co_authors",
         }
         for update_key, update_method in update_methods.items():
@@ -624,6 +680,15 @@ class ToolLinkSerializer(serializers.ModelSerializer):
         fields = ["url", "url_name"]
 
 
+class ToolVideoTutorialSerializer(serializers.ModelSerializer):
+    url = serializers.URLField(required=False, allow_blank=True)
+    name = serializers.CharField(required=False, allow_blank=True, source="title")
+
+    class Meta:
+        model = ToolVideoTutorial
+        fields = ["url", "name"]
+
+
 class ToolSerializer(BaseContentSubclassSerializer):
     operating_systems = DllM2MField(
         allow_null=True,
@@ -643,7 +708,26 @@ class ToolSerializer(BaseContentSubclassSerializer):
         queryset=ToolFunction.objects.all(),
         required=False,
     )
+
+    potentials = DllM2MField(
+        allow_null=True,
+        many=True,
+        queryset=Potential.objects.all(),
+        required=False,
+    )
+
+    subjects = DllM2MField(
+        allow_null=True,
+        many=True,
+        queryset=Subject.objects.all(),
+        required=False,
+    )
+
     url = ToolLinkSerializer(allow_null=True, many=False, required=False)
+
+    video_tutorials = ToolVideoTutorialSerializer(
+        allow_null=True, many=True, required=False
+    )
 
     def get_array_fields(self):
         fields = super(ToolSerializer, self).get_array_fields()
@@ -654,6 +738,17 @@ class ToolSerializer(BaseContentSubclassSerializer):
         fields = super(ToolSerializer, self).get_m2m_fields()
         fields.extend(["operating_systems", "applications"])
         return fields
+
+    def create(self, validated_data):
+        tutorial_data = validated_data.pop("video_tutorials", [])
+        content = super(ToolSerializer, self).create(validated_data)
+        self._update_tutorials(content, tutorial_data)
+        return content
+
+    def _update_tutorials(self, content, tutorial_data):
+        ToolVideoTutorial.objects.filter(tool=content).delete()
+        for link in tutorial_data:
+            ToolVideoTutorial.objects.create(tool=content, **dict(link))
 
     def update(self, instance, validated_data):
         if instance:

@@ -1,16 +1,21 @@
 import json
-import random
 
+from constance import config
 from django.conf import settings
 from django.contrib.syndication.views import Feed
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import (
+    ObjectDoesNotExist,
+    MultipleObjectsReturned,
+    PermissionDenied,
+)
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse_lazy, resolve
 from django.views import View
-from django.views.generic import TemplateView, DetailView, FormView
+from django.views.generic import TemplateView, DetailView, FormView, UpdateView
 from django.views.generic.base import ContextMixin
 from django.utils.translation import gettext_lazy as _
 from django_filters.rest_framework import DjangoFilterBackend
@@ -22,7 +27,12 @@ from haystack.query import SearchQuerySet
 from psycopg2._range import NumericRange
 from rest_framework import viewsets, filters, mixins, status
 from rest_framework.decorators import action
-from rest_framework.generics import ListAPIView, GenericAPIView, DestroyAPIView
+from rest_framework.generics import (
+    ListAPIView,
+    GenericAPIView,
+    DestroyAPIView,
+    UpdateAPIView,
+)
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import FileUploadParser
 from rest_framework.permissions import (
@@ -42,6 +52,7 @@ from dll.content.filters import (
     ToolSubjectFilter,
     ToolWithCostsFilter,
 )
+from dll.content.rules import is_bsb_reviewer, is_tuhh_reviewer
 from dll.content.models import (
     Content,
     TeachingModule,
@@ -84,12 +95,15 @@ from .filters import (
     ToolFunctionFilter,
 )
 from .forms import TestimonialForm
-from .models import ToolFunction, Favorite
+from .models import Testimonial, TestimonialReview, ToolFunction, Favorite
 from .more_like_this import more_like_this
 from .serializers import (
     ContentListSerializer,
     ContentPolymorphicSerializer,
     FavoriteSerializer,
+    PotentialSerializer,
+    TestimonialReviewSerializer,
+    TestimonialSerializer,
 )
 from .utils import get_random_content
 
@@ -170,7 +184,11 @@ class ContentDetailBase(DetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ContentDetailBase, self).get_context_data(**kwargs)
-        ctx["testimonial_form"] = self.get_testimonial_form()
+        if self.request.user.is_authenticated:
+            ctx["testimonial_form"] = self.get_testimonial_form()
+            ctx["can_add_testimonial"] = not Testimonial.objects.filter(
+                author=self.request.user, content=self.object
+            ).exists()
         ctx["competences"] = Competence.objects.all()
         ctx["functions"] = ToolFunction.objects.all()
         ctx["potentials"] = Potential.objects.all()
@@ -190,6 +208,12 @@ class ContentDetailView(ContentDetailBase):
     def get_context_data(self, **kwargs):
         ctx = super(ContentDetailView, self).get_context_data(**kwargs)
         ctx["meta"] = self.get_object().as_meta(self.request)
+        if (
+            self.request.user.is_authenticated and config.TESTIMONIAL_DLL
+            if settings.SITE_ID == 1
+            else config.TESTIMONIAL_DLT
+        ):
+            ctx["show_testimonial_form"] = True
         return ctx
 
 
@@ -675,6 +699,13 @@ class ToolFunctionSearchView(ListAPIView):
     search_fields = ["title"]
 
 
+class ToolPotentialSearchView(ListAPIView):
+    queryset = Potential.objects.all()
+    serializer_class = PotentialSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ["name"]
+
+
 class SubCompetencesSearchView(ListAPIView):
     queryset = SubCompetence.objects.all()
     serializer_class = SubCompetenceSerializer
@@ -921,25 +952,158 @@ class FavoriteListApiView(ListAPIView):
         return Favorite.objects.filter(user=user)
 
 
-class TestimonialView(FormView):
+class TestimonialView(LoginRequiredMixin, FormView):
     form_class = TestimonialForm
     template_name = "dll/content/includes/testimonial_form.html"
 
     def get_context_data(self, **kwargs):
         ctx = super(TestimonialView, self).get_context_data(**kwargs)
         ctx["testimonial_form"] = self.get_form()
+        ctx["can_add_testimonial"] = True
         return ctx
 
     def get_form_kwargs(self):
         kwargs = super(TestimonialView, self).get_form_kwargs()
         kwargs["author"] = self.request.user
         if c_id := self.request.POST.get("content"):
-            kwargs["content"] = Content.objects.get(pk=c_id)
+            kwargs["content"] = get_object_or_404(Content, pk=c_id)
         return kwargs
 
     def form_invalid(self, form):
         return self.render_to_response(self.get_context_data(form=form), status=400)
 
     def form_valid(self, form):
-        form.save()
+        instance = form.save()
+        instance.submit_for_review(self.request.user)
+
         return HttpResponse()
+
+
+class TestimonialUpdateView(UpdateAPIView):
+    serializer_class = TestimonialSerializer
+    queryset = Testimonial.objects.all()
+    lookup_field = "pk"
+    lookup_url_kwarg = "pk"
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        review = TestimonialReview.objects.filter(testimonial=instance).latest(
+            "created"
+        )
+        review.is_active = True
+        review.status = TestimonialReview.NEW
+        review.save()
+        return super().partial_update(request, *args, **kwargs)
+
+
+class TestimonialReviewViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
+    """Authors have only view permission, reviewers have view and edit permission"""
+
+    serializer_class = TestimonialReviewSerializer
+    queryset = TestimonialReview.objects.all()
+    permission_classes = [DjangoObjectPermissions]
+    lookup_field = "pk"
+    lookup_url_kwarg = "pk"
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ["status"]
+    search_fields = ["testimonial__content__name"]
+
+    def get_queryset(self):
+        qs = super(TestimonialReviewViewSet, self).get_queryset()
+        user = self.request.user
+        if not user.has_perm("testimonial.view_review"):
+            # user should have permission to view reviews
+            raise Http404
+        if not user.has_perm("testimonial.can_review"):
+            # if not allowed to review - only show own reviews
+            qs = qs.filter(submitted_by=user)
+
+        return qs
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def accept(self, request, pk):
+        error = JsonResponse(
+            status=400,
+            data={"error": _("Fehler beim freigeben des Erfahrungsberichts.")},
+        )
+        user = self.request.user
+        if not user.has_perm("testimonial.can_review"):
+            return error
+        testimonial_review = self.get_object()
+        result = testimonial_review.accept(user)
+        if result:
+            return HttpResponse()
+        return error
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def decline(self, request, pk):
+        error = JsonResponse(
+            status=400,
+            data={"error": _("Fehler beim freigeben des Erfahrungsberichts.")},
+        )
+        user = self.request.user
+        if not user.has_perm("testimonial.can_review"):
+            return error
+        testimonial_review = self.get_object()
+        result = testimonial_review.decline(user)
+        if result:
+            return HttpResponse()
+        return error
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def request_changes(self, request, pk):
+        error = JsonResponse(
+            status=400,
+            data={"error": _("Fehler beim freigeben des Erfahrungsberichts.")},
+        )
+        user = self.request.user
+        if not user.has_perm("testimonial.can_review"):
+            return error
+        comment = request.data.get("comment")
+        testimonial_review = self.get_object()
+        result = testimonial_review.request_changes(comment, user)
+        if result:
+            return HttpResponse()
+        return error
+
+    def perform_update(self, serializer):
+        if not self.request.user.has_perm("testimonial.can_review"):
+            raise PermissionDenied
+        serializer.save()
+
+
+class TestimonialReviewsOverview(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
+    template_name = "dll/user/content/review_testimonial.html"
+    breadcrumb_title = "Review Erfahrungsberichte"
+    breadcrumb_url = reverse_lazy("content-testimonial-review")  # TODO
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if not any([is_bsb_reviewer(user), is_tuhh_reviewer(user), user.is_superuser]):
+            raise Http404
+        return super(TestimonialReviewsOverview, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(TestimonialReviewsOverview, self).get_context_data(**kwargs)
+        ctx["mode"] = "reviewer"
+        ctx["testimonial_reviews"] = TestimonialReview.objects.filter(
+            status__in=[TestimonialReview.NEW, TestimonialReview.IN_PROGRESS]
+        ).select_related("testimonial")
+        return ctx
+
+
+class TestimonialOverview(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
+    template_name = "dll/user/content/review_testimonial.html"
+    breadcrumb_title = "Meine Erfahrungsberichte"
+    breadcrumb_url = reverse_lazy("my-content-testimonials")  # TODO
+
+    def get_context_data(self, **kwargs):
+        ctx = super(TestimonialOverview, self).get_context_data(**kwargs)
+        ctx["testimmonials"] = Testimonial.objects.filter(author=self.request.user)
+        ctx["mode"] = "user"
+        return ctx

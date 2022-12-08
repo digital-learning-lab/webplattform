@@ -9,6 +9,11 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from dll import shared_session
 from dll.content.views import (
+    SubjectSearchView,
+    TestimonialReviewViewSet,
+    TestimonialReviewsOverview,
+    TestimonialUpdateView,
+    TestimonialOverview,
     ToolDetailView,
     ToolDataFilterView,
     ToolFilterView,
@@ -18,9 +23,35 @@ from dll.content.views import (
     TrendDetailView,
     TeachingModuleDetailView,
     TestimonialView,
+    FileUploadView,
+    DeleteContentFileView,
+    SubmitContentView,
+    ImageUploadView,
+    ApproveContentView,
+    DeclineContentView,
+    AssignReviewerView,
+    UnassignReviewerView,
+    PublishedContentViewSet,
+    DraftsContentViewSet,
+    ReviewViewSet,
+    ToolFunctionSearchView,
+    ToolPotentialSearchView,
+    ToolApplicationSearchView,
+    OperatingSystemSearchView,
+)
+from dll.user.views import (
+    MyContentView,
+    CreateEditToolView,
+    UserContentView,
 )
 
 router = DefaultRouter()
+router.register(r"inhalte", PublishedContentViewSet, basename="public-content")
+router.register(r"inhalt-bearbeiten", DraftsContentViewSet, basename="draft-content")
+router.register(r"review", ReviewViewSet, basename="review"),
+router.register(
+    r"testimonial-review", TestimonialReviewViewSet, basename="testimonial-review"
+),
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -37,7 +68,91 @@ urlpatterns = [
         ToolDetailPreviewView.as_view(),
         name="tool-detail-preview",
     ),
+    path(
+        "review-erfahrungsberichte",
+        TestimonialReviewsOverview.as_view(),
+        name="content-testimonial-review",
+    ),
+    path(
+        "api/testimonial/<int:pk>/",
+        TestimonialUpdateView.as_view(),
+        name="testimonial-update",
+    ),
+    path(
+        "meine-erfahrungsberichte",
+        TestimonialOverview.as_view(),
+        name="my-content-testimonials",
+    ),
+    path("meine-inhalte", MyContentView.as_view(), name="user-content-overview"),
+    path("meine-inhalte/tools/", CreateEditToolView.as_view(), name="add-tool"),
+    path(
+        "meine-inhalte/tools/<slug:slug>",
+        CreateEditToolView.as_view(),
+        name="edit-tool",
+    ),
     path("tools", ToolFilterView.as_view(), name="tools-filter"),
+    path(
+        "api/inhalt-bearbeiten/<slug:slug>/vorschau-bild",
+        ImageUploadView.as_view(),
+        name="add-preview-image",
+    ),
+    path(
+        "api/inhalt-bearbeiten/<slug:slug>/file-upload",
+        FileUploadView.as_view(),
+        name="add-content-file",
+    ),
+    path(
+        "api/inhalt-bearbeiten/<slug:slug>/file-remove/<int:pk>",
+        DeleteContentFileView.as_view(),
+        name="remove-content-file",
+    ),
+    path(
+        "api/inhalt-einreichen/<slug:slug>",
+        SubmitContentView.as_view(),
+        name="submit-content",
+    ),
+    path(
+        "api/review/<slug:slug>/approve",
+        ApproveContentView.as_view(),
+        name="approve-content",
+    ),
+    path(
+        "api/review/<slug:slug>/decline",
+        DeclineContentView.as_view(),
+        name="decline-content",
+    ),
+    path(
+        "api/review/<slug:slug>/assign",
+        AssignReviewerView.as_view(),
+        name="assign-reviewer",
+    ),
+    path(
+        "api/review/<slug:slug>/unassign",
+        UnassignReviewerView.as_view(),
+        name="unassign-reviewer",
+    ),
+    path(
+        "api/toolFunctions",
+        ToolFunctionSearchView.as_view(),
+        name="tool-function-search",
+    ),
+    path(
+        "api/potentials",
+        ToolPotentialSearchView.as_view(),
+        name="tool-potential-search",
+    ),
+    path(
+        "api/applications",
+        ToolApplicationSearchView.as_view(),
+        name="application-search",
+    ),
+    path(
+        "api/operatingSystems",
+        OperatingSystemSearchView.as_view(),
+        name="operating-system-search",
+    ),
+    path("api/subjects", SubjectSearchView.as_view(), name="subject-search"),
+    path("api/meine-inhalte", UserContentView.as_view(), name="user-contents"),
     path("api/", include(router.urls)),
     path("api/tools", ToolDataFilterView.as_view(), name="tools-data-filter"),
     path("suche", search_view, name="search"),

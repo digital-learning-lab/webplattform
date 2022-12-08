@@ -757,10 +757,6 @@ class Tool(Content):
 
     with_costs = models.BooleanField(_("Kostenpflichtig"), default=False)
 
-    video_tutorials = models.ManyToManyField(
-        "ToolVideoTutorial", verbose_name=_("Video Anleitungen"), null=True, blank=True
-    )
-
     potentials = models.ManyToManyField(
         "Potential", verbose_name=_("Potential Kategorien"), null=True, blank=True
     )
@@ -1632,6 +1628,14 @@ class ToolVideoTutorial(TimeStampedModel):
 
     url = models.CharField(verbose_name=_("URL"), max_length=2048)
 
+    tool = models.ForeignKey(
+        "Tool",
+        on_delete=models.CASCADE,
+        related_name="video_tutorials",
+        null=True,
+        blank=False,
+    )
+
     def __str__(self):
         return self.title
 
@@ -1667,11 +1671,97 @@ class Testimonial(PublisherModel):
             return f"{self.author} - {self.content.name} (public)"
         return f"{self.author} - {self.content.name}"
 
+    def submit_for_review(self, user):
+        review = TestimonialReview.objects.create(
+            submitted_by=user, testimonial=self, is_active=True
+        )
+
+    @property
+    def active_review(self):
+        return self.reviews.filter(is_active=True).latest("created")
+
     def copy_relations(self, draft_instance, public_instance):
         super(Testimonial, self).copy_relations(draft_instance, public_instance)
         public_instance.subject = draft_instance.subject
         public_instance.content = draft_instance.content.get_published()
         public_instance.author = draft_instance.author
+
+
+class TestimonialReview(TimeStampedModel):
+    NEW, IN_PROGRESS, ACCEPTED, DECLINED, CHANGES = 0, 1, 2, 3, 4
+    STATUS_CHOICES = (
+        (NEW, _("Neu")),
+        (IN_PROGRESS, _("In Bearbeitung")),
+        (CHANGES, _("Änderungen angefragt")),
+        (ACCEPTED, _("Akzeptiert")),
+        (DECLINED, _("Abgelehnt")),
+    )
+    testimonial = models.ForeignKey(
+        Testimonial, on_delete=models.CASCADE, related_name="reviews"
+    )
+    status = models.IntegerField(choices=STATUS_CHOICES, default=NEW)
+    comment = models.TextField(verbose_name="Kommentar", null=False, blank=False)
+    submitted_by = models.ForeignKey(
+        DllUser,
+        on_delete=models.SET(get_default_tuhh_user),
+        related_name="submitted_tetsimonial_reviews",
+        null=True,
+    )
+    assigned_reviewer = models.ForeignKey(
+        verbose_name=_("Assigned Reviewer"),
+        to=DllUser,
+        on_delete=models.SET_NULL,
+        related_name="assigned_tetsimonial_reviews",
+        null=True,
+    )
+    accepted_by = models.ForeignKey(
+        DllUser,
+        on_delete=models.SET(get_default_tuhh_user),
+        related_name="accepted_tetsimonial_reviews",
+        null=True,
+    )
+    declined_by = models.ForeignKey(
+        DllUser,
+        on_delete=models.SET(get_default_tuhh_user),
+        related_name="declined_tetsimonial_reviews",
+        null=True,
+    )
+    is_active = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-created"]
+
+    def __str__(self) -> str:
+        return f"{self.testimonial.content.name} ({self.get_status_display()})"
+
+    def accept(self, user):
+        if self.status not in [self.NEW, self.IN_PROGRESS]:
+            return False
+        self.status = self.ACCEPTED
+        self.is_active = False
+        self.accepted_by = user
+        self.testimonial.publish()
+        self.save()
+        return True
+
+    def decline(self, user):
+        if self.status not in [self.NEW, self.IN_PROGRESS]:
+            return False
+        self.status = self.DECLINED
+        self.is_active = False
+        self.declined_by = user
+        self.save()
+        return True
+
+    def request_changes(self, comment: str, user):
+        if self.status not in [self.NEW, self.IN_PROGRESS]:
+            return False
+        self.status = self.CHANGES
+        self.comment = comment
+        self.assigned_reviewer = user
+        self.is_active = False
+        self.save()
+        return True
 
 
 class DataPrivacyAssessment(TimeStampedModel):
