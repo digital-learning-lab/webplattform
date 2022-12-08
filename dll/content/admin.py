@@ -211,6 +211,23 @@ class ToolVideoTutorialInline(admin.TabularInline):
 
 class DataPrivacyAssessmentAdmin(admin.StackedInline):
     model = DataPrivacyAssessment
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    ("server_location", "server_location_text"),
+                    ("provider", "provider_text"),
+                    ("user_registration", "user_registration_text"),
+                    ("data_privacy_terms", "data_privacy_terms_text"),
+                    ("terms_and_conditions", "terms_and_conditions_text"),
+                    ("security", "security_text"),
+                    "conclusion",
+                    "overall",
+                )
+            },
+        ),
+    )
 
 
 @admin.register(Tool)
