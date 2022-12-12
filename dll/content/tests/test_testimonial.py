@@ -138,6 +138,8 @@ class TestimonialTests(BaseTestCase):
         review = testimonial.reviews.first()
         self.assertFalse(testimonial.is_public)
         self.assertIsNone(testimonial.get_published())
+        self.assertEqual(1, len(mail.outbox))
+        self.assertIn("einen Erfahrungsbricht für den Inhalt", mail.outbox[0].body)
 
         accept_url = "/api/testimonial-review/{}/accept/"
 
@@ -150,6 +152,11 @@ class TestimonialTests(BaseTestCase):
         self.assertFalse(testimonial.is_public)
         self.assertEqual(Testimonial.objects.all().count(), 2)
         self.assertIsNotNone(testimonial.get_published())
+        self.assertEqual(2, len(mail.outbox))
+        self.assertIn(
+            TestimonialReview.MAIL_TEXTS[TestimonialReview.ACCEPTED],
+            mail.outbox[1].body,
+        )
 
     def test_testimonial_decline(self):
 
@@ -172,6 +179,8 @@ class TestimonialTests(BaseTestCase):
         review = testimonial.reviews.first()
         self.assertFalse(testimonial.is_public)
         self.assertIsNone(testimonial.get_published())
+        self.assertEqual(1, len(mail.outbox))
+        self.assertIn("einen Erfahrungsbricht für den Inhalt", mail.outbox[0].body)
 
         decline_url = "/api/testimonial-review/{}/decline/"
 
@@ -184,6 +193,11 @@ class TestimonialTests(BaseTestCase):
         self.assertFalse(testimonial.is_public)
         self.assertEqual(Testimonial.objects.all().count(), 1)
         self.assertIsNone(testimonial.get_published())
+        self.assertEqual(2, len(mail.outbox))
+        self.assertIn(
+            TestimonialReview.MAIL_TEXTS[TestimonialReview.DECLINED],
+            mail.outbox[1].body,
+        )
 
     def test_testimonial_request_change(self):
         Testimonial.objects.all().delete()
@@ -205,6 +219,8 @@ class TestimonialTests(BaseTestCase):
         review = testimonial.reviews.first()
         self.assertFalse(testimonial.is_public)
         self.assertIsNone(testimonial.get_published())
+        self.assertEqual(1, len(mail.outbox))
+        self.assertIn("einen Erfahrungsbricht für den Inhalt", mail.outbox[0].body)
 
         request_url = "/api/testimonial-review/{}/request_changes/"
         comment = "some comment"
@@ -221,34 +237,7 @@ class TestimonialTests(BaseTestCase):
         self.assertEqual(Testimonial.objects.all().count(), 1)
         self.assertEqual(review.comment, comment)
         self.assertIsNone(testimonial.get_published())
-
-    def test_testimonial_mail_sent(self):
-        Testimonial.objects.all().delete()
-        self._login()
-        payload = {
-            "subject": self.subject.pk,
-            "comment": "Tolles Tool!",
-            "school_class": 1,
-            "content": self.tool.pk,
-        }
-
-        response = self._submit_testimonial(payload)
-        self.assertEqual(response.status_code, 200)
-
-        self.client.logout()
-        self._login_admin()
-
-        testimonial = Testimonial.objects.all().first()
-        review = testimonial.reviews.first()
-        self.assertFalse(testimonial.is_public)
-        self.assertIsNone(testimonial.get_published())
-
-        decline_url = "/api/testimonial-review/{}/decline/"
-
-        decline_response = self.client.post(decline_url.format(review.pk), follow=True)
-        self.assertEqual(decline_response.status_code, 200)
-
-        testimonial.refresh_from_db()
-
-        self.assertEqual(1, len(mail.outbox))
-        self.assertIn("einen Erfahrungsbricht für den Inhalt", mail.outbox[0].body)
+        self.assertEqual(2, len(mail.outbox))
+        self.assertIn(
+            TestimonialReview.MAIL_TEXTS[TestimonialReview.CHANGES], mail.outbox[1].body
+        )

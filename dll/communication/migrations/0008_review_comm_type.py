@@ -7,6 +7,10 @@ def forward_func(apps, schema_editor):
         code="TESTIMONIAL_SUBMITTED_FOR_REVIEW", name="Erfahrungsbericht eingericht"
     )
 
+    CommunicationEventType.objects.create(
+        code="TESTIMONIAL_REVIEW_DONE", name="Erfahrungsbericht aktualisiert"
+    )
+
 
 def backwards_func(apps, schema_editor):
     CommunicationEventType = apps.get_model("communication", "CommunicationEventType")
@@ -17,11 +21,16 @@ def backwards_func(apps, schema_editor):
     except CommunicationEventType.DoesNotExist:
         pass
 
+    try:
+        CommunicationEventType.objects.get(code="TESTIMONIAL_REVIEW_DONE").delete()
+    except CommunicationEventType.DoesNotExist:
+        pass
+
 
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("content", "0031_testimonialreview"),
+        ("communication", "0007_alter_communicationeventtype_from_email"),
     ]
 
     operations = [migrations.RunPython(forward_func, backwards_func)]

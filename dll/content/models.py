@@ -1725,6 +1725,13 @@ class Testimonial(PublisherModel):
 
 class TestimonialReview(TimeStampedModel):
     NEW, IN_PROGRESS, ACCEPTED, DECLINED, CHANGES = 0, 1, 2, 3, 4
+
+    MAIL_TEXTS = {
+        ACCEPTED: "Ihr Erfahrungsbericht wurde akzeptiert.",
+        DECLINED: "Ihr Erfahrungsbericht wurde abgelehnt.",
+        CHANGES: "Es wurden Änderungen zu Ihrem Erfahrungsbericht angefragt.",
+    }
+
     STATUS_CHOICES = (
         (NEW, _("Neu")),
         (IN_PROGRESS, _("In Bearbeitung")),
@@ -1770,6 +1777,18 @@ class TestimonialReview(TimeStampedModel):
     def __str__(self) -> str:
         return f"{self.testimonial.content.name} ({self.get_status_display()})"
 
+    def send_update_email(self, text):
+        context = {
+            "content_title": self.testimonial.content.name,
+            "status_message": text,
+        }
+        send_mail.delay(
+            event_type_code="TESTIMONIAL_REVIEW_DONE",
+            ctx=context,
+            email=self.submitted_by.email,
+            bcc=settings.EMAIL_SENDER,
+        )
+
     def accept(self, user):
         if self.status not in [self.NEW, self.IN_PROGRESS]:
             return False
@@ -1778,6 +1797,7 @@ class TestimonialReview(TimeStampedModel):
         self.accepted_by = user
         self.testimonial.publish()
         self.save()
+        self.send_update_email(self.MAIL_TEXTS[self.ACCEPTED])
         return True
 
     def decline(self, user):
@@ -1787,6 +1807,7 @@ class TestimonialReview(TimeStampedModel):
         self.is_active = False
         self.declined_by = user
         self.save()
+        self.send_update_email(self.MAIL_TEXTS[self.DECLINED])
         return True
 
     def request_changes(self, comment: str, user):
@@ -1797,6 +1818,7 @@ class TestimonialReview(TimeStampedModel):
         self.assigned_reviewer = user
         self.is_active = False
         self.save()
+        self.send_update_email(self.MAIL_TEXTS[self.CHANGES])
         return True
 
 
