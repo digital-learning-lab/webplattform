@@ -250,5 +250,5 @@ class TestimonialTests(BaseTestCase):
 
         testimonial.refresh_from_db()
 
-        self.assertEqual(1, len(mail.outbox[0]))
+        self.assertEqual(1, len(mail.outbox))
         self.assertIn("einen Erfahrungsbricht für den Inhalt", mail.outbox[0].body)
