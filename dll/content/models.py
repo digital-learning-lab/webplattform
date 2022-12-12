@@ -1696,7 +1696,7 @@ class Testimonial(PublisherModel):
         )
         url = "https://%s%s" % (
             Site.objects.get_current().domain,
-            reverse("review-erfahrungsberichte"),
+            reverse("content-testimonial-review"),
         )
         context = {
             "content_title": self.content.name,
@@ -1707,7 +1707,7 @@ class Testimonial(PublisherModel):
         send_mail.delay(
             event_type_code="TESTIMONIAL_SUBMITTED_FOR_REVIEW",
             ctx=context,
-            email=config.TESTIMONIAL_REVIEW_EMAIL,
+            email=config.TESTIMONIAL_REVIEW_EMAIL or settings.REVIEW_MAIL,
             sender_id=getattr(user, "pk", None),
             bcc=settings.EMAIL_SENDER,
         )

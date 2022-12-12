@@ -21,7 +21,7 @@ def backwards_func(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("communication", "0031_testimonialreview"),
+        ("content", "0031_testimonialreview"),
     ]
 
     operations = [migrations.RunPython(forward_func, backwards_func)]

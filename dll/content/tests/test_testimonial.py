@@ -1,4 +1,5 @@
 from constance.test import override_config
+from django.core import mail
 from django.urls import reverse
 from django.test import TestCase, override_settings
 
@@ -220,3 +221,34 @@ class TestimonialTests(BaseTestCase):
         self.assertEqual(Testimonial.objects.all().count(), 1)
         self.assertEqual(review.comment, comment)
         self.assertIsNone(testimonial.get_published())
+
+    def test_testimonial_mail_sent(self):
+        Testimonial.objects.all().delete()
+        self._login()
+        payload = {
+            "subject": self.subject.pk,
+            "comment": "Tolles Tool!",
+            "school_class": 1,
+            "content": self.tool.pk,
+        }
+
+        response = self._submit_testimonial(payload)
+        self.assertEqual(response.status_code, 200)
+
+        self.client.logout()
+        self._login_admin()
+
+        testimonial = Testimonial.objects.all().first()
+        review = testimonial.reviews.first()
+        self.assertFalse(testimonial.is_public)
+        self.assertIsNone(testimonial.get_published())
+
+        decline_url = "/api/testimonial-review/{}/decline/"
+
+        decline_response = self.client.post(decline_url.format(review.pk), follow=True)
+        self.assertEqual(decline_response.status_code, 200)
+
+        testimonial.refresh_from_db()
+
+        self.assertEqual(1, len(mail.outbox[0]))
+        self.assertIn("einen Erfahrungsbricht für den Inhalt", mail.outbox[0].body)
