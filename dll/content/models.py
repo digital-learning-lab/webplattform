@@ -20,6 +20,7 @@ from constance import config
 from django_better_admin_arrayfield.models.fields import ArrayField
 from django_extensions.db.fields import CreationDateTimeField
 from django_extensions.db.models import TimeStampedModel, TitleSlugDescriptionModel
+from dll.communication.tasks import send_mail
 from easy_thumbnails.exceptions import InvalidImageFormatError
 from easy_thumbnails.files import get_thumbnailer
 from filer.fields.file import FilerFileField
@@ -459,6 +460,9 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         )
         ContentFile.objects.create(file=filer_file, title=file_name, content=self)
 
+    def _get_review_email(self):
+        return settings.REVIEW_MAIL
+
     def send_content_submitted_mail(self, by_user=None):
         from dll.communication.tasks import send_mail
 
@@ -475,7 +479,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         send_mail.delay(
             event_type_code="CONTENT_SUBMITTED_FOR_REVIEW",
             ctx=context,
-            email=settings.REVIEW_MAIL,
+            email=instance._get_review_email(),
             sender_id=getattr(by_user, "pk", None),
             bcc=settings.EMAIL_SENDER,
         )
@@ -646,6 +650,11 @@ class TeachingModule(Content):
         }
         return fields
 
+    def _get_review_email(self):
+        if config.TEACHING_MODULE_REVIEW_EMAIL:
+            return config.TEACHING_MODULE_REVIEW_EMAIL
+        return super()._get_review_email()
+
     def copy_relations(self, draft_instance, public_instance):
         super(TeachingModule, self).copy_relations(draft_instance, public_instance)
         public_instance.subjects.add(*draft_instance.subjects.all())
@@ -790,6 +799,11 @@ class Tool(Content):
         }
         return fields
 
+    def _get_review_email(self):
+        if config.TOOL_REVIEW_EMAIL:
+            return config.TOOL_REVIEW_EMAIL
+        return super()._get_review_email()
+
     def get_absolute_url(self):
         return reverse("tool-detail", kwargs={"slug": self.slug})
 
@@ -904,6 +918,11 @@ class Trend(Content):
             "citation_info",
         }
         return fields
+
+    def _get_review_email(self):
+        if config.TREND_REVIEW_EMAIL:
+            return config.TREND_REVIEW_EMAIL
+        return super()._get_review_email()
 
     def get_absolute_url(self):
         return reverse("trend-detail", kwargs={"slug": self.slug})
@@ -1674,6 +1693,23 @@ class Testimonial(PublisherModel):
     def submit_for_review(self, user):
         review = TestimonialReview.objects.create(
             submitted_by=user, testimonial=self, is_active=True
+        )
+        url = "https://%s%s" % (
+            Site.objects.get_current().domain,
+            reverse("review-erfahrungsberichte"),
+        )
+        context = {
+            "content_title": self.content.name,
+            "author": user.full_name,
+            "link_to_review_overview": url,
+        }
+
+        send_mail.delay(
+            event_type_code="TESTIMONIAL_SUBMITTED_FOR_REVIEW",
+            ctx=context,
+            email=config.TESTIMONIAL_REVIEW_EMAIL,
+            sender_id=getattr(user, "pk", None),
+            bcc=settings.EMAIL_SENDER,
         )
 
     @property
