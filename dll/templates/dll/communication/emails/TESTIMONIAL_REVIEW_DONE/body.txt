@@ -1,0 +1,7 @@
+Guten Tag,
+
+Ihr Erfahrungsbericht zum Inhalt {{ content_title }} hat folgenden Status:
+
+{{ status_message }}
+
+Hier kommen Sie zur Übersicht Ihrer Erfahrungsberichte: {{ link_to_review_overview }}

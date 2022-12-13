@@ -15,7 +15,6 @@ from django.utils.encoding import smart_str as u, force_bytes
 
 from dll.communication.managers import CommunicationEventTypeManager
 from dll.communication.tokens import co_author_invitation_token
-from dll.content.models import Content
 from dll.user.models import DllUser
 
 logger = logging.getLogger("dll.communication.models")
@@ -187,7 +186,7 @@ class CoAuthorshipInvitation(TimeStampedModel):
         related_name="received_invitations",
     )
     content = models.ForeignKey(
-        Content, on_delete=models.CASCADE, related_name="invitations"
+        "content.Content", on_delete=models.CASCADE, related_name="invitations"
     )
     accepted = models.BooleanField(null=True, verbose_name=_("Status"))
     message = models.TextField(max_length=500, verbose_name=_("Nachricht"), null=True)
