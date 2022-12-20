@@ -1098,7 +1098,7 @@ class TestimonialReviewsOverview(LoginRequiredMixin, TemplateView, BreadcrumbMix
 
 
 class TestimonialOverview(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
-    template_name = "dll/user/content/review_testimonial.html"
+    template_name = "dll/user/content/testimonial_overview.html"
     breadcrumb_title = "Meine Erfahrungsberichte"
     breadcrumb_url = reverse_lazy("my-content-testimonials")  # TODO
 
