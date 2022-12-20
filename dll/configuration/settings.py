@@ -444,6 +444,12 @@ CONSTANCE_CONFIG_FIELDSETS = {
         "TESTIMONIAL_DLL",
         "TESTIMONIAL_DLT",
     ),
+    "Mailings": (
+        "TOOL_REVIEW_EMAIL",
+        "TEACHING_MODULE_REVIEW_EMAIL",
+        "TREND_REVIEW_EMAIL",
+        "TESTIMONIAL_REVIEW_EMAIL",
+    ),
 }
 CONSTANCE_CONFIG = {
     # Content Teaser
@@ -618,6 +624,10 @@ CONSTANCE_CONFIG = {
     "SECURITY_UNKNOWN": ("", "", str),
     "TESTIMONIAL_DLT": (False, "Erfahrungsberichte für's DLT aktivieren.", bool),
     "TESTIMONIAL_DLL": (False, "Erfahrungsberichte für's DLL aktivieren.", bool),
+    "TOOL_REVIEW_EMAIL": ("", "", str),
+    "TEACHING_MODULE_REVIEW_EMAIL": ("", "", str),
+    "TREND_REVIEW_EMAIL": ("", "", str),
+    "TESTIMONIAL_REVIEW_EMAIL": ("", "", str),
 }
 
 WAGTAIL_SITE_NAME = "digital.learning.lab"
