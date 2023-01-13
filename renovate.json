@@ -1,7 +1,10 @@
 {
 	"$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    ":pinAllExceptPeerDependencies",
+    ":dependencyDashboard"
+  ],
 	"prConcurrentLimit": 1,
-	"dependencyDashboard": true,
 	"packageRules": [
 		{
 			"matchDatasources": ["npm"],
