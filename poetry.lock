@@ -832,14 +832,14 @@ Django = ">=3.2"
 
 [[package]]
 name = "django-filer"
-version = "2.2.3"
+version = "2.2.4"
 description = "A file management application for django that makes handling of files and images a breeze."
 category = "main"
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "django-filer-2.2.3.tar.gz", hash = "sha256:becb275b7dcd5f443b2a5178e14e8ec9d7d494227e404ce7fa80379c956b7199"},
-    {file = "django_filer-2.2.3-py3-none-any.whl", hash = "sha256:29e3e2e52a3b1d77eabe9423b06c27841227d7aa983b6b056d49cc21264cb928"},
+    {file = "django-filer-2.2.4.tar.gz", hash = "sha256:3486b8031c5632811eb1ea52a8b9ee6c6754a8a5c17cdb9fab8241df68fcccf8"},
+    {file = "django_filer-2.2.4-py3-none-any.whl", hash = "sha256:eebb270cf2b00f4b4aafae973b147b7916c3cbc4f247ed6feaf64f8356f31c7c"},
 ]
 
 [package.dependencies]
@@ -2480,4 +2480,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~=3.8"
-content-hash = "a4d9aafd345b8cea6238e831cbb674f73c492f1d7ca8a031345c4531d3a5f364"
+content-hash = "33a1269e5735844277e7d186c58a706245938b0adf3c9b7a4eda8c1ad4dca8fa"
