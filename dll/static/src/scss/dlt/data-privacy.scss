@@ -1,0 +1,17 @@
+.data-privacy-indicator {
+    $size: 75px;
+    width: $size;
+    height: $size;
+    margin-left: auto;
+    padding: 18px;
+    background-color: $color--smalt-blue;
+    &--compliant {
+        transform: rotate(0deg);
+    }
+    &--not_compliant {
+        transform: rotate(180deg);
+    }
+    &--unknown {
+        transform: rotate(90deg);
+    }
+}

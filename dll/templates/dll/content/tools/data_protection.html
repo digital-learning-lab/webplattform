@@ -4,10 +4,26 @@
     <div class="information-area__title information-area__title">
         Datenschutz-Bewertung
     </div>
+    <div class="data-privacy-indicator data-privacy-indicator--{{ object.dataprivacyassessment.overall }}">
+        <svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+            viewBox="0 0 79.6 79.6" style="enable-background:new 0 0 79.6 79.6;" xml:space="preserve">
+        <style type="text/css">
+            .st0{fill:#FFFFFF;}
+        </style>
+        <g>
+            <path class="st0" d="M57.4,29.8H39.3c0,0,2.4-5.8,2.4-10.9c0-2.6-2.1-4.8-4.8-4.8c-2.6,0-4.8,2.1-4.8,4.8s-0.3,4.9-5.4,10
+                c-3,3-2.6,12.2-2.6,12.2s0,9.1,0,13.6c0.1,4.5,4.2,7.2,7.8,7.2c3.6,0,19.7,0,19.7,0c2.3,0,4.2-1.9,4.2-4.2c0-0.9-0.3-1.8-0.8-2.5
+                c2-0.4,3.6-2.2,3.6-4.4c0-1.4-0.6-2.6-1.6-3.4c1.9-0.6,3.3-2.4,3.3-4.5c0-1.2-0.5-2.4-1.3-3.2c2-0.7,3.5-2.6,3.5-4.8
+                C62.5,32.1,60.2,29.8,57.4,29.8z"/>
+            <path class="st0" d="M39.8,0C17.8,0,0,17.8,0,39.8s17.9,39.8,39.8,39.8s39.8-17.9,39.8-39.8C79.6,17.8,61.8,0,39.8,0z M39.8,77.6
+                C18.9,77.6,2,60.7,2,39.8S18.9,2,39.8,2s37.8,16.9,37.8,37.8S60.7,77.6,39.8,77.6z"/>
+        </g>
+        </svg>
+
+    </div>
     <div class="information-area__body">
         <div id="accordion-data-privacy">
             {% for name, field in object.dataprivacyassessment.render_dict %}
-
                 <div class="accordion card">
                     <div class="card-header" id="heading-{{ field.title|slugify }}">
                         <h5 class="mb-0">
