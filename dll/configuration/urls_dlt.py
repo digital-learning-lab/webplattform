@@ -43,6 +43,7 @@ from dll.user.views import (
     MyContentView,
     CreateEditToolView,
     UserContentView,
+    UserToolBoxView,
 )
 
 router = DefaultRouter()
@@ -84,6 +85,7 @@ urlpatterns = [
         name="my-content-testimonials",
     ),
     path("meine-inhalte", MyContentView.as_view(), name="user-content-overview"),
+    path("meine-toolbox", UserToolBoxView.as_view(), name="user-toolbox-overview"),
     path("meine-inhalte/tools/", CreateEditToolView.as_view(), name="add-tool"),
     path(
         "meine-inhalte/tools/<slug:slug>",

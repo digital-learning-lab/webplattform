@@ -134,6 +134,19 @@ class DllUser(TimeStampedModel, AbstractUser):
             status_list.append(_("Author"))
         return status_list
 
+    @cached_property
+    def tool_box_information(self):
+        from dll.content.models import Potential, Tool
+
+        res = {}
+        tools = Tool.objects.filter(pk__in=self.favorites.values_list("pk", flat=True))
+        for potential in Potential.objects.all():
+            res[potential.slug] = {
+                "name": potential.name,
+                "count": tools.filter(potentials__in=[potential]).count(),
+            }
+        return res
+
 
 class EmailChangeRequest(TimeStampedModel):
     user = models.ForeignKey(DllUser, on_delete=models.CASCADE)

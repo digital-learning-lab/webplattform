@@ -531,6 +531,17 @@ class UserFavoriteView(BreadcrumbMixin, TemplateView):
         return ctx
 
 
+class UserToolBoxView(BreadcrumbMixin, TemplateView):
+    template_name = "dll/user/content/tool_box.html"
+    breadcrumb_title = "Meine favorisierten Tools"
+    breadcrumb_url = reverse_lazy("user-toolbox-overview")
+
+    def get_context_data(self, **kwargs):
+        ctx = super(UserToolBoxView, self).get_context_data(**kwargs)
+        ctx["tool_box_information"] = self.request.user.tool_box_information
+        return ctx
+
+
 class FavoriteLoginRequiredView(RedirectView):
     url = reverse_lazy("user:login")
     query_string = True
