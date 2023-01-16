@@ -109,8 +109,17 @@ class ContentViewTests(BaseTestCase):
         public_tool = Tool.objects.published().first()
         detail_view = reverse("tool-detail", kwargs={"slug": public_tool.slug})
         response = self.client.get(detail_view)
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response.url, f"//dlt.local/tools/{public_tool.slug}")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response, f'<h1 class="content-info__title">{public_tool.name}</h1>'
+        )
+        self.assertContains(
+            response, f'<p class="content-info__teaser">{public_tool.teaser}</p>'
+        )
+        self.assertContains(
+            response, f'<meta name="description" content="{public_tool.teaser}">'
+        )
+        self.assertContains(response, f"<title>Tool | {public_tool.name}</title>")
 
     @override_settings(SITE_ID=2)
     def test_tool_detail_dlt(self):
