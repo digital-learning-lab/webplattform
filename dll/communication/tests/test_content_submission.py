@@ -70,11 +70,11 @@ class BaseTestCase(TestCase):
 class ContentSubmissionTests(BaseTestCase):
     def test_teaching_module_submission_sends_mail_to_bsb_reviewers(self):
         self.teaching_module.submit_for_review(by_user=self.author)
-        self.assertTrue(settings.REVIEW_MAIL in mail.outbox[0].to)
+        self.assertEqual(settings.REVIEW_MAIL, mail.outbox[0].to)
 
     def test_trend_submission_sends_mail_to_tuhh_reviewers(self):
         self.trend.submit_for_review(by_user=self.author)
-        self.assertTrue(settings.REVIEW_MAIL in mail.outbox[0].to)
+        self.assertEqual(settings.REVIEW_MAIL, mail.outbox[0].to)
 
 
 class ContentDeclineTests(BaseTestCase):
