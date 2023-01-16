@@ -625,9 +625,13 @@ CONSTANCE_CONFIG = {
     "TESTIMONIAL_DLT": (False, "Erfahrungsberichte für's DLT aktivieren.", bool),
     "TESTIMONIAL_DLL": (False, "Erfahrungsberichte für's DLL aktivieren.", bool),
     "TOOL_REVIEW_EMAIL": ("", "", str),
-    "TEACHING_MODULE_REVIEW_EMAIL": ("", "", str),
-    "TREND_REVIEW_EMAIL": ("", "", str),
-    "TESTIMONIAL_REVIEW_EMAIL": ("", "", str),
+    "TEACHING_MODULE_REVIEW_EMAIL": (
+        "",
+        "Komma getrennte Liste von E-Mail Adressen",
+        str,
+    ),
+    "TREND_REVIEW_EMAIL": ("", "Komma getrennte Liste von E-Mail Adressen", str),
+    "TESTIMONIAL_REVIEW_EMAIL": ("", "Komma getrennte Liste von E-Mail Adressen", str),
 }
 
 WAGTAIL_SITE_NAME = "digital.learning.lab"

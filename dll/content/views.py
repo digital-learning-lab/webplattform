@@ -235,7 +235,7 @@ class ContentPreviewView(ContentDetailBase):
         return qs.drafts()
 
 
-class ToolDetailView(SiteRedirectMixin, ContentDetailView):
+class ToolDetailView(ContentDetailView):
     model = Tool
     template_name = "dll/content/tool_detail.html"
 

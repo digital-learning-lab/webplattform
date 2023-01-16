@@ -461,7 +461,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         ContentFile.objects.create(file=filer_file, title=file_name, content=self)
 
     def _get_review_email(self):
-        return settings.REVIEW_MAIL
+        return [settings.REVIEW_MAIL]
 
     def send_content_submitted_mail(self, by_user=None):
         from dll.communication.tasks import send_mail
@@ -475,14 +475,18 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
             "content_type": instance.type_verbose,
             "content_title": instance.name,
         }
-
-        send_mail.delay(
-            event_type_code="CONTENT_SUBMITTED_FOR_REVIEW",
-            ctx=context,
-            email=instance._get_review_email(),
-            sender_id=getattr(by_user, "pk", None),
-            bcc=settings.EMAIL_SENDER,
-        )
+        email_list = instance._get_review_email()
+        print(email_list)
+        if len(email_list):
+            for email in email_list:
+                if email and "@" in email:
+                    send_mail.delay(
+                        event_type_code="CONTENT_SUBMITTED_FOR_REVIEW",
+                        ctx=context,
+                        email=email,
+                        sender_id=getattr(by_user, "pk", None),
+                        bcc=settings.EMAIL_SENDER,
+                    )
 
     def get_image(self):
         if self.image is not None:
@@ -652,7 +656,7 @@ class TeachingModule(Content):
 
     def _get_review_email(self):
         if config.TEACHING_MODULE_REVIEW_EMAIL:
-            return config.TEACHING_MODULE_REVIEW_EMAIL
+            return config.TEACHING_MODULE_REVIEW_EMAIL.split(",")
         return super()._get_review_email()
 
     def copy_relations(self, draft_instance, public_instance):
@@ -801,7 +805,7 @@ class Tool(Content):
 
     def _get_review_email(self):
         if config.TOOL_REVIEW_EMAIL:
-            return config.TOOL_REVIEW_EMAIL
+            return config.TOOL_REVIEW_EMAIL.split(",")
         return super()._get_review_email()
 
     def get_absolute_url(self):
@@ -921,7 +925,7 @@ class Trend(Content):
 
     def _get_review_email(self):
         if config.TREND_REVIEW_EMAIL:
-            return config.TREND_REVIEW_EMAIL
+            return config.TREND_REVIEW_EMAIL.split(",")
         return super()._get_review_email()
 
     def get_absolute_url(self):
