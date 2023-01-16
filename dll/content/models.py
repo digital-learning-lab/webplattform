@@ -461,7 +461,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         ContentFile.objects.create(file=filer_file, title=file_name, content=self)
 
     def _get_review_email(self):
-        return settings.REVIEW_MAIL
+        return [settings.REVIEW_MAIL]
 
     def send_content_submitted_mail(self, by_user=None):
         from dll.communication.tasks import send_mail
@@ -476,6 +476,7 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
             "content_title": instance.name,
         }
         email_list = instance._get_review_email()
+        print(email_list)
         if len(email_list):
             for email in email_list:
                 if email and "@" in email:
