@@ -63,6 +63,43 @@ test_python:
     rules:
       - if: $CI_PIPELINE_SOURCE != "schedule" && $CI_PIPELINE_SOURCE != "merge_request_event"
 
+test_collectstatic_s3:
+    stage: test
+    image: ${TEST_IMAGE_NAME}
+    variables:
+        S3BACKEND: mem
+        POSTGRES_DB: "postgres"
+        POSTGRES_USER: "postgres"
+        POSTGRES_PASSWORD: ""
+        POSTGRES_HOST_AUTH_METHOD: trust
+        REDIS_HOSTNAME: "redis"
+        DATABASE_USER: "postgres"
+        DATABASE_NAME: "postgres"
+        DATABASE_HOST: "postgres"
+        DJANGO_DEBUG: "True"
+        CELERY_TASK_ALWAYS_EAGER: "True"
+        SOLR_HOSTNAME: "solr"
+        EMAIL_HOST: "floki.rz.tuhh.de"
+        EMAIL_PORT: "25"
+        EMAIL_USE_TLS: "False"
+        EMAIL_SENDER: "j.doe@example.com"
+        CONTACT_EMAIL_BSB: "j.doe@example.com"
+        CONTACT_EMAIL_DLL: "j.doe@example.com"
+        META_SITE_PROTOCOL: https
+        META_SITE_DOMAIN: staging.digitallearninglab.de
+        DEFAULT_USER_EMAIL: digital.learning.lab@tuhh.de
+    services:
+      - name: zenko/cloudserver
+        alias: s3.docker.test
+    before_script:
+      - apt-get update && apt-get install -y s3cmd
+      - s3cmd -c .test-s3cfg mb s3://dll
+      - poetry install
+    script:
+      - poetry run python manage.py collectstatic --no-input
+
+
+
 register_staging_python_image:
   stage: deploy
   before_script:
