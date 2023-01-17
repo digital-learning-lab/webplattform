@@ -1,0 +1,7 @@
+[default]
+access_key = accessKey1
+secret_key = verySecretKey1
+host_base = s3.docker.test:8000
+host_bucket = %(bucket).s3.docker.test:8000
+signature_v2 = False
+use_https = False
