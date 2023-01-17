@@ -1972,7 +1972,7 @@ class DataPrivacyAssessment(TimeStampedModel):
             self.NOT_COMPLIANT[0]: "red",
             self.UNKNOWN[0]: "grey",
         }
-        return {
+        res = {
             field: {
                 "title": self._meta.get_field(field).verbose_name,
                 "text": self._meta.get_field(f"{field}_text").value_from_object(self),
@@ -1980,7 +1980,14 @@ class DataPrivacyAssessment(TimeStampedModel):
                 "color": COLOR_MAP[getattr(self, field)],
             }
             for field in FIELDS
-        }.items()
+        }
+        res["conclusion"] = {
+            "title": self._meta.get_field("conclusion").verbose_name,
+            "text": self._meta.get_field("conclusion").value_from_object(self),
+            "compliance": getattr(self, "overall"),
+            "color": COLOR_MAP[getattr(self, "overall")],
+        }
+        return res.items()
 
     def __str__(self):
         return self.tool.name
