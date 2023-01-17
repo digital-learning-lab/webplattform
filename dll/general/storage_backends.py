@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from storages.backends.s3boto3 import S3Boto3Storage
+from storages.utils import clean_name
 
 
 class StaticStorage(S3Boto3Storage):
@@ -11,7 +12,7 @@ class StaticStorage(S3Boto3Storage):
     def get_object_parameters(self, name):
         if not name:
             return {}
-        nname = self._normalize_name(self._clean_name(name))
+        nname = self._normalize_name(clean_name(name))
         if nname and "." in nname:
             ext = nname.split(".")[-1]
             LONG_CACHE_FILE_EXTENSIONS = [
