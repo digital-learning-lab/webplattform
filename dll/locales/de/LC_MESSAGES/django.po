@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-01-13 15:36+0100\n"
+"POT-Creation-Date: 2023-01-17 09:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,140 +18,258 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: dll/communication/admin.py:28
+#: dll/cms/blocks.py:13
+msgid "Mobiles Bild"
+msgstr ""
+
+#: dll/cms/blocks.py:16
+msgid "Bild Breakpoint"
+msgstr ""
+
+#: dll/cms/blocks.py:18
+msgid "Anzahl an Pixel, bei der vom mobilen Bild zum Bild umgebrochen wird."
+msgstr ""
+
+#: dll/cms/blocks.py:30
+msgid "Alt Text"
+msgstr ""
+
+#: dll/cms/blocks.py:32
+msgid "Überschreibt den Standard Alt Text des Bildes."
+msgstr ""
+
+#: dll/cms/blocks.py:52 dll/cms/blocks.py:221 dll/cms/blocks.py:295
+msgid "Überschrift"
+msgstr ""
+
+#: dll/cms/blocks.py:75 dll/cms/blocks.py:139 dll/cms/blocks.py:244
+#: dll/cms/blocks.py:318
+msgid "Text Ausrichtung"
+msgstr ""
+
+#: dll/cms/blocks.py:77 dll/cms/blocks.py:141 dll/cms/blocks.py:152
+#: dll/cms/blocks.py:246 dll/cms/blocks.py:320
+msgid "Links"
+msgstr ""
+
+#: dll/cms/blocks.py:78 dll/cms/blocks.py:142 dll/cms/blocks.py:153
+#: dll/cms/blocks.py:247 dll/cms/blocks.py:321
+msgid "Zentriert"
+msgstr ""
+
+#: dll/cms/blocks.py:79 dll/cms/blocks.py:143 dll/cms/blocks.py:154
+#: dll/cms/blocks.py:248 dll/cms/blocks.py:322
+msgid "Rechts"
+msgstr ""
+
+#: dll/cms/blocks.py:93 dll/cms/blocks.py:262 dll/cms/blocks.py:340
+msgid "Hintergrund Farbe"
+msgstr ""
+
+#: dll/cms/blocks.py:94 dll/cms/blocks.py:263 dll/cms/blocks.py:341
+msgid "Hex Wert ohne #"
+msgstr ""
+
+#: dll/cms/blocks.py:100 dll/cms/blocks.py:269 dll/cms/blocks.py:347
+msgid "Erweiterte Einstellungen"
+msgstr ""
+
+#: dll/cms/blocks.py:150
+msgid "Bild Ausrichtung"
+msgstr ""
+
+#: dll/cms/blocks.py:296
+msgid "Sub-Überschrift"
+msgstr ""
+
+#: dll/cms/templates/wagtailadmin/chooser/_link_types.html:5
+#: dll/cms/templates/wagtailadmin/chooser/_link_types.html:8
+#: dll/cms/templates/wagtailadmin/chooser/_link_types.html:10
+msgid "Internal link"
+msgstr ""
+
+#: dll/cms/templates/wagtailadmin/chooser/_link_types.html:15
+#: dll/cms/templates/wagtailadmin/chooser/_link_types.html:17
+msgid "External and Auto Generated Links"
+msgstr ""
+
+#: dll/cms/templates/wagtailadmin/chooser/_link_types.html:21
+#: dll/cms/templates/wagtailadmin/chooser/_link_types.html:23
+msgid "Email link"
+msgstr ""
+
+#: dll/cms/templates/wagtailadmin/chooser/_link_types.html:27
+#: dll/cms/templates/wagtailadmin/chooser/_link_types.html:29
+msgid "Phone link"
+msgstr ""
+
+#: dll/cms/templates/wagtailadmin/chooser/_link_types.html:33
+#: dll/cms/templates/wagtailadmin/chooser/_link_types.html:35
+msgid "Anchor link"
+msgstr ""
+
+#: dll/communication/admin.py:35
 msgid "DOI Confirmation Date"
 msgstr "DOI Bestätigt Datum"
 
-#: dll/communication/admin.py:34
+#: dll/communication/admin.py:44
 msgid "Registered"
 msgstr "Angemeldet"
 
-#: dll/communication/forms.py:10
+#: dll/communication/forms.py:12
 msgid "Anregungen zu den Unterrichtsbausteinen | E-Mail an die BSB"
 msgstr ""
 
-#: dll/communication/forms.py:13
+#: dll/communication/forms.py:19
 msgid "Anregungen zu Tools, Trends und zum dll allgemein | E-Mail an die TUHH"
 msgstr ""
 
-#: dll/communication/forms.py:16
+#: dll/communication/forms.py:26
 msgid "Fragen/Probleme zum Login und Einreichungsprozess | E-Mail an die TUHH"
 msgstr ""
 
-#: dll/communication/forms.py:19
+#: dll/communication/forms.py:32
 msgid "Allgemeines Anliegen | E-Mail an die TUHH"
 msgstr ""
 
-#: dll/communication/models.py:26
+#: dll/communication/models.py:28
 msgid "Auslösender User"
 msgstr ""
 
-#: dll/communication/models.py:31
+#: dll/communication/models.py:36
 msgid "Event Type"
 msgstr ""
 
-#: dll/communication/models.py:34
+#: dll/communication/models.py:40
 msgid "Kommunikations-Ereignis"
 msgstr ""
 
-#: dll/communication/models.py:35
+#: dll/communication/models.py:41
 msgid "Kommunikations-Ereignisse"
 msgstr ""
 
-#: dll/communication/models.py:40
+#: dll/communication/models.py:46
 msgid "'{type:s}' event for user #{number:s}"
 msgstr "'{type:s}' Ereignis für Nutzer #{number:s}"
 
-#: dll/communication/models.py:51
+#: dll/communication/models.py:61
 msgid "Code, mit dem dieses Ereignis programmgesteuert gesucht werden kann."
 msgstr ""
 
-#: dll/communication/models.py:55 dll/user/forms.py:63
+#: dll/communication/models.py:67 dll/user/forms.py:79
 msgid "Name"
 msgstr ""
 
-#: dll/communication/models.py:56
+#: dll/communication/models.py:69
 msgid "Dies dient nur zu organisatorischen Zwecken."
 msgstr ""
 
-#: dll/communication/models.py:63
+#: dll/communication/models.py:77
 msgid "Email Subject Template"
 msgstr "Email Betreff Template"
 
-#: dll/communication/models.py:65
+#: dll/communication/models.py:80
 msgid "Email Body Template"
 msgstr "Email Text Template"
 
-#: dll/communication/models.py:67
+#: dll/communication/models.py:83
 msgid "Email Body HTML Template"
 msgstr "Email Text HTML Template"
 
-#: dll/communication/models.py:68
+#: dll/communication/models.py:86
 msgid "HTML template"
 msgstr "HTML Template"
 
-#: dll/communication/models.py:78
+#: dll/communication/models.py:97
 msgid "Art des Kommunikations-Ereignis"
 msgstr ""
 
-#: dll/communication/models.py:79
+#: dll/communication/models.py:98
 msgid "Arten von Kommunikations-Ereignissen"
 msgstr ""
 
-#: dll/communication/models.py:147
+#: dll/communication/models.py:171
 msgid "Newsletter Subscription"
 msgstr "Newsletter Anmeldung"
 
-#: dll/communication/models.py:148
+#: dll/communication/models.py:172
 msgid "Newsletter Subscriptions"
 msgstr "Newsletter Anmeldungen"
 
-#: dll/communication/models.py:152
+#: dll/communication/models.py:179
 msgid "Einladung von"
 msgstr ""
 
-#: dll/communication/models.py:154
+#: dll/communication/models.py:185
 msgid "Einladung an"
 msgstr ""
 
-#: dll/communication/models.py:157 dll/content/models.py:418
-#: dll/user/forms.py:65
+#: dll/communication/models.py:191 dll/content/models.py:731
+#: dll/user/forms.py:81
 msgid "Status"
 msgstr ""
 
-#: dll/communication/models.py:158
+#: dll/communication/models.py:192
 msgid "Nachricht"
 msgstr ""
 
-#: dll/communication/views.py:78
+#: dll/communication/views.py:89
 msgid ""
 "Bestätigungslink versendet. Sie erhalten in Kürze eine E-Mail, um die "
 "Newsletter-Anmeldung zu bestätigen."
 msgstr ""
 
-#: dll/communication/views.py:120
+#: dll/communication/views.py:139
 msgid "Newsletter Anmeldung erfolgreich"
 msgstr ""
 
-#: dll/communication/views.py:122
+#: dll/communication/views.py:144
 msgid "Newsletter Anmeldung nicht erfolgreich. Versuchen Sie es erneut."
 msgstr ""
 
-#: dll/communication/views.py:161
+#: dll/communication/views.py:196
 msgid "Sie sind nicht berechtigt die Anfrage zu akzeptieren"
 msgstr ""
 
-#: dll/communication/views.py:173
+#: dll/communication/views.py:215
 msgid "Bestätigen Sie mit Ja oder Nein"
 msgstr ""
 
-#: dll/communication/views.py:178
+#: dll/communication/views.py:220
 msgid "Die Einladung ist verfallen"
 msgstr ""
 
-#: dll/content/admin.py:43
-msgid "Deleted all tools without a name."
-msgstr "Es wurden alle Tools ohne Namen entfernt."
+#: dll/configuration/settings.py:640
+msgid "Open Page"
+msgstr ""
+
+#: dll/configuration/settings.py:641
+msgid "Leave Intent"
+msgstr ""
+
+#: dll/configuration/settings.py:642
+msgid "Content Submission"
+msgstr ""
+
+#: dll/configuration/settings.py:643
+msgid "Click"
+msgstr ""
+
+#: dll/configuration/settings.py:644
+msgid "Scroll"
+msgstr ""
+
+#: dll/configuration/settings.py:645
+msgid "Login"
+msgstr ""
+
+#: dll/content/admin.py:99
+msgid "Yes"
+msgstr ""
+
+#: dll/content/admin.py:100
+msgid "No"
+msgstr ""
 
 #: dll/content/fields.py:13
 #, python-brace-format
@@ -163,7 +281,7 @@ msgstr ""
 msgid "Got unexpected keys \"{unexpected}\"."
 msgstr "Unerwartete Eingabe: \"{unexpected}\"."
 
-#: dll/content/fields.py:15
+#: dll/content/fields.py:16
 #, python-brace-format
 msgid ""
 "Bounds flags \"{bounds}\" not valid. Valid bounds are \"{valid_bounds}\"."
@@ -171,203 +289,247 @@ msgstr ""
 "Die Grenzen \"{bounds}\" sind ungültig. Gültige Grenzen sind "
 "\"{valid_bounds}\"."
 
-#: dll/content/fields.py:16
+#: dll/content/fields.py:18
 msgid "Range may not be empty."
 msgstr "Dieses Feld dard nicht leer sein."
 
-#: dll/content/models.py:41
+#: dll/content/models.py:54
 msgid "CC0"
 msgstr ""
 
-#: dll/content/models.py:42
+#: dll/content/models.py:55
 msgid "CC BY"
 msgstr ""
 
-#: dll/content/models.py:43
+#: dll/content/models.py:56
 msgid "CC BY 4.0"
 msgstr ""
 
-#: dll/content/models.py:44
+#: dll/content/models.py:57
 msgid "CC BY-NC"
 msgstr ""
 
-#: dll/content/models.py:45
+#: dll/content/models.py:58
 msgid "CC BY-NC-ND"
 msgstr ""
 
-#: dll/content/models.py:46
+#: dll/content/models.py:59
 msgid "CC BY-NC-SA"
 msgstr ""
 
-#: dll/content/models.py:47
+#: dll/content/models.py:60
 msgid "CC BY-ND"
 msgstr ""
 
-#: dll/content/models.py:48
+#: dll/content/models.py:61
 msgid "CC BY-SA"
 msgstr ""
 
-#: dll/content/models.py:49
+#: dll/content/models.py:62
 msgid "CC BY-SA 4.0"
 msgstr ""
 
-#: dll/content/models.py:50
+#: dll/content/models.py:63
 msgid "urheberrechtlich geschützt"
 msgstr ""
 
-#: dll/content/models.py:55
+#: dll/content/models.py:73
+msgid "Video URL"
+msgstr ""
+
+#: dll/content/models.py:75
+msgid ""
+"Es werden YouTube und Vimeo Videos unterstützt. Kopieren Sie einfach die URL "
+"des Videos in dieses Feld. Diese wird automatisch in die Embed-URL "
+"umgewandelt."
+msgstr ""
+
+#: dll/content/models.py:121
 msgid "Titel des Tools/Trends/Unterrichtsbausteins"
 msgstr ""
 
-#: dll/content/models.py:57
-msgid "Autor"
-msgstr "Autor_in"
+#: dll/content/models.py:127
+msgid "created"
+msgstr ""
 
-#: dll/content/models.py:59
+#: dll/content/models.py:137
+msgid "Ersteller"
+msgstr ""
+
+#: dll/content/models.py:142
 msgid "Kollaborateure"
 msgstr ""
 
-#: dll/content/models.py:60
+#: dll/content/models.py:146
 msgid "Anzeigebild"
 msgstr ""
 
-#: dll/content/models.py:61
+#: dll/content/models.py:149
 msgid "Teaser"
 msgstr ""
 
-#: dll/content/models.py:62
+#: dll/content/models.py:153
 msgid "Lernziele"
 msgstr ""
 
-#: dll/content/models.py:64
+#: dll/content/models.py:160
 msgid "Verwandte Tools/Trends/Unterrichtsbausteine"
 msgstr ""
 
-#: dll/content/models.py:69
+#: dll/content/models.py:167
 msgid "Hinweise/Anmerkungen/Hintergrund"
 msgstr ""
 
-#: dll/content/models.py:70 dll/content/models.py:810
+#: dll/content/models.py:170 dll/content/models.py:1280
 msgid "Kompetenzen"
 msgstr ""
 
-#: dll/content/models.py:71 dll/content/models.py:934
+#: dll/content/models.py:173 dll/content/models.py:1533
 msgid "Subkompetenzen"
 msgstr ""
 
-#: dll/content/models.py:76
+#: dll/content/models.py:179
 msgid "Ex-Autoren"
 msgstr ""
 
-#: dll/content/models.py:82
+#: dll/content/models.py:182
 msgid "Tags"
 msgstr ""
 
-#: dll/content/models.py:331
+#: dll/content/models.py:560
+msgid ""
+"Schaut Euch mal diesen inspirierenden Impuls für die Unterrichtsgestaltung "
+"im @digilearninglab an:"
+msgstr ""
+
+#: dll/content/models.py:563
+msgid ""
+"Ich möchte mit Euch diesen neuen Impuls für die Unterrichtsgestaltung im "
+"digital.learning.lab teilen:"
+msgstr ""
+
+#: dll/content/models.py:566
+msgid "Neuer Impuls für Unterrichtsgestaltung vom digital.learning.lab"
+msgstr ""
+
+#: dll/content/models.py:569
+msgid ""
+"Ich möchte mit Euch diesen neuen Impuls für die Unterrichtsgestaltung im "
+"digital.learning.lab teilen:\n"
+"\n"
+msgstr ""
+
+#: dll/content/models.py:575
 msgid "Inhalt"
 msgstr ""
 
-#: dll/content/models.py:332
+#: dll/content/models.py:576
 msgid "Inhalte"
 msgstr ""
 
-#: dll/content/models.py:336 dll/content/models.py:424
+#: dll/content/models.py:580 dll/content/models.py:754
+#: dll/content/models.py:1296
 msgid "Beschreibung"
 msgstr ""
 
-#: dll/content/models.py:337
+#: dll/content/models.py:582
 msgid "Unterichtsgegenstand"
 msgstr ""
 
-#: dll/content/models.py:339
+#: dll/content/models.py:585
 msgid "Bildungsplanbezug"
 msgstr ""
 
-#: dll/content/models.py:340
+#: dll/content/models.py:588 dll/content/models.py:1680
 msgid "Jahrgangsstufe"
 msgstr ""
 
-#: dll/content/models.py:342
+#: dll/content/models.py:592
 msgid "Zeitumfang"
 msgstr ""
 
-#: dll/content/models.py:343
+#: dll/content/models.py:596
 msgid "Ausstattung"
 msgstr ""
 
-#: dll/content/models.py:345
+#: dll/content/models.py:602
 msgid "Bundesland"
 msgstr ""
 
-#: dll/content/models.py:346
+#: dll/content/models.py:605
 msgid "Differenzierung"
 msgstr ""
 
-#: dll/content/models.py:347
+#: dll/content/models.py:609
 msgid "Fachkompetenzen"
 msgstr ""
 
-#: dll/content/models.py:349 dll/content/models.py:982
+#: dll/content/models.py:615 dll/content/models.py:1585
+#: dll/content/models.py:1674
 msgid "Unterrichtsfach"
 msgstr ""
 
-#: dll/content/models.py:350 dll/content/models.py:994
+#: dll/content/models.py:618 dll/content/models.py:1597
 msgid "Schulform"
 msgstr ""
 
-#: dll/content/models.py:351 dll/content/models.py:487
+#: dll/content/models.py:621 dll/content/models.py:872
 msgid "Lizenz"
 msgstr ""
 
-#: dll/content/models.py:354
+#: dll/content/models.py:623
+msgid "Geeignet für Hybridunterricht"
+msgstr ""
+
+#: dll/content/models.py:626
 msgid "Unterrichtsbaustein"
 msgstr ""
 
-#: dll/content/models.py:355
+#: dll/content/models.py:627
 msgid "Unterrichtsbausteine"
 msgstr ""
 
-#: dll/content/models.py:393
+#: dll/content/models.py:686
 msgid "Online"
 msgstr ""
 
-#: dll/content/models.py:394
+#: dll/content/models.py:687
 msgid "Offline"
 msgstr ""
 
-#: dll/content/models.py:395
+#: dll/content/models.py:688
 msgid "Online & Offline"
 msgstr ""
 
-#: dll/content/models.py:399
+#: dll/content/models.py:692
 msgid "Ohne Altersbeschränkung"
 msgstr ""
 
-#: dll/content/models.py:400
+#: dll/content/models.py:693
 msgid "Ab 6 Jahren"
 msgstr ""
 
-#: dll/content/models.py:401
+#: dll/content/models.py:694
 msgid "Ab 12 Jahren"
 msgstr ""
 
-#: dll/content/models.py:402
+#: dll/content/models.py:695
 msgid "Ab 16 Jahren"
 msgstr ""
 
-#: dll/content/models.py:403
+#: dll/content/models.py:696
 msgid "Ab 18 Jahren"
 msgstr ""
 
-#: dll/content/models.py:407
+#: dll/content/models.py:700
 msgid "Unbekannt"
 msgstr ""
 
-#: dll/content/models.py:408
+#: dll/content/models.py:701
 msgid "Es werden keinerlei Daten erhoben"
 msgstr ""
 
-#: dll/content/models.py:409
+#: dll/content/models.py:705
 msgid ""
 "Personenbezogene Daten wie z.B. Logins werden geschützt auf dem Server "
 "abgelegt. Es greift die EU-Datenschutz-Grundverordnung."
@@ -375,250 +537,489 @@ msgstr ""
 "Personenbezogene Daten wie z.B. Logins werden geschützt auf dem Server "
 "abgelegt. Es entspricht der EU-Datenschutz-Grundverordnung."
 
-#: dll/content/models.py:411
+#: dll/content/models.py:712
+#, fuzzy
+#| msgid ""
+#| "Personenbezogene Daten werden erhoben. Dritte haben Zugriff auf diese "
+#| "Daten. Es entspricht EU-Datenschutz-Grundverordnung."
 msgid ""
 "Personenbezogene Daten werden erhoben. Dritte haben Zugriff auf diese Daten. "
-"Es entspricht EU-Datenschutz-Grundverordnung."
+"Es greift die EU-Datenschutz-Grundverordnung."
 msgstr ""
 "Personenbezogene Daten werden erhoben. Dritte haben Zugriff auf diese Daten. "
 "Es entspricht EU-Datenschutz-Grundverordnung."
 
-#: dll/content/models.py:413
+#: dll/content/models.py:719
 msgid ""
 "Personenbezogene Daten werden erhoben. Es greift NICHT die EU-Datenschutz-"
 "Grundverordnung."
 msgstr ""
-"Personenbezogene Daten werden erhoben. Es entspricht nicht der EU-Datenschutz-"
-"Grundverordnung."
+"Personenbezogene Daten werden erhoben. Es entspricht nicht der EU-"
+"Datenschutz-Grundverordnung."
 
-#: dll/content/models.py:416 dll/content/models.py:742
+#: dll/content/models.py:725 dll/content/models.py:1209
 msgid "Betriebssystem"
 msgstr ""
 
-#: dll/content/models.py:417 dll/content/models.py:1013
+#: dll/content/models.py:728 dll/content/models.py:1616
 msgid "Anwendung"
 msgstr ""
 
-#: dll/content/models.py:420
+#: dll/content/models.py:735
 msgid "Altersfreigabe"
 msgstr ""
 
-#: dll/content/models.py:421
+#: dll/content/models.py:739
 msgid "Pro"
 msgstr ""
 
-#: dll/content/models.py:422
+#: dll/content/models.py:746
 msgid "Kontra"
 msgstr ""
 
-#: dll/content/models.py:423
+#: dll/content/models.py:752
 msgid "Datenschutz"
 msgstr ""
 
-#: dll/content/models.py:425
+#: dll/content/models.py:755
 msgid "Nutzung"
 msgstr ""
 
-#: dll/content/models.py:428
+#: dll/content/models.py:757
+msgid "Tool-Funktionen"
+msgstr ""
+
+#: dll/content/models.py:762
+msgid "Disclaimer"
+msgstr ""
+
+#: dll/content/models.py:768
+msgid "Fächerbezug"
+msgstr ""
+
+#: dll/content/models.py:771
+msgid "Kostenpflichtig"
+msgstr ""
+
+#: dll/content/models.py:774
+msgid "Potential Kategorien"
+msgstr ""
+
+#: dll/content/models.py:778 dll/content/models.py:1928
 msgid "Tool"
 msgstr ""
 
-#: dll/content/models.py:429
+#: dll/content/models.py:779
 msgid "Tools"
 msgstr ""
 
-#: dll/content/models.py:474
+#: dll/content/models.py:856
 msgid "Deutsch"
 msgstr ""
 
-#: dll/content/models.py:475
+#: dll/content/models.py:857
 msgid "Englisch"
 msgstr ""
 
-#: dll/content/models.py:479
+#: dll/content/models.py:861
 msgid "Keine Angaben"
 msgstr ""
 
-#: dll/content/models.py:480
+#: dll/content/models.py:862
 msgid "Forschung"
 msgstr ""
 
-#: dll/content/models.py:481
+#: dll/content/models.py:863
 msgid "Portal"
 msgstr ""
 
-#: dll/content/models.py:482
+#: dll/content/models.py:864
 msgid "Praxisbeispiel"
 msgstr ""
 
-#: dll/content/models.py:483
+#: dll/content/models.py:865
 msgid "Veröffentlichung"
 msgstr ""
 
-#: dll/content/models.py:486
+#: dll/content/models.py:869
 msgid "Sprache"
 msgstr ""
 
-#: dll/content/models.py:488
+#: dll/content/models.py:875
 msgid "Kategorie"
 msgstr ""
 
-#: dll/content/models.py:489
+#: dll/content/models.py:879
 msgid "Zielgruppe"
 msgstr ""
 
-#: dll/content/models.py:491
+#: dll/content/models.py:886
 msgid "Herausgeber"
 msgstr ""
 
-#: dll/content/models.py:493
+#: dll/content/models.py:892
 msgid "Datum der Veröffentlichung"
 msgstr ""
 
-#: dll/content/models.py:494
+#: dll/content/models.py:894
 msgid "Zentrale Inhalte"
 msgstr ""
 
-#: dll/content/models.py:495
+#: dll/content/models.py:896
 msgid "Zitierhinweis"
 msgstr ""
 
-#: dll/content/models.py:498
+#: dll/content/models.py:900
 msgid "Trend"
 msgstr ""
 
-#: dll/content/models.py:499
+#: dll/content/models.py:901
 msgid "Trends"
 msgstr ""
 
-#: dll/content/models.py:606
+#: dll/content/models.py:1022
 msgid "Hilfetext für "
 msgstr ""
 
-#: dll/content/models.py:618
+#: dll/content/models.py:1038
 msgid "Hilfetext für"
 msgstr ""
 
-#: dll/content/models.py:624
+#: dll/content/models.py:1044 dll/content/models.py:1740
 msgid "Neu"
 msgstr ""
 
-#: dll/content/models.py:625
+#: dll/content/models.py:1045 dll/content/models.py:1741
 msgid "In Bearbeitung"
 msgstr ""
 
-#: dll/content/models.py:626
+#: dll/content/models.py:1046 dll/content/models.py:1743
 msgid "Akzeptiert"
 msgstr ""
 
-#: dll/content/models.py:627
+#: dll/content/models.py:1047 dll/content/models.py:1744
 msgid "Abgelehnt"
 msgstr ""
 
-#: dll/content/models.py:743
+#: dll/content/models.py:1063 dll/content/models.py:1758
+#, fuzzy
+#| msgid "Reviewer"
+msgid "Assigned Reviewer"
+msgstr "Reviewer_in"
+
+#: dll/content/models.py:1102
+msgid "Reviewer {} hat den Inhalt akzeptiert."
+msgstr ""
+
+#: dll/content/models.py:1107
+msgid "Inhalt wurde von {} veröffentlicht."
+msgstr ""
+
+#: dll/content/models.py:1119
+msgid "Reviewer {} hat den Inhalt abgelehnt."
+msgstr ""
+
+#: dll/content/models.py:1210
 msgid "Betriebssysteme"
 msgstr ""
 
-#: dll/content/models.py:809
+#: dll/content/models.py:1279
 msgid "Kompetenz"
 msgstr ""
 
-#: dll/content/models.py:933
+#: dll/content/models.py:1287
+msgid "Kompentenz"
+msgstr ""
+
+#: dll/content/models.py:1294 dll/content/models.py:1650
+msgid "Titel"
+msgstr ""
+
+#: dll/content/models.py:1302
+msgid "Zusätzliche Kompetenz Information"
+msgstr ""
+
+#: dll/content/models.py:1303
+msgid "Zusätzliche Kompetenz Informationen"
+msgstr ""
+
+#: dll/content/models.py:1532
 msgid "Subkompetenz"
 msgstr ""
 
-#: dll/content/models.py:939
-msgid "Audio"
-msgstr ""
-
-#: dll/content/models.py:940
+#: dll/content/models.py:1538
 msgid "Video"
 msgstr ""
 
-#: dll/content/models.py:941
-msgid "Webseite"
+#: dll/content/models.py:1539 dll/content/models.py:1540
+#: dll/survey/models.py:26
+msgid "Text"
 msgstr ""
 
-#: dll/content/models.py:942
-msgid "Literatur"
-msgstr ""
-
-#: dll/content/models.py:983
+#: dll/content/models.py:1586
 msgid "Unterrichtsfächer"
 msgstr ""
 
-#: dll/content/models.py:995
+#: dll/content/models.py:1598
 msgid "Schulformen"
 msgstr ""
 
-#: dll/content/models.py:1000
+#: dll/content/models.py:1603
 msgid "App"
 msgstr ""
 
-#: dll/content/models.py:1001
+#: dll/content/models.py:1604
 msgid "Website"
 msgstr ""
 
-#: dll/content/models.py:1002
+#: dll/content/models.py:1605
 msgid "Programm"
 msgstr ""
 
-#: dll/content/models.py:1003
+#: dll/content/models.py:1606
 msgid "Browser-Add-on"
 msgstr ""
 
-#: dll/content/models.py:1014
+#: dll/content/models.py:1617
 msgid "Anwendungen"
 msgstr ""
 
-#: dll/content/serializers.py:76
+#: dll/content/models.py:1652
+msgid "URL"
+msgstr ""
+
+#: dll/content/models.py:1669 dll/user/models.py:134
+msgid "Author"
+msgstr "Autor_in"
+
+#: dll/content/models.py:1682
+msgid "Kommentar"
+msgstr ""
+
+#: dll/content/models.py:1686
+msgid "Content"
+msgstr ""
+
+#: dll/content/models.py:1742
+msgid "Änderungen angefragt"
+msgstr ""
+
+#: dll/content/models.py:1830
+msgid "Compliant"
+msgstr "Erfüllt"
+
+#: dll/content/models.py:1831
+msgid "Not Compliant"
+msgstr "Nicht erfüllt"
+
+#: dll/content/models.py:1832
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#: dll/content/models.py:1877
+msgid "Serverstandort"
+msgstr ""
+
+#: dll/content/models.py:1879
+msgid "Anbieter"
+msgstr ""
+
+#: dll/content/models.py:1881
+msgid "Benutzeranmeldung"
+msgstr ""
+
+#: dll/content/models.py:1884
+msgid "Datenschutzerklärung"
+msgstr ""
+
+#: dll/content/models.py:1887
+msgid "AGB"
+msgstr ""
+
+#: dll/content/models.py:1890
+msgid "Sicherheit"
+msgstr ""
+
+#: dll/content/models.py:1894
+msgid "Server Standort Text"
+msgstr ""
+
+#: dll/content/models.py:1896 dll/content/models.py:1901
+#: dll/content/models.py:1906 dll/content/models.py:1911
+#: dll/content/models.py:1916 dll/content/models.py:1921
+msgid "Lassen Sie das Feld leer um den Standardtext zu hinterlegen."
+msgstr ""
+
+#: dll/content/models.py:1899
+msgid "Anbieter Text"
+msgstr ""
+
+#: dll/content/models.py:1904
+msgid "Benutzeranmeldung Text"
+msgstr ""
+
+#: dll/content/models.py:1909
+msgid "Datenschutzerklärung Text"
+msgstr ""
+
+#: dll/content/models.py:1914
+msgid "AGB Text"
+msgstr ""
+
+#: dll/content/models.py:1919
+msgid "Sicherheit Text"
+msgstr ""
+
+#: dll/content/models.py:1924
+msgid "Fazit"
+msgstr ""
+
+#: dll/content/models.py:1935
+msgid "Gesamteindruck"
+msgstr ""
+
+#: dll/content/serializers.py:120
 msgid "Draft"
 msgstr "Entwurf"
 
-#: dll/content/serializers.py:80
+#: dll/content/serializers.py:124
 msgid "Approved - Resubmission declined."
 msgstr "Freigegeben - Neue Einreichung abgelehnt."
 
-#: dll/content/serializers.py:82
+#: dll/content/serializers.py:126
 msgid "Approved - Resubmission pending."
 msgstr "Freigegeben - Neue Einreichung ausstehend."
 
-#: dll/content/serializers.py:83
+#: dll/content/serializers.py:127
 msgid "Approved"
 msgstr "Freigegeben"
 
-#: dll/content/serializers.py:86
+#: dll/content/serializers.py:134
 msgid "Declined"
 msgstr "Abgelehnt"
 
-#: dll/content/serializers.py:89
+#: dll/content/serializers.py:137
 msgid "Submitted"
 msgstr "Eingereicht"
 
-#: dll/content/serializers.py:235
+#: dll/content/serializers.py:463 dll/content/serializers.py:475
 msgid "A content with this name already exists."
 msgstr "Ein Inhalt mit diesem Namen existiert bereits."
 
-#: dll/content/serializers.py:400
+#: dll/content/serializers.py:666
 msgid "All additional tools must contain a name and an URL."
 msgstr ""
 "Alle Angaben im Feld \"Andere Tools\" müssen einen Namen und eine URL "
 "enthalten."
 
-#: dll/content/templates/admin/content/change_list.html:5
-msgid "Remove Tools without name"
-msgstr "Tools ohne Namen entfernen"
+#: dll/content/views.py:347
+msgid "Inhalt bereits favorisiert."
+msgstr ""
 
-#: dll/general/models.py:129
+#: dll/content/views.py:358
+msgid "Favorit konnte nicht gefunden werden."
+msgstr ""
+
+#: dll/content/views.py:1032 dll/content/views.py:1047
+#: dll/content/views.py:1062
+msgid "Fehler beim freigeben des Erfahrungsberichts."
+msgstr ""
+
+#: dll/general/models.py:84
+msgid ""
+"Veröffentlichte Version wurde im Rahmen einer Neuveröffentlichung entfernt."
+msgstr ""
+
+#: dll/general/models.py:136
 msgid "Koauthorenschaftsanfrage"
 msgstr ""
 
-#: dll/general/models.py:130
+#: dll/general/models.py:137
 msgid "BSB Kontaktanfrage"
 msgstr ""
 
-#: dll/general/models.py:131
+#: dll/general/models.py:138
 msgid "DLL Kontaktanfrage"
+msgstr ""
+
+#: dll/survey/models.py:10 dll/survey/models.py:36
+msgid "Title"
+msgstr ""
+
+#: dll/survey/models.py:12
+msgid "Description"
+msgstr ""
+
+#: dll/survey/models.py:21
+msgid "Type"
+msgstr ""
+
+#: dll/survey/models.py:23
+msgid "Radio"
+msgstr ""
+
+#: dll/survey/models.py:24
+msgid "Dropdown"
+msgstr ""
+
+#: dll/survey/models.py:25
+msgid "Checkbox"
+msgstr ""
+
+#: dll/survey/models.py:34 dll/survey/models.py:50
+msgid "Position"
+msgstr ""
+
+#: dll/survey/models.py:38
+msgid "Required"
+msgstr ""
+
+#: dll/survey/models.py:48
+msgid "Label"
+msgstr ""
+
+#: dll/survey/models.py:80
+msgid "Value"
+msgstr ""
+
+#: dll/survey/models.py:84
+msgid "Question: "
+msgstr ""
+
+#: dll/survey/models.py:90
+msgid "Trigger Type"
+msgstr ""
+
+#: dll/survey/models.py:94
+msgid "Delay"
+msgstr ""
+
+#: dll/survey/models.py:98
+msgid "Page Url"
+msgstr ""
+
+#: dll/survey/models.py:102
+msgid "Target Selector"
+msgstr ""
+
+#: dll/survey/models.py:106
+msgid "Selector for DOM node. Required for click events."
+msgstr ""
+
+#: dll/survey/models.py:111
+msgid "Active"
+msgstr ""
+
+#: dll/survey/models.py:116
+msgid "Target Selector is mandatory for 'click' triggers."
+msgstr ""
+
+#: dll/survey/models.py:120
+msgid "Page Url is mandatory for 'scroll' triggers."
+msgstr ""
+
+#: dll/templates/admin/change_form_object_tools.html:8
+msgid "View on site"
 msgstr ""
 
 #: dll/templates/django_better_admin_arrayfield/forms/widgets/dynamic_array.html:15
@@ -629,81 +1030,109 @@ msgstr "Weitere hinzufügen"
 msgid "Important"
 msgstr ""
 
-#: dll/user/forms.py:27
-msgid "Sign up for newsletter"
-msgstr "Für Newsletter anmelden"
-
-#: dll/user/forms.py:64
+#: dll/user/forms.py:80
 msgid "E-Mail"
 msgstr ""
 
-#: dll/user/forms.py:66
+#: dll/user/forms.py:82
 msgid "Beigetreten"
 msgstr ""
 
-#: dll/user/forms.py:105
+#: dll/user/forms.py:111
+msgid "Es existiert bereits ein Konto mit dieser E-Mail Adresse."
+msgstr ""
+
+#: dll/user/forms.py:130
 msgid ""
 "Old and new password must be different. Please use another new password."
 msgstr ""
 "Das alte und neue Passwort müssen unterschiedlich sein. Bitte wählen Sie ein "
 "anderes neues Passwort."
 
-#: dll/user/forms.py:113
-msgid "Ich habe die Bedingungen gelesen und akzeptiere sie."
+#: dll/user/forms.py:141
+msgid ""
+"Ich bestätige, dass ich weiterhin namentlich in meinen erstellten und "
+"bearbeiteten Inhalten gelistet werde."
 msgstr ""
 
-#: dll/user/models.py:46
+#: dll/user/models.py:48
 msgid "email address"
 msgstr "E-Mail Adresse"
 
-#: dll/user/models.py:48
+#: dll/user/models.py:50
 msgid "first name"
 msgstr ""
 
-#: dll/user/models.py:51
+#: dll/user/models.py:52
 msgid "username"
 msgstr "Nutzername"
 
-#: dll/user/models.py:56
+#: dll/user/models.py:54
 msgid "Double-opt-in confirmed"
 msgstr "Double-Opt-In bestätigt"
 
-#: dll/user/models.py:60
+#: dll/user/models.py:58
 msgid "Datum der Registrierungsbestätigung"
 msgstr ""
 
-#: dll/user/models.py:113
+#: dll/user/models.py:76
+msgid "User"
+msgstr ""
+
+#: dll/user/models.py:77
+msgid "Users"
+msgstr ""
+
+#: dll/user/models.py:130
 msgid "Administrator"
 msgstr "Administrator_in"
 
-#: dll/user/models.py:115
+#: dll/user/models.py:132
 msgid "Reviewer"
 msgstr "Reviewer_in"
 
-#: dll/user/models.py:117
-msgid "Author"
-msgstr "Autor_in"
-
-#: dll/user/views.py:327
+#: dll/user/views.py:402
 msgid "Mein Profil"
 msgstr ""
 
-#: dll/user/views.py:348
+#: dll/user/views.py:424
 msgid "Passwort Ändern"
 msgstr ""
 
-#: dll/user/views.py:363
+#: dll/user/views.py:438
+msgid ""
+"Es wurde eine E-Mail zur Bestätigung der neuen Adresse versendet. Bitte "
+"prüfen Sie Ihr E-Mail Postfach um die Aktualisierung abzuschließen."
+msgstr ""
+
+#: dll/user/views.py:441
+msgid "E-Mail Adresse wurde nicht verändert."
+msgstr ""
+
+#: dll/user/views.py:445
 msgid "E-Mails"
 msgstr ""
 
-#: dll/user/views.py:401
+#: dll/user/views.py:493
 msgid "Ihre E-Mail wurde erfolgreich geändert."
 msgstr ""
 
-#: dll/user/views.py:404
+#: dll/user/views.py:496
 msgid "Ihr E-Mail Aktivierungslink ist ungültig."
 msgstr ""
 
-#: dll/user/views.py:415
+#: dll/user/views.py:508
 msgid "Account löschen"
 msgstr ""
+
+#~ msgid "Deleted all tools without a name."
+#~ msgstr "Es wurden alle Tools ohne Namen entfernt."
+
+#~ msgid "Autor"
+#~ msgstr "Autor_in"
+
+#~ msgid "Remove Tools without name"
+#~ msgstr "Tools ohne Namen entfernen"
+
+#~ msgid "Sign up for newsletter"
+#~ msgstr "Für Newsletter anmelden"
