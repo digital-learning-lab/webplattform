@@ -66,6 +66,8 @@ test_python:
 test_collectstatic_s3:
     stage: test
     image: ${TEST_IMAGE_NAME}
+    tags:
+      - dll-docker
     variables:
         S3BACKEND: mem
         POSTGRES_DB: "postgres"
@@ -97,6 +99,8 @@ test_collectstatic_s3:
       - poetry install
     script:
       - poetry run python manage.py collectstatic --no-input
+    rules:
+      - if: $CI_PIPELINE_SOURCE != "schedule" && $CI_PIPELINE_SOURCE != "merge_request_event"
 
 
 
