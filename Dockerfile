@@ -29,6 +29,12 @@ RUN apt update \
     && apt purge -y gcc python3-dev \
     && apt autoremove -y --purge
 
+ARG DJANGO_SECRET_KEY=ThisIsJustHereSoWeCanRunManagementCommandsDuringBuild
+ARG DATABASE_NAME=ThisIsJustHereSoWeCanRunManagementCommandsDuringBuild
+ARG DATABASE_USER=ThisIsJustHereSoWeCanRunManagementCommandsDuringBuild
+ARG DATABASE_PASSWORD=ThisIsJustHereSoWeCanRunManagementCommandsDuringBuild
+ARG DATABASE_HOST=ThisIsJustHereSoWeCanRunManagementCommandsDuringBuild
+
 WORKDIR /code
 
 EXPOSE 80
@@ -36,6 +42,6 @@ EXPOSE 80
 COPY dll /code/dll
 COPY solr /code/solr
 COPY manage.py /code
+RUN cd /code && python manage.py compilemessages
 COPY .coveragerc /code
 COPY --from=webpack /node_deps/static/dist /code/dll/static/dist
-COPY --from=python_build /code/dll/locales/de/LC_MESSAGES /code/dll/locales/de/LC_MESSAGES
