@@ -49,6 +49,11 @@
                     <a href="https://www.youtube.com/channel/UC9w8XPtdEqIOsdjS7ZEwnzA" target="_blank">
                         <img src="{% static "img/icons/youtube.png" %}">
                     </a>
+                    {% if template_suffix == "dlt" %}
+                    <p class="text-center pt-3">
+                      Dieses Angebot ist Teil des <a href="{{ dll_url }}">digital.learning.lab</a>
+                    </p>
+                    {% endif %}
                 </div>
                 <div class="mb-3 col col-12 col-lg-4 col-xl-3 pb-5 text-center text-lg-right footer__text">
                     <div class="d-flex flex-column flex-lg-row pb-5 justify-content-lg-end justify-content-sm-center align-items-center">
