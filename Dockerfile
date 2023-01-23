@@ -29,6 +29,7 @@ RUN apt update \
     && apt purge -y gcc python3-dev \
     && apt autoremove -y --purge
 COPY dll /code/dll
+COPY manage.py /code
 RUN python /code/manage.py compilemessages
 
 WORKDIR /code
