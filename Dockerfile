@@ -39,4 +39,4 @@ COPY solr /code/solr
 COPY manage.py /code
 COPY .coveragerc /code
 COPY --from=webpack /node_deps/static/dist /code/dll/static/dist
-COPY --from=python_buid /code/dll/locales/de/LC_MESSAGES /code/dll/locales/de/LC_MESSAGES
+COPY --from=python_build /code/dll/locales/de/LC_MESSAGES /code/dll/locales/de/LC_MESSAGES
