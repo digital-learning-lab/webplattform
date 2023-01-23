@@ -28,6 +28,7 @@ RUN apt update \
 		&& rm -rf "$POETRY_CACHE_DIR" \
     && apt purge -y gcc python3-dev \
     && apt autoremove -y --purge
+COPY dll /code/dll
 RUN python manage.py compilemessages
 
 WORKDIR /code
