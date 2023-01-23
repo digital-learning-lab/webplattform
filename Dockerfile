@@ -15,7 +15,7 @@ RUN npm run build
 
 ### Stage 2: The release image
 
-FROM python:3.10-slim
+FROM python:3.10-slim as python_build
 ENV PYTHONUNBUFFERED=1 \
 	POETRY_VIRTUALENVS_CREATE=false \
 	POETRY_CACHE_DIR='/var/cache/pypoetry'
@@ -28,6 +28,7 @@ RUN apt update \
 		&& rm -rf "$POETRY_CACHE_DIR" \
     && apt purge -y gcc python3-dev \
     && apt autoremove -y --purge
+RUN python manage.py compilemessages
 
 WORKDIR /code
 
@@ -38,3 +39,4 @@ COPY solr /code/solr
 COPY manage.py /code
 COPY .coveragerc /code
 COPY --from=webpack /node_deps/static/dist /code/dll/static/dist
+COPY --from=python_buid /code/dll/locales/de/LC_MESSAGES /code/dll/locales/de/LC_MESSAGES
