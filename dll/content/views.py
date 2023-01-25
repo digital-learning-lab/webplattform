@@ -943,6 +943,9 @@ def search_view(request):
                 limit_teaching_modules=0, limit_tools=6, limit_trends=0
             )
 
+    if settings.SITE_ID == 2:
+        sqs = sqs.models(Tool)
+
     ctx = {
         "results": Content.objects.filter(pk__in=sqs.values_list("pk", flat=True)),
         "mlt": suggestions,
