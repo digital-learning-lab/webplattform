@@ -934,7 +934,14 @@ def search_view(request):
     # If there are no results - display random Content objects.
     suggestions = []
     if sqs.count() == 0:
-        suggestions = get_random_content(2, 2, 2)
+        if settings.SITE_ID == 1:
+            suggestions = get_random_content(
+                limit_teaching_modules=2, limit_tools=2, limit_trends=2
+            )
+        if settings.SITE_ID == 2:
+            suggestions = get_random_content(
+                limit_teaching_modules=0, limit_tools=6, limit_trends=0
+            )
 
     ctx = {
         "results": Content.objects.filter(pk__in=sqs.values_list("pk", flat=True)),
