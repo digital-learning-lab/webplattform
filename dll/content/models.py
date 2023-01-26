@@ -993,6 +993,12 @@ class HelpText(TimeStampedModel):
         ]
         if self.content_type.model == "tool":
             EXTRA_FIELDS.append(("url", "Webseite"))
+            EXTRA_FIELDS.append(("server_location", _("Serverstandort")))
+            EXTRA_FIELDS.append(("provider", _("Anbieter")))
+            EXTRA_FIELDS.append(("user_registration", _("Benutzeranmeldung")))
+            EXTRA_FIELDS.append(("data_privacy_terms", _("Datenschutzerklärung")))
+            EXTRA_FIELDS.append(("terms_and_conditions", _("AGB")))
+            EXTRA_FIELDS.append(("security", _("Sicherheit")))
         fields = self.get_fields()
         choices = []
 

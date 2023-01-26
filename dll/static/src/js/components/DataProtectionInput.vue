@@ -1,0 +1,83 @@
+<template>
+  <div class="form-group">
+      <span class="" v-if="icon"></span>
+      <label  :for="id" class="mb-2 w-100">{{ label }}:<span v-if="required">*</span></label>
+      <button class="button--neutral button--smallSquare button--help ml-1 float-right" type="button" data-toggle="tooltip" data-placement="top" :title="helpText" v-if="helpText"></button>
+    <div class="form__links-input">
+      <div class="d-flex align-items-baseline ">
+        <select class="form-control mr-3" name="types" v-model="complianceLevel">
+          <option value="compliant">Erfüllt</option>
+          <option value="not_compliant">Nicht erfüllt</option>
+          <option value="not-unknown">Unbekannt</option>
+        </select>
+        <input type="text" class="form-control mr-3" :class="{'form__field--error': error}" :id="id" placeholder="Anmerkungen" v-model="complianceText" :readonly="readonly">
+      </div>
+    </div>
+    <app-review-input :mode="review ? 'review' : 'edit'" :id="'id'+-review" :name="label" :reviewValue.sync="ownReviewValue"></app-review-input>
+  </div>
+</template>
+
+<script>
+  import ReviewInput from './ReviewInput.vue'
+  import { reviewMixin } from '../mixins/reviewMixin'
+  export default {
+    name: 'DataProtectionInput',
+    components: {
+      'AppReviewInput': ReviewInput
+    },
+    mixins: [reviewMixin],
+    props: {
+      id: {
+        type: String,
+        default: '',
+        required: true
+      },
+      required: {
+        type: Boolean,
+        default: false,
+        required: false
+      },
+      label: {
+        type: String,
+        default: '',
+        required: true
+      },
+      icon: {
+        type: String,
+        default: '',
+        required: false
+      },
+      error: {
+        type: Boolean,
+        default: false,
+        required: false
+      },
+      helpText: {
+        type: String,
+        default: '',
+        required: false
+      },
+      readonly: {
+        type: Boolean,
+        default: false,
+        required: false
+      }
+    },
+    data () {
+      return {
+        complianceLevel: '',
+        complianceText: ''
+      }
+    },
+    methods: {
+    },
+    created () {
+    },
+    watch: {
+    }
+  }
+</script>
+
+<style scoped>
+
+</style>
