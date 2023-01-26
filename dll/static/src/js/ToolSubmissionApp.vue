@@ -36,6 +36,13 @@
       <app-dropdown id="tool-potentials" :readonly="readonly" :review="review" label="Potential Kategorien" :required="true" :value.sync="data.potentials" :review-value.sync="reviewValue.potentials" :error="errorFields.includes('potentials')" fetch-url="/api/potentials" :multiple="true" :prefetch="true" :help-text="getHelpText('potentials')"></app-dropdown>
       <app-text-area id="disclaimer" :readonly="readonly" :review="review" label="Kurzzusammenfassung" :required="true" :value.sync="data.disclaimer" :review-value.sync="reviewValue.disclaimer" :error="errorFields.includes('disclaimer')" :rows="3" :help-text="getHelpText('disclaimer')"></app-text-area>
       <app-links-input id="video_tutorials" :readonly="readonly" :review="review" :links.sync="data.video_tutorials" :review-value.sync="reviewValue.video_tutorials" :error="errorFields.includes('video_tutorials')" label="Video Anleitungen" :type="'video'" :help-text="getHelpText('video_tutorials')" :types="false"></app-links-input>
+      <app-data-protection-input id="server_location" label="Serverstandort" :readonly="readonly" :review="review" :links.sync="data.server_location" :review-value.sync="reviewValue.server_location" :error="errorFields.includes('server_location')" :help-text="getHelpText('server_location')" icon="serverstandort"></app-data-protection-input>
+      <app-data-protection-input id="provider" label="Anbieter" :readonly="readonly" :review="review" :links.sync="data.provider" :review-value.sync="reviewValue.provider" :error="errorFields.includes('provider')" :help-text="getHelpText('provider')" icon="anbieter"></app-data-protection-input>
+      <app-data-protection-input id="user_registration" label="Benutzeranmeldung" :readonly="readonly" :review="review" :links.sync="data.user_registration" :review-value.sync="reviewValue.user_registration" :error="errorFields.includes('user_registration')" :help-text="getHelpText('user_registration')" icon="benutzeranmeldung"></app-data-protection-input>
+      <app-data-protection-input id="data_privacy_terms" label="Datenschutzerklärung" :readonly="readonly" :review="review" :links.sync="data.data_privacy_terms" :review-value.sync="reviewValue.data_privacy_terms" :error="errorFields.includes('data_privacy_terms')" :help-text="getHelpText('data_privacy_terms')" icon="datenschutzerklarung"></app-data-protection-input>
+      <app-data-protection-input id="terms_and_conditions" label="AGB" :readonly="readonly" :review="review" :links.sync="data.terms_and_conditions" :review-value.sync="reviewValue.terms_and_conditions" :error="errorFields.includes('terms_and_conditions')" :help-text="getHelpText('terms_and_conditions')" icon="agb"></app-data-protection-input>
+      <app-data-protection-input id="security" label="Sicherheit" :readonly="readonly" :review="review" :links.sync="data.security" :review-value.sync="reviewValue.security" :error="errorFields.includes('security')" :help-text="getHelpText('security')" icon="sicherheit"></app-data-protection-input>
+      <app-text-area id="conclusion" :readonly="readonly" :review="review" label="Fazit" :required="true" :value.sync="data.conclusion" :review-value.sync="reviewValue.conclusion" :error="errorFields.includes('conclusion')" :rows="3" :help-text="getHelpText('conclusion')" :character-counter="true" :maximal-chars="700"></app-text-area>
     </div>
   </app-content-submission-form>
 </template>
@@ -43,12 +50,14 @@
 <script>
   import { submissionMixin } from './mixins/submissionMixin'
   import ContentSubmissionForm from './ContentSubmissionForm.vue'
+  import DataProtectionInput from './components/DataProtectionInput.vue'
 
   export default {
     name: 'ToolSubmissionApp',
     mixins: [submissionMixin],
     components: {
-      'AppContentSubmissionForm': ContentSubmissionForm
+      'AppContentSubmissionForm': ContentSubmissionForm,
+      'AppDataProtectionInput': DataProtectionInput,
     },
     data () {
       return {

@@ -9,6 +9,7 @@ from wagtail.documents import urls as wagtaildocs_urls
 
 from dll import shared_session
 from dll.content.views import (
+    HelpTextFieldChoices,
     SubjectSearchView,
     TestimonialReviewViewSet,
     TestimonialReviewsOverview,
@@ -162,6 +163,11 @@ urlpatterns = [
     path("documents/", include(wagtaildocs_urls)),
     path("shared-session/", shared_session.urls),
     path("testimonial", TestimonialView.as_view(), name="testimonial"),
+    path(
+        "select2/admin_help_fields",
+        HelpTextFieldChoices.as_view(),
+        name="admin-help-text-choices",
+    ),
     path("", include("dll.communication.urls", namespace="communication")),
     path("", include("dll.user.urls", namespace="user")),
     path("", include(wagtail_urls)),

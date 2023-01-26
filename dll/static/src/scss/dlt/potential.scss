@@ -41,6 +41,11 @@ $general-width: 700px;
   background-color: rgba(204, 216, 224, 1);
   box-shadow: inset rgba(120, 120, 120, 0.5) 0 0 10px;
   width: $general-width / 2;
+  display: flex;
+  align-items: center;
+  h2 {
+    margin: 0;
+  }
 }
 .potential-center--mobile {
   display: none;
@@ -56,6 +61,7 @@ $general-width: 700px;
     display: none;
   }
   .potential-center--mobile {
+    padding-top: 5px;
     display: block;
   }
   .potential-box {

@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.sites.models import Site
 from django.urls import reverse_lazy, resolve
 from django.views import View
 from django.views.generic import TemplateView, DetailView, FormView, UpdateView
@@ -43,7 +44,6 @@ from rest_framework.permissions import (
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
-from django.contrib.sites import models
 
 from dll.content.filters import (
     SolrTagFilter,
@@ -126,7 +126,7 @@ class SiteRedirectMixin(View):
         if settings.SITE_ID == 2:
             return super().get(self.request)
         else:
-            site = models.Site.objects.get(pk=2)
+            site = Site.objects.get(pk=2)
             domain = site.domain
             return redirect(f"//{domain}{self.request.path}")
 
@@ -239,6 +239,13 @@ class ToolDetailView(ContentDetailView):
     model = Tool
     template_name = "dll/content/tool_detail.html"
 
+    def get_context_data(self, **kwargs):
+        ctx = super(ToolDetailView, self).get_context_data(**kwargs)
+        if settings.SITE_ID == 2:
+            dll_domain = Site.objects.get(pk=1).domain
+            ctx["canonical"] = f"https://{dll_domain}/tools/{self.object.slug}/"
+        return ctx
+
 
 class TrendDetailView(ContentDetailView):
     model = Trend
@@ -248,7 +255,7 @@ class TrendDetailView(ContentDetailView):
         if settings.SITE_ID == 1:
             return super().get(self.request)
         else:
-            site = models.Site.objects.get(pk=1)
+            site = Site.objects.get(pk=1)
             domain = site.domain
             return redirect(f"//{domain}{self.request.path}")
 
@@ -261,7 +268,7 @@ class TeachingModuleDetailView(ContentDetailView):
         if settings.SITE_ID == 1:
             return super().get(self.request)
         else:
-            site = models.Site.objects.get(pk=1)
+            site = Site.objects.get(pk=1)
             domain = site.domain
             return redirect(f"//{domain}{self.request.path}")
 
@@ -934,7 +941,17 @@ def search_view(request):
     # If there are no results - display random Content objects.
     suggestions = []
     if sqs.count() == 0:
-        suggestions = get_random_content(2, 2, 2)
+        if settings.SITE_ID == 1:
+            suggestions = get_random_content(
+                limit_teaching_modules=2, limit_tools=2, limit_trends=2
+            )
+        if settings.SITE_ID == 2:
+            suggestions = get_random_content(
+                limit_teaching_modules=0, limit_tools=6, limit_trends=0
+            )
+
+    if settings.SITE_ID == 2:
+        sqs = sqs.models(Tool)
 
     ctx = {
         "results": Content.objects.filter(pk__in=sqs.values_list("pk", flat=True)),
