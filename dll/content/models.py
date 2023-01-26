@@ -999,6 +999,7 @@ class HelpText(TimeStampedModel):
             EXTRA_FIELDS.append(("data_privacy_terms", _("Datenschutzerklärung")))
             EXTRA_FIELDS.append(("terms_and_conditions", _("AGB")))
             EXTRA_FIELDS.append(("security", _("Sicherheit")))
+            EXTRA_FIELDS.append(("conclusion", _("Fazit")))
         fields = self.get_fields()
         choices = []
 

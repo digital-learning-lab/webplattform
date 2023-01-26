@@ -11,6 +11,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from constance import config
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView, RedirectView
@@ -192,6 +193,29 @@ class CreateEditToolView(SiteRedirectMixin, CreateEditContentView):
     breadcrumb_url = reverse_lazy("add-tool")
     model = Tool
     serializer = ToolSerializer
+
+    def _get_compliance_dict(self):
+        fields = [
+            "SERVER_LOCATION",
+            "PROVIDER",
+            "DATA_PRIVACY_TERMS",
+            "TERMS_AND_CONDITIONS",
+            "USER_REGISTRATION",
+            "SECURITY",
+        ]
+        result = {}
+        for field in fields:
+            result[field.lower()] = {
+                "compliant": getattr(config, field + "_COMPLIANT"),
+                "not_compliant": getattr(config, field + "_NOT_COMPLIANT"),
+                "unknown": getattr(config, field + "_UNKNOWN"),
+            }
+        return result
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["compliance"] = json.dumps(self._get_compliance_dict())
+        return ctx
 
 
 class ReviewToolView(CreateEditToolView):

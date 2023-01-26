@@ -44,3 +44,11 @@
     kontaktieren.
   </p>
 {% endblock %}
+
+{% block extra_scripts %}
+  {{ block.super }}
+  <script>
+    window.compliance = {{ compliance|safe }};
+  </script>
+{% endblock extra_scripts %}
+
