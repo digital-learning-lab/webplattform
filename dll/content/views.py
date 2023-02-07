@@ -241,9 +241,18 @@ class ToolDetailView(ContentDetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ToolDetailView, self).get_context_data(**kwargs)
+        if settings.SITE_ID == 1:
+            ctx["show_banner"] = True
+            dlt_domain = Site.objects.get(pk=2).domain
+            ctx[
+                "dlt_tool_url"
+            ] = f"{self.request.scheme}://{dlt_domain}/tools/{self.object.slug}"
         if settings.SITE_ID == 2:
             dll_domain = Site.objects.get(pk=1).domain
-            ctx["canonical"] = f"https://{dll_domain}/tools/{self.object.slug}/"
+            ctx[
+                "canonical"
+            ] = f"{self.request.scheme}://{dll_domain}/tools/{self.object.slug}/"
+
         return ctx
 
 
@@ -579,7 +588,7 @@ class TeachingModuleDataFilterView(ContentDataFilterView):
         return qs.distinct()
 
 
-class ToolFilterView(SiteRedirectMixin, BaseFilterView):
+class ToolFilterView(BaseFilterView):
     template_name = "dll/filter/tools.html"
     rss_feed_url = reverse_lazy("tools-feed")
 

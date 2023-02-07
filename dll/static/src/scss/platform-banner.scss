@@ -1,0 +1,30 @@
+.platform-banner {
+    $size: 250px;
+    width: $size;
+    height: $size;
+    position: fixed;
+    bottom: 20px;
+    right: 40px;
+    background-color: #fff;
+    padding: 8px;
+    padding-top: 15px;
+    text-align: center;
+    font-size: 15px;
+}
+.platform-banner-logo {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+.platform-banner-catImage {
+    width: 40px;
+    height: 40px;
+    background-color: $color--daintree;
+    display: inline-block;
+    padding: 10px;
+    vertical-align: top;
+    margin: 3px;
+    img {
+        vertical-align: top;
+        max-height: 100%;
+    }
+}

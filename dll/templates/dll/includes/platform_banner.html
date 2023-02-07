@@ -1,0 +1,40 @@
+{% load static %}
+{% if show_banner %}
+<div class="platform-banner">
+    <img src="{% static 'img/logo/logo_dlt.svg' %}" class="platform-banner-logo" alt="">
+    <p>Mache mehr aus deinen Tools!</p>
+    <a href="{{ dlt_tool_url }}">Jetzt entdecken &#8250;</a>
+    <div class="mt-3">
+        <div class="platform-banner-catImage">
+            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_VisualisierenAnimierenSimulieren_weiß.svg' %}" alt="">
+        </div>
+        <div class="platform-banner-catImage">
+            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_Kommunizieren_weiß.svg' %}" alt="">
+        </div>
+        <div class="platform-banner-catImage">
+            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_InhalteTeilen_weiß.svg' %}" alt="">
+        </div>
+        <div class="platform-banner-catImage">
+            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_Zusammenarbeiten_weiß.svg' %}" alt="">
+        </div>
+        <div class="platform-banner-catImage">
+            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_Reflektieren_weiß.svg' %}" alt="">
+        </div>
+        <div class="platform-banner-catImage">
+            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_StrukturierenSystematisieren_weiß.svg' %}" alt="">
+        </div>
+        <div class="platform-banner-catImage">
+            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_TestenBewerten_weiß.svg' %}" alt="">
+        </div>
+        <div class="platform-banner-catImage">
+            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_SpielerischLernen_weiß.svg' %}" alt="">
+        </div>
+        <div class="platform-banner-catImage">
+            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_InhalteProduzieren_weiß.svg' %}" alt="">
+        </div>
+        <div class="platform-banner-catImage">
+            <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_ProblemeLoesen_weiß.svg' %}" alt="">
+        </div>
+    </div>
+</div>
+{% endif %}
