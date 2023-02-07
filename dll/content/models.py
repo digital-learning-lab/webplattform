@@ -826,7 +826,7 @@ class Tool(Content):
         public_instance.applications.add(*draft_instance.applications.all())
         public_instance.functions.add(*draft_instance.functions.all())
         try:
-            assessment = draft_instance.dataprivacyassessment
+            assessment = draft_instance.data_privacy_assessment
             assessment.pk = None
             assessment.tool = public_instance
             assessment.save()
