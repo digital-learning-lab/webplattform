@@ -18,6 +18,7 @@ from dll.content.utils import is_favored
 from dll.communication.models import CoAuthorshipInvitation
 from dll.content.fields import RangeField
 from dll.content.models import (
+    DataPrivacyAssessment,
     Potential,
     SchoolType,
     Competence,
@@ -689,6 +690,26 @@ class ToolVideoTutorialSerializer(serializers.ModelSerializer):
         fields = ["url", "name"]
 
 
+class DataPrivacyAssessmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataPrivacyAssessment
+        fields = [
+            "server_location",
+            "provider",
+            "user_registration",
+            "data_privacy_terms",
+            "terms_and_conditions",
+            "security",
+            "server_location_text",
+            "provider_text",
+            "user_registration_text",
+            "data_privacy_terms_text",
+            "terms_and_conditions_text",
+            "security_text",
+            "conclusion",
+        ]
+
+
 class ToolSerializer(BaseContentSubclassSerializer):
     operating_systems = DllM2MField(
         allow_null=True,
@@ -725,6 +746,10 @@ class ToolSerializer(BaseContentSubclassSerializer):
 
     url = ToolLinkSerializer(allow_null=True, many=False, required=False)
 
+    data_privacy_assessment = DataPrivacyAssessmentSerializer(
+        allow_null=True, required=False, many=False
+    )
+
     video_tutorials = ToolVideoTutorialSerializer(
         allow_null=True, many=True, required=False
     )
@@ -739,9 +764,16 @@ class ToolSerializer(BaseContentSubclassSerializer):
         fields.extend(["operating_systems", "applications"])
         return fields
 
+    def get_data_privacy_assessment(self, obj):
+        if hasattr(obj, "data_privacy_assessment"):
+            return DataPrivacyAssessmentSerializer(obj.data_privacy_assessment).data
+        return {}
+
     def create(self, validated_data):
         tutorial_data = validated_data.pop("video_tutorials", [])
+        validated_data.pop("data_privacy_assessment", None)
         content = super(ToolSerializer, self).create(validated_data)
+        DataPrivacyAssessment.objects.create(tool=content)
         self._update_tutorials(content, tutorial_data)
         return content
 
@@ -760,6 +792,19 @@ class ToolSerializer(BaseContentSubclassSerializer):
             url = validated_data.pop("url", None)
             if url:
                 ToolLink.objects.create(**url, tool=instance)
+            try:
+                if instance.data_privacy_assessment:
+                    instance.data_privacy_assessment.delete()
+            except ObjectDoesNotExist:
+                pass
+            print(validated_data)
+            data_privacy_assessment = validated_data.pop(
+                "data_privacy_assessment", None
+            )
+            if data_privacy_assessment:
+                DataPrivacyAssessment.objects.create(
+                    tool=instance, **data_privacy_assessment
+                )
 
         instance = super(ToolSerializer, self).update(instance, validated_data)
         return instance
@@ -888,7 +933,14 @@ class ToolSubmissionSerializer(ToolSerializer):
 
     def __init__(self, *args, **kwargs):
         super(ToolSubmissionSerializer, self).__init__(*args, **kwargs)
-        FIELDS = ["name", "teaser", "image", "competences", "url"]
+        FIELDS = [
+            "name",
+            "teaser",
+            "image",
+            "competences",
+            "url",
+            "data_privacy_assessment",
+        ]
 
         for field in FIELDS:
             setattr(self.fields[field], "allow_blank", False)

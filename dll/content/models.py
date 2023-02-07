@@ -1880,20 +1880,52 @@ class DataPrivacyAssessment(TimeStampedModel):
     )
 
     server_location = models.CharField(
-        _("Serverstandort"), max_length=32, choices=SERVER_LOCATION_CHOICES
+        _("Serverstandort"),
+        max_length=32,
+        choices=SERVER_LOCATION_CHOICES,
+        null=True,
+        blank=True,
+        default=UNKNOWN[0],
     )
-    provider = models.CharField(_("Anbieter"), max_length=32, choices=PROVIDER_CHOICES)
+    provider = models.CharField(
+        _("Anbieter"),
+        max_length=32,
+        choices=PROVIDER_CHOICES,
+        null=True,
+        blank=True,
+        default=UNKNOWN[0],
+    )
     user_registration = models.CharField(
-        _("Benutzeranmeldung"), max_length=32, choices=USER_REGISTRATION_CHOICES
+        _("Benutzeranmeldung"),
+        max_length=32,
+        choices=USER_REGISTRATION_CHOICES,
+        null=True,
+        blank=True,
+        default=UNKNOWN[0],
     )
     data_privacy_terms = models.CharField(
-        _("Datenschutzerklärung"), max_length=32, choices=DATA_PRIVACY_TERMS_CHOICES
+        _("Datenschutzerklärung"),
+        max_length=32,
+        choices=DATA_PRIVACY_TERMS_CHOICES,
+        null=True,
+        blank=True,
+        default=UNKNOWN[0],
     )
     terms_and_conditions = models.CharField(
-        _("AGB"), max_length=32, choices=TERMS_AND_CONDITIONS_CHOICES
+        _("AGB"),
+        max_length=32,
+        choices=TERMS_AND_CONDITIONS_CHOICES,
+        null=True,
+        blank=True,
+        default=UNKNOWN[0],
     )
     security = models.CharField(
-        _("Sicherheit"), max_length=32, choices=SECURITY_CHOICES
+        _("Sicherheit"),
+        max_length=32,
+        choices=SECURITY_CHOICES,
+        null=True,
+        blank=True,
+        default=UNKNOWN[0],
     )
 
     server_location_text = models.TextField(
@@ -1927,14 +1959,15 @@ class DataPrivacyAssessment(TimeStampedModel):
         help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
     )
 
-    conclusion = models.TextField(_("Fazit"), blank=False)
+    conclusion = models.TextField(_("Fazit"), blank=True)
 
     tool = models.OneToOneField(
         "Tool",
         verbose_name=_("Tool"),
-        null=False,
-        blank=False,
+        null=True,
+        blank=True,
         on_delete=models.CASCADE,
+        related_name="data_privacy_assessment",
     )
 
     overall = models.CharField(

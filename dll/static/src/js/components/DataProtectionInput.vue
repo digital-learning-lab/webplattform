@@ -9,7 +9,7 @@
           <option value="not_compliant">Nicht erfüllt</option>
           <option value="unknown">Unbekannt</option>
         </select>
-        <input type="text" class="form-control mr-3" :class="{'form__field--error': error}" :id="id" placeholder="Anmerkungen" v-model="complianceText" :readonly="readonly">
+        <input type="text" class="form-control mr-3" :class="{'form__field--error': error}" :id="id" placeholder="Anmerkungen" v-model="complianceTextInternal" :readonly="readonly">
       </div>
     </div>
     <app-review-input :mode="review ? 'review' : 'edit'" :id="'id'+-review" :name="label" :reviewValue.sync="ownReviewValue"></app-review-input>
@@ -46,6 +46,16 @@
         default: '',
         required: false
       },
+      compliance: {
+        type: String,
+        default: '',
+        required: false
+      },
+      complianceText: {
+        type: String,
+        default: '',
+        required: false
+      },
       error: {
         type: Boolean,
         default: false,
@@ -65,7 +75,7 @@
     data () {
       return {
         complianceLevel: 'unknown',
-        complianceText: '',
+        complianceTextInternal: '',
         defaultTextCompliant: '',
         defaultTextNotCompliant: '',
         defaultTextUknown: ''
@@ -92,16 +102,16 @@
       },
       updateText(event) {
         if (event.target.value === 'compliant') {
-          if (this.isDefaultText(this.complianceText)) {
-            this.complianceText = this.defaultTextCompliant
+          if (this.isDefaultText(this.complianceTextInternal)) {
+            this.complianceTextInternal = this.defaultTextCompliant
           }
         } else if (event.target.value === 'not_compliant') {
-          if (this.isDefaultText(this.complianceText)) {
-            this.complianceText = this.defaultTextNotCompliant
+          if (this.isDefaultText(this.complianceTextInternal)) {
+            this.complianceTextInternal = this.defaultTextNotCompliant
           }
         } else {
-          if (this.isDefaultText(this.complianceText)) {
-            this.complianceText = this.defaultTextUknown
+          if (this.isDefaultText(this.complianceTextInternal)) {
+            this.complianceTextInternal = this.defaultTextUknown
           }
         }
       }
@@ -110,8 +120,16 @@
       this.defaultTextCompliant = window.compliance[this.id].compliant;
       this.defaultTextNotCompliant = window.compliance[this.id].not_compliant;
       this.defaultTextUknown = window.compliance[this.id].unknown;
+      this.complianceTextInternal = this.complianceText
+      this.complianceLevel = this.compliance
     },
     watch: {
+      complianceTextInternal: function (val) {
+        this.$emit('update:complianceText', val)
+      },
+      complianceLevel: function (val) {
+        this.$emit('update:compliance', val)
+      }
     }
   }
 </script>

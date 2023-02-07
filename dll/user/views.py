@@ -27,7 +27,14 @@ from .forms import (
     UserPasswordChangeForm,
     UserAccountDeleteForm,
 )
-from dll.content.models import Content, TeachingModule, Tool, Trend, Review
+from dll.content.models import (
+    Content,
+    DataPrivacyAssessment,
+    TeachingModule,
+    Tool,
+    Trend,
+    Review,
+)
 from dll.content.rules import is_bsb_reviewer, is_tuhh_reviewer
 from dll.content.serializers import (
     TeachingModuleSerializer,
@@ -116,6 +123,11 @@ class CreateEditContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
                 and not self.request.user.is_reviewer
             ):
                 data["review"] = None
+            if (
+                "data_privacy_assessment" in data
+                and not data["data_privacy_assessment"]
+            ):
+                data["data_privacy_assessment"] = {}
             ctx["obj"] = json.dumps(data)
             ctx["author"] = obj.author.full_name
             ctx["can_delete"] = (
@@ -216,6 +228,13 @@ class CreateEditToolView(SiteRedirectMixin, CreateEditContentView):
         ctx = super().get_context_data(**kwargs)
         ctx["compliance"] = json.dumps(self._get_compliance_dict())
         return ctx
+
+    def get_object(self):
+        obj = super().get_object()
+        if obj and not DataPrivacyAssessment.objects.filter(tool=obj).exists():
+            obj.data_privacy_assessment = DataPrivacyAssessment.objects.create(tool=obj)
+            obj.save()
+        return obj
 
 
 class ReviewToolView(CreateEditToolView):
