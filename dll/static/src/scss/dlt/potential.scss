@@ -13,21 +13,28 @@ $general-width: 700px;
   height: $general-width / 4;
   background-color: rgb(34, 42, 76);
   flex-basis: 25%;
+  display: flex;
+  align-content: center;
   border: 8px solid white;
   color: white;
   font-size: 0.85rem;
   font-weight: 600;
   text-align: center;
+  flex-wrap: wrap;
   &:hover {
     background-color: lighten(rgb(34, 42, 76), 20%);
     cursor: pointer;
     color: white !important;
   }
+  p {
+    flex: 1 0 100%;
+    margin-bottom: 0;
+  }
 }
 .potential-box-image {
   height: 50px;
   width: 50px;
-  margin-top: 20px;
+  flex: 1 0 100%;
   margin-bottom: 15px;
   display: block;
   margin-left: auto;
