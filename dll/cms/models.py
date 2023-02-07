@@ -87,7 +87,6 @@ class SimplePage(DllPageMixin, Page):
 
 
 class BlockPage(DllPageMixin, Page):
-
     body = StreamField(
         [
             ("single_element_block", SingleElementBlock()),
@@ -116,7 +115,6 @@ class BlockPage(DllPageMixin, Page):
 
 
 class Frontpage(DllPageMixin, Page):
-
     body = StreamField(
         [
             ("single_element_block", SingleElementBlock()),

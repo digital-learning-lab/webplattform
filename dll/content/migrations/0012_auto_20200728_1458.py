@@ -6,7 +6,6 @@ import dll.content.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("content", "0011_auto_20200714_1708"),
     ]

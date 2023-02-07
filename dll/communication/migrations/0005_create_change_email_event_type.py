@@ -17,7 +17,6 @@ def backwards_func(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("communication", "0004_create_user_password_reset_event_type"),
     ]

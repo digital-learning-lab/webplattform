@@ -25,7 +25,6 @@ def remove_tool_potentials(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("content", "0023_auto_20221005_2244"),
     ]

@@ -91,7 +91,6 @@ class FavorTestCase(BaseTestCase):
         self.assertContains(response, draft_content.name)
 
     def test_content_teaser_favor_indication(self):
-
         self.client.login(email="test+alice@blueshoe.de", password="password")
         draft_content = Content.objects.drafts().first()
         self._favor_content(draft_content)

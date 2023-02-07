@@ -12,7 +12,6 @@ from dll.user.utils import get_bsb_reviewer_group, get_tuhh_reviewer_group
 
 class BaseTestCase(TestCase):
     def setUp(self):
-
         author = {
             "username": "alice",
             "first_name": "Alice",

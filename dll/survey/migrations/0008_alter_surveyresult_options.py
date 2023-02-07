@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('survey', '0007_auto_20210210_1904'),
+        ("survey", "0007_auto_20210210_1904"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='surveyresult',
-            options={'get_latest_by': 'modified'},
+            name="surveyresult",
+            options={"get_latest_by": "modified"},
         ),
     ]

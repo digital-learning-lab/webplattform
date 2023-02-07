@@ -142,7 +142,6 @@ class TeachingModuleAdmin(ImportExportMixin, ContentAdmin):
         return qs.drafts()
 
     def export_xlsx(self, request, queryset):
-
         output = BytesIO()
         workbook = xlsxwriter.Workbook(output)
         worksheet = workbook.add_worksheet()

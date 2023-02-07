@@ -5,7 +5,6 @@ import dll.general.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("user", "0004_remove_dlluser_additional_emails"),
     ]

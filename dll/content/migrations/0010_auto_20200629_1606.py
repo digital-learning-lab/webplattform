@@ -7,7 +7,6 @@ import django_extensions.db.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("content", "0009_fix_missing_created_values"),
     ]

@@ -13,7 +13,6 @@ from dll.survey.models import (
 
 
 class SurveyResultForm(forms.ModelForm):
-
     FIELD_MAP = {
         0: forms.ChoiceField,
         2: forms.MultipleChoiceField,

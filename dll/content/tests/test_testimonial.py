@@ -159,7 +159,6 @@ class TestimonialTests(BaseTestCase):
         )
 
     def test_testimonial_decline(self):
-
         Testimonial.objects.all().delete()
         self._login()
         payload = {

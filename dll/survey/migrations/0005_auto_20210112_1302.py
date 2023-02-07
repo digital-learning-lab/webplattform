@@ -8,7 +8,6 @@ import django_extensions.db.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("survey", "0004_auto_20201203_1652"),
     ]

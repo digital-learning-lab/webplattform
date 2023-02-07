@@ -4,18 +4,17 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('general', '0001_initial'),
+        ("general", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='message',
-            options={'get_latest_by': 'modified'},
+            name="message",
+            options={"get_latest_by": "modified"},
         ),
         migrations.AlterModelOptions(
-            name='newslettersubscription',
-            options={'get_latest_by': 'modified'},
+            name="newslettersubscription",
+            options={"get_latest_by": "modified"},
         ),
     ]

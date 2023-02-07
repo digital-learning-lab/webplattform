@@ -1653,7 +1653,6 @@ class Potential(TimeStampedModel, VideoEmbedMixin):
 
 
 class ToolVideoTutorial(TimeStampedModel):
-
     title = models.CharField(verbose_name=_("Titel"), max_length=512)
 
     url = models.CharField(verbose_name=_("URL"), max_length=2048)

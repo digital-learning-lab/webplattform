@@ -8,7 +8,6 @@ import dll.user.utils
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ("content", "0030_auto_20221114_1650"),

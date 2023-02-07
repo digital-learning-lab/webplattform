@@ -10,7 +10,6 @@ import filer.fields.image
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("content", "0005_auto_20200113_1636"),
     ]
