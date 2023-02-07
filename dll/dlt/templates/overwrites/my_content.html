@@ -5,3 +5,10 @@
     Tool erstellen <span class=" fas fa-plus"></span>
   </a>
 {% endblock add_buttons %}
+
+{% block extra_scripts %}
+  {{ block.super }}
+  <script>
+  window.dllData.type = 'tool';
+  </script>
+{% endblock %}

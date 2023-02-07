@@ -155,11 +155,15 @@
     mixins: [paginationMixin, axiosMixin],
     computed: {
       params () {
-        return {
+        const params = {
           type: this.type,
           q: this.searchTerm,
           status: this.status
+        };
+        if (window.dllData.type) {
+          params.type = window.dllData.type;
         }
+        return params;
       }
     },
     methods: {
