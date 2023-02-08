@@ -270,16 +270,11 @@ class ContentViewTests(BaseTestCase):
     def test_tools_filter_view(self):
         url = reverse("tools-filter")
         response = self.client.get(url)
-        self.assertEqual(response.status_code, 302)
-        site = Site.objects.get(pk=2)
-        self.assertRedirects(
-            response, f"//{site.domain}{url}", fetch_redirect_response=False
-        )
-        with self.settings(SITE_ID=2):
-            response = self.client.get(url)
-            # contains vue app container
-            self.assertContains(response, "tools-app")
-            self.assertContains(response, "window.functionsFilter")
+        self.assertEqual(response.status_code, 200)
+        response = self.client.get(url)
+        # contains vue app container
+        self.assertContains(response, "tools-app")
+        self.assertContains(response, "window.functionsFilter")
 
     def test_teaching_content_data_filter_view(self):
         url = reverse("teaching-modules-data-filter")
