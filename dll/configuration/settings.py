@@ -662,3 +662,16 @@ SHARED_SESSION_SITES = [
     "staging.digitallearningtools.de",
 ]
 SHARED_SESSION_ALWAYS_REPLACE = True
+
+TOOL_FUNCTION_POTENTIAL_MAPPING = {
+    "Produzieren": "Inhalte produzieren",
+    "Kommunizieren": "Kommunizieren",
+    "Reflexion": "Reflektieren",
+    "Spielerisch lernen": "Spielerisch lernen",
+    "Bereitstellen & Austauschen von digitalen Dokumenten": "Inhalte teilen",
+    "Visualisieren, Animieren & Simulieren": "Visualisieren, Animieren und Simulieren",
+    "Zusammenarbeiten & Kooperieren": "Zusammenarbeiten und Kooperieren",
+    "Strukturieren von Inhalten": "Strukturieren und Systematisieren",
+    "Problemlösen mit digitalen Werkzeugen": "Probleme lösen",
+    "Testing & Assessment": "Testen und Bewerten",
+}

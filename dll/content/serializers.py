@@ -797,7 +797,6 @@ class ToolSerializer(BaseContentSubclassSerializer):
                     instance.data_privacy_assessment.delete()
             except ObjectDoesNotExist:
                 pass
-            print(validated_data)
             data_privacy_assessment = validated_data.pop(
                 "data_privacy_assessment", None
             )

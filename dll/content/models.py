@@ -778,6 +778,31 @@ class Tool(Content):
         verbose_name = _("Tool")
         verbose_name_plural = _("Tools")
 
+    def sync_functions_to_potentials(self):
+        self.functions.set([])
+        for p in self.potentials.all():
+            try:
+                if p.function:
+                    self.functions.add(p.function)
+            except ToolFunction.DoesNotExist:
+                pass
+
+    def sync_potentials_to_functions(self):
+        self.potentials.set([])
+        for f in self.functions.all():
+            try:
+                if f.potential:
+                    self.potentials.add(f.potential)
+            except Potential.DoesNotExist:
+                pass
+
+    def save(self, *args, **kwargs):
+        if settings.SITE_ID == 2:
+            self.sync_functions_to_potentials()
+        elif settings.SITE_ID == 1:
+            self.sync_potentials_to_functions()
+        super().save(*args, **kwargs)
+
     @property
     def type_verbose(self):
         return "Tool"
@@ -825,6 +850,7 @@ class Tool(Content):
         public_instance.operating_systems.add(*draft_instance.operating_systems.all())
         public_instance.applications.add(*draft_instance.applications.all())
         public_instance.functions.add(*draft_instance.functions.all())
+        public_instance.potentials.add(*draft_instance.potentials.all())
         try:
             assessment = draft_instance.data_privacy_assessment
             assessment.pk = None
@@ -1646,6 +1672,9 @@ class Potential(TimeStampedModel, VideoEmbedMixin):
         max_length=512,
         populate_from="name",
         slugify_function=remove_number_custom_slugify,
+    )
+    function = models.OneToOneField(
+        to="ToolFunction", on_delete=models.SET_NULL, null=True
     )
 
     def __str__(self):

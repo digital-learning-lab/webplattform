@@ -233,7 +233,7 @@ class DataPrivacyAssessmentAdmin(admin.StackedInline):
 class ToolAdmin(
     PublishAdminMixin, SimpleHistoryAdmin, ImportExportMixin, admin.ModelAdmin
 ):
-    exclude = ("json_data", "tags")
+    exclude = ("json_data", "tags", "functions")
     resource_class = ToolResource
     inlines = [
         DataPrivacyAssessmentAdmin,
