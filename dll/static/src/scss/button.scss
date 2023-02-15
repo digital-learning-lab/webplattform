@@ -154,6 +154,7 @@
   bottom: 10%;
   visibility: hidden;
   transition: opacity .3s linear;
+  z-index: 100000;
   &.show {
     opacity: 1;
     visibility: visible;
