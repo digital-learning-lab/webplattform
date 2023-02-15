@@ -8,6 +8,7 @@ def platform_variables(request):
         "main_css": "main_dll",
         "template_suffix": "dll",
         "title": "digital.learning.lab",
+        "dll_logo": "img/logo/dll_logo_rgb_claim_rechts.png",
         "logo_desktop_1x": "img/logo/dll_logo_rgb_claim_rechts.png",
         "logo_desktop_2x": "img/logo/dll_logo_rgb_claim_rechts_large.png",
         "logo_mobile_1x": "img/logo/dll_logo_rgb_ohne_claim.png",

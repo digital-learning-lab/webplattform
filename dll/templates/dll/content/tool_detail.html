@@ -96,6 +96,7 @@
             <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
         </a>
     </li>
+    {% if SITE_ID == 2 %}
     <li class="sidebar__nav-item">
         <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="data-protection-tab" data-toggle="pill" href="#data-protection"
            role="tab" aria-controls="hints" aria-selected="true">
@@ -103,6 +104,7 @@
             <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
         </a>
     </li>
+    {% endif %}
     {% if object.related_teaching_modules %}
         <li class="sidebar__nav-item">
             <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="modules-tab" data-toggle="pill"
@@ -130,15 +132,27 @@
             </a>
         </li>
     {% endif %}
+
+    {% if SITE_ID == 2 %}
+        <li class="sidebar__nav-item">
+            <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="more-tab" data-toggle="pill" href="#more"
+               role="tab" aria-controls="more" aria-selected="true">
+                Mehr entdecken
+                <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+            </a>
+        </li>
+    {% endif %}
 {% endblock %}
 
 {% block tab_contents %}
     <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
         {% include 'dll/content/tools/overview.html' %}
     </div>
+    {% if SITE_ID == 2 %}
     <div class="tab-pane fade" id="data-protection" role="tabpanel" aria-labelledby="hints-tab">
         {% include 'dll/content/tools/data_protection.html' %}
     </div>
+    {% endif %}
     {% if object.related_teaching_modules %}
         <div class="tab-pane fade" id="modules" role="tabpanel" aria-labelledby="modules-tab">
             {% include 'dll/content/tools/teaching_modules.html' %}
@@ -152,6 +166,12 @@
     {% if object.related_trends %}
         <div class="tab-pane fade" id="trends" role="tabpanel" aria-labelledby="trends-tab">
             {% include 'dll/content/includes/trends.html' with headline='Trends' %}
+        </div>
+    {% endif %}
+
+    {% if SITE_ID == 2 %}
+        <div class="tab-pane fade" id="more" role="tabpanel" aria-labelledby="more-tab">
+            {% include 'dll/content/includes/discover_more.html' with headline='Entdecke mehr Bausteine und Trends' %}
         </div>
     {% endif %}
 {% endblock %}
