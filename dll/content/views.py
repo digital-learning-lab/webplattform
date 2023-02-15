@@ -241,8 +241,8 @@ class ToolDetailView(ContentDetailView):
 
     def get_context_data(self, **kwargs):
         ctx = super(ToolDetailView, self).get_context_data(**kwargs)
+        ctx["show_banner"] = True
         if settings.SITE_ID == 1:
-            ctx["show_banner"] = True
             dlt_domain = Site.objects.get(pk=2).domain
             ctx[
                 "dlt_tool_url"

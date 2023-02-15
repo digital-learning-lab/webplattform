@@ -1,6 +1,7 @@
 {% load static %}
 {% if show_banner %}
 <div class="platform-banner">
+    {% if SITE_ID == 1 %}
     <img src="{% static 'img/logo/logo_dlt.svg' %}" class="platform-banner-logo" alt="">
     <p>Mache mehr aus deinen Tools!</p>
     <a href="{{ dlt_tool_url }}">Jetzt entdecken &#8250;</a>
@@ -36,5 +37,11 @@
             <img src="{% static 'img/icons/dlt/dlt_Potenzialkategorien_ProblemeLoesen_weiß.svg' %}" alt="">
         </div>
     </div>
+    {% elif SITE_ID == 2 %}
+        <img class="platform-banner-logo" src="{% static dll_logo  %}" class="platform-banner-logo" alt="">
+        <p>Mache mehr aus deinem Unterricht</p>
+        <a href="{{ dll_url }}">Jetzt entdecken &#8250;</a>
+        <img src="" alt="">
+    {% endif %}
 </div>
 {% endif %}
