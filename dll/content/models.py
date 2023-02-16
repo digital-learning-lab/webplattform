@@ -797,10 +797,11 @@ class Tool(Content):
                 pass
 
     def save(self, *args, **kwargs):
-        if settings.SITE_ID == 2:
-            self.sync_functions_to_potentials()
-        elif settings.SITE_ID == 1:
-            self.sync_potentials_to_functions()
+        if self.pk:
+            if settings.SITE_ID == 2:
+                self.sync_functions_to_potentials()
+            elif settings.SITE_ID == 1:
+                self.sync_potentials_to_functions()
         super().save(*args, **kwargs)
 
     @property
