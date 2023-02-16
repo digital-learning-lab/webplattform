@@ -35,7 +35,6 @@ test_python:
     before_script:
       - poetry install
     script:
-      - python manage.py rebuild_index --noinput
       - coverage run --source=/code/dll/ -m pytest /code/dll/
       - coverage report
     tags:
