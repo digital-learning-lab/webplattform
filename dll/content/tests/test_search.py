@@ -21,7 +21,7 @@ class SearchTestCase(BaseTestCase):
 
     def test_search_with_results(self):
         # Make sure index was updated before running tests.
-        time.sleep(15)
+        # time.sleep(15)
         response = self.client.get(self.search_url + "?q=TeachingModule")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "TeachingModule Ut a")
