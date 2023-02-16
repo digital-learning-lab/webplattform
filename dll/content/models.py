@@ -1743,13 +1743,25 @@ class Testimonial(PublisherModel):
             "link_to_review_overview": url,
         }
 
-        send_mail.delay(
-            event_type_code="TESTIMONIAL_SUBMITTED_FOR_REVIEW",
-            ctx=context,
-            email=config.TESTIMONIAL_REVIEW_EMAIL or settings.REVIEW_MAIL,
-            sender_id=getattr(user, "pk", None),
-            bcc=settings.EMAIL_SENDER,
-        )
+        email = config.TESTIMONIAL_REVIEW_EMAIL or settings.REVIEW_MAIL
+        if "," in email:
+            emails = email.split(",")
+            for email in emails:
+                send_mail.delay(
+                    event_type_code="TESTIMONIAL_SUBMITTED_FOR_REVIEW",
+                    ctx=context,
+                    email=email,
+                    sender_id=getattr(user, "pk", None),
+                    bcc=settings.EMAIL_SENDER,
+                )
+        else:
+            send_mail.delay(
+                event_type_code="TESTIMONIAL_SUBMITTED_FOR_REVIEW",
+                ctx=context,
+                email=email,
+                sender_id=getattr(user, "pk", None),
+                bcc=settings.EMAIL_SENDER,
+            )
 
     @property
     def active_review(self):
