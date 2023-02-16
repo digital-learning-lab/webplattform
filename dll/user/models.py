@@ -144,6 +144,7 @@ class DllUser(TimeStampedModel, AbstractUser):
             res[potential.slug] = {
                 "name": potential.name,
                 "count": tools.filter(potentials__in=[potential]).count(),
+                "pk": potential.pk,
             }
         return res
 

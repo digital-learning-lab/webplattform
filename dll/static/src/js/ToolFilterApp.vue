@@ -17,6 +17,15 @@
             </ul>
           </div>
           <div>
+            <h3 class="form-subhead">Meine favorisierten Tools</h3>
+            <ul class="list-unstyled">
+              <li class="form-check">
+                <input type="checkbox" class="form-check-input" name="favorites" v-model="favorites" id="favorites-checkbox">
+                <label class="form-check-label" for="favorites-checkbox">Anzeigen</label>
+              </li>
+            </ul>
+          </div>
+          <div>
             <h3 class="form-subhead">Fächerbezug</h3>
             <select name="subject" id="subject" v-model="subject" @change="updateContents" class="form-control">
               <option value="" selected>--------</option>
@@ -150,7 +159,8 @@
         operatingSystems: [],
         dataPrivacy: null,
         withCosts: null,
-        slider: null
+        slider: null,
+        favorites: false
       }
     },
     computed: {
@@ -182,7 +192,8 @@
           toolFunctions: this.toolFunctions,
           withCosts: this.withCosts,
           potentials: this.potentials,
-          subject: this.subject
+          subject: this.subject,
+          favorites: this.favorites
         }
       },
       getToolFunctions () {

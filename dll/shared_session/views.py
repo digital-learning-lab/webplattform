@@ -31,7 +31,6 @@ class SharedSessionView(View):
         response = HttpResponse("", content_type="text/javascript")
         try:
             message = self.decrypt_payload(urlsafe_base64_decode(kwargs.get("message")))
-            print("Hello")
 
             is_session_empty = request.session.is_empty()
 

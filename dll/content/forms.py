@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from threading import local
-
 from ckeditor.widgets import CKEditorWidget
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Field, Hidden
@@ -11,8 +9,6 @@ from django.contrib.flatpages.forms import FlatpageForm
 from django.urls import reverse
 from django_select2.forms import HeavySelect2Widget
 from dll.content.models import HelpText, HelpTextField, Testimonial
-
-_thread_locals = local()
 
 
 class FlatPageAdminForm(FlatpageForm):

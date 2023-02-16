@@ -1,5 +1,6 @@
 .toolbox-tile {
     background-color: $color--darkblue;
+    display: block;
     color: #fff;
     font-weight: bold;
     text-align: center;
@@ -8,6 +9,9 @@
     height: 220px;
     padding: 40px;
     width: 100%;
+    &:hover {
+        color: #fff;
+    }
 }
 .toolbox-tile-counter {
     position: absolute;

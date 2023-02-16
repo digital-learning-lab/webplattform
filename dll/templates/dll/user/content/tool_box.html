@@ -6,13 +6,13 @@
   <div class="row justify-content-center">
     {% for slug, info in tool_box_information.items %}
       <div class="col-6 col-md-4 col-xl-3 mb-3">
-        <div class="toolbox-tile">
+        <a class="toolbox-tile" href="{% url 'tools-filter' %}?potentials={{ info.pk }}">
           <div class="toolbox-tile-counter">{{ info.count }}</div>
           <div class="toolbox-icon icon--dlt icon-{{ slug }}--white" data-toggle="tooltip" title="{{ info.name }}"></div>
           <div>
             {{ info.name }}
           </div>
-        </div>
+        </a>
       </div>
     {% endfor %}
   </div>
