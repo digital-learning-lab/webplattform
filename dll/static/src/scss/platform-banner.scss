@@ -1,7 +1,6 @@
 .platform-banner {
     $size: 250px;
     width: $size;
-    height: $size;
     position: fixed;
     bottom: 20px;
     right: 40px;
@@ -28,4 +27,11 @@
         vertical-align: top;
         max-height: 100%;
     }
+}
+.platform-banner-circle {
+    width: 80%;
+    margin-left: auto;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    margin-right: auto;
 }
