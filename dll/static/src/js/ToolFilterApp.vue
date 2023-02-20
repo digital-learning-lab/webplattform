@@ -16,7 +16,7 @@
               </li>
             </ul>
           </div>
-          <div>
+          <div v-if="loggedIn">
             <h3 class="form-subhead">Meine favorisierten Tools</h3>
             <ul class="list-unstyled">
               <li class="form-check">
@@ -185,7 +185,7 @@
         return window.dataPrivacyFilter
       },
       getQueryParams () {
-        return {
+        const res = {
           dataPrivacy: this.dataPrivacy,
           applications: this.applications,
           operatingSystems: this.operatingSystems,
@@ -193,8 +193,11 @@
           withCosts: this.withCosts,
           potentials: this.potentials,
           subject: this.subject,
-          favorites: this.favorites
         }
+        if (this.loggedIn) {
+          res['favorites'] = this.favorites
+        }
+        return res;
       },
       getToolFunctions () {
         return window.functionsFilter
@@ -217,6 +220,9 @@
         this.debouncedUpdate()
       },
       potentials () {
+        this.debouncedUpdate()
+      },
+      favorites () {
         this.debouncedUpdate()
       },
       activePotentials (newVal) {

@@ -36,6 +36,18 @@ class SortingFilter(BaseFilterBackend):
             return queryset.order_by("-name")
 
 
+class FavoriteFilter(BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        favorites = request.GET.get("favorites", "false") == "true"
+        if favorites:
+            return queryset.filter(
+                pk__in=request.user.favorites.values_list(
+                    "publisher_linked__pk", flat=True
+                )
+            )
+        return queryset
+
+
 class PolymorphicAttributeFilter(BaseFilterBackend):
     query_parameter_name = None
     field_name = None

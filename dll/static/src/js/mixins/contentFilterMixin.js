@@ -66,6 +66,9 @@ export const contentFilter = {
   computed: {
     window () {
       return window
+    },
+    loggedIn () {
+      return this.window.loggedIn
     }
   },
   created () {

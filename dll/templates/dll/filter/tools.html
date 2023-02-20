@@ -13,5 +13,6 @@
   window.functionsFilter = {{ functions_filter|safe }};
   window.potentialFilter = {{ potential_filter|safe }};
   window.dataPrivacyFilter = {{ data_privacy_filter|safe }};
+  window.loggedIn = {{ request.user.is_authenticated|yesno:"true,false" }};
   </script>
 {% endblock %}

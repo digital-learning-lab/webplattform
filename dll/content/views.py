@@ -51,6 +51,7 @@ from dll.content.filters import (
     ToolPotentialFilter,
     ToolSubjectFilter,
     ToolWithCostsFilter,
+    FavoriteFilter,
 )
 from dll.content.rules import is_bsb_reviewer, is_tuhh_reviewer
 from dll.content.models import (
@@ -642,6 +643,7 @@ class ToolDataFilterView(ContentDataFilterView):
         ToolPotentialFilter,
         ToolSubjectFilter,
         ToolWithCostsFilter,
+        FavoriteFilter,
     ] + ContentDataFilterView.filter_backends
 
 
