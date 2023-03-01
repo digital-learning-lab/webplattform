@@ -2391,13 +2391,14 @@ testing = ["Jinja2 (>=3.0,<3.2)", "azure-mgmt-cdn (>=5.1,<6.0)", "azure-mgmt-fro
 
 [[package]]
 name = "wagtailmenus"
-version = "3.1.3"
+version = "3.1.5"
 description = "An app to help you manage menus in your Wagtail projects more consistently."
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "wagtailmenus-3.1.3-py3-none-any.whl", hash = "sha256:0f5669f160d788b1ab8c2b412cb95411e9c07f83e4b52dddc92991752c6fa397"},
+    {file = "wagtailmenus-3.1.5-py3-none-any.whl", hash = "sha256:26a4b1f32cf0906cc209bee7d88bc6f9674d5cc17426fa8305ef93faea544f57"},
+    {file = "wagtailmenus-3.1.5.tar.gz", hash = "sha256:bd242aa87ffe653a79e3cad34bdeecdd569dea6bc37f7075b153de485e97534e"},
 ]
 
 [package.dependencies]
@@ -2491,4 +2492,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~=3.8"
-content-hash = "3fa85a880387881acd9280ad058d244e33ea2c07d9199eb102770e237b2ba257"
+content-hash = "ab35c7587a74e8f674f336b225abd58a20233d01a6ed4d509fa3e90768758035"
