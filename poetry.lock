@@ -192,14 +192,14 @@ crt = ["awscrt (==0.16.9)"]
 
 [[package]]
 name = "bpython"
-version = "0.23"
+version = "0.24"
 description = ""
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "bpython-0.23-py3-none-any.whl", hash = "sha256:72aab438052439ac89b471c4ee2a8fba6a0a082a51b0f70826e88cc0e7723298"},
-    {file = "bpython-0.23.tar.gz", hash = "sha256:9f0078abc887c48af088691e2f64797d6ca994ac0f4bc03c38d06f657d7c052a"},
+    {file = "bpython-0.24-py3-none-any.whl", hash = "sha256:0d196ae3d1ce3dcd559a3fb89ed2c468dfbd1504af0d680b906dd65a9c7a32eb"},
+    {file = "bpython-0.24.tar.gz", hash = "sha256:98736ffd7a8c48fd2bfb53d898a475f4241bde0b672125706af04d9d08fd3dbd"},
 ]
 
 [package.dependencies]
@@ -2492,4 +2492,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "~=3.8"
-content-hash = "ab35c7587a74e8f674f336b225abd58a20233d01a6ed4d509fa3e90768758035"
+content-hash = "064b594ced7aef93077fa8f09f6604c7e5cd63082891df780cbaab28f391fa6e"
