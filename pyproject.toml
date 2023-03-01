@@ -10,7 +10,7 @@ python = "~=3.8"
 Django = "3.2.18"
 psycopg2 = {version = "2.9.5", extras = ["binary"]}
 django-meta = "2.1.0"
-django-webpack-loader = "==1.8.0"
+django-webpack-loader = "==1.8.1"
 django-extensions = "3.2.1"
 django-filer = "2.2.4"
 django-polymorphic = "3.1.0"
