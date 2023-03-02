@@ -43,7 +43,7 @@ django-constance = {version = "==2.9.1", extras = ["database"]}
 wagtail = "3.0.3"
 PyNaCl = "==1.5.0"
 django-nested-admin = "4.0.2"
-sentry-sdk = "1.13.0"
+sentry-sdk = "1.16.0"
 wagtailmenus = "3.1.5"
 
 [tool.poetry.dev-dependencies]
