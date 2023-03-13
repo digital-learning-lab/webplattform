@@ -234,3 +234,5 @@ ore.io/api/node,linux,macos,python,django,pycharm
 /.idea/.gitignore
 .devcontainer/devcontainer.json
 settings.json
+backup/220217_dll-production.sql
+backup/dll_db_backup.bin

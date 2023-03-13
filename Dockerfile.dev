@@ -12,5 +12,5 @@ RUN apt update \
 
 RUN mkdir /code
 WORKDIR /code
-
+RUN touch /.pythonhist && chmod 777 /.pythonhist
 COPY . /code/
