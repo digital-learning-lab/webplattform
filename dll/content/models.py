@@ -1283,7 +1283,7 @@ class Competence(TimeStampedModel):
 
     cid = models.SmallIntegerField(unique=True, editable=False)
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=600)
+    description = models.CharField(verbose_name=_("Beschreibung"), max_length=600)
     slug = DllSlugField(
         max_length=512,
         populate_from="name",
@@ -1668,18 +1668,25 @@ class Favorite(TimeStampedModel):
 
 class Potential(TimeStampedModel, VideoEmbedMixin):
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=600)
+    description = models.CharField(verbose_name=_("Beschreibung"), max_length=600)
     slug = DllSlugField(
         max_length=512,
         populate_from="name",
         slugify_function=remove_number_custom_slugify,
     )
     function = models.OneToOneField(
-        to="ToolFunction", on_delete=models.SET_NULL, null=True
+        verbose_name=_("Tool Funktion"),
+        to="ToolFunction",
+        on_delete=models.SET_NULL,
+        null=True,
     )
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = _("Potential")
+        verbose_name_plural = _("Potentiale")
 
 
 class ToolVideoTutorial(TimeStampedModel):
