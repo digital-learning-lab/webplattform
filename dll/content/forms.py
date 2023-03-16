@@ -74,24 +74,13 @@ class HelpTextFieldForm(forms.ModelForm):
 
 class CommentField(Field):
     def render(
-        self,
-        form,
-        form_style,
-        context,
-        template_pack=TEMPLATE_PACK,
-        extra_context=None,
-        **kwargs
+        self, form, context, template_pack=TEMPLATE_PACK, extra_context=None, **kwargs
     ):
         if not context:
             context = {}
         context.update({"field_class": "col-lg-12"})
         return super(CommentField, self).render(
-            form,
-            form_style,
-            context,
-            template_pack=TEMPLATE_PACK,
-            extra_context=None,
-            **kwargs
+            form, context, template_pack=TEMPLATE_PACK, extra_context=None, **kwargs
         )
 
 
