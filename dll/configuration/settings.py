@@ -452,6 +452,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
         "TREND_REVIEW_EMAIL",
         "TESTIMONIAL_REVIEW_EMAIL",
     ),
+    "Digtal.Learning.Tools": ("DLL_ENABLE_DLT_FEATURES",),
 }
 CONSTANCE_CONFIG = {
     # Content Teaser
@@ -634,6 +635,11 @@ CONSTANCE_CONFIG = {
     ),
     "TREND_REVIEW_EMAIL": ("", "Komma getrennte Liste von E-Mail Adressen", str),
     "TESTIMONIAL_REVIEW_EMAIL": ("", "Komma getrennte Liste von E-Mail Adressen", str),
+    "DLL_ENABLE_DLT_FEATURES": (
+        False,
+        "Aktiviert DLT Anzeigen und Features auf digitallearninglab",
+        bool,
+    ),
 }
 
 WAGTAIL_SITE_NAME = "digital.learning.lab"

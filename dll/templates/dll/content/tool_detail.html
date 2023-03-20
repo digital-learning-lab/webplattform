@@ -9,7 +9,9 @@
 
 {% block body %}
     {{ block.super }}
-    {% include 'dll/includes/platform_banner.html' %}
+    {% if DLT_FEATURES_ENABLED %}
+        {% include 'dll/includes/platform_banner.html' %}
+    {% endif %}
 {% endblock %}
 
 {% block content_additional_information %}
@@ -96,7 +98,7 @@
             <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
         </a>
     </li>
-    {% if SITE_ID == 2 %}
+    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED %}
     <li class="sidebar__nav-item">
         <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="data-protection-tab" data-toggle="pill" href="#data-protection"
            role="tab" aria-controls="hints" aria-selected="true">
@@ -133,7 +135,7 @@
         </li>
     {% endif %}
 
-    {% if SITE_ID == 2 %}
+    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED %}
         <li class="sidebar__nav-item">
             <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="more-tab" data-toggle="pill" href="#more"
                role="tab" aria-controls="more" aria-selected="true">
@@ -148,7 +150,7 @@
     <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
         {% include 'dll/content/tools/overview.html' %}
     </div>
-    {% if SITE_ID == 2 %}
+    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED %}
     <div class="tab-pane fade" id="data-protection" role="tabpanel" aria-labelledby="hints-tab">
         {% include 'dll/content/tools/data_protection.html' %}
     </div>
@@ -169,7 +171,7 @@
         </div>
     {% endif %}
 
-    {% if SITE_ID == 2 %}
+    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED %}
         <div class="tab-pane fade" id="more" role="tabpanel" aria-labelledby="more-tab">
             {% include 'dll/content/includes/discover_more.html' with headline='Entdecke mehr Bausteine und Trends' %}
         </div>
