@@ -7,7 +7,9 @@
 <html lang="en">
 <head {% meta_namespaces %}>
   <meta charset="UTF-8">
-  {% shared_session_loader %}
+  {% if DLT_FEATURES_ENABLED %}
+    {% shared_session_loader %}
+  {% endif %}
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
   <title>{% block title %}{{ title }}{% endblock %}</title>
   {% block css %}
