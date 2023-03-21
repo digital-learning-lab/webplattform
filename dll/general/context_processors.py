@@ -1,8 +1,11 @@
+from constance import config
+
 from django.contrib.sites.models import Site
 
 
 def platform_variables(request):
     site = Site.objects.get_current()
+    DLT_FEATURES_ENABLED = config.DLL_ENABLE_DLT_FEATURES
     DEFAULTS = {
         "main_js": "main_dll",
         "main_css": "main_dll",
@@ -14,6 +17,7 @@ def platform_variables(request):
         "logo_mobile_1x": "img/logo/dll_logo_rgb_ohne_claim.png",
         "logo_mobile_2x": "img/logo/dll_logo_rgb_ohne_claim_large.png",
         "SITE_ID": 1,
+        "DLT_FEATURES_ENABLED": DLT_FEATURES_ENABLED,
     }
     try:
         DEFAULTS.update(
@@ -37,6 +41,7 @@ def platform_variables(request):
                 "logo_mobile_1x": "img/logo/logo_dlt_mobile.svg",
                 "logo_mobile_2x": "img/logo/logo_dlt_mobile.svg",
                 "SITE_ID": 2,
+                "DLT_FEATURES_ENABLED": DLT_FEATURES_ENABLED,
             }
         )
     return DEFAULTS

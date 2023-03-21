@@ -22,12 +22,14 @@
       </form>
       <a href="{% url 'user:password_reset' %}">Passwort vergessen?</a>
     </div>
-    <div class="col-12 col-md-6 col-lg-4 offset-lg-1">
-        <img src="{% static 'img/content/dll_dlt_login.svg' %}" alt="">
+    {% if DLT_FEATURES_ENABLED %}
+    <div class="col-12 col-lg-4 offset-lg-1 text-center text-lg-left">
+        <img src="{% static 'img/content/dll_dlt_login.svg' %}" alt="Login digital.learning.lab und digital.learning.tools" style="max-width: 300px;">
         <p class="ml-md-5 h5 font-weight-light">
             Loggen Sie sich einmalig ein, <br>
             um beide Portale zu nutzen.
         </p>
     </div>
+    {% endif %}
   </div>
 {% endblock %}

@@ -3,7 +3,7 @@
 {% block intro %}
   <h1 class="headline">Tool {% if obj %}bearbeiten{% else %}erstellen{% endif %}</h1>
   <h2>
-    Mit diesem Eingabeformular können Sie eine Toolbeschreibung im digital.learning.lab einreichen.
+    Mit diesem Eingabeformular können Sie eine Toolbeschreibung im {% if SITE_ID == 1 %}digital.learning.lab{% else %}digital.learning.tools{% endif %} einreichen.
   </h2>
   <p>
     Unter <b>Tools</b> verstehen wir digitale Werkzeuge für den direkten Einsatz im Unterricht. Mithilfe der
@@ -49,6 +49,7 @@
   {{ block.super }}
   <script>
     window.compliance = {{ compliance|safe }};
+    window.dltFeatures = {{ DLT_FEATURES_ENABLED|lower|safe }};
   </script>
 {% endblock extra_scripts %}
 

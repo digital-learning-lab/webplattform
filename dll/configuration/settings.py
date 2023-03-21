@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     "polymorphic",
     "django_extensions",
     "crispy_forms",
+    "crispy_bootstrap4",
     "ckeditor",
     "import_export",
     "dll.content",
@@ -277,6 +278,7 @@ LOGIN_URL = "user:login"
 LOGIN_REDIRECT_URL = "user-content-overview"
 LOGOUT_REDIRECT_URL = "/"
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 REST_FRAMEWORK = {
@@ -450,6 +452,7 @@ CONSTANCE_CONFIG_FIELDSETS = {
         "TREND_REVIEW_EMAIL",
         "TESTIMONIAL_REVIEW_EMAIL",
     ),
+    "Digtal.Learning.Tools": ("DLL_ENABLE_DLT_FEATURES",),
 }
 CONSTANCE_CONFIG = {
     # Content Teaser
@@ -632,6 +635,11 @@ CONSTANCE_CONFIG = {
     ),
     "TREND_REVIEW_EMAIL": ("", "Komma getrennte Liste von E-Mail Adressen", str),
     "TESTIMONIAL_REVIEW_EMAIL": ("", "Komma getrennte Liste von E-Mail Adressen", str),
+    "DLL_ENABLE_DLT_FEATURES": (
+        False,
+        "Aktiviert DLT Anzeigen und Features auf digitallearninglab",
+        bool,
+    ),
 }
 
 WAGTAIL_SITE_NAME = "digital.learning.lab"
