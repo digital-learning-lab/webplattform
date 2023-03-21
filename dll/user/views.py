@@ -240,6 +240,9 @@ class CreateEditToolView(SiteRedirectMixin, CreateEditContentView):
 class ReviewToolView(CreateEditToolView):
     template_name = "dll/user/content/review_tool.html"
 
+    def get(self, *args, **kwargs):
+        return super(CreateEditContentView, self).get(*args, **kwargs)
+
     def get_breadcrumbs(self):
         bcs = super(CreateEditToolView, self).get_breadcrumbs()
         result = []
