@@ -219,10 +219,12 @@
       this.mode = window.dllData.mode || 'overview'
       this.updateContents()
       this.debouncedUpdate = debounce(this.updateContents, 500)
-      axios.get('/api/meine-einladungen')
-        .then(res => {
-          this.invitationContents = res.data.results
-        })
+      if (this.mode === 'overview') {
+        axios.get('/api/meine-einladungen')
+          .then(res => {
+            this.invitationContents = res.data.results
+          })
+      }
       axios.get('/api/reviewers')
         .then(res => {
           this.reviewers = res.data.results

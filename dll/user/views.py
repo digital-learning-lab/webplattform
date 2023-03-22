@@ -3,6 +3,7 @@ import json
 from django.contrib import messages
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
@@ -415,6 +416,8 @@ class PendingReviewContentView(UserContentView):
             is_active=True, status__in=[Review.NEW, Review.IN_PROGRESS]
         )
         qs = Content.objects.drafts().filter(reviews__in=reviews).order_by("created")
+        if settings.SITE_ID == 2:
+            return qs.instance_of(Tool)
 
         type = self.request.GET.get("type", None)
         search_term = self.request.GET.get("q", None)

@@ -10,6 +10,7 @@ from wagtail.documents import urls as wagtaildocs_urls
 from dll import shared_session
 from dll.content.views import (
     HelpTextFieldChoices,
+    ReviewerSearchView,
     SubjectSearchView,
     TestimonialReviewViewSet,
     TestimonialReviewsOverview,
@@ -43,6 +44,9 @@ from dll.content.views import (
 from dll.user.views import (
     MyContentView,
     CreateEditToolView,
+    MyReviewsView,
+    PendingReviewContentView,
+    ReviewToolView,
     UserContentView,
     UserToolBoxView,
 )
@@ -88,12 +92,22 @@ urlpatterns = [
     path("meine-inhalte", MyContentView.as_view(), name="user-content-overview"),
     path("meine-toolbox", UserToolBoxView.as_view(), name="user-toolbox-overview"),
     path("meine-inhalte/tools/", CreateEditToolView.as_view(), name="add-tool"),
+    path("review-inhalte", MyReviewsView.as_view(), name="user-content-review"),
+    path(
+        "review-inhalte/tools/<slug:slug>/review",
+        ReviewToolView.as_view(),
+        name="review-tool",
+    ),
     path(
         "meine-inhalte/tools/<slug:slug>",
         CreateEditToolView.as_view(),
         name="edit-tool",
     ),
     path("tools", ToolFilterView.as_view(), name="tools-filter"),
+    path(
+        "api/review-inhalte", PendingReviewContentView.as_view(), name="content-pending"
+    ),
+    path("api/reviewers", ReviewerSearchView.as_view(), name="reviewer-search"),
     path(
         "api/inhalt-bearbeiten/<slug:slug>/vorschau-bild",
         ImageUploadView.as_view(),
