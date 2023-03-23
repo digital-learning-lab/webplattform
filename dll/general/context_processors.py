@@ -7,6 +7,7 @@ def platform_variables(request):
     site = Site.objects.get_current()
     DLT_FEATURES_ENABLED = config.DLL_ENABLE_DLT_FEATURES
     DEFAULTS = {
+        "request": request,
         "main_js": "main_dll",
         "main_css": "main_dll",
         "template_suffix": "dll",
