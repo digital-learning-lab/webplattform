@@ -98,7 +98,7 @@
             <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
         </a>
     </li>
-    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED %}
+    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED and object.data_privacy_assessment %}
     <li class="sidebar__nav-item">
         <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="data-protection-tab" data-toggle="pill" href="#data-protection"
            role="tab" aria-controls="hints" aria-selected="true">
@@ -150,7 +150,7 @@
     <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
         {% include 'dll/content/tools/overview.html' %}
     </div>
-    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED %}
+    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED and object.data_privacy_assessment %}
     <div class="tab-pane fade" id="data-protection" role="tabpanel" aria-labelledby="hints-tab">
         {% include 'dll/content/tools/data_protection.html' %}
     </div>
