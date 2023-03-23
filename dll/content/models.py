@@ -2073,7 +2073,7 @@ class DataPrivacyAssessment(TimeStampedModel):
             "title": self._meta.get_field("conclusion").verbose_name,
             "text": self._meta.get_field("conclusion").value_from_object(self),
             "compliance": getattr(self, "overall"),
-            "color": COLOR_MAP[getattr(self, "overall")],
+            "color": COLOR_MAP[getattr(self, "overall", self.OVERALL_CHOICES[2][0])],
         }
         return res.items()
 
