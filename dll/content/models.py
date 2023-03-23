@@ -2069,11 +2069,12 @@ class DataPrivacyAssessment(TimeStampedModel):
             }
             for field in FIELDS
         }
+        com_level = getattr(self, "overall") or self.OVERALL_CHOICES[2][0]
         res["conclusion"] = {
             "title": self._meta.get_field("conclusion").verbose_name,
             "text": self._meta.get_field("conclusion").value_from_object(self),
             "compliance": getattr(self, "overall"),
-            "color": COLOR_MAP[getattr(self, "overall", self.OVERALL_CHOICES[2][0])],
+            "color": COLOR_MAP[com_level],
         }
         return res.items()
 
