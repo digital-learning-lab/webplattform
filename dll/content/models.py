@@ -1837,8 +1837,13 @@ class TestimonialReview(TimeStampedModel):
         return f"{self.testimonial.content.name} ({self.get_status_display()})"
 
     def send_update_email(self, text):
+        url = "https://%s%s" % (
+            Site.objects.get_current().domain,
+            reverse("my-content-testimonials"),
+        )
         context = {
             "content_title": self.testimonial.content.name,
+            "link_to_review_overview": url,
             "status_message": text,
         }
         send_mail.delay(
