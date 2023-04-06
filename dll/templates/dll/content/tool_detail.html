@@ -98,10 +98,17 @@
             <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
         </a>
     </li>
+    <li class="sidebar__nav-item">
+        <a class="sidebar__nav-link nav-link js-sidebar-nav-item active" id="hints-tab" data-toggle="pill"
+           href="#hints" role="tab" aria-controls="hints" aria-selected="true">
+            Hinweise und Tutorials
+            <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+        </a>
+    </li>
     {% if SITE_ID == 2 and DLT_FEATURES_ENABLED and object.data_privacy_assessment %}
     <li class="sidebar__nav-item">
         <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="data-protection-tab" data-toggle="pill" href="#data-protection"
-           role="tab" aria-controls="hints" aria-selected="true">
+           role="tab" aria-controls="data-protection" aria-selected="true">
             Datenschutz
             <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
         </a>
@@ -150,8 +157,11 @@
     <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
         {% include 'dll/content/tools/overview.html' %}
     </div>
+    <div class="tab-pane fade" id="hints" role="tabpanel" aria-labelledby="hints-tab">
+        {% include 'dll/content/tools/hints.html' %}
+    </div>
     {% if SITE_ID == 2 and DLT_FEATURES_ENABLED and object.data_privacy_assessment %}
-    <div class="tab-pane fade" id="data-protection" role="tabpanel" aria-labelledby="hints-tab">
+    <div class="tab-pane fade" id="data-protection" role="tabpanel" aria-labelledby="data-protection-tab">
         {% include 'dll/content/tools/data_protection.html' %}
     </div>
     {% endif %}
