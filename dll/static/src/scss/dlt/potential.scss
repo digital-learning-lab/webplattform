@@ -1,0 +1,86 @@
+
+$general-width: 700px;
+
+.potentials-grid {
+  width: $general-width;
+  flex-wrap: wrap;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: rgba(120, 120, 120, 0.5) 0 0 10px;
+}
+.potential-box {
+  width: $general-width / 4;
+  height: $general-width / 4;
+  background-color: rgb(34, 42, 76);
+  flex-basis: 25%;
+  display: flex;
+  align-content: center;
+  border: 8px solid white;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  flex-wrap: wrap;
+  &:hover {
+    background-color: lighten(rgb(34, 42, 76), 20%);
+    cursor: pointer;
+    color: white !important;
+  }
+  p {
+    flex: 1 0 100%;
+    margin-bottom: 0;
+  }
+}
+.potential-box-image {
+  height: 50px;
+  width: 50px;
+  flex: 1 0 100%;
+  margin-bottom: 15px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+.potential-center,
+.potential-center--mobile {
+  text-align: center;
+}
+.potential-center {
+  background-color: rgba(204, 216, 224, 1);
+  box-shadow: inset rgba(120, 120, 120, 0.5) 0 0 10px;
+  width: $general-width / 2;
+  display: flex;
+  align-items: center;
+  h2 {
+    margin: 0;
+  }
+}
+.potential-center--mobile {
+  display: none;
+  width: 100%;
+}
+
+
+@media (max-width: 732px) {
+  .potentials-grid {
+    width: 100%;
+  }
+  .potential-center {
+    display: none;
+  }
+  .potential-center--mobile {
+    padding-top: 5px;
+    display: block;
+  }
+  .potential-box {
+    width: 50%;
+    flex-basis: 50%;
+    padding-bottom: 10px;
+  }
+}
+
+@media (max-width: 610px) {
+
+  .potential-box {
+    width: 100%;
+  }
+}

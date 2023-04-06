@@ -3,16 +3,16 @@
 
 <header class="header fixed-top js-header">
   <a href="/" class="logo">
-      <img class="logo__claim" src="{% static 'img/logo/dll_logo_rgb_claim_rechts.png' %}" srcset="{% static 'img/logo/dll_logo_rgb_claim_rechts.png' %} 1x, {% static 'img/logo/dll_logo_rgb_claim_rechts_large.png' %} 2x" alt="digital.learning.lab Logo">
-      <img class="logo__no-claim" src="{% static 'img/logo/dll_logo_rgb_ohne_claim.png' %}" srcset="{% static 'img/logo/dll_logo_rgb_ohne_claim.png' %} 1x, {% static 'img/logo/dll_logo_rgb_ohne_claim_large.png' %} 2x" alt="digital.learning.lab Logo">
+      <img class="logo__claim" src="{% static logo_desktop_1x %}" srcset="{% static logo_desktop_1x %} 1x, {% static logo_desktop_2x %} 2x" alt="{{ title }} Logo">
+      <img class="logo__no-claim" src="{% static logo_mobile_1x %}" srcset="{% static logo_mobile_1x %} 1x, {% static logo_mobile_2x %} 2x" alt="{{ title }} Logo">
   </a>
   <div class="float-right">
-    <form class="search-form" action="{% url 'search' %}" method="get" accept-charset="utf-8" role="search" autocomplete="off">
+		<form class="search-form" action="{% url 'search' %}" method="get" accept-charset="utf-8" role="search" autocomplete="off">
       <input type="hidden" autocomplete="false">
       <button class="search-form__submit" type="submit">
         <i class="fa fa-search"></i>
       </button>
-      <input class="search-form__field" id="autoComplete" name="q" type="text" placeholder="Das dll durchsuchen">
+      <input class="search-form__field" id="autoComplete" name="q" type="text" placeholder="Das {{ template_suffix }} durchsuchen">
     </form>
     <button class="navigation-toggle js-navigation-toggle" aria-label="Navigation ausklappen">
       <span class="navigation-toggle__stripe"></span>

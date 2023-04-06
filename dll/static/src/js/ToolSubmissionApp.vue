@@ -15,12 +15,12 @@
       <app-dropdown id="teaching-modules" :readonly="readonly" :review=review label="Passende Unterrichtsbausteine" :value.sync="data.teaching_modules" :review-value.sync="reviewValue.teaching_modules" :error="errorFields.includes('teaching_modules')" fetch-url="/api/unterrichtsbausteine" :multiple="true" :help-text="getHelpText('teaching_modules')" :prefetch="true"></app-dropdown>
       <app-dropdown id="tools" :readonly="readonly" :review="review" label="Passende Tools" :value.sync="data.tools" :review-value.sync="reviewValue.tools" :error="errorFields.includes('tools')" fetch-url="/api/tools" :multiple="true" :help-text="getHelpText('tools')" :prefetch="true"></app-dropdown>
       <app-dropdown id="trends" :readonly="readonly" :review="review" label="Passende Trends" :value.sync="data.trends" :review-value.sync="reviewValue.trends" :error="errorFields.includes('trends')" fetch-url="/api/trends" :multiple="true" :help-text="getHelpText('trends')" :prefetch="true"></app-dropdown>
-      <app-dropdown id="competences" :readonly="readonly" :review="review" label="Kompetenzen in der digitalen Welt" :required="true" :value.sync="data.competences" :review-value.sync="reviewValue.competences" :error="errorFields.includes('competences')" fetch-url="/api/competences" :multiple="true" :prefetch="true" :help-text="getHelpText('competences')"></app-dropdown>
-      <app-dropdown id="tool-functions" :readonly="readonly" :review="review" label="Tool-Funktionen" :required="true" :value.sync="data.functions" :review-value.sync="reviewValue.functions" :error="errorFields.includes('functions')" fetch-url="/api/toolFunctions" :multiple="true" :prefetch="true" :help-text="getHelpText('functions')"></app-dropdown>
+      <app-dropdown v-if="!dltFeatures" id="competences" :readonly="readonly" :review="review" label="Kompetenzen in der digitalen Welt" :required="true" :value.sync="data.competences" :review-value.sync="reviewValue.competences" :error="errorFields.includes('competences')" fetch-url="/api/competences" :multiple="true" :prefetch="true" :help-text="getHelpText('competences')"></app-dropdown>
+      <app-dropdown v-if="!dltFeatures" id="tool-functions" :readonly="readonly" :review="review" label="Tool-Funktionen" :required="true" :value.sync="data.functions" :review-value.sync="reviewValue.functions" :error="errorFields.includes('functions')" fetch-url="/api/toolFunctions" :multiple="true" :prefetch="true" :help-text="getHelpText('functions')"></app-dropdown>
       <app-link-input id="url" :readonly="readonly" :review="review" :link.sync="data.url" :review-value.sync="reviewValue.url" :error="errorFields.includes('url')" label="Website" :type="'null'" :help-text="getHelpText('url')" :required="true"></app-link-input>
-      <app-list-input :min="1" id="pro" :readonly="readonly" :review="review" label="Vorteile" :list.sync="data.pro" :review-value.sync="reviewValue.pro" :error="errorFields.includes('pro')" :initial="data.pro" :help-text="getHelpText('pro')"></app-list-input>
-      <app-list-input :min="1" id="contra" :readonly="readonly" :review="review" label="Nachteile" :list.sync="data.contra" :review-value.sync="reviewValue.contra" :error="errorFields.includes('contra')" :initial="data.contra" :help-text="getHelpText('contra')"></app-list-input>
-      <app-select id="data-privacy" :readonly=readonly  :review="review" label="Datenschutz" :options="dataPrivacyOptions" default-val="" :value.sync="data.privacy" :review-value.sync="reviewValue.privacy" :error="errorFields.includes('privacy')" :default-val="data.privacy" :help-text="getHelpText('privacy')"></app-select>
+      <app-list-input v-if="!dltFeatures" :min="1" id="pro" :readonly="readonly" :review="review" label="Vorteile" :list.sync="data.pro" :review-value.sync="reviewValue.pro" :error="errorFields.includes('pro')" :initial="data.pro" :help-text="getHelpText('pro')"></app-list-input>
+      <app-list-input v-if="!dltFeatures" :min="1" id="contra" :readonly="readonly" :review="review" label="Nachteile" :list.sync="data.contra" :review-value.sync="reviewValue.contra" :error="errorFields.includes('contra')" :initial="data.contra" :help-text="getHelpText('contra')"></app-list-input>
+      <app-select id="data-privacy" :readonly=readonly  :review="review" label="Datenschutz" :options="dataPrivacyOptions" :value.sync="data.privacy" :review-value.sync="reviewValue.privacy" :error="errorFields.includes('privacy')" :default-val="data.privacy" :help-text="getHelpText('privacy')"></app-select>
       <app-text-area id="usage" :readonly="readonly" :review="review" label="Nutzung" :value.sync="data.usage" :review-value.sync="reviewValue.usage" :error="errorFields.includes('usage')" :character-counter="true" :maximal-chars="300" :help-text="getHelpText('usage')"></app-text-area>
       <app-dropdown id="applications" :readonly="readonly" :review="review" label="Anwendung" :value.sync="data.applications" :review-value.sync="reviewValue.applications" :error="errorFields.includes('applications')" fetch-url="/api/applications" :multiple="true" :prefetch="true" :help-text="getHelpText('applications')"></app-dropdown>
       <app-links-input id="mediaLinks" :readonly="readonly" :review="review" :links.sync="data.mediaLinks" :review-value.sync="reviewValue.mediaLinks" :error="errorFields.includes('mediaLinks')" label="Links zu Audio- und Videomedien" :type="'video'" :help-text="getHelpText('contentlink')" :types="true"></app-links-input>
@@ -31,6 +31,18 @@
       <app-text-area id="additional-info" :readonly="readonly" :review="review" label="Anmerkungen" :value.sync="data.additional_info" :review-value.sync="reviewValue.additional_info" :error="errorFields.includes('additional_info')" :character-counter="true" :maximal-chars="700" :rows="10" :help-text="getHelpText('additional_info')"></app-text-area>
       <app-text-area id="description" :readonly="readonly" :review="review" label="Detaillierte Beschreibung" :value.sync="data.description" :review-value.sync="reviewValue.description" :error="errorFields.includes('description')" :character-counter="true" :maximal-chars="500" :rows="10" :help-text="getHelpText('description')"></app-text-area>
       <app-dropdown id="operating_systems" :readonly="readonly" :review="review" label="Betriebssystem" :value.sync="data.operating_systems" :review-value.sync="reviewValue.operating_systems" :error="errorFields.includes('operating_systems')" fetch-url="/api/operatingSystems" :multiple="true" :prefetch="true" :help-text="getHelpText('operating_systems')"></app-dropdown>
+      <app-dropdown id="subject" :readonly="readonly" :review="review" :required="true" label="Unterrichtsfach" :value.sync="data.subjects" :review-value.sync="reviewValue.subjects" :error="errorFields.includes('subjects')" fetch-url="/api/subjects" :multiple="true" :prefetch="true" :help-text="getHelpText('subjects')"></app-dropdown>
+      <app-select id="with_costs" :readonly="readonly" :review="review" label="Kostenpflichtig" :options="with_costsOptions" :value.sync="data.with_costs" :review-value.sync="reviewValue.with_costs" :error="errorFields.includes('with_costs')" :default-val="data.with_costs" :help-text="getHelpText('with_costs')"></app-select>
+      <app-dropdown id="tool-potentials" :readonly="readonly" :review="review" label="Potential Kategorien" :required="true" :value.sync="data.potentials" :review-value.sync="reviewValue.potentials" :error="errorFields.includes('potentials')" fetch-url="/api/potentials" :multiple="true" :prefetch="true" :help-text="getHelpText('potentials')" v-if="dltFeatures"></app-dropdown>
+      <app-text-area id="disclaimer" :readonly="readonly" :review="review" label="Disclaimer" :value.sync="data.disclaimer" :review-value.sync="reviewValue.disclaimer" :error="errorFields.includes('disclaimer')" :rows="3" :help-text="getHelpText('disclaimer')" v-if="dltFeatures"></app-text-area>
+      <app-links-input id="video_tutorials" :readonly="readonly" :review="review" :links.sync="data.video_tutorials" :review-value.sync="reviewValue.video_tutorials" :error="errorFields.includes('video_tutorials')" label="Video Anleitungen" :type="'video'" :help-text="getHelpText('video_tutorials')" :types="false"></app-links-input>
+      <app-data-protection-input id="server_location" label="Serverstandort" :readonly="readonly" :review="review" :complianceText.sync="data.data_privacy_assessment.server_location_text" :compliance.sync="data.data_privacy_assessment.server_location" :review-value.sync="reviewValue.server_location" :error="errorFields.includes('server_location')" :help-text="getHelpText('server_location')" icon="serverstandort" v-if="dltFeatures"></app-data-protection-input>
+      <app-data-protection-input id="provider" label="Anbieter" :readonly="readonly" :review="review" :complianceText.sync="data.data_privacy_assessment.provider_text" :compliance.sync="data.data_privacy_assessment.provider" :review-value.sync="reviewValue.provider" :error="errorFields.includes('provider')" :help-text="getHelpText('provider')" icon="anbieter" v-if="dltFeatures"></app-data-protection-input>
+      <app-data-protection-input id="user_registration" label="Benutzeranmeldung" :readonly="readonly" :review="review" :complianceText.sync="data.data_privacy_assessment.user_registration_text" :compliance.sync="data.data_privacy_assessment.user_registration" :review-value.sync="reviewValue.user_registration" :error="errorFields.includes('user_registration')" :help-text="getHelpText('user_registration')" icon="benutzeranmeldung" v-if="dltFeatures"></app-data-protection-input>
+      <app-data-protection-input id="data_privacy_terms" label="Datenschutzerklärung" :readonly="readonly" :review="review" :complianceText.sync="data.data_privacy_assessment.data_privacy_terms_text" :compliance.sync="data.data_privacy_assessment.data_privacy_terms" :review-value.sync="reviewValue.data_privacy_terms" :error="errorFields.includes('data_privacy_terms')" :help-text="getHelpText('data_privacy_terms')" icon="datenschutzerklarung" v-if="dltFeatures"></app-data-protection-input>
+      <app-data-protection-input id="terms_and_conditions" label="AGB" :readonly="readonly" :review="review" :complianceText.sync="data.data_privacy_assessment.terms_and_conditions_text" :compliance.sync="data.data_privacy_assessment.terms_and_conditions" :review-value.sync="reviewValue.terms_and_conditions" :error="errorFields.includes('terms_and_conditions')" :help-text="getHelpText('terms_and_conditions')" icon="agb" v-if="dltFeatures"></app-data-protection-input>
+      <app-data-protection-input id="security" label="Sicherheit" :readonly="readonly" :review="review" :complianceText.sync="data.data_privacy_assessment.security_text" :compliance.sync="data.data_privacy_assessment.security" :review-value.sync="reviewValue.security" :error="errorFields.includes('security')" :help-text="getHelpText('security')" icon="sicherheit" v-if="dltFeatures"></app-data-protection-input>
+      <app-text-area id="conclusion" :readonly="readonly" :review="review" label="Fazit" :required="false" :value.sync="data.data_privacy_assessment.conclusion" :review-value.sync="reviewValue.conclusion" :error="errorFields.includes('conclusion')" :rows="3" :help-text="getHelpText('conclusion')" :character-counter="true" :maximal-chars="700" v-if="dltFeatures"></app-text-area>
     </div>
   </app-content-submission-form>
 </template>
@@ -38,12 +50,14 @@
 <script>
   import { submissionMixin } from './mixins/submissionMixin'
   import ContentSubmissionForm from './ContentSubmissionForm.vue'
+  import DataProtectionInput from './components/DataProtectionInput.vue'
 
   export default {
     name: 'ToolSubmissionApp',
     mixins: [submissionMixin],
     components: {
-      'AppContentSubmissionForm': ContentSubmissionForm
+      'AppContentSubmissionForm': ContentSubmissionForm,
+      'AppDataProtectionInput': DataProtectionInput,
     },
     data () {
       return {
@@ -52,9 +66,10 @@
           {field: 'name', title: 'Titel'},
           {field: 'teaser', title: 'Kurzzusammenfassung'},
           {field: 'image', title: 'Anzeigebild'},
-          {field: 'competences', title: 'Kompetenzen in der digitalen Welt'},
+          // {field: 'competences', title: 'Kompetenzen in der digitalen Welt'},
           {field: 'url', title: 'Website'},
         ],
+        dltFeatures: window.dltFeatures,
         data: {
           author: '',
           name: '',
@@ -72,14 +87,20 @@
           educational_plan_reference: '',
           differentiating_attribute: '',
           sub_competences: [],
+          subjects: [],
           tools: [],
           trends: [],
           teaching_modules: [],
           additional_info: '',
           related_content: [],
           mediaLinks: [],
+          video_tutorials: [],
           literatureLinks: [],
-          license: null
+          license: null,
+          with_costs: false,
+          potentials: [],
+          disclaimer: '',
+          data_privacy_assessment: {}
         },
         dataPrivacyOptions: [
           {value: 0, label: 'Unbekannt'},
@@ -103,6 +124,10 @@
           {value: 'on', label: 'Online'},
           {value: 'off', label: 'Offline'},
           {value: 'onoff', label: 'Online & Offline'}
+        ],
+        with_costsOptions: [
+          {value: true, label: 'Ja'},
+          {value: false, label: 'Nein'}
         ]
       }
     },

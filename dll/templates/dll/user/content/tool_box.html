@@ -1,0 +1,21 @@
+{% extends 'dll/default_page.html' %}
+
+{% block content %}
+  <h1>Meine favorisierten Tools</h1>
+
+  <div class="row justify-content-center">
+    {% for slug, info in tool_box_information.items %}
+      <div class="col-6 col-md-4 col-xl-3 mb-3">
+        <a class="toolbox-tile" href="{% url 'tools-filter' %}?potentials={{ info.pk }}&favorites=true">
+          <div class="toolbox-tile-counter">{{ info.count }}</div>
+          <div class="toolbox-icon icon--dlt icon-{{ slug }}--white" data-toggle="tooltip" title="{{ info.name }}"></div>
+          <div>
+            {{ info.name }}
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}
+

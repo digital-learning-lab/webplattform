@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("content", "0004_teachingmodule_subject_of_tuitiuon_migration"),
     ]

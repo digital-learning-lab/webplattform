@@ -1,14 +1,20 @@
 {% spaceless %}
 {% load render_bundle from webpack_loader %}
 {% load meta %}
+{% load shared_session %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head {% meta_namespaces %}>
   <meta charset="UTF-8">
+  {% if DLT_FEATURES_ENABLED %}
+    {% shared_session_loader %}
+  {% endif %}
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
-  <title>{% block title %}digital.learning.lab{% endblock %}</title>
-  {% render_bundle 'main' 'css' %}
+  <title>{% block title %}{{ title }}{% endblock %}</title>
+  {% block css %}
+  {% render_bundle main_css 'css' %}
+  {% endblock %}
   <link rel="apple-touch-icon" sizes="57x57" href="{% static 'img/icons/apple-icon-57x57.png' %}">
   <link rel="apple-touch-icon" sizes="60x60" href="{% static 'img/icons/apple-icon-60x60.png' %}">
   <link rel="apple-touch-icon" sizes="72x72" href="{% static 'img/icons/apple-icon-72x72.png' %}">
@@ -24,6 +30,7 @@
   <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/icons/favicon-16x16.png' %}">
   <meta name="msapplication-TileColor" content="#ffffff">
   <meta name="msapplication-TileImage" content="{% static 'img/icons/favicon/ms-icon-144x144.png' %}">
+  {% block meta %}{% endblock %}
   <!-- Matomo -->
   <script type="text/javascript">
     var _paq = window._paq = window._paq || [];
@@ -66,17 +73,18 @@
 {% include 'dll/includes/navigation.html' %}
 {% block body %}
 {% endblock %}
+{% include 'dll/includes/scrollToTop.html' %}
 {% include 'dll/includes/footer.html' %}
 {% block extra_scripts %}{% endblock %}
-123
-{{ request }}
 {% if request.newsletter_subscription_done %}
   <script>
     window.newsletterRegistrationDone = true;
   </script>
 {% endif %}
 {% include 'dll/includes/toast.html' %}
-{% render_bundle 'main' 'js' %}
+{% block js %}
+{% render_bundle main_js 'js' %}
+{% endblock %}
 {% include 'survey/survey_trigger.html' %}
 </body>
 </html>

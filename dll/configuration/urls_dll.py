@@ -22,7 +22,11 @@ from wagtail.admin import urls as wagtailadmin_urls
 from wagtail.core import urls as wagtail_urls
 from wagtail.documents import urls as wagtaildocs_urls
 
+from dll import shared_session
 from dll.content.views import (
+    TestimonialReviewsOverview,
+    TestimonialOverview,
+    TestimonialUpdateView,
     ToolDetailView,
     TrendDetailView,
     TeachingModuleDetailView,
@@ -45,6 +49,7 @@ from dll.content.views import (
     ToolApplicationSearchView,
     OperatingSystemSearchView,
     ReviewViewSet,
+    TestimonialReviewViewSet,
     ToolDetailPreviewView,
     TeachingModuleDetailPreviewView,
     TrendDetailPreviewView,
@@ -63,6 +68,7 @@ from dll.content.views import (
     TrendsFeed,
     FavoriteListApiView,
     ToolFunctionSearchView,
+    TestimonialView,
 )
 from dll.survey.views import SurveyDetailView, TriggerListApiView
 from dll.user.views import (
@@ -83,7 +89,10 @@ from dll.user.views import (
 router = DefaultRouter()
 router.register(r"inhalte", PublishedContentViewSet, basename="public-content")
 router.register(r"inhalt-bearbeiten", DraftsContentViewSet, basename="draft-content")
-router.register(r"review", ReviewViewSet, basename="review")
+router.register(r"review", ReviewViewSet, basename="review"),
+router.register(
+    r"testimonial-review", TestimonialReviewViewSet, basename="testimonial-review"
+),
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -128,6 +137,21 @@ urlpatterns = [
     path("trends", TrendFilterView.as_view(), name="trends-filter"),
     path("meine-inhalte", MyContentView.as_view(), name="user-content-overview"),
     path("mein-merkzettel", UserFavoriteView.as_view(), name="user-favorites-overview"),
+    path(
+        "review-erfahrungsberichte",
+        TestimonialReviewsOverview.as_view(),
+        name="content-testimonial-review",
+    ),
+    path(
+        "api/testimonial/<int:pk>/",
+        TestimonialUpdateView.as_view(),
+        name="testimonial-update",
+    ),
+    path(
+        "meine-erfahrungsberichte",
+        TestimonialOverview.as_view(),
+        name="my-content-testimonials",
+    ),
     path("review-inhalte", MyReviewsView.as_view(), name="user-content-review"),
     path(
         "meine-inhalte/unterrichtsbausteine/",
@@ -154,12 +178,12 @@ urlpatterns = [
         ReviewTrendView.as_view(),
         name="review-trend",
     ),
-    path("meine-inhalte/tools/", CreateEditToolView.as_view(), name="add-tool"),
     path(
         "meine-inhalte/tools/<slug:slug>",
         CreateEditToolView.as_view(),
         name="edit-tool",
     ),
+    path("meine-inhalte/tools/", CreateEditToolView.as_view(), name="add-tool"),
     path("meine-inhalte/trends/", CreateEditTrendView.as_view(), name="add-trend"),
     path(
         "meine-inhalte/trends/<slug:slug>",
@@ -266,8 +290,10 @@ urlpatterns = [
         name="trigger-list",
     ),
     path("suche", search_view, name="search"),
+    path("testimonial", TestimonialView.as_view(), name="testimonial"),
     path("cms/", include(wagtailadmin_urls)),
     path("documents/", include(wagtaildocs_urls)),
+    path("shared-session/", shared_session.urls),
     path("", include(wagtail_urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

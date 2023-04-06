@@ -30,11 +30,11 @@ $('.js-favor, .js-unfavor').click(function (e) {
   })
     .then(res => {
       if (e.target.classList.contains('js-favor')) {
-        $('.js-toast-body').text('Erfolgreich auf Ihrem Merkzettel hinzugefügt. Sie finden Ihren Merkzettel im Menü unter „Mein Merkzettel“.')
+        $('.js-toast-body').text(favorAddedText)
         $(e.target).addClass('d-none')
         $('.js-unfavor').removeClass('d-none')
       } else {
-        $('.js-toast-body').text('Erfolgreich vom Merkzettel entfernt!')
+        $('.js-toast-body').text(favorRemovedText)
         $(e.target).addClass('d-none')
         $('.js-favor').removeClass('d-none')
       }

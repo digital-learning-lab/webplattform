@@ -1,121 +1,179 @@
 {% extends 'dll/content/detail.html' %}
 {% load static %}
 
-{% block content_additional_information %}
-  {% if object.url %}
-    <div class="col">
-      <div class="content-info__link">
-        <span class="fas fa-at"></span>
-        <a target="_blank" rel="noopener noreferrer" href="{{ object.url.url }}">{{ object.url.name }}</a>
-      </div>
-    </div>
-  {% endif %}
+{% block meta %}
+    {% if canonical %}
+    <link rel="canonical" href="{{ canonical }}" />
+    {% endif %}
+{% endblock %}
 
-  {{ block.super }}
-  {% if 'tuhh' in object.json_data.from_import %}
-    <div class="col">
-      <img class="content-info__partner-logo" src="{% static 'img/partners/tuhh_logo.svg' %}" alt="Logo TUHH">
-    </div>
-  {% endif %}
+{% block body %}
+    {{ block.super }}
+    {% if DLT_FEATURES_ENABLED %}
+        {% include 'dll/includes/platform_banner.html' %}
+    {% endif %}
+{% endblock %}
+
+{% block content_additional_information %}
+    {% if object.url %}
+        <div class="col">
+            <div class="content-info__link">
+                <span class="fas fa-at"></span>
+                <a target="_blank" rel="noopener noreferrer" href="{{ object.url.url }}">{{ object.url.name }}</a>
+            </div>
+        </div>
+    {% endif %}
+
+    {{ block.super }}
+    {% if 'tuhh' in object.json_data.from_import %}
+        <div class="col">
+            <img class="content-info__partner-logo" src="{% static 'img/partners/tuhh_logo.svg' %}" alt="Logo TUHH">
+        </div>
+    {% endif %}
 {% endblock %}
 
 
 {% block sidebar_information %}
-  {% if object.functions.all.count > 0 %}
-  <li class="sidebar__information-item">
-    <span class="sidebar__information-icon icon-tool"></span>
-    <ul class="list-unstyled">
-    {% for function in object.functions.all %}
-        <li>{{ function.title }}</li>
-    {% endfor %}
-    </ul>
-  </li>
-  {% endif %}
-  {% if object.applications.all.count %}
-  <li class="sidebar__information-item">
-    <span class="sidebar__information-icon icon-settings"></span>
-    <ul class="list-unstyled">
-      {% for app in object.applications.all %}
-        <li>{{ app.name }}</li>
-      {% endfor %}
-    </ul>
-  </li>
-  {% endif %}
-  <li class="sidebar__information-item">
-    <span class="sidebar__information-icon icon-registration"></span>
-    Registrierung:
-    {% if object.requires_registration %}
-      Erforderlich
-    {% else %}
-      Nicht erforderlich
+    {% if object.potentials.all.count > 0 %}
+        <li class="sidebar__information-item">
+            <span class="sidebar__information-icon icon-tool"></span>
+            <ul class="list-unstyled">
+                {% for potential in object.potentials.all %}
+                    <li>{{ potential.name }}</li>
+                {% endfor %}
+            </ul>
+        </li>
     {% endif %}
-  </li>
-  <li class="sidebar__information-item">
-    <span class="sidebar__information-icon icon-hexagon"></span>
-    Datenschutz: {{ object.get_privacy_display }}
-  </li>
+    {% if object.subjects.all.count > 0 %}
+        <li class="sidebar__information-item">
+            <span class="sidebar__information-icon icon-subject"></span>
+            <ul class="list-unstyled">
+                {% for subject in object.subjects.all %}
+                    <li>{{ subject.name }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endif %}
+    {% if object.competences.all.count %}
+        <li class="sidebar__information-item">
+            <span class="sidebar__information-icon icon-hexagon"></span>
+            <ul class="list-unstyled">
+                {% for competence in object.competences.all %}
+                    <li>{{ competence.name }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endif %}
+    {% if object.applications.all.count %}
+        <li class="sidebar__information-item">
+            <span class="sidebar__information-icon icon-settings"></span>
+            <ul class="list-unstyled">
+                {% for app in object.applications.all %}
+                    <li>{{ app.name }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endif %}
+    <li class="sidebar__information-item">
+        <span class="sidebar__information-icon icon-registration"></span>
+        Registrierung:
+        {% if object.requires_registration %}
+        Erforderlich
+        {% else %}
+        Nicht erforderlich
+        {% endif %}
+    </li>
+    <li class="sidebar__information-item">
+        <span class="sidebar__information-icon icon-schuetzen-sicher-agieren"></span>
+        Datenschutz: {{ object.get_privacy_display }}
+    </li>
 {% endblock %}
 
 
 {% block sidebar_navigation_items %}
-  <li class="sidebar__nav-item">
-    <a class="sidebar__nav-link nav-link js-sidebar-nav-item active" id="overview-tab" data-toggle="pill" href="#overview" role="tab" aria-controls="overview" aria-selected="true">
-      Überblick
-      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
-    </a>
-  </li>
-  <li class="sidebar__nav-item">
-    <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="hints-tab" data-toggle="pill" href="#hints" role="tab" aria-controls="hints" aria-selected="true">
-      Hinweise & Tutorials
-      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
-    </a>
-  </li>
-  {% if object.related_teaching_modules %}
-  <li class="sidebar__nav-item">
-    <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="modules-tab" data-toggle="pill" href="#modules" role="tab" aria-controls="modules" aria-selected="true">
-      Bausteine
-      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
-    </a>
-  </li>
-  {% endif %}
-  {% if object.related_tools %}
-  <li class="sidebar__nav-item">
-    <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="similar-tools-tab" data-toggle="pill" href="#similar-tools" role="tab" aria-controls="similar-tools" aria-selected="true">
-      Ähnliche Tools
-      <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
-    </a>
-  </li>
-  {% endif %}
-  {% if object.related_trends %}
     <li class="sidebar__nav-item">
-      <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="trends-tab" data-toggle="pill" href="#trends" role="tab" aria-controls="trends" aria-selected="true">
-        Trends
-        <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
-      </a>
+        <a class="sidebar__nav-link nav-link js-sidebar-nav-item active" id="overview-tab" data-toggle="pill"
+           href="#overview" role="tab" aria-controls="overview" aria-selected="true">
+            Überblick
+            <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+        </a>
     </li>
-  {% endif %}
+    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED and object.data_privacy_assessment %}
+    <li class="sidebar__nav-item">
+        <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="data-protection-tab" data-toggle="pill" href="#data-protection"
+           role="tab" aria-controls="hints" aria-selected="true">
+            Datenschutz
+            <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+        </a>
+    </li>
+    {% endif %}
+    {% if object.related_teaching_modules %}
+        <li class="sidebar__nav-item">
+            <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="modules-tab" data-toggle="pill"
+               href="#modules" role="tab" aria-controls="modules" aria-selected="true">
+                Bausteine
+                <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+            </a>
+        </li>
+    {% endif %}
+    {% if object.related_tools %}
+        <li class="sidebar__nav-item">
+            <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="similar-tools-tab" data-toggle="pill"
+               href="#similar-tools" role="tab" aria-controls="similar-tools" aria-selected="true">
+                Ähnliche Tools
+                <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+            </a>
+        </li>
+    {% endif %}
+    {% if object.related_trends %}
+        <li class="sidebar__nav-item">
+            <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="trends-tab" data-toggle="pill" href="#trends"
+               role="tab" aria-controls="trends" aria-selected="true">
+                Trends
+                <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+            </a>
+        </li>
+    {% endif %}
+
+    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED %}
+        <li class="sidebar__nav-item">
+            <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="more-tab" data-toggle="pill" href="#more"
+               role="tab" aria-controls="more" aria-selected="true">
+                Mehr entdecken
+                <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
+            </a>
+        </li>
+    {% endif %}
 {% endblock %}
 
 {% block tab_contents %}
-  <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
-    {% include 'dll/content/tools/overview.html' %}
-  </div>
-  <div class="tab-pane fade" id="hints" role="tabpanel" aria-labelledby="hints-tab">
-    {% include 'dll/content/tools/hints.html' %}
-  </div>
-  {% if object.related_teaching_modules %}
-    <div class="tab-pane fade" id="modules" role="tabpanel" aria-labelledby="modules-tab">
-      {% include 'dll/content/tools/teaching_modules.html' %}
+    <div class="tab-pane fade show active" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+        {% include 'dll/content/tools/overview.html' %}
     </div>
-  {% endif %}
-  {% if object.related_tools %}
-    <div class="tab-pane fade" id="similar-tools" role="tabpanel" aria-labelledby="similar-tools-tab">
-      {% include 'dll/content/includes/tools.html' with headline='Ähnliche Tools' %}
+    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED and object.data_privacy_assessment %}
+    <div class="tab-pane fade" id="data-protection" role="tabpanel" aria-labelledby="hints-tab">
+        {% include 'dll/content/tools/data_protection.html' %}
     </div>
-  {% endif %}
-  {% if object.related_trends %}
-    <div class="tab-pane fade" id="trends" role="tabpanel" aria-labelledby="trends-tab">
-      {% include 'dll/content/includes/trends.html' with headline='Trends' %}
-    </div>
-  {% endif %}
+    {% endif %}
+    {% if object.related_teaching_modules %}
+        <div class="tab-pane fade" id="modules" role="tabpanel" aria-labelledby="modules-tab">
+            {% include 'dll/content/tools/teaching_modules.html' %}
+        </div>
+    {% endif %}
+    {% if object.related_tools %}
+        <div class="tab-pane fade" id="similar-tools" role="tabpanel" aria-labelledby="similar-tools-tab">
+            {% include 'dll/content/includes/tools.html' with headline='Ähnliche Tools' %}
+        </div>
+    {% endif %}
+    {% if object.related_trends %}
+        <div class="tab-pane fade" id="trends" role="tabpanel" aria-labelledby="trends-tab">
+            {% include 'dll/content/includes/trends.html' with headline='Trends' %}
+        </div>
+    {% endif %}
+
+    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED %}
+        <div class="tab-pane fade" id="more" role="tabpanel" aria-labelledby="more-tab">
+            {% include 'dll/content/includes/discover_more.html' with headline='Entdecke mehr Bausteine und Trends' %}
+        </div>
+    {% endif %}
 {% endblock %}

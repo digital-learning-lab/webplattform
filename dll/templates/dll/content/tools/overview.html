@@ -1,37 +1,5 @@
 <h2>Überblick</h2>
-<div class="information-area information-area--{{ object.type }}">
-  <div class="information-area__title information-area__title">
-    Kompetenzen in der Digitalen Welt
-  </div>
-  <div class="information-area__body">
-    <ul class="list-unstyled">
-      {% for competence in object.competences.all %}
-        <li>{{ competence.name }}</li>
-      {% endfor %}
-    </ul>
-    {% for competence in competences %}
-      <span class="information-area__icon icon-{{ competence.slug }}{% if competence in object.competences.all %} information-area__icon--active{% endif %}" data-toggle="tooltip" title="{{ competence.name }}"></span>
-    {% endfor %}
-  </div>
-</div>
-{% if object.functions.all.count > 0 %}
-    <div class="information-area information-area--{{ object.type }}">
-        <div class="information-area__title">
-           Tool-funktionen
-        </div>
-        <div class="information-area__body">
-            <ul class="list-unstyled">
-              {% for function in object.functions.all %}
 
-                <li>{{ function.title }}</li>
-              {% endfor %}
-            </ul>
-        {% for function in functions %}
-          <span class="information-area__icon icon-{{ function.slug }}{% if function in object.functions.all %} information-area__icon--active{% endif %}" data-toggle="tooltip" title="{{ function.title }}"></span>
-        {% endfor %}
-        </div>
-    </div>
-{% endif %}
 {% if object.description %}
   <div class="information-area information-area--{{ object.type }}">
     <div class="information-area__title information-area__title">
@@ -43,6 +11,37 @@
   </div>
 {% endif %}
 
+{% if object.potentials.all.count > 0 %}
+    <div class="information-area information-area--{{ object.type }}">
+        <div class="information-area__title">
+           Tool-funktionen
+        </div>
+        <div class="information-area__body">
+            <ul class="list-unstyled">
+                {% for potential in object.potentials.all %}
+                    <li>{{ potential.name }}</li>
+                {% endfor %}
+            </ul>
+        {% for potential in potentials %}
+          <span class="information-area__icon icon--dlt icon-{{ potential.slug }}--{% if potential in object.potentials.all %}blue{% else %}grey{% endif %}" data-toggle="tooltip" title="{{ potential.name }}"></span>
+        {% endfor %}
+        </div>
+    </div>
+{% endif %}
+{% if object.subjects.all|length > 0 %}
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Fächerbezug
+    </div>
+    <div class="information-area__body">
+      <ul class="list-unstyled">
+        {% for subject in object.subjects.all %}
+          <li>{{ subject.name }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endif %}
 {% if object.applications.all|length > 0 %}
   <div class="information-area information-area--{{ object.type }}">
     <div class="information-area__title information-area__title">
@@ -76,10 +75,10 @@
 {% if object.type %}
   <div class="information-area information-area--{{ object.type }}">
     <div class="information-area__title information-area__title">
-      Offline/Online
+      Kostenpflichtig
     </div>
     <div class="information-area__body">
-      {{ object.get_status_display }}
+        {% if object.with_costs %}Ja{% else %}Nein{% endif %}
     </div>
   </div>
 {% endif %}
@@ -98,6 +97,41 @@
     </div>
   </div>
 {% endif %}
+{% if object.testimonials.published|length > 0 %}
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Praxiserfahrung
+    </div>
+    <div class="information-area__body">
+      <div class="testimonials js-testimonials">
+        {% for testimonial in object.testimonials.published %}
+          <div class="testimonial">
+            <table class="testimonial-header">
+                <tr>
+                    <td>Autor*in:</td>
+                    <td>{{ testimonial.author.full_name }}</td>
+                </tr>
+                <tr>
+                    <td>Unterrichtsfach:</td>
+                    <td>{{ testimonial.subject }}</td>
+                </tr>
+                <tr>
+                    <td>Jahrgangsstufe:</td>
+                    <td>{{ testimonial.school_class }}. Klasse</td>
+                </tr>
+            </table>
+            <div class="testimonial-body">
+                {{ testimonial.comment }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% if show_testimonial_form %}
+  {% include "dll/content/includes/testimonial_form.html" %}
+{% endif %}
 
 {% if object.contra.0 %}
   <div class="information-area information-area--{{ object.type }}">
@@ -110,6 +144,21 @@
           <li>{{ contra }}</li>
         {% endfor %}
       </ul>
+    </div>
+  </div>
+{% endif %}
+
+{% include 'dll/content/includes/links.html' with literature_title='Weiterführende Literatur und Links' video_title='Video-Anleitungen' %}
+
+
+
+{% if object.disclaimer %}
+  <div class="information-area information-area--{{ object.type }}">
+    <div class="information-area__title information-area__title">
+      Disclaimer
+    </div>
+    <div class="information-area__body">
+      {{ object.disclaimer|linebreaksbr|urlize }}
     </div>
   </div>
 {% endif %}

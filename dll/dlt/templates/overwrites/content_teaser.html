@@ -1,0 +1,23 @@
+{% load thumbnail favored_tag %}
+<a class="content-teaser content-teaser--{{ content.type }}{% if condensed %} content-teaser--condensed{% endif %}" href="{{ content.get_absolute_url }}">
+  <div class="content-teaser__image-container">
+    <img class="content-teaser__image" src="{% thumbnail content.image 300x300 crop=True %}" srcset="" alt="Vorschaubild {{ content.name }}">
+  </div>
+  <div class="content-teaser__body">
+    <div class="content-teaser__type">{{ content.type_verbose }}</div>
+    {% favored_snippet content %}
+    <div class="clearfix"></div>
+    <div class="content-teaser__title">{{ content.name|truncatechars:50 }}</div>
+    <div class="content-teaser__abstract">{{ content.teaser|default_if_none:''|truncatechars:64 }}</div>
+    <div class="content-teaser__footer">
+      <div class="content-teaser__competences">
+
+        {% for potential in content.potentials.all %}
+          <span class="content-teaser__competence icon--dlt icon-{{ potential.slug }}--blue" data-toggle="tooltip" title="{{ potential.name }}"></span>
+          <span class="content-teaser__competence icon--dlt icon-{{ potential.slug }}--white" data-toggle="tooltip" title="{{ potential.name }}"></span>
+        {% endfor %}
+
+      </div>
+    </div>
+  </div>
+</a>

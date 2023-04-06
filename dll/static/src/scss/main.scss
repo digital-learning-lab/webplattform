@@ -13,9 +13,9 @@ $slick-loader-path: "~slick-carousel/slick/" !default;
 @import "~slick-carousel/slick/slick.scss";
 @import "~slick-carousel/slick/slick-theme.scss";
 
-@import 'variables';
 @import 'typography';
 
+@import 'accordion';
 @import 'alert';
 @import 'announcement';
 @import 'basics';
@@ -42,6 +42,7 @@ $slick-loader-path: "~slick-carousel/slick/" !default;
 @import 'news-box';
 @import 'pagination';
 @import 'partner-logo';
+@import 'platform-banner';
 @import 'read-more-link';
 @import 'search';
 @import 'section-competence';
@@ -51,4 +52,5 @@ $slick-loader-path: "~slick-carousel/slick/" !default;
 @import 'slick';
 @import 'survey';
 @import 'tabs';
+@import 'testimonial';
 @import 'toast';

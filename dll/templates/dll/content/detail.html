@@ -58,17 +58,18 @@
                 {{ object.type_verbose }} - Informationen
             </h3>
               <ul class="sidebar__information">
-                {% if object.competences.all.count %}
-                  <li class="sidebar__information-item">
-                    <span class="sidebar__information-icon icon-hexagon"></span>
-                    <ul class="list-unstyled">
-                      {% for competence in object.competences.all %}
-                        <li>{{ competence.name }}</li>
-                      {% endfor %}
-                    </ul>
-                  </li>
-                {% endif %}
-                {% block sidebar_information %}{% endblock %}
+                {% block sidebar_information %}
+                    {% if object.competences.all.count %}
+                      <li class="sidebar__information-item">
+                        <span class="sidebar__information-icon icon-hexagon"></span>
+                        <ul class="list-unstyled">
+                          {% for competence in object.competences.all %}
+                            <li>{{ competence.name }}</li>
+                          {% endfor %}
+                        </ul>
+                      </li>
+                    {% endif %}
+                {% endblock %}
               </ul>
               <ul class="nav flex-column sidebar__nav" role="tablist" aria-orientation="vertical">
                 {% block sidebar_navigation_items %}{% endblock %}
@@ -87,16 +88,16 @@
                     {% if user.is_authenticated %}
                     <button type="button" class="button button--secondary button--small m-0 js-favor{% if favored %} d-none{% endif %}" data-url="{{ object.get_favor_url }}">
                       <span class="fa fa-heart button__icon button__icon--inactive" focusable="false"></span>
-                      <span>Zum Merkzettel hinzufügen</span>
+                      <span>{% if SITE_ID == 1 %}Zum Merkzettel hinzufügen{% else %}Zur Toolbox hinzufügen{% endif %}</span>
                     </button>
                     <button type="button" class="button button--secondary button--small m-0 js-unfavor {% if not favored %} d-none{% endif %}" data-url="{{ object.get_unfavor_url }}">
                       <span class="fa fa-heart button__icon button__icon--active" focusable="false"></span>
-                      <span class="">Vom Merkzettel entfernen</span>
+                      <span>{% if SITE_ID == 1 %}Vom Merkzettel entfernen{% else %}Aus Toolbox entfernen{% endif %}</span>
                     </button>
                     {% else %}
                     <a href="{% url 'user:favorite-login-required' %}?next={{ object.get_absolute_url }}" class="button button--secondary button--small m-0">
                       <span class="fa fa-heart button__icon button__icon--inactive" focusable="false"></span>
-                      <span>Zum Merkzettel hinzufügen</span>
+                      <span>{% if SITE_ID == 1 %}Zum Merkzettel hinzufügen{% else %}Zur Toolbox hinzufügen{% endif %}</span>
                     </a>
                     {% endif %}
                   </div>
@@ -146,4 +147,13 @@
     </div>
     {% endif %}
   </main>
+  <script>
+    {% if SITE_ID == 1 %}
+    const favorAddedText = 'Erfolgreich auf Ihrem Merkzettel hinzugefügt. Sie finden Ihren Merkzettel im Menü unter „Mein Merkzettel“.';
+    const favorRemovedText = 'Erfolgreich vom Merkzettel entfernt.';
+    {% elif SITE_ID == 2 %}
+    const favorAddedText = 'Erfolgreich zur Ihrer Toolbox hinzugefügt. Sie finden Ihre Toolbox im Menü unter „Meine Toolbox“.';
+    const favorRemovedText = 'Erfolgreich aus der Toolbox entfernt.';
+    {% endif %}
+  </script>
 {% endblock %}

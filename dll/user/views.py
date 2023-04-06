@@ -3,6 +3,7 @@ import json
 from django.contrib import messages
 from django.contrib.auth import login, get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import Http404, HttpResponseRedirect
@@ -11,6 +12,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from constance import config
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views.generic import TemplateView, FormView, RedirectView
@@ -26,7 +28,14 @@ from .forms import (
     UserPasswordChangeForm,
     UserAccountDeleteForm,
 )
-from dll.content.models import Content, TeachingModule, Tool, Trend, Review
+from dll.content.models import (
+    Content,
+    DataPrivacyAssessment,
+    TeachingModule,
+    Tool,
+    Trend,
+    Review,
+)
 from dll.content.rules import is_bsb_reviewer, is_tuhh_reviewer
 from dll.content.serializers import (
     TeachingModuleSerializer,
@@ -36,7 +45,7 @@ from dll.content.serializers import (
     ContentListInternalReviewSerializer,
     ContentListInvitationSerializer,
 )
-from dll.content.views import BreadcrumbMixin
+from dll.content.views import BreadcrumbMixin, SiteRedirectMixin
 from dll.user.models import EmailChangeRequest
 from dll.user.tokens import account_activation_token, email_confirmation_token
 from .forms import SignUpForm
@@ -65,7 +74,7 @@ class TestView(TemplateView):
 
 
 class MyContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
-    template_name = "dll/user/content/overview.html"
+    template_name = "overwrites/my_content.html"
     breadcrumb_title = "Meine Inhalte"
     breadcrumb_url = reverse_lazy("user-content-overview")
 
@@ -115,6 +124,11 @@ class CreateEditContentView(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
                 and not self.request.user.is_reviewer
             ):
                 data["review"] = None
+            if (
+                "data_privacy_assessment" in data
+                and not data["data_privacy_assessment"]
+            ):
+                data["data_privacy_assessment"] = {}
             ctx["obj"] = json.dumps(data)
             ctx["author"] = obj.author.full_name
             ctx["can_delete"] = (
@@ -186,16 +200,49 @@ class ReviewTeachingModuleView(CreateEditTeachingModuleView):
         return result
 
 
-class CreateEditToolView(CreateEditContentView):
+class CreateEditToolView(SiteRedirectMixin, CreateEditContentView):
     template_name = "dll/user/content/add_tool.html"
     breadcrumb_title = "Tool {}"
     breadcrumb_url = reverse_lazy("add-tool")
     model = Tool
     serializer = ToolSerializer
 
+    def _get_compliance_dict(self):
+        fields = [
+            "SERVER_LOCATION",
+            "PROVIDER",
+            "DATA_PRIVACY_TERMS",
+            "TERMS_AND_CONDITIONS",
+            "USER_REGISTRATION",
+            "SECURITY",
+        ]
+        result = {}
+        for field in fields:
+            result[field.lower()] = {
+                "compliant": getattr(config, field + "_COMPLIANT"),
+                "not_compliant": getattr(config, field + "_NOT_COMPLIANT"),
+                "unknown": getattr(config, field + "_UNKNOWN"),
+            }
+        return result
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["compliance"] = json.dumps(self._get_compliance_dict())
+        return ctx
+
+    def get_object(self):
+        obj = super().get_object()
+        if obj and not DataPrivacyAssessment.objects.filter(tool=obj).exists():
+            obj.data_privacy_assessment = DataPrivacyAssessment.objects.create(tool=obj)
+            obj.save()
+        return obj
+
 
 class ReviewToolView(CreateEditToolView):
     template_name = "dll/user/content/review_tool.html"
+
+    def get(self, *args, **kwargs):
+        return super(CreateEditContentView, self).get(*args, **kwargs)
 
     def get_breadcrumbs(self):
         bcs = super(CreateEditToolView, self).get_breadcrumbs()
@@ -369,6 +416,8 @@ class PendingReviewContentView(UserContentView):
             is_active=True, status__in=[Review.NEW, Review.IN_PROGRESS]
         )
         qs = Content.objects.drafts().filter(reviews__in=reviews).order_by("created")
+        if settings.SITE_ID == 2:
+            return qs.instance_of(Tool)
 
         type = self.request.GET.get("type", None)
         search_term = self.request.GET.get("q", None)
@@ -528,6 +577,17 @@ class UserFavoriteView(BreadcrumbMixin, TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super(UserFavoriteView, self).get_context_data(**kwargs)
         ctx["favorites"] = self.request.user.favorites.all()
+        return ctx
+
+
+class UserToolBoxView(BreadcrumbMixin, TemplateView):
+    template_name = "dll/user/content/tool_box.html"
+    breadcrumb_title = "Meine favorisierten Tools"
+    breadcrumb_url = reverse_lazy("user-toolbox-overview")
+
+    def get_context_data(self, **kwargs):
+        ctx = super(UserToolBoxView, self).get_context_data(**kwargs)
+        ctx["tool_box_information"] = self.request.user.tool_box_information
         return ctx
 
 

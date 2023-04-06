@@ -17,7 +17,6 @@ def backwards_func(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("communication", "0003_auto_20200113_1540"),
     ]

@@ -5,7 +5,6 @@ import django_better_admin_arrayfield.models.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("content", "0002_auto_20191030_1424"),
     ]

@@ -5,7 +5,6 @@ import dll.general.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("content", "0016_favorite"),
     ]

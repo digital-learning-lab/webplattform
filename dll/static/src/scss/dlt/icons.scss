@@ -1,0 +1,206 @@
+.icon--dlt {
+  height: 30px;
+  width: 30px;
+  display: inline-block;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.icon--dlt.icon-agb--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_AGB_grau.svg")
+}
+.icon--dlt.icon-agb--green {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_AGB_gruen.svg")
+}
+.icon--dlt.icon-agb--red {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_AGB_rot.svg")
+}
+.icon--dlt.icon-aenderungen--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Aenderungen_grau.svg")
+}
+.icon--dlt.icon-anbieter--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Anbieter_grau.svg")
+}
+.icon--dlt.icon-anbieter--green {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Anbieter_gruen.svg")
+}
+.icon--dlt.icon-anbieter--red {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Anbieter_rot.svg")
+}
+.icon--dlt.icon-benutzeranmeldung--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Benutzeranmeldung_grau.svg")
+}
+.icon--dlt.icon-benutzeranmeldung--green {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Benutzeranmeldung_gruen.svg")
+}
+.icon--dlt.icon-benutzeranmeldung--red {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Benutzeranmeldung_rot.svg")
+}
+.icon--dlt.icon-datenschutzerklarung--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Datenschutzerklärung_grau.svg")
+}
+.icon--dlt.icon-datenschutzerklarung--green {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Datenschutzerklärung_gruen.svg")
+}
+.icon--dlt.icon-datenschutzerklarung--red {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Datenschutzerklärung_rot.svg")
+}
+.icon--dlt.icon-fazit--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Fazit_grau.svg")
+}
+.icon--dlt.icon-fazit--green {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Fazit_gruen.svg")
+}
+.icon--dlt.icon-fazit--red {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Fazit_rot.svg")
+}
+.icon--dlt.icon-nutzung_bedingtEmpfohlen {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Nutzung_bedingtEmpfohlen.svg")
+}
+.icon--dlt.icon-nutzung_empfohlen {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Nutzung_empfohlen.svg")
+}
+.icon--dlt.icon-nutzung_kontextabhaengigEmpfohlen {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Nutzung_kontextabhaengigEmpfohlen.svg")
+}
+.icon--dlt.icon-serverstandort--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Serverstandort_grau.svg")
+}
+.icon--dlt.icon-serverstandort--green {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Serverstandort_gruen.svg")
+}
+.icon--dlt.icon-serverstandort--red {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Serverstandort_rot.svg")
+}
+.icon--dlt.icon-sicherheit--green {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Sicherheit_gruen.svg")
+}
+.icon--dlt.icon-sicherheit--red {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Sicherheit_rot.svg")
+}
+.icon--dlt.icon-sicherheit--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Datenschutz_Sichertheit_grau.svg")
+}
+.icon--dlt.icon-inhalte-produzieren--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_InhalteProduzieren_grau.svg")
+}
+.icon--dlt.icon-inhalte-produzieren--blue {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_InhalteProduzieren_blau.svg")
+}
+.icon--dlt.icon-inhalte-produzieren--white {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_InhalteProduzieren_weiß.svg")
+}
+.icon--dlt.icon-inhalte-teilen--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_InhalteTeilen_grau.svg")
+}
+.icon--dlt.icon-inhalte-teilen--blue {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_InhalteTeilen_blau.svg")
+}
+.icon--dlt.icon-inhalte-teilen--white {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_InhalteTeilen_weiß.svg")
+}
+.icon--dlt.icon-kommunizieren--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_Kommunizieren_grau.svg")
+}
+.icon--dlt.icon-kommunizieren--blue {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_Kommunizieren_blau.svg")
+}
+.icon--dlt.icon-kommunizieren--white {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_Kommunizieren_weiß.svg")
+}
+.icon--dlt.icon-probleme-losen--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_ProblemeLoesen_grau.svg")
+}
+.icon--dlt.icon-probleme-losen--blue {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_ProblemeLoesen_blau.svg")
+}
+.icon--dlt.icon-probleme-losen--white {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_ProblemeLoesen_weiß.svg")
+}
+.icon--dlt.icon-reflektieren--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_Reflektieren_grau.svg")
+}
+.icon--dlt.icon-reflektieren--blue {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_Reflektieren_blau.svg")
+}
+.icon--dlt.icon-reflektieren--white {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_Reflektieren_weiß.svg")
+}
+.icon--dlt.icon-spielerisch-lernen--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_SpielerischLernen_grau.svg")
+}
+.icon--dlt.icon-spielerisch-lernen--blue {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_SpielerischLernen_blau.svg")
+}
+.icon--dlt.icon-spielerisch-lernen--white {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_SpielerischLernen_weiß.svg")
+}
+.icon--dlt.icon-strukturieren-und-systematisieren--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_StrukturierenSystematisieren_grau.svg")
+}
+.icon--dlt.icon-strukturieren-und-systematisieren--blue {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_StrukturierenSystematisieren_blau.svg")
+}
+.icon--dlt.icon-strukturieren-und-systematisieren--white {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_StrukturierenSystematisieren_weiß.svg")
+}
+.icon--dlt.icon-testen-und-bewerten--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_TestenBewerten_grau.svg")
+}
+.icon--dlt.icon-testen-und-bewerten--blue {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_TestenBewerten_blau.svg")
+}
+.icon--dlt.icon-testen-und-bewerten--white {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_TestenBewerten_weiß.svg")
+}
+.icon--dlt.icon-visualisieren-animieren-und-simulieren--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_VisualisierenAnimierenSimulieren_grau.svg")
+}
+.icon--dlt.icon-visualisieren-animieren-und-simulieren--blue {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_VisualisierenAnimierenSimulieren_blau.svg")
+}
+.icon--dlt.icon-visualisieren-animieren-und-simulieren--white {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_VisualisierenAnimierenSimulieren_weiß.svg")
+}
+.icon--dlt.icon-zusammenarbeiten-und-kooperieren--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_Zusammenarbeiten_grau.svg")
+}
+.icon--dlt.icon-zusammenarbeiten-und-kooperieren--blue {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_Zusammenarbeiten_blau.svg")
+}
+.icon--dlt.icon-zusammenarbeiten-und-kooperieren--white {
+  background-image: url("/static/img/icons/dlt/dlt_Potenzialkategorien_Zusammenarbeiten_weiß.svg")
+}
+.icon--dlt.icon-meineTools--grey {
+  background-image: url("/static/img/icons/dlt/dlt_Sidebar_MeineTools_grau.svg")
+}
+.icon--dlt.icon-art--grey {
+  background-image: url("/static/img/icons/dlt/dlt_ToolDetailseite_ToolInformaitionen_Art_grau.svg")
+}
+.icon--dlt.icon-art--white {
+  background-image: url("/static/img/icons/dlt/dlt_ToolDetailseite_ToolInformaitionen_Art_weiß.svg")
+}
+.icon--dlt.icon-datenschutz--grey {
+  background-image: url("/static/img/icons/dlt/dlt_ToolDetailseite_ToolInformaitionen_Datenschutz_grau.svg")
+}
+.icon--dlt.icon-datenschutz--white {
+  background-image: url("/static/img/icons/dlt/dlt_ToolDetailseite_ToolInformaitionen_Datenschutz_weiß.svg")
+}
+.icon--dlt.icon-faecherbezug--grey {
+  background-image: url("/static/img/icons/dlt/dlt_ToolDetailseite_ToolInformaitionen_Faecherbezug_grau.svg")
+}
+.icon--dlt.icon-faecherbezug--white {
+  background-image: url("/static/img/icons/dlt/dlt_ToolDetailseite_ToolInformaitionen_Faecherbezug_weiß.svg")
+}
+.icon--dlt.icon-potenzialkategorien--grey {
+  background-image: url("/static/img/icons/dlt/dlt_ToolDetailseite_ToolInformaitionen_Potenzialkategorien_grau.svg")
+}
+.icon--dlt.icon-potenzialkategorien--white {
+  background-image: url("/static/img/icons/dlt/dlt_ToolDetailseite_ToolInformaitionen_Potenzialkategorien_weiß.svg")
+}
+.icon--dlt.icon-registrierung--grey {
+  background-image: url("/static/img/icons/dlt/dlt_ToolDetailseite_ToolInformaitionen_Registrierung_grau.svg")
+}
+.icon--dlt.icon-registrierung--white {
+  background-image: url("/static/img/icons/dlt/dlt_ToolDetailseite_ToolInformaitionen_Registrierung_weiß.svg")
+}

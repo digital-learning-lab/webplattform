@@ -1,14 +1,22 @@
 import json
-import random
 
+from constance import config
+from django.conf import settings
 from django.contrib.syndication.views import Feed
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import (
+    ObjectDoesNotExist,
+    MultipleObjectsReturned,
+    PermissionDenied,
+)
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import JsonResponse, Http404, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.sites.models import Site
 from django.urls import reverse_lazy, resolve
-from django.views.generic import TemplateView, DetailView
+from django.views import View
+from django.views.generic import TemplateView, DetailView, FormView, UpdateView
 from django.views.generic.base import ContextMixin
 from django.utils.translation import gettext_lazy as _
 from django_filters.rest_framework import DjangoFilterBackend
@@ -20,7 +28,12 @@ from haystack.query import SearchQuerySet
 from psycopg2._range import NumericRange
 from rest_framework import viewsets, filters, mixins, status
 from rest_framework.decorators import action
-from rest_framework.generics import ListAPIView, GenericAPIView, DestroyAPIView
+from rest_framework.generics import (
+    ListAPIView,
+    GenericAPIView,
+    DestroyAPIView,
+    UpdateAPIView,
+)
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.parsers import FileUploadParser
 from rest_framework.permissions import (
@@ -32,7 +45,15 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rules.contrib.rest_framework import AutoPermissionViewSetMixin
 
-from dll.content.filters import SolrTagFilter, SortingFilter
+from dll.content.filters import (
+    SolrTagFilter,
+    SortingFilter,
+    ToolPotentialFilter,
+    ToolSubjectFilter,
+    ToolWithCostsFilter,
+    FavoriteFilter,
+)
+from dll.content.rules import is_bsb_reviewer, is_tuhh_reviewer
 from dll.content.models import (
     Content,
     TeachingModule,
@@ -47,6 +68,8 @@ from dll.content.models import (
     ToolApplication,
     HelpText,
     ContentFile,
+    Potential,
+    DataPrivacyAssessment,
 )
 from dll.content.serializers import (
     AuthorSerializer,
@@ -72,12 +95,16 @@ from .filters import (
     TeachingModuleSchoolTypeFilter,
     ToolFunctionFilter,
 )
-from .models import ToolFunction, Favorite
+from .forms import TestimonialForm
+from .models import Testimonial, TestimonialReview, ToolFunction, Favorite
 from .more_like_this import more_like_this
 from .serializers import (
     ContentListSerializer,
     ContentPolymorphicSerializer,
     FavoriteSerializer,
+    PotentialSerializer,
+    TestimonialReviewSerializer,
+    TestimonialSerializer,
 )
 from .utils import get_random_content
 
@@ -93,6 +120,16 @@ class ReviewerMixin(GenericAPIView):
         permission = super(ReviewerMixin, self).get_permissions()
         permission.append(ReviewerPermission())
         return permission
+
+
+class SiteRedirectMixin(View):
+    def get(self, *args, **kwargs):
+        if settings.SITE_ID == 2:
+            return super().get(self.request)
+        else:
+            site = Site.objects.get(pk=2)
+            domain = site.domain
+            return redirect(f"//{domain}{self.request.path}")
 
 
 class BreadcrumbMixin(ContextMixin):
@@ -143,10 +180,19 @@ class ContentDetailBase(DetailView):
         context = self.get_context_data(object=self.object)
         return self.render_to_response(context)
 
+    def get_testimonial_form(self):
+        return TestimonialForm(author=self.request.user, content=self.object)
+
     def get_context_data(self, **kwargs):
         ctx = super(ContentDetailBase, self).get_context_data(**kwargs)
+        if self.request.user.is_authenticated:
+            ctx["testimonial_form"] = self.get_testimonial_form()
+            ctx["can_add_testimonial"] = not Testimonial.objects.filter(
+                author=self.request.user, content=self.object
+            ).exists()
         ctx["competences"] = Competence.objects.all()
         ctx["functions"] = ToolFunction.objects.all()
+        ctx["potentials"] = Potential.objects.all()
         ctx["recommended_content"] = more_like_this(self.object)
         if self.request.user.is_authenticated:
             ctx["favored"] = Favorite.objects.filter(
@@ -163,6 +209,12 @@ class ContentDetailView(ContentDetailBase):
     def get_context_data(self, **kwargs):
         ctx = super(ContentDetailView, self).get_context_data(**kwargs)
         ctx["meta"] = self.get_object().as_meta(self.request)
+        if (
+            self.request.user.is_authenticated and config.TESTIMONIAL_DLL
+            if settings.SITE_ID == 1
+            else config.TESTIMONIAL_DLT
+        ):
+            ctx["show_testimonial_form"] = True
         return ctx
 
 
@@ -188,15 +240,47 @@ class ToolDetailView(ContentDetailView):
     model = Tool
     template_name = "dll/content/tool_detail.html"
 
+    def get_context_data(self, **kwargs):
+        ctx = super(ToolDetailView, self).get_context_data(**kwargs)
+        ctx["show_banner"] = True
+        if settings.SITE_ID == 1:
+            dlt_domain = Site.objects.get(pk=2).domain
+            ctx[
+                "dlt_tool_url"
+            ] = f"{self.request.scheme}://{dlt_domain}/tools/{self.object.slug}"
+        if settings.SITE_ID == 2:
+            dll_domain = Site.objects.get(pk=1).domain
+            ctx[
+                "canonical"
+            ] = f"{self.request.scheme}://{dll_domain}/tools/{self.object.slug}/"
+
+        return ctx
+
 
 class TrendDetailView(ContentDetailView):
     model = Trend
     template_name = "dll/content/trend_detail.html"
 
+    def get(self, *args, **kwargs):
+        if settings.SITE_ID == 1:
+            return super().get(self.request)
+        else:
+            site = Site.objects.get(pk=1)
+            domain = site.domain
+            return redirect(f"//{domain}{self.request.path}")
+
 
 class TeachingModuleDetailView(ContentDetailView):
     model = TeachingModule
     template_name = "dll/content/teaching_module_detail.html"
+
+    def get(self, *args, **kwargs):
+        if settings.SITE_ID == 1:
+            return super().get(self.request)
+        else:
+            site = Site.objects.get(pk=1)
+            domain = site.domain
+            return redirect(f"//{domain}{self.request.path}")
 
 
 class ToolDetailPreviewView(ContentPreviewView):
@@ -515,6 +599,36 @@ class ToolFilterView(BaseFilterView):
             {"id": function.id, "title": function.title}
             for function in ToolFunction.objects.all()
         ]
+        subject_filter = [
+            {"value": subject.pk, "name": subject.name}
+            for subject in Subject.objects.all()
+        ]
+        ctx["subject_filter"] = json.dumps(subject_filter)
+        potential_filter = [
+            {
+                "value": potential.pk,
+                "name": potential.name,
+                "description": potential.description,
+                "video_embed": potential.video_embed_code,
+            }
+            for potential in Potential.objects.all()
+        ]
+        ctx["potential_filter"] = json.dumps(potential_filter)
+        data_privacy_filter = [
+            {
+                "value": DataPrivacyAssessment.COMPLIANT[0],
+                "name": str(DataPrivacyAssessment.COMPLIANT[1]),
+            },
+            {
+                "value": DataPrivacyAssessment.NOT_COMPLIANT[0],
+                "name": str(DataPrivacyAssessment.NOT_COMPLIANT[1]),
+            },
+            {
+                "value": DataPrivacyAssessment.UNKNOWN[0],
+                "name": str(DataPrivacyAssessment.UNKNOWN[1]),
+            },
+        ]
+        ctx["data_privacy_filter"] = json.dumps(data_privacy_filter)
         return ctx
 
 
@@ -526,6 +640,10 @@ class ToolDataFilterView(ContentDataFilterView):
         ToolDataPrivacyFilter,
         ToolOperationSystemFilter,
         ToolFunctionFilter,
+        ToolPotentialFilter,
+        ToolSubjectFilter,
+        ToolWithCostsFilter,
+        FavoriteFilter,
     ] + ContentDataFilterView.filter_backends
 
 
@@ -597,6 +715,13 @@ class ToolFunctionSearchView(ListAPIView):
     serializer_class = ToolFunctionSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     search_fields = ["title"]
+
+
+class ToolPotentialSearchView(ListAPIView):
+    queryset = Potential.objects.all()
+    serializer_class = PotentialSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    search_fields = ["name"]
 
 
 class SubCompetencesSearchView(ListAPIView):
@@ -827,7 +952,17 @@ def search_view(request):
     # If there are no results - display random Content objects.
     suggestions = []
     if sqs.count() == 0:
-        suggestions = get_random_content(2, 2, 2)
+        if settings.SITE_ID == 1:
+            suggestions = get_random_content(
+                limit_teaching_modules=2, limit_tools=2, limit_trends=2
+            )
+        if settings.SITE_ID == 2:
+            suggestions = get_random_content(
+                limit_teaching_modules=0, limit_tools=6, limit_trends=0
+            )
+
+    if settings.SITE_ID == 2:
+        sqs = sqs.models(Tool)
 
     ctx = {
         "results": Content.objects.filter(pk__in=sqs.values_list("pk", flat=True)),
@@ -843,3 +978,160 @@ class FavoriteListApiView(ListAPIView):
     def get_queryset(self):
         user = self.request.user
         return Favorite.objects.filter(user=user)
+
+
+class TestimonialView(LoginRequiredMixin, FormView):
+    form_class = TestimonialForm
+    template_name = "dll/content/includes/testimonial_form.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super(TestimonialView, self).get_context_data(**kwargs)
+        ctx["testimonial_form"] = self.get_form()
+        ctx["can_add_testimonial"] = True
+        return ctx
+
+    def get_form_kwargs(self):
+        kwargs = super(TestimonialView, self).get_form_kwargs()
+        kwargs["author"] = self.request.user
+        if c_id := self.request.POST.get("content"):
+            kwargs["content"] = get_object_or_404(Content, pk=c_id)
+        return kwargs
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form), status=400)
+
+    def form_valid(self, form):
+        instance = form.save()
+        instance.submit_for_review(self.request.user)
+
+        return HttpResponse()
+
+
+class TestimonialUpdateView(UpdateAPIView):
+    serializer_class = TestimonialSerializer
+    queryset = Testimonial.objects.all()
+    lookup_field = "pk"
+    lookup_url_kwarg = "pk"
+
+    def partial_update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        review = TestimonialReview.objects.filter(testimonial=instance).latest(
+            "created"
+        )
+        review.is_active = True
+        review.status = TestimonialReview.NEW
+        review.save()
+        return super().partial_update(request, *args, **kwargs)
+
+
+class TestimonialReviewViewSet(
+    mixins.RetrieveModelMixin,
+    mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
+    """Authors have only view permission, reviewers have view and edit permission"""
+
+    serializer_class = TestimonialReviewSerializer
+    queryset = TestimonialReview.objects.all()
+    permission_classes = [DjangoObjectPermissions]
+    lookup_field = "pk"
+    lookup_url_kwarg = "pk"
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
+    filterset_fields = ["status"]
+    search_fields = ["testimonial__content__name"]
+
+    def get_queryset(self):
+        qs = super(TestimonialReviewViewSet, self).get_queryset()
+        user = self.request.user
+        if not user.has_perm("testimonial.view_review"):
+            # user should have permission to view reviews
+            raise Http404
+        if not user.has_perm("testimonial.can_review"):
+            # if not allowed to review - only show own reviews
+            qs = qs.filter(submitted_by=user)
+
+        return qs
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def accept(self, request, pk):
+        error = JsonResponse(
+            status=400,
+            data={"error": _("Fehler beim freigeben des Erfahrungsberichts.")},
+        )
+        user = self.request.user
+        if not user.has_perm("testimonial.can_review"):
+            return error
+        testimonial_review = self.get_object()
+        result = testimonial_review.accept(user)
+        if result:
+            return HttpResponse()
+        return error
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def decline(self, request, pk):
+        error = JsonResponse(
+            status=400,
+            data={"error": _("Fehler beim freigeben des Erfahrungsberichts.")},
+        )
+        user = self.request.user
+        if not user.has_perm("testimonial.can_review"):
+            return error
+        testimonial_review = self.get_object()
+        result = testimonial_review.decline(user)
+        if result:
+            return HttpResponse()
+        return error
+
+    @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
+    def request_changes(self, request, pk):
+        error = JsonResponse(
+            status=400,
+            data={"error": _("Fehler beim freigeben des Erfahrungsberichts.")},
+        )
+        user = self.request.user
+        if not user.has_perm("testimonial.can_review"):
+            return error
+        comment = request.data.get("comment")
+        testimonial_review = self.get_object()
+        result = testimonial_review.request_changes(comment, user)
+        if result:
+            return HttpResponse()
+        return error
+
+    def perform_update(self, serializer):
+        if not self.request.user.has_perm("testimonial.can_review"):
+            raise PermissionDenied
+        serializer.save()
+
+
+class TestimonialReviewsOverview(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
+    template_name = "dll/user/content/review_testimonial.html"
+    breadcrumb_title = "Review Erfahrungsberichte"
+    breadcrumb_url = reverse_lazy("content-testimonial-review")  # TODO
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if not any([is_bsb_reviewer(user), is_tuhh_reviewer(user), user.is_superuser]):
+            raise Http404
+        return super(TestimonialReviewsOverview, self).get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        ctx = super(TestimonialReviewsOverview, self).get_context_data(**kwargs)
+        ctx["mode"] = "reviewer"
+        ctx["testimonial_reviews"] = TestimonialReview.objects.filter(
+            status__in=[TestimonialReview.NEW, TestimonialReview.IN_PROGRESS]
+        ).select_related("testimonial")
+        return ctx
+
+
+class TestimonialOverview(LoginRequiredMixin, TemplateView, BreadcrumbMixin):
+    template_name = "dll/user/content/testimonial_overview.html"
+    breadcrumb_title = "Meine Erfahrungsberichte"
+    breadcrumb_url = reverse_lazy("my-content-testimonials")  # TODO
+
+    def get_context_data(self, **kwargs):
+        ctx = super(TestimonialOverview, self).get_context_data(**kwargs)
+        ctx["testimmonials"] = Testimonial.objects.filter(author=self.request.user)
+        ctx["mode"] = "user"
+        return ctx

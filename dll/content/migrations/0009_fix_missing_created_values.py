@@ -20,7 +20,6 @@ def unfix_missing_created_values(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("content", "0008_auto_20200206_1049"),
     ]

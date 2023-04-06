@@ -1,5 +1,6 @@
 import random
 
+from django.contrib.sites.models import Site
 from django.db.models import TextField
 from django.utils.functional import cached_property
 from meta.views import Meta
@@ -13,7 +14,7 @@ from dll.cms.blocks import (
     MultiElementBlock,
     SideBySideBlock,
 )
-from dll.content.models import TeachingModule, Trend, Tool, Content
+from dll.content.models import TeachingModule, Trend, Tool, Content, Potential
 
 
 class DllPageMixin:
@@ -86,7 +87,6 @@ class SimplePage(DllPageMixin, Page):
 
 
 class BlockPage(DllPageMixin, Page):
-
     body = StreamField(
         [
             ("single_element_block", SingleElementBlock()),
@@ -115,7 +115,6 @@ class BlockPage(DllPageMixin, Page):
 
 
 class Frontpage(DllPageMixin, Page):
-
     body = StreamField(
         [
             ("single_element_block", SingleElementBlock()),
@@ -141,16 +140,37 @@ class Frontpage(DllPageMixin, Page):
     def get_context(self, request, *args, **kwargs):
         ctx = super(Frontpage, self).get_context(request, *args, **kwargs)
         content_pks = []
+        site = Site.objects.get_current(request)
         try:
-            content_pks += random.choices(
-                TeachingModule.objects.published().values_list("pk", flat=True), k=2
-            )
-            content_pks += random.choices(
-                Trend.objects.published().values_list("pk", flat=True), k=2
-            )
-            content_pks += random.choices(
-                Tool.objects.published().values_list("pk", flat=True), k=2
-            )
+            if site.id == 1:
+                content_pks += random.choices(
+                    TeachingModule.objects.published().values_list("pk", flat=True), k=2
+                )
+                content_pks += random.choices(
+                    Trend.objects.published().values_list("pk", flat=True), k=2
+                )
+                content_pks += random.choices(
+                    Tool.objects.published().values_list("pk", flat=True), k=2
+                )
+            elif site.id == 2:
+                content_pks += random.choices(
+                    Tool.objects.published().values_list("pk", flat=True), k=6
+                )
+                ctx["potentials"] = zip(
+                    Potential.objects.all()[:10],
+                    [
+                        "img/icons/dlt/dlt_Potenzialkategorien_VisualisierenAnimierenSimulieren_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_Kommunizieren_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_InhalteTeilen_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_Zusammenarbeiten_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_Reflektieren_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_StrukturierenSystematisieren_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_TestenBewerten_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_SpielerischLernen_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_InhalteProduzieren_weiß.svg",
+                        "img/icons/dlt/dlt_Potenzialkategorien_ProblemeLoesen_weiß.svg",
+                    ],
+                )
         except IndexError:
             pass  # no content yet
         ctx["contents"] = Content.objects.filter(pk__in=content_pks)

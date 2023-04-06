@@ -29,10 +29,10 @@ def get_random_content(limit_teaching_modules, limit_tools, limit_trends):
             k=limit_teaching_modules,
         )
         content_pks += random.choices(
-            Trend.objects.published().values_list("pk", flat=True), k=limit_tools
+            Trend.objects.published().values_list("pk", flat=True), k=limit_trends
         )
         content_pks += random.choices(
-            Tool.objects.published().values_list("pk", flat=True), k=limit_trends
+            Tool.objects.published().values_list("pk", flat=True), k=limit_tools
         )
     except IndexError:
         pass  # no content yet

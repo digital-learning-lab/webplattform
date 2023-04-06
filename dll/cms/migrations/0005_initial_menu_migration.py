@@ -190,7 +190,6 @@ def backwards_func(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("cms", "0004_auto_20201217_1835"),
         ("wagtailmenus", "0023_remove_use_specific"),

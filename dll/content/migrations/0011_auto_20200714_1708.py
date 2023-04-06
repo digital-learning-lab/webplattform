@@ -9,7 +9,6 @@ import django_extensions.db.fields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("content", "0010_auto_20200629_1606"),
     ]

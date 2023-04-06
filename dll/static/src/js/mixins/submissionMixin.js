@@ -192,6 +192,9 @@ export const submissionMixin = {
         this.data.contentlink_set = this.data.literatureLinks
       }
       this.data.related_content = this.data.tools.concat(this.data.trends.concat(this.data.teaching_modules))
+      if (this.data.data_privacy_assessment) {
+        delete this.data.data_privacy_assessment.id
+      }
       const axiosInstance = this.getAxiosInstance()
       this.loading = true
       if (this.previewImage) {

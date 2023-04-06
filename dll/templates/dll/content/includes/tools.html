@@ -3,7 +3,7 @@
 
 {% for module in object.related_tools %}
   <div class="mb-5">
-    {% include 'dll/includes/content_teaser.html' with content=module %}
+    {% include 'overwrites/content_teaser.html' with content=module %}
   </div>
 {% endfor %}
 {% endif %}

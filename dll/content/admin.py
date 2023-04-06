@@ -3,8 +3,10 @@ from django.contrib import admin
 
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from io import BytesIO
+
+from django.shortcuts import redirect
 from django.utils.translation import gettext_lazy as _
 
 from django_better_admin_arrayfield.admin.mixins import DynamicArrayMixin
@@ -21,6 +23,8 @@ from .models import (
     SubCompetence,
     Subject,
     SchoolType,
+    TestimonialReview,
+    ToolVideoTutorial,
     Trend,
     Tool,
     ToolApplication,
@@ -31,9 +35,29 @@ from .models import (
     CompetenceAdditionalInformation,
     ContentFile,
     ToolLink,
+    DataPrivacyAssessment,
+    Testimonial,
+    Potential,
 )
 
 admin.site.unregister(FlatPage)
+
+
+class PublishAdminMixin:
+    change_form_template = "admin/publish_change_form.html"
+
+    def response_change(self, request, obj):
+        if "_publish" in request.POST:
+            obj.publish()
+            return HttpResponseRedirect(".")
+        elif "_unpublish" in request.POST:
+            if obj.is_public:
+                info = self.model._meta.app_label, self.model._meta.model_name
+                view_name = "admin:%s_%s_changelist" % info
+                obj.delete()
+                return redirect(view_name)
+
+        return super().response_change(request, obj)
 
 
 class TeachingModuleResource(resources.ModelResource):
@@ -98,7 +122,9 @@ class CompetenceAdditionalInformationInlineAdmin(admin.StackedInline):
 
 
 @admin.register(Trend)
-class ContentAdmin(SimpleHistoryAdmin, admin.ModelAdmin, DynamicArrayMixin):
+class ContentAdmin(
+    PublishAdminMixin, SimpleHistoryAdmin, admin.ModelAdmin, DynamicArrayMixin
+):
     exclude = ("json_data", "tags")
     inlines = [ContentLinkInlineAdmin]
     search_fields = ["name"]
@@ -116,7 +142,6 @@ class TeachingModuleAdmin(ImportExportMixin, ContentAdmin):
         return qs.drafts()
 
     def export_xlsx(self, request, queryset):
-
         output = BytesIO()
         workbook = xlsxwriter.Workbook(output)
         worksheet = workbook.add_worksheet()
@@ -179,16 +204,59 @@ class ToolLinkInline(admin.TabularInline):
     model = ToolLink
 
 
+class ToolVideoTutorialInline(admin.TabularInline):
+    model = ToolVideoTutorial
+
+
+class DataPrivacyAssessmentAdmin(admin.StackedInline):
+    model = DataPrivacyAssessment
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    ("server_location", "server_location_text"),
+                    ("provider", "provider_text"),
+                    ("user_registration", "user_registration_text"),
+                    ("data_privacy_terms", "data_privacy_terms_text"),
+                    ("terms_and_conditions", "terms_and_conditions_text"),
+                    ("security", "security_text"),
+                    "conclusion",
+                    "overall",
+                )
+            },
+        ),
+    )
+
+
 @admin.register(Tool)
-class ToolAdmin(SimpleHistoryAdmin, ImportExportMixin, admin.ModelAdmin):
-    exclude = ("json_data", "tags")
+class ToolAdmin(
+    PublishAdminMixin, SimpleHistoryAdmin, ImportExportMixin, admin.ModelAdmin
+):
+    exclude = ("json_data", "tags", "functions")
     resource_class = ToolResource
-    inlines = [ToolLinkInline, ContentLinkInlineAdmin]
+    inlines = [
+        DataPrivacyAssessmentAdmin,
+        ToolLinkInline,
+        ContentLinkInlineAdmin,
+        ToolVideoTutorialInline,
+    ]
     search_fields = ["name"]
 
     def get_export_queryset(self, request):
         qs = super(ToolAdmin, self).get_export_queryset(request)
         return qs.drafts()
+
+
+@admin.register(Testimonial)
+class TestimonialAdmin(PublishAdminMixin, admin.ModelAdmin):
+    pass
+
+
+@admin.register(TestimonialReview)
+class TestimonialReviewAdmin(admin.ModelAdmin):
+    search_fields = ["testimonial__content__name"]
+    list_filter = ("status",)
 
 
 class HelpTextFieldInline(admin.TabularInline):
@@ -250,9 +318,10 @@ class CompetenceAdmin(admin.ModelAdmin):
     inlines = [CompetenceAdditionalInformationInlineAdmin]
 
 
-admin.site.register(ToolFunction)
+admin.site.register(OperatingSystem)
+admin.site.register(Potential)
+admin.site.register(SchoolType)
 admin.site.register(SubCompetence)
 admin.site.register(Subject)
-admin.site.register(SchoolType)
-admin.site.register(OperatingSystem)
 admin.site.register(ToolApplication)
+admin.site.register(ToolFunction)

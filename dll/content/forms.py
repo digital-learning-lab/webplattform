@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
-from threading import local
-
 from ckeditor.widgets import CKEditorWidget
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Fieldset, Submit, Field, Hidden
+from crispy_forms.utils import TEMPLATE_PACK
 from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.flatpages.forms import FlatpageForm
+from django.urls import reverse
 from django_select2.forms import HeavySelect2Widget
-from dll.content.models import HelpText, HelpTextField
-
-
-_thread_locals = local()
+from dll.content.models import HelpText, HelpTextField, Testimonial
 
 
 class FlatPageAdminForm(FlatpageForm):
@@ -71,3 +70,60 @@ class HelpTextFieldForm(forms.ModelForm):
     class Meta:
         model = HelpTextField
         fields = ["name", "text"]
+
+
+class CommentField(Field):
+    def render(
+        self, form, context, template_pack=TEMPLATE_PACK, extra_context=None, **kwargs
+    ):
+        if not context:
+            context = {}
+        context.update({"field_class": "col-lg-12"})
+        return super(CommentField, self).render(
+            form, context, template_pack=TEMPLATE_PACK, extra_context=None, **kwargs
+        )
+
+
+class TestimonialForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        self.author = kwargs.pop("author")
+        self.content = kwargs.get("content")
+        if self.content:
+            kwargs.pop("content")
+        super(TestimonialForm, self).__init__(*args, **kwargs)
+        self.fields["content"].initial = self.content
+        self.fields["comment"].label = False
+        self.helper = FormHelper()
+        self.helper.form_action = reverse("testimonial")
+        self.helper.form_class = "form-horizontal js-testimonialForm"
+        self.helper.label_class = "col-lg-4"
+        self.helper.field_class = "col-lg-8"
+        if self.content:
+            self.helper.layout = Layout(
+                "subject",
+                "school_class",
+                CommentField(
+                    "comment",
+                    label_class="sr-only",
+                    placeholder="Hier ihre Praxiserfahrung teilen...",
+                ),
+                Hidden("content", self.content.pk),
+                Submit("submit", "Absenden", css_class="button button--primary"),
+            )
+
+    def save(self, commit=True):
+        self.instance.author = self.author
+        return super(TestimonialForm, self).save(commit=commit)
+
+    def clean(self):
+        if Testimonial.objects.filter(
+            content=self.content, author=self.author
+        ).exists():
+            raise forms.ValidationError(
+                "Sie haben bereits einen Erfahrungsbericht für diesen Inhalt abgegeben."
+            )
+        return super().clean()
+
+    class Meta:
+        model = Testimonial
+        fields = ["subject", "school_class", "comment", "content"]

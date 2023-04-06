@@ -85,7 +85,6 @@ class SurveyResultAnswer(models.Model):
 
 
 class Trigger(models.Model):
-
     event = models.CharField(
         verbose_name=_("Trigger Type"), choices=settings.TRIGGER_EVENTS, max_length=64
     )

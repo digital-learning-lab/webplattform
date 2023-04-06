@@ -16,10 +16,11 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-
+from constance import config
 from django_better_admin_arrayfield.models.fields import ArrayField
 from django_extensions.db.fields import CreationDateTimeField
 from django_extensions.db.models import TimeStampedModel, TitleSlugDescriptionModel
+from dll.communication.tasks import send_mail
 from easy_thumbnails.exceptions import InvalidImageFormatError
 from easy_thumbnails.files import get_thumbnailer
 from filer.fields.file import FilerFileField
@@ -29,7 +30,6 @@ from meta.models import ModelMeta
 from polymorphic.managers import PolymorphicManager
 from polymorphic.models import PolymorphicModel
 from rules.contrib.models import RulesModelMixin, RulesModelBaseMixin
-from simple_history.utils import get_history_model_for_model
 from taggit.managers import TaggableManager
 from simple_history.models import HistoricalRecords
 from wagtail.snippets.models import register_snippet
@@ -38,8 +38,6 @@ from .managers import ContentQuerySet
 from dll.general.models import DllSlugField, PublisherModel
 from dll.user.utils import (
     get_default_tuhh_user,
-    get_bsb_reviewer_group,
-    get_tuhh_reviewer_group,
 )
 from dll.general.utils import (
     GERMAN_STATES,
@@ -47,7 +45,7 @@ from dll.general.utils import (
     remove_number_custom_slugify,
 )
 from dll.user.models import DllUser
-
+from ..general.managers import PublisherQuerySet
 
 logger = logging.getLogger("dll.content.models")
 
@@ -68,6 +66,54 @@ LICENCE_CHOICES = (
 
 def get_default_created_time():
     return timezone.now()
+
+
+class VideoEmbedMixin(models.Model):
+    video_url = models.URLField(
+        _("Video URL"),
+        help_text=_(
+            "Es werden YouTube und Vimeo Videos unterstützt. Kopieren Sie einfach die URL des Videos in dieses"
+            " Feld. Diese wird automatisch in die Embed-URL umgewandelt."
+        ),
+        null=True,
+        blank=False,
+    )
+
+    @property
+    def video_embed_code(self):
+        if not self.video_url:
+            return ""
+        if "vimeo.com" in self.video_url:
+            return render_to_string(
+                "dll/filter/partials/vimeo_embed.html", {"embed_url": self.video_url}
+            )
+        if "youtube.com" in self.video_url:
+            return render_to_string(
+                "dll/filter/partials/youtube_embed.html", {"embed_url": self.video_url}
+            )
+        return ""
+
+    def clean(self):
+        """
+        Check video url. Depending on the link generate the embed URL.
+        """
+        if not self.video_url:
+            return
+
+        if "vimeo.com" in self.video_url:
+            if "https://player.vimeo.com/video/" in self.video_url:
+                return
+            self.video_url = self.video_url.replace(
+                "https://vimeo.com/", "https://player.vimeo.com/video/"
+            )
+
+        if "youtube.com" in self.video_url:
+            if "https://www.youtube.com/embed/" in self.video_url:
+                return
+            self.video_url = self.video_url.replace("watch?v=", "embed/")
+
+    class Meta:
+        abstract = True
 
 
 class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
@@ -414,6 +460,9 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
         )
         ContentFile.objects.create(file=filer_file, title=file_name, content=self)
 
+    def _get_review_email(self):
+        return [settings.REVIEW_MAIL]
+
     def send_content_submitted_mail(self, by_user=None):
         from dll.communication.tasks import send_mail
 
@@ -426,14 +475,18 @@ class Content(ModelMeta, RulesModelMixin, PublisherModel, PolymorphicModel):
             "content_type": instance.type_verbose,
             "content_title": instance.name,
         }
-
-        send_mail.delay(
-            event_type_code="CONTENT_SUBMITTED_FOR_REVIEW",
-            ctx=context,
-            email=settings.REVIEW_MAIL,
-            sender_id=getattr(by_user, "pk", None),
-            bcc=settings.EMAIL_SENDER,
-        )
+        email_list = instance._get_review_email()
+        print(email_list)
+        if len(email_list):
+            for email in email_list:
+                if email and "@" in email:
+                    send_mail.delay(
+                        event_type_code="CONTENT_SUBMITTED_FOR_REVIEW",
+                        ctx=context,
+                        email=email,
+                        sender_id=getattr(by_user, "pk", None),
+                        bcc=settings.EMAIL_SENDER,
+                    )
 
     def get_image(self):
         if self.image is not None:
@@ -601,13 +654,22 @@ class TeachingModule(Content):
         }
         return fields
 
+    def _get_review_email(self):
+        if config.TEACHING_MODULE_REVIEW_EMAIL:
+            return config.TEACHING_MODULE_REVIEW_EMAIL.split(",")
+        return super()._get_review_email()
+
     def copy_relations(self, draft_instance, public_instance):
         super(TeachingModule, self).copy_relations(draft_instance, public_instance)
         public_instance.subjects.add(*draft_instance.subjects.all())
         public_instance.school_types.add(*draft_instance.school_types.all())
 
     def get_absolute_url(self):
-        return reverse("teaching-module-detail", kwargs={"slug": self.slug})
+        return reverse(
+            "teaching-module-detail",
+            urlconf="dll.configuration.urls_dll",
+            kwargs={"slug": self.slug},
+        )
 
     def get_preview_url(self):
         return reverse("teaching-module-detail-preview", kwargs={"slug": self.slug})
@@ -695,9 +757,52 @@ class Tool(Content):
         to="content.ToolFunction", verbose_name=_("Tool-Funktionen"), blank=True
     )
 
+    # digital.learning.tools fields
+    disclaimer = models.TextField(
+        verbose_name=_("Disclaimer"),
+        default=config.DISCLAIMER_DEFAULT_TEXT,
+        blank=True,
+        null=True,
+    )
+    subjects = models.ManyToManyField(
+        "Subject", verbose_name=_("Fächerbezug"), blank=True
+    )
+
+    with_costs = models.BooleanField(_("Kostenpflichtig"), default=False)
+
+    potentials = models.ManyToManyField(
+        "Potential", verbose_name=_("Potential Kategorien"), null=True, blank=True
+    )
+
     class Meta(Content.Meta):
         verbose_name = _("Tool")
         verbose_name_plural = _("Tools")
+
+    def sync_functions_to_potentials(self):
+        self.functions.set([])
+        for p in self.potentials.all():
+            try:
+                if p.function:
+                    self.functions.add(p.function)
+            except ToolFunction.DoesNotExist:
+                pass
+
+    def sync_potentials_to_functions(self):
+        self.potentials.set([])
+        for f in self.functions.all():
+            try:
+                if f.potential:
+                    self.potentials.add(f.potential)
+            except Potential.DoesNotExist:
+                pass
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            if settings.SITE_ID == 2:
+                self.sync_functions_to_potentials()
+            elif settings.SITE_ID == 1:
+                self.sync_potentials_to_functions()
+        super().save(*args, **kwargs)
 
     @property
     def type_verbose(self):
@@ -724,6 +829,11 @@ class Tool(Content):
         }
         return fields
 
+    def _get_review_email(self):
+        if config.TOOL_REVIEW_EMAIL:
+            return config.TOOL_REVIEW_EMAIL.split(",")
+        return super()._get_review_email()
+
     def get_absolute_url(self):
         return reverse("tool-detail", kwargs={"slug": self.slug})
 
@@ -741,6 +851,14 @@ class Tool(Content):
         public_instance.operating_systems.add(*draft_instance.operating_systems.all())
         public_instance.applications.add(*draft_instance.applications.all())
         public_instance.functions.add(*draft_instance.functions.all())
+        public_instance.potentials.add(*draft_instance.potentials.all())
+        try:
+            assessment = draft_instance.data_privacy_assessment
+            assessment.pk = None
+            assessment.tool = public_instance
+            assessment.save()
+        except DataPrivacyAssessment.DoesNotExist:
+            pass
 
         url_clone = draft_instance.url
         url_clone.pk = None
@@ -832,6 +950,11 @@ class Trend(Content):
         }
         return fields
 
+    def _get_review_email(self):
+        if config.TREND_REVIEW_EMAIL:
+            return config.TREND_REVIEW_EMAIL.split(",")
+        return super()._get_review_email()
+
     def get_absolute_url(self):
         return reverse("trend-detail", kwargs={"slug": self.slug})
 
@@ -897,6 +1020,13 @@ class HelpText(TimeStampedModel):
         ]
         if self.content_type.model == "tool":
             EXTRA_FIELDS.append(("url", "Webseite"))
+            EXTRA_FIELDS.append(("server_location", _("Serverstandort")))
+            EXTRA_FIELDS.append(("provider", _("Anbieter")))
+            EXTRA_FIELDS.append(("user_registration", _("Benutzeranmeldung")))
+            EXTRA_FIELDS.append(("data_privacy_terms", _("Datenschutzerklärung")))
+            EXTRA_FIELDS.append(("terms_and_conditions", _("AGB")))
+            EXTRA_FIELDS.append(("security", _("Sicherheit")))
+            EXTRA_FIELDS.append(("conclusion", _("Fazit")))
         fields = self.get_fields()
         choices = []
 
@@ -1153,7 +1283,7 @@ class Competence(TimeStampedModel):
 
     cid = models.SmallIntegerField(unique=True, editable=False)
     name = models.CharField(max_length=100)
-    description = models.CharField(max_length=600)
+    description = models.CharField(verbose_name=_("Beschreibung"), max_length=600)
     slug = DllSlugField(
         max_length=512,
         populate_from="name",
@@ -1185,7 +1315,7 @@ class Competence(TimeStampedModel):
 
 
 @register_snippet
-class CompetenceAdditionalInformation(models.Model):
+class CompetenceAdditionalInformation(VideoEmbedMixin):
     competence = models.OneToOneField(
         Competence,
         verbose_name=_("Kompentenz"),
@@ -1199,49 +1329,8 @@ class CompetenceAdditionalInformation(models.Model):
 
     description = models.TextField(verbose_name=_("Beschreibung"))
 
-    video_url = models.URLField(
-        _("Video URL"),
-        help_text=_(
-            "Es werden YouTube und Vimeo Videos unterstützt. Kopieren Sie einfach die URL des Videos in dieses"
-            " Feld. Diese wird automatisch in die Embed-URL umgewandelt."
-        ),
-        null=True,
-        blank=False,
-    )
-
     def __str__(self):
         return "{} - {}".format(self.competence.name, self.title)
-
-    def clean(self):
-        """
-        Check video url. Depending on the link generate the embed URL.
-        """
-        if not self.video_url:
-            return
-
-        if "vimeo.com" in self.video_url:
-            if "https://player.vimeo.com/video/" in self.video_url:
-                return
-            self.video_url = self.video_url.replace(
-                "https://vimeo.com/", "https://player.vimeo.com/video/"
-            )
-
-        if "youtube.com" in self.video_url:
-            if "https://www.youtube.com/embed/" in self.video_url:
-                return
-            self.video_url = self.video_url.replace("watch?v=", "embed/")
-
-    @property
-    def video_embed_code(self):
-        if "vimeo.com" in self.video_url:
-            return render_to_string(
-                "dll/filter/partials/vimeo_embed.html", {"embed_url": self.video_url}
-            )
-        if "youtube.com" in self.video_url:
-            return render_to_string(
-                "dll/filter/partials/youtube_embed.html", {"embed_url": self.video_url}
-            )
-        return ""
 
     class Meta:
         verbose_name = _("Zusätzliche Kompetenz Information")
@@ -1575,3 +1664,424 @@ class Favorite(TimeStampedModel):
 
     class Meta:
         unique_together = ("user", "content")
+
+
+class Potential(TimeStampedModel, VideoEmbedMixin):
+    name = models.CharField(max_length=100)
+    description = models.CharField(verbose_name=_("Beschreibung"), max_length=600)
+    slug = DllSlugField(
+        max_length=512,
+        populate_from="name",
+        slugify_function=remove_number_custom_slugify,
+    )
+    function = models.OneToOneField(
+        verbose_name=_("Tool Funktion"),
+        to="ToolFunction",
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _("Potential")
+        verbose_name_plural = _("Potentiale")
+
+
+class ToolVideoTutorial(TimeStampedModel):
+    title = models.CharField(verbose_name=_("Titel"), max_length=512)
+
+    url = models.CharField(verbose_name=_("URL"), max_length=2048)
+
+    tool = models.ForeignKey(
+        "Tool",
+        on_delete=models.CASCADE,
+        related_name="video_tutorials",
+        null=True,
+        blank=False,
+    )
+
+    def __str__(self):
+        return self.title
+
+
+class Testimonial(PublisherModel):
+    objects = PublisherQuerySet.as_manager()
+    author = models.ForeignKey(
+        DllUser, on_delete=models.SET_NULL, verbose_name=_("Author"), null=True
+    )
+
+    subject = models.ForeignKey(
+        "Subject",
+        verbose_name=_("Unterrichtsfach"),
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
+
+    school_class = models.IntegerField(verbose_name=_("Jahrgangsstufe"))
+
+    comment = models.TextField(verbose_name=_("Kommentar"), blank=True, null=True)
+
+    content = models.ForeignKey(
+        "Content",
+        verbose_name=_("Content"),
+        on_delete=models.CASCADE,
+        related_name="testimonials",
+        related_query_name="testimonial",
+    )
+
+    def __str__(self):
+        if self.is_public:
+            return f"{self.author} - {self.content.name} (public)"
+        return f"{self.author} - {self.content.name}"
+
+    def submit_for_review(self, user):
+        review = TestimonialReview.objects.create(
+            submitted_by=user, testimonial=self, is_active=True
+        )
+        url = "https://%s%s" % (
+            Site.objects.get_current().domain,
+            reverse("content-testimonial-review"),
+        )
+        context = {
+            "content_title": self.content.name,
+            "author": user.full_name,
+            "link_to_review_overview": url,
+        }
+
+        email = config.TESTIMONIAL_REVIEW_EMAIL or settings.REVIEW_MAIL
+        if "," in email:
+            emails = email.split(",")
+            for email in emails:
+                send_mail.delay(
+                    event_type_code="TESTIMONIAL_SUBMITTED_FOR_REVIEW",
+                    ctx=context,
+                    email=email,
+                    sender_id=getattr(user, "pk", None),
+                    bcc=settings.EMAIL_SENDER,
+                )
+        else:
+            send_mail.delay(
+                event_type_code="TESTIMONIAL_SUBMITTED_FOR_REVIEW",
+                ctx=context,
+                email=email,
+                sender_id=getattr(user, "pk", None),
+                bcc=settings.EMAIL_SENDER,
+            )
+
+    @property
+    def active_review(self):
+        return self.reviews.filter(is_active=True).latest("created")
+
+    def copy_relations(self, draft_instance, public_instance):
+        super(Testimonial, self).copy_relations(draft_instance, public_instance)
+        public_instance.subject = draft_instance.subject
+        public_instance.content = draft_instance.content.get_published()
+        public_instance.author = draft_instance.author
+
+
+class TestimonialReview(TimeStampedModel):
+    NEW, IN_PROGRESS, ACCEPTED, DECLINED, CHANGES = 0, 1, 2, 3, 4
+
+    MAIL_TEXTS = {
+        ACCEPTED: "Ihr Erfahrungsbericht wurde akzeptiert.",
+        DECLINED: "Ihr Erfahrungsbericht wurde abgelehnt.",
+        CHANGES: "Es wurden Änderungen zu Ihrem Erfahrungsbericht angefragt.",
+    }
+
+    STATUS_CHOICES = (
+        (NEW, _("Neu")),
+        (IN_PROGRESS, _("In Bearbeitung")),
+        (CHANGES, _("Änderungen angefragt")),
+        (ACCEPTED, _("Akzeptiert")),
+        (DECLINED, _("Abgelehnt")),
+    )
+    testimonial = models.ForeignKey(
+        Testimonial, on_delete=models.CASCADE, related_name="reviews"
+    )
+    status = models.IntegerField(choices=STATUS_CHOICES, default=NEW)
+    comment = models.TextField(verbose_name="Kommentar", null=False, blank=False)
+    submitted_by = models.ForeignKey(
+        DllUser,
+        on_delete=models.SET(get_default_tuhh_user),
+        related_name="submitted_tetsimonial_reviews",
+        null=True,
+    )
+    assigned_reviewer = models.ForeignKey(
+        verbose_name=_("Assigned Reviewer"),
+        to=DllUser,
+        on_delete=models.SET_NULL,
+        related_name="assigned_tetsimonial_reviews",
+        null=True,
+    )
+    accepted_by = models.ForeignKey(
+        DllUser,
+        on_delete=models.SET(get_default_tuhh_user),
+        related_name="accepted_tetsimonial_reviews",
+        null=True,
+    )
+    declined_by = models.ForeignKey(
+        DllUser,
+        on_delete=models.SET(get_default_tuhh_user),
+        related_name="declined_tetsimonial_reviews",
+        null=True,
+    )
+    is_active = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-created"]
+
+    def __str__(self) -> str:
+        return f"{self.testimonial.content.name} ({self.get_status_display()})"
+
+    def send_update_email(self, text):
+        url = "https://%s%s" % (
+            Site.objects.get_current().domain,
+            reverse("my-content-testimonials"),
+        )
+        context = {
+            "content_title": self.testimonial.content.name,
+            "link_to_review_overview": url,
+            "status_message": text,
+        }
+        send_mail.delay(
+            event_type_code="TESTIMONIAL_REVIEW_DONE",
+            ctx=context,
+            email=self.submitted_by.email,
+            bcc=settings.EMAIL_SENDER,
+        )
+
+    def accept(self, user):
+        if self.status not in [self.NEW, self.IN_PROGRESS]:
+            return False
+        self.status = self.ACCEPTED
+        self.is_active = False
+        self.accepted_by = user
+        self.testimonial.publish()
+        self.save()
+        self.send_update_email(self.MAIL_TEXTS[self.ACCEPTED])
+        return True
+
+    def decline(self, user):
+        if self.status not in [self.NEW, self.IN_PROGRESS]:
+            return False
+        self.status = self.DECLINED
+        self.is_active = False
+        self.declined_by = user
+        self.save()
+        self.send_update_email(self.MAIL_TEXTS[self.DECLINED])
+        return True
+
+    def request_changes(self, comment: str, user):
+        if self.status not in [self.NEW, self.IN_PROGRESS]:
+            return False
+        self.status = self.CHANGES
+        self.comment = comment
+        self.assigned_reviewer = user
+        self.is_active = False
+        self.save()
+        self.send_update_email(self.MAIL_TEXTS[self.CHANGES])
+        return True
+
+
+class DataPrivacyAssessment(TimeStampedModel):
+    COMPLIANT = ("compliant", _("Compliant"))
+    NOT_COMPLIANT = ("not_compliant", _("Not Compliant"))
+    UNKNOWN = ("unknown", _("Unknown"))
+
+    OVERALL_CHOICES = (
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
+    )
+
+    SERVER_LOCATION_CHOICES = (
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
+    )
+
+    PROVIDER_CHOICES = (
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
+    )
+
+    USER_REGISTRATION_CHOICES = (
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
+    )
+
+    DATA_PRIVACY_TERMS_CHOICES = (
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
+    )
+
+    TERMS_AND_CONDITIONS_CHOICES = (
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
+    )
+
+    SECURITY_CHOICES = (
+        COMPLIANT,
+        NOT_COMPLIANT,
+        UNKNOWN,
+    )
+
+    server_location = models.CharField(
+        _("Serverstandort"),
+        max_length=32,
+        choices=SERVER_LOCATION_CHOICES,
+        null=True,
+        blank=True,
+        default=UNKNOWN[0],
+    )
+    provider = models.CharField(
+        _("Anbieter"),
+        max_length=32,
+        choices=PROVIDER_CHOICES,
+        null=True,
+        blank=True,
+        default=UNKNOWN[0],
+    )
+    user_registration = models.CharField(
+        _("Benutzeranmeldung"),
+        max_length=32,
+        choices=USER_REGISTRATION_CHOICES,
+        null=True,
+        blank=True,
+        default=UNKNOWN[0],
+    )
+    data_privacy_terms = models.CharField(
+        _("Datenschutzerklärung"),
+        max_length=32,
+        choices=DATA_PRIVACY_TERMS_CHOICES,
+        null=True,
+        blank=True,
+        default=UNKNOWN[0],
+    )
+    terms_and_conditions = models.CharField(
+        _("AGB"),
+        max_length=32,
+        choices=TERMS_AND_CONDITIONS_CHOICES,
+        null=True,
+        blank=True,
+        default=UNKNOWN[0],
+    )
+    security = models.CharField(
+        _("Sicherheit"),
+        max_length=32,
+        choices=SECURITY_CHOICES,
+        null=True,
+        blank=True,
+        default=UNKNOWN[0],
+    )
+
+    server_location_text = models.TextField(
+        verbose_name=_("Server Standort Text"),
+        blank=True,
+        help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
+    )
+    provider_text = models.TextField(
+        verbose_name=_("Anbieter Text"),
+        blank=True,
+        help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
+    )
+    user_registration_text = models.TextField(
+        verbose_name=_("Benutzeranmeldung Text"),
+        blank=True,
+        help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
+    )
+    data_privacy_terms_text = models.TextField(
+        verbose_name=_("Datenschutzerklärung Text"),
+        blank=True,
+        help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
+    )
+    terms_and_conditions_text = models.TextField(
+        verbose_name=_("AGB Text"),
+        blank=True,
+        help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
+    )
+    security_text = models.TextField(
+        verbose_name=_("Sicherheit Text"),
+        blank=True,
+        help_text=_("Lassen Sie das Feld leer um den Standardtext zu hinterlegen."),
+    )
+
+    conclusion = models.TextField(_("Fazit"), blank=True)
+
+    tool = models.OneToOneField(
+        "Tool",
+        verbose_name=_("Tool"),
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="data_privacy_assessment",
+    )
+
+    overall = models.CharField(
+        verbose_name=_("Gesamteindruck"),
+        max_length=32,
+        choices=OVERALL_CHOICES,
+        null=True,
+    )
+
+    def save(self, **kwargs):
+        FIELDS = [
+            "server_location",
+            "provider",
+            "user_registration",
+            "data_privacy_terms",
+            "terms_and_conditions",
+            "security",
+        ]
+        for field in FIELDS:
+            if not getattr(self, f"{field}_text"):
+                value = getattr(self, field)
+                setattr(
+                    self,
+                    f"{field}_text",
+                    getattr(config, f"{field.upper()}_{value.upper()}"),
+                )
+        super(DataPrivacyAssessment, self).save(**kwargs)
+
+    @property
+    def render_dict(self):
+        FIELDS = [
+            "server_location",
+            "provider",
+            "user_registration",
+            "data_privacy_terms",
+            "terms_and_conditions",
+            "security",
+        ]
+        COLOR_MAP = {
+            self.COMPLIANT[0]: "green",
+            self.NOT_COMPLIANT[0]: "red",
+            self.UNKNOWN[0]: "grey",
+        }
+        res = {
+            field: {
+                "title": self._meta.get_field(field).verbose_name,
+                "text": self._meta.get_field(f"{field}_text").value_from_object(self),
+                "compliance": getattr(self, field),
+                "color": COLOR_MAP[getattr(self, field)],
+            }
+            for field in FIELDS
+        }
+        com_level = getattr(self, "overall") or self.OVERALL_CHOICES[2][0]
+        res["conclusion"] = {
+            "title": self._meta.get_field("conclusion").verbose_name,
+            "text": self._meta.get_field("conclusion").value_from_object(self),
+            "compliance": getattr(self, "overall"),
+            "color": COLOR_MAP[com_level],
+        }
+        return res.items()
+
+    def __str__(self):
+        return self.tool.name

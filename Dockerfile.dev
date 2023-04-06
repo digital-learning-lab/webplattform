@@ -1,4 +1,4 @@
-FROM python:3.10-slim
+FROM python:3.10.9-slim
 ENV PYTHONUNBUFFERED=1 \
 	POETRY_VIRTUALENVS_CREATE=false
 
@@ -12,5 +12,5 @@ RUN apt update \
 
 RUN mkdir /code
 WORKDIR /code
-
+RUN touch /.pythonhist && chmod 777 /.pythonhist
 COPY . /code/

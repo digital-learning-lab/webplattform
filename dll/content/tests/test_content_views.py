@@ -1,6 +1,7 @@
 import random
 
-from django.test import TestCase
+from django.contrib.sites.models import Site
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from dll.content.models import (
@@ -96,6 +97,8 @@ class BaseTestCase(TestCase):
 
 
 class ContentViewTests(BaseTestCase):
+    fixtures = ["dll/fixtures/sites.json"]
+
     def test_content_retrieve(self):
         public_tool = Tool.objects.published().first()
         detail_view = reverse("public-content-detail", kwargs={"pk": public_tool.pk})
@@ -107,6 +110,22 @@ class ContentViewTests(BaseTestCase):
         detail_view = reverse("tool-detail", kwargs={"slug": public_tool.slug})
         response = self.client.get(detail_view)
         self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response, f'<h1 class="content-info__title">{public_tool.name}</h1>'
+        )
+        self.assertContains(
+            response, f'<p class="content-info__teaser">{public_tool.teaser}</p>'
+        )
+        self.assertContains(
+            response, f'<meta name="description" content="{public_tool.teaser}">'
+        )
+        self.assertContains(response, f"<title>Tool | {public_tool.name}</title>")
+
+    @override_settings(SITE_ID=2)
+    def test_tool_detail_dlt(self):
+        public_tool = Tool.objects.published().first()
+        detail_view = reverse("tool-detail", kwargs={"slug": public_tool.slug})
+        response = self.client.get(detail_view)
         self.assertContains(
             response, f'<h1 class="content-info__title">{public_tool.name}</h1>'
         )
@@ -251,8 +270,9 @@ class ContentViewTests(BaseTestCase):
     def test_tools_filter_view(self):
         url = reverse("tools-filter")
         response = self.client.get(url)
-        # contains vue app container
         self.assertEqual(response.status_code, 200)
+        response = self.client.get(url)
+        # contains vue app container
         self.assertContains(response, "tools-app")
         self.assertContains(response, "window.functionsFilter")
 

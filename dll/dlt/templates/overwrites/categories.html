@@ -1,0 +1,26 @@
+{% load static %}
+<section class="section-competence section-potentials">
+    <div class="potentials-grid d-flex">
+        <div class="potential-center--mobile">
+            <h2>
+                Entdecke passende Unterrichtstools
+            </h2>
+        </div>
+        {% for potential in potentials %}
+            <a class="potential-box" href="{% url 'tools-filter' %}?potentials={{ potential.0.pk }}">
+                <img src="{% static potential.1 %}" class="potential-box-image" alt="">
+                <p>
+                    {{ potential.0.name }}
+                </p>
+            </a>
+            {% if forloop.counter == 5%}
+
+            <div class="potential-center">
+                <h2>
+                    Entdecke passende Unterrichtstools
+                </h2>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>

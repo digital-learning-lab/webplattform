@@ -1,0 +1,24 @@
+{% extends 'dll/default_page.html' %}
+
+{% block content %}
+  <div>
+    <h3>Eingereichte Erfahrungsberichte sichten</h3>
+    <p>In diesem Bereich können Sie Ihre eingereichten Erfahrungsberichte sichten.</p>
+    <p>Nachfolgend finden Sie alle Erfahrungsberichte aufgelistet.</p>
+  </div>
+
+  <div id="testimonial-overview-app"></div>
+{% endblock %}
+
+{% block extra_scripts %}
+  {{ block.super }}
+  <script>
+  window.dllData = {
+    retrieveUrl: '/api/testimonial-review/',
+    mode: '{{ mode }}',
+    updateUrl: '/api/testimonial/',
+    csrfToken: '{{ csrf_token }}'
+  }
+  </script>
+{% endblock %}
+

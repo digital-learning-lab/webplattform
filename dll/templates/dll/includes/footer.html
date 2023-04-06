@@ -28,7 +28,7 @@
                     </div>
                     <div class="col col-3 text-center">
                       <a href="https://www.joachim-herz-stiftung.de/" class="partner-logo__link" target="_blank" rel="noopener noreferrer">
-                        <img src="{% static 'img/partners/JHS_Logo_RGB.png' %}" class="footer__partner-logo" alt="JHS-Logo">
+                        <img src="{% static 'img/partners/JHS_Logo_CMYK_white-violett.jpg' %}" class="footer__partner-logo" alt="JHS-Logo">
                       </a>
                     </div>
                   </div>
@@ -40,7 +40,7 @@
                     <a href="{% slugurl 'datenschutz' %}" class="footer__link">Datenschutz</a>
                   </div>
                   <p class="">Weitere Informationen im
-                      <a href="{% url 'communication:newsletter' %}" class="footer__link-newsletter">Newsletter<br></a>
+									<a href="{% url 'communication:newsletter' %}" class="footer__link-newsletter">Newsletter<br></a>
                       oder auf unseren Social-Media-Kanälen:
                   </p>
                     <a href="https://twitter.com/digilearninglab" target="_blank">
@@ -49,6 +49,11 @@
                     <a href="https://www.youtube.com/channel/UC9w8XPtdEqIOsdjS7ZEwnzA" target="_blank">
                         <img src="{% static "img/icons/youtube.png" %}">
                     </a>
+                    {% if template_suffix == "dlt" %}
+                    <p class="text-center pt-3">
+                      Dieses Angebot ist Teil des <a href="{{ dll_url }}">digital.learning.lab</a>
+                    </p>
+                    {% endif %}
                 </div>
                 <div class="mb-3 col col-12 col-lg-4 col-xl-3 pb-5 text-center text-lg-right footer__text">
                     <div class="d-flex flex-column flex-lg-row pb-5 justify-content-lg-end justify-content-sm-center align-items-center">

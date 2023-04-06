@@ -142,3 +142,27 @@
 .button__icon--inactive {
   color: rgba(201, 209, 222, 1)
 }
+.button__scroll-top {
+  background-color: $color--smalt-blue;
+  height: 50px;
+  border: 0;
+  width: 50px;
+  position: fixed;
+  right: 40px;
+  display: block;
+  opacity: 0;
+  bottom: 10%;
+  visibility: hidden;
+  transition: opacity .3s linear;
+  z-index: 100000;
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+  .fas {
+    color: #fff;
+    display: inline-block;
+    margin-top: 4px;
+    font-size: 1.5rem;
+  }
+}

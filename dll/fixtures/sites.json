@@ -1,1 +1,1 @@
-[{"model": "sites.site", "pk": 1, "fields": {"domain": "digitallearninglab.de", "name": "digitallearninglab.de"}}]
+[{"model": "sites.site", "pk": 1, "fields": {"domain": "dll.local", "name": "digitallearninglab.de"}}, {"model": "sites.site", "pk": 2, "fields": {"domain": "dlt.local", "name": "digitallearningtools.de"}}]
