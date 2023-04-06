@@ -99,8 +99,8 @@
         </a>
     </li>
     <li class="sidebar__nav-item">
-        <a class="sidebar__nav-link nav-link js-sidebar-nav-item active" id="hints-tab" data-toggle="pill"
-           href="#hints" role="tab" aria-controls="hints" aria-selected="true">
+        <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="hints-tab" data-toggle="pill"
+           href="#hints" role="tab" aria-controls="hints" aria-selected="false">
             Hinweise und Tutorials
             <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
         </a>
@@ -108,7 +108,7 @@
     {% if SITE_ID == 2 and DLT_FEATURES_ENABLED and object.data_privacy_assessment %}
     <li class="sidebar__nav-item">
         <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="data-protection-tab" data-toggle="pill" href="#data-protection"
-           role="tab" aria-controls="data-protection" aria-selected="true">
+           role="tab" aria-controls="data-protection" aria-selected="false">
             Datenschutz
             <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
         </a>
@@ -117,7 +117,7 @@
     {% if object.related_teaching_modules %}
         <li class="sidebar__nav-item">
             <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="modules-tab" data-toggle="pill"
-               href="#modules" role="tab" aria-controls="modules" aria-selected="true">
+               href="#modules" role="tab" aria-controls="modules" aria-selected="false">
                 Bausteine
                 <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
             </a>
@@ -126,7 +126,7 @@
     {% if object.related_tools %}
         <li class="sidebar__nav-item">
             <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="similar-tools-tab" data-toggle="pill"
-               href="#similar-tools" role="tab" aria-controls="similar-tools" aria-selected="true">
+               href="#similar-tools" role="tab" aria-controls="similar-tools" aria-selected="false">
                 Ähnliche Tools
                 <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
             </a>
@@ -135,7 +135,7 @@
     {% if object.related_trends %}
         <li class="sidebar__nav-item">
             <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="trends-tab" data-toggle="pill" href="#trends"
-               role="tab" aria-controls="trends" aria-selected="true">
+               role="tab" aria-controls="trends" aria-selected="false">
                 Trends
                 <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
             </a>
@@ -145,7 +145,7 @@
     {% if SITE_ID == 2 and DLT_FEATURES_ENABLED %}
         <li class="sidebar__nav-item">
             <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="more-tab" data-toggle="pill" href="#more"
-               role="tab" aria-controls="more" aria-selected="true">
+               role="tab" aria-controls="more" aria-selected="false">
                 Mehr entdecken
                 <span class="sidebar__nav-link-item fas fa-angle-right fa-2x"></span>
             </a>
