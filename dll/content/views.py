@@ -124,6 +124,8 @@ class ReviewerMixin(GenericAPIView):
 
 class SiteRedirectMixin(View):
     def get(self, *args, **kwargs):
+        if not config.DLL_ENABLE_DLT_FEATURES:
+            return super().get(self.request)
         if settings.SITE_ID == 2:
             return super().get(self.request)
         else:
