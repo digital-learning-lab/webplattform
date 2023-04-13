@@ -39,6 +39,7 @@ def platform_variables(request):
                 "title": "digital.learning.tools",
                 "logo_desktop_1x": "img/logo/logo_dlt.svg",
                 "logo_desktop_2x": "img/logo/logo_dlt.svg",
+                "dlt_logo": "img/logo/logo_dlt.svg",
                 "logo_mobile_1x": "img/logo/logo_dlt_mobile.svg",
                 "logo_mobile_2x": "img/logo/logo_dlt_mobile.svg",
                 "SITE_ID": 2,
