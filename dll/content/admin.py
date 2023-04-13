@@ -91,13 +91,13 @@ class ToolResource(resources.ModelResource):
 
 
 class PublishedFilter(admin.SimpleListFilter):
-    title = "Veröffentlicht"
+    title = "Veröffentlichungs-Status"
     parameter_name = "publisher_is_draft"
 
     def lookups(self, request, model_admin):
         return (
-            ("y", _("Yes")),
-            ("n", _("No")),
+            ("y", _("Public")),
+            ("n", _("Draft")),
         )
 
     def queryset(self, request, queryset):
@@ -235,6 +235,7 @@ class ToolAdmin(
 ):
     exclude = ("json_data", "tags", "functions")
     resource_class = ToolResource
+    list_filter = (PublishedFilter,)
     inlines = [
         DataPrivacyAssessmentAdmin,
         ToolLinkInline,
