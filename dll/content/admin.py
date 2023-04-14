@@ -1,5 +1,6 @@
 import xlsxwriter
 from django.contrib import admin
+from django.contrib.sites.models import Site
 
 from django.contrib.flatpages.admin import FlatPageAdmin
 from django.contrib.flatpages.models import FlatPage
@@ -45,6 +46,28 @@ admin.site.unregister(FlatPage)
 
 class PublishAdminMixin:
     change_form_template = "admin/publish_change_form.html"
+
+    def _get_preview_urls(self, obj):
+        res = []
+        for site in Site.objects.all():
+            res.append(
+                {
+                    "name": site.name,
+                    "url": f"https://{site.domain}{obj.get_preview_url()}",
+                }
+            )
+        return res
+            
+
+    def change_view(self, request, object_id, form_url="", extra_context=None):
+        extra_context = extra_context or {}
+        extra_context["preview_urls"] = self._get_preview_urls(self.get_object(request, object_id))
+        return super().change_view(
+            request,
+            object_id,
+            form_url,
+            extra_context=extra_context,
+        )
 
     def response_change(self, request, obj):
         if "_publish" in request.POST:

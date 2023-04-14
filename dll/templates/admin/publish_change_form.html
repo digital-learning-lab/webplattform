@@ -6,6 +6,11 @@
     {{ block.super }}
     <div class="submit-row">
         {% if adminform.form.instance.is_draft %}
+        <div style="float:left; margin-top: 5px;">
+            {% for preview_url in preview_urls %}
+                <a class="button" href="{{ preview_url.url }}" target="_blank">Vorschau {{ preview_url.name }}</a>
+            {% endfor %}
+        </div>
             <input type="submit" value="Publizieren" name="_publish">
         {% else %}
             <input type="submit" value="Unpublish" name="_unpublish">
