@@ -8,22 +8,22 @@
           <input type="text" v-model="q" name="searchTerm" class="form-control" @keydown="preventEnter">
 
           <div>
-            <h3 class="form-subhead">Tool-Kategorien</h3>
+            <h3 class="form-subhead">Tool-Funktionen</h3>
             <ul class="list-unstyled">
-              <li class="form-check" v-for="potential in getPotentials()">
-                <input type="checkbox" class="form-check-input" :value="potential.value" name="potential" :id="'potential' + potential.value" v-model="potentials">
-                <label class="form-check-label" :for="'potential' + potential.value">{{ potential.name }}</label>
+              <li class="form-check" v-for="toolFunction in getToolFunctions()">
+                <input type="checkbox" class="form-check-input" :value="toolFunction.id" name="toolFunction" :id="'toolFunction' + toolFunction.id" v-model="toolFunctions">
+                <label class="form-check-label" :for="'toolFunction' + toolFunction.id">{{ toolFunction.title }}</label>
               </li>
             </ul>
           </div>
           <div v-if="loggedIn">
-            <h3 class="form-subhead">Meine favorisierten Tools</h3>
+            <!-- <h3 class="form-subhead">Meine favorisierten Tools</h3>
             <ul class="list-unstyled">
               <li class="form-check">
                 <input type="checkbox" class="form-check-input" name="favorites" v-model="favorites" id="favorites-checkbox">
                 <label class="form-check-label" for="favorites-checkbox">Anzeigen</label>
               </li>
-            </ul>
+            </ul> -->
           </div>
           <div>
             <h3 class="form-subhead">Fächerbezug</h3>
@@ -112,7 +112,7 @@
       </div>
     </div>
     <div class="col col-12 col-lg-7 col-xl-8">
-      <div class="section-info mb-5" v-show="activePotentials.length">
+      <!-- <div class="section-info mb-5" v-show="activePotentials.length">
           <div class="js-potential-slider" ref="potentialSlider">
             <div class="js-potential-slide" v-for="potential in getPotentials()" ref="potentialSlides" :data-ref="potential.value">
               <div class="row">
@@ -126,7 +126,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       <div class="row" v-if="contents.length > 0 || loading">
         <div class="col col-12 col-xl-6 mb-4" v-for="content in contents">
           <app-content-teaser :content="content"></app-content-teaser>
