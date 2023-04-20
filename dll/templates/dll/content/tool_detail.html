@@ -142,7 +142,7 @@
         </li>
     {% endif %}
 
-    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED %}
+    {% if DLT_FEATURES_ENABLED %}
         <li class="sidebar__nav-item">
             <a class="sidebar__nav-link nav-link js-sidebar-nav-item" id="more-tab" data-toggle="pill" href="#more"
                role="tab" aria-controls="more" aria-selected="false">
@@ -181,7 +181,7 @@
         </div>
     {% endif %}
 
-    {% if SITE_ID == 2 and DLT_FEATURES_ENABLED %}
+    {% if DLT_FEATURES_ENABLED %}
         <div class="tab-pane fade" id="more" role="tabpanel" aria-labelledby="more-tab">
             {% include 'dll/content/includes/discover_more.html' with headline='Entdecke mehr Bausteine und Trends' %}
         </div>
