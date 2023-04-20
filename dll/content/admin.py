@@ -57,11 +57,12 @@ class PublishAdminMixin:
                 }
             )
         return res
-            
 
     def change_view(self, request, object_id, form_url="", extra_context=None):
         extra_context = extra_context or {}
-        extra_context["preview_urls"] = self._get_preview_urls(self.get_object(request, object_id))
+        extra_context["preview_urls"] = self._get_preview_urls(
+            self.get_object(request, object_id)
+        )
         return super().change_view(
             request,
             object_id,
