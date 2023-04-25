@@ -54,7 +54,7 @@
             </ul>
         </li>
     {% endif %}
-    {% if object.competences.all.count %}
+    {% if SITE_ID == 1 and object.competences.all.count %}
         <li class="sidebar__information-item">
             <span class="sidebar__information-icon icon-hexagon"></span>
             <ul class="list-unstyled">
