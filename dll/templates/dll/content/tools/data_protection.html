@@ -1,9 +1,11 @@
+{% load static %}
 <h2>Datenschutz</h2>
 
 <div class="information-area information-area--{{ object.type }}">
     <div class="information-area__title information-area__title">
         Datenschutz-Bewertung
     </div>
+    {% if object.data_privacy_assessment.display %}
     <div class="data-privacy-indicator data-privacy-indicator--{{ object.data_privacy_assessment.overall }}">
         <svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
             viewBox="0 0 79.6 79.6" style="enable-background:new 0 0 79.6 79.6;" xml:space="preserve">
@@ -45,4 +47,17 @@
             {% endfor %}
         </div>
     </div>
+    {% else %}
+    <div class="row">
+        <div class="col-md-2">
+            <img height="70" src="{% static "img/icons/dlt/datenschutz_ausstehend.svg" %}" alt="Baustellen-Icon">
+        </div>
+        <div class="col-md-10">
+            <p class="mt-2">
+                <b>In Arbeit</b><br>
+                Die Bewertung des Tools steht noch aus.
+            </p>
+        </div>
+    </div>
+    {% endif %}
 </div>

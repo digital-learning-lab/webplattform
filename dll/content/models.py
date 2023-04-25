@@ -2031,6 +2031,8 @@ class DataPrivacyAssessment(TimeStampedModel):
         null=True,
     )
 
+    display = models.BooleanField(verbose_name=_("Datenschutz anzeigen"), default=False)
+
     def save(self, **kwargs):
         FIELDS = [
             "server_location",
