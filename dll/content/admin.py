@@ -261,6 +261,7 @@ class DataPrivacyAssessmentAdmin(admin.StackedInline):
                     ("security", "security_text"),
                     "conclusion",
                     "overall",
+                    "display",
                 )
             },
         ),
