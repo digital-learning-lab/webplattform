@@ -1,0 +1,111 @@
+{% load static %}
+<style>
+    body {
+        font-family: 'Montserrat', sans-serif;
+        padding: 20px 30px;
+        font-size: 0.55em;   
+      }
+    .lazy-embed {
+        display: flex;
+    }
+    .embed-play {
+        display: none;
+    }
+    .embed-logo {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+    }
+    .embed-print {
+    }
+    .embed-hint--start {
+        display: block;
+    }
+    .embed-hint {
+        flex: 1 1 100%;
+        align-self: center;
+        justify-self: center;
+    }
+    .embed-button {
+        background-color: rgba(50, 120, 200, 1);
+        font-weight: 800;
+        padding: 5px;
+        border: 0;
+        color: white;
+        display: inline-block;
+        text-align: center;
+        text-decoration: none;
+    }
+    .text-center {
+        text-align: center;
+    }
+    @media (max-width: 429px) {
+        body {
+            font-size: 0.42em;
+        }
+    }
+    @media (min-width: 500px) {
+        body {
+            font-size: 1em;
+        }
+        .embed-play {
+            display: block;
+            font-size: 4em;
+            text-align: center;
+            flex: 1;
+            margin-top: 40px;
+        }
+        .embed-print {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            border-top: 1px solid black;
+            padding: 5px 30px;
+            display: flex;
+            box-sizing: border-box;
+        }
+        .embed-hint--start {
+            display: inline;
+        }
+        .embed-hint {
+            flex: 1 0 69%;
+            font-size: 0.62em;
+        }
+        .text-center {
+            flex: 1 0 31%;
+            text-align: left;
+        }
+        .embed-logo {
+            width: 60px;
+            height: 60px;
+        }
+        .embed-button {
+            margin-top: 15px;
+            margin-left: 25px;
+            font-size: 0.7em;
+        }
+    }
+</style>
+<div class="lazy-embed">
+    <span class="embed-play">▶</span>
+    <img class="embed-logo" src="{% static logo_mobile_1x %}" srcset="{% static logo_mobile_1x %} 1x, {% static logo_mobile_2x %} 2x" alt="{{ title }} Logo">
+
+<div class="embed-print">
+    <p class="embed-hint">
+        <b class="embed-hint--start">Hinweis:</b>
+        Beim Abspielen dieses YouTube Videos werden
+        Cookies gesetzt. Von der dann möglichen Erhebung
+        und Verwendung Ihrer Daten durch YouTube haben
+        wir keine Kenntnis und darauf auch keinen Einfluss.
+        Nähere Informationen können Sie der Datenschutzerklärung
+        von YouTube unter www.google.de/intl/de/policies/privacy
+        entnehmen.
+    </p>
+    <div class="text-center">
+        <a href="{{url}}?autoplay=1" class="btn btn-primary embed-button">Akzeptieren und <br>Inhalte laden</a>
+    </div>
+</div>
+</div>

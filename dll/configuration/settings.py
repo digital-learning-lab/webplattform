@@ -16,6 +16,7 @@ from environs import Env
 from django.utils.translation import gettext_lazy as _
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from wagtail.embeds.oembed_providers import youtube
 
 env = Env()
 logger = logging.getLogger("dll.settings")
@@ -683,3 +684,10 @@ TOOL_FUNCTION_POTENTIAL_MAPPING = {
     "Problemlösen mit digitalen Werkzeugen": "Probleme lösen",
     "Testing & Assessment": "Testen und Bewerten",
 }
+
+WAGTAILEMBEDS_FINDERS = [
+    {
+        'class': 'dll.general.youtube_embed_provider',
+        'providers': [youtube],
+    },
+]
