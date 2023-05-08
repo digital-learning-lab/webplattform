@@ -1,9 +1,13 @@
 {% load static %}
 <style>
+    html, body {
+        height: 100%;
+    }
     body {
         font-family: 'Montserrat', sans-serif;
         padding: 20px 30px;
-        font-size: 0.55em;   
+        font-size: 0.55em;
+        background-image: url({%static 'img/content/video_background.svg' %});
       }
     .lazy-embed {
         display: flex;
@@ -19,6 +23,10 @@
         height: 40px;
     }
     .embed-print {
+        position: absolute;
+        top: -50%;
+        margin-top: 50%;
+        padding-right: 30px;
     }
     .embed-hint--start {
         display: block;
@@ -60,12 +68,15 @@
         .embed-print {
             position: absolute;
             bottom: 0;
+            margin-top: auto;
+            top: auto;
             left: 0;
             width: 100%;
             border-top: 1px solid black;
             padding: 5px 30px;
             display: flex;
             box-sizing: border-box;
+            background-color: white;
         }
         .embed-hint--start {
             display: inline;
