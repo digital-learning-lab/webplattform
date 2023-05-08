@@ -687,7 +687,7 @@ TOOL_FUNCTION_POTENTIAL_MAPPING = {
 
 WAGTAILEMBEDS_FINDERS = [
     {
-        'class': 'dll.general.youtube_embed_provider',
-        'providers': [youtube],
+        "class": "dll.general.youtube_embed_provider",
+        "providers": [youtube],
     },
 ]
