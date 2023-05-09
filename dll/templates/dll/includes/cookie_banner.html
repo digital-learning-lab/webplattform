@@ -1,0 +1,14 @@
+<div class="modal js-cookiebanner" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div>{{ cookiebanner_message|safe }}</div>
+                <button class="button button--primary" onclick="acceptCookies()">{{ cookiebanner_button_text }}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.cookieBannerDuration = {{ cookiebanner_duration }};
+</script>

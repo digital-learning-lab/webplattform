@@ -454,6 +454,11 @@ CONSTANCE_CONFIG_FIELDSETS = {
         "TESTIMONIAL_REVIEW_EMAIL",
     ),
     "Digtal.Learning.Tools": ("DLL_ENABLE_DLT_FEATURES",),
+    "Cookie Banner": (
+        "MESSAGE",
+        "BUTTON_TEXT",
+        "DURATION",
+    ),
 }
 CONSTANCE_CONFIG = {
     # Content Teaser
@@ -641,6 +646,18 @@ CONSTANCE_CONFIG = {
         "Aktiviert DLT Anzeigen und Features auf digitallearninglab",
         bool,
     ),
+    "MESSAGE": ("", "Cookie Banner Text", "html_input"),
+    "BUTTON_TEXT": ("Akzeptieren", "Text des Akzeptieren-Buttons", str),
+    "DURATION": (12, "Gültigkeitsdauer des Cookies in Monaten", int),
+}
+
+CONSTANCE_ADDITIONAL_FIELDS = {
+    "html_input": [
+        "django.forms.fields.CharField",
+        {
+            "widget": "ckeditor.widgets.CKEditorWidget",
+        },
+    ],
 }
 
 WAGTAIL_SITE_NAME = "digital.learning.lab"

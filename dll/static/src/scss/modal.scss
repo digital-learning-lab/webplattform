@@ -1,4 +1,8 @@
 .modal {
   top: 100px;
   height: calc(100% - 100px);
+  z-index: 2010;
+}
+.modal-backdrop {
+  z-index: 2000;
 }

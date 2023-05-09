@@ -29,4 +29,4 @@ import './slick'
 import './scrollToTop'
 import './testimonial'
 import './video'
-
+import './cookies'
