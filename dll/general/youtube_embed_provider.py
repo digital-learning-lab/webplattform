@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.shortcuts import render
 from django.template.loader import get_template
 from wagtail.embeds.finders.oembed import OEmbedFinder
 
@@ -28,7 +27,7 @@ class LazyOEmbedFinder(OEmbedFinder):
         content = content.replace('"', "'")
         srcdoc = f'srcdoc="{content}"'
 
-        html = html.replace("<iframe ", f"<iframe {srcdoc}")
+        html = html.replace("<iframe ", f"<iframe {srcdoc} data-embed")
         return html
 
     def find_embed(self, url, max_width=None, max_height=None):

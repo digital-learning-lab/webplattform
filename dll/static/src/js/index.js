@@ -28,4 +28,5 @@ import './survey'
 import './slick'
 import './scrollToTop'
 import './testimonial'
+import './video'
 
