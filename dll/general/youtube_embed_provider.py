@@ -32,7 +32,6 @@ class LazyOEmbedFinder(OEmbedFinder):
         return html
 
     def find_embed(self, url, max_width=None, max_height=None):
-        print(123)
         result = super(LazyOEmbedFinder, self).find_embed(
             url, max_width=max_width, max_height=max_height
         )
