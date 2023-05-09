@@ -253,6 +253,7 @@ class DataPrivacyAssessmentAdmin(admin.StackedInline):
             None,
             {
                 "fields": (
+                    ("display",),
                     ("server_location", "server_location_text"),
                     ("provider", "provider_text"),
                     ("user_registration", "user_registration_text"),
@@ -261,7 +262,6 @@ class DataPrivacyAssessmentAdmin(admin.StackedInline):
                     ("security", "security_text"),
                     "conclusion",
                     "overall",
-                    "display",
                 )
             },
         ),
