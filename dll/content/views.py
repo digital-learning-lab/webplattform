@@ -619,15 +619,15 @@ class ToolFilterView(BaseFilterView):
         data_privacy_filter = [
             {
                 "value": DataPrivacyAssessment.COMPLIANT[0],
-                "name": str(DataPrivacyAssessment.COMPLIANT[1]),
+                "name": "DS GVO-Richtlinien werden eingehalten: Nutzung im Unterricht unbedenklich",
             },
             {
                 "value": DataPrivacyAssessment.NOT_COMPLIANT[0],
-                "name": str(DataPrivacyAssessment.NOT_COMPLIANT[1]),
+                "name": "DS GVO-Richtlinien werden nicht eingehalten: Nutzung im Unterricht bedenklich",
             },
             {
                 "value": DataPrivacyAssessment.UNKNOWN[0],
-                "name": str(DataPrivacyAssessment.UNKNOWN[1]),
+                "name": "DS GVO - Richtlinien sind unbekannt: Nutzung im Unterricht nicht beurteilbar",
             },
         ]
         ctx["data_privacy_filter"] = json.dumps(data_privacy_filter)
