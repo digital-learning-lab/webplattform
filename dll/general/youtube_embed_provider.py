@@ -8,6 +8,8 @@ class LazyOEmbedFinder(OEmbedFinder):
         # transform youtube url to youtube embed url
         if "watch" in url:
             url = url.replace("watch?v=", "embed/")
+        if "youtub.be/" in url:
+            url = url.replace(".be/", ".com/embed/")
 
         t = get_template("dll/content/video_lazy_loader.html")
         ctx = {"url": url}
