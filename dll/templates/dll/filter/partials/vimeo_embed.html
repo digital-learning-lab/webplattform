@@ -1,4 +1,4 @@
 {% extends 'dll/filter/partials/video_embed.html' %}
 {% block embed %}
-  <iframe class="embed-responsive-item" src="{{ embed_url }}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  <iframe class="embed-responsive-item" srcdoc="{% include 'dll/content/video_lazy_loader.html' with url=embed_url %}" src="{{ embed_url }}" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
 {% endblock %}
