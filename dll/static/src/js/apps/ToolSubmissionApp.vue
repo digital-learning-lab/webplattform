@@ -16,7 +16,7 @@
     @approve-review="approveContent"
     @decline-review="declineContent"
   >
-    <div v-if="reviewValue.feedback && !review" class="form-group">
+    <div v-if="reviewValue.feedback && !review" class="form-group mb-3">
       <label>Feedback:</label> <br />
       {{ reviewValue.feedback }}
     </div>

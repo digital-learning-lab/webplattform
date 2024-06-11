@@ -4,7 +4,7 @@
       <button v-if="!show" class="button--neutral button--smallSquare mt-3" type="button" @click="show = true">
         <span class="fas fa-plus" />
       </button>
-      <div v-if="inputValue || show" class="form-group mt-4">
+      <div v-if="inputValue || show" class="form-group mb-3 mt-4">
         <div class="d-flex">
           <input
             :id="props.id"

@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group">
+  <div class="form-group mb-3">
     <label :for="props.id" class="mb-2 w-100">
       <span v-if="props.icon" class="icon--dlt me-3" :class="iconClass" /> {{ props.label }}:<span v-if="props.required"
         >*</span

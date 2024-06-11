@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group">
+  <div class="form-group mb-3">
     <label :for="props.id" v-text="props.label" />
     <div class="d-flex">
       <select

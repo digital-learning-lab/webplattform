@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group">
+  <div class="form-group mb-3">
     <label :for="props.id">{{ props.label }}:<span v-if="props.required">*</span></label>
     <div class="d-flex">
       <textarea
