@@ -19,19 +19,19 @@
         <div v-if="modeValue === 'edit'">
           <button
             v-if="!props.data.submitted"
-            class="button button--primary"
+            class="button me-2 button--primary"
             type="button"
             :disabled="props.loading"
             @click="emitUpdate()"
           >
             Speichern
           </button>
-          <button class="button button--preview" type="button" :disabled="props.loading" @click="emitPreview()">
+          <button class="button me-2 button--preview" type="button" :disabled="props.loading" @click="emitPreview()">
             Vorschau
           </button>
           <button
             v-if="!props.data.submitted"
-            class="button button--submit"
+            class="button me-2 button--submit"
             type="button"
             :disabled="props.loading"
             @click="emitSubmit()"
@@ -40,7 +40,7 @@
           </button>
           <button
             v-if="props.canDelete"
-            class="button button--danger"
+            class="button me-2 button--danger"
             type="button"
             :disabled="props.loading"
             @click="emitDeleteWarning()"
@@ -49,13 +49,13 @@
           </button>
         </div>
         <div v-if="modeValue === 'review'">
-          <button class="button button--primary" type="button" :disabled="props.loading" @click="emitUpdateReview()">
+          <button class="button me-2 button--primary" type="button" :disabled="props.loading" @click="emitUpdateReview()">
             Speichern
           </button>
-          <button class="button button--submit" type="button" :disabled="props.loading" @click="emitApproveReview()">
+          <button class="button me-2 button--submit" type="button" :disabled="props.loading" @click="emitApproveReview()">
             Freigeben
           </button>
-          <button class="button button--danger" type="button" :disabled="props.loading" @click="emitDeclineReview()">
+          <button class="button me-2 button--danger" type="button" :disabled="props.loading" @click="emitDeclineReview()">
             Ablehnen
           </button>
         </div>
@@ -67,17 +67,17 @@
           <b>{{ props.data.name }}</b>
         </p>
 
-        <button type="button" class="button button--danger" @click="emitDelete()">Ja, Inhalt löschen</button>
-        <button type="button" class="button button--primary" @click="modeValue = 'edit'">Nein, abbrechen.</button>
+        <button type="button" class="button me-2 button--danger" @click="emitDelete()">Ja, Inhalt löschen</button>
+        <button type="button" class="button me-2 button--primary" @click="modeValue = 'edit'">Nein, abbrechen.</button>
       </div>
       <div v-if="modeValue === 'review'">
-        <button class="button button--primary" type="button" :disabled="props.loading" @click="emitUpdateReview()">
+        <button class="button me-2 button--primary" type="button" :disabled="props.loading" @click="emitUpdateReview()">
           Speichern
         </button>
-        <button class="button button--submit" type="button" :disabled="props.loading" @click="emitApproveReview()">
+        <button class="button me-2 button--submit" type="button" :disabled="props.loading" @click="emitApproveReview()">
           Freigeben
         </button>
-        <button class="button button--danger" type="button" :disabled="props.loading" @click="emitDeclineReview()">
+        <button class="button me-2 button--danger" type="button" :disabled="props.loading" @click="emitDeclineReview()">
           Ablehnen
         </button>
       </div>
@@ -93,19 +93,19 @@
       <div v-if="modeValue === 'edit'">
         <button
           v-if="!props.data.submitted"
-          class="button button--primary"
+          class="button me-2 button--primary"
           type="button"
           :disabled="props.loading"
           @click="submit"
         >
           Speichern
         </button>
-        <button class="button button--preview" type="button" :disabled="props.loading" @click="emitPreview()">
+        <button class="button me-2 button--preview" type="button" :disabled="props.loading" @click="emitPreview()">
           Vorschau
         </button>
         <button
           v-if="!props.data.submitted"
-          class="button button--submit"
+          class="button me-2 button--submit"
           type="button"
           :disabled="props.loading"
           @click="emitSubmit()"
@@ -114,7 +114,7 @@
         </button>
         <button
           v-if="props.canDelete"
-          class="button button--danger"
+          class="button me-2 button--danger"
           type="button"
           :disabled="props.loading"
           @click="emitDeleteWarning()"
@@ -122,7 +122,7 @@
           Löschen
         </button>
       </div>
-      <button v-if="modeValue === 'create'" class="button button--primary" type="button" @click="emitCreate()">
+      <button v-if="modeValue === 'create'" class="button me-2 button--primary" type="button" @click="emitCreate()">
         Speichern
       </button>
     </div>
