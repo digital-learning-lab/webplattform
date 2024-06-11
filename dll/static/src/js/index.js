@@ -1,5 +1,4 @@
 import 'slick-carousel';
-import 'bootstrap/js/dist/collapse';
 import 'bootstrap/js/dist/tab';
 import 'bootstrap/js/dist/modal';
 
@@ -27,3 +26,4 @@ import './apps/toolFilter';
 import './apps/teachingModuleSubmission';
 import './apps/toolSubmission';
 import './apps/trendSubmission';
+import './apps/filter';

@@ -68,7 +68,7 @@
             aria-expanded="false"
             type="button"
           >
-            Filter ausklappen <span class="fas fa-chevron-circle-down" />
+            Filter ausklappen <span class="fas fa-chevron-circle-down" ></span>
           </button>
         </div>
       </div>
