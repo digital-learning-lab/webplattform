@@ -229,8 +229,9 @@
             data-bs-target="#filterForm"
             aria-expanded="false"
             aria-controls="filterForm"
+            @click="mobileFilterExpanded = !mobileFilterExpanded"
           >
-            Filter ausklappen <span class="fas fa-chevron-circle-down" />
+            {{ mobileFilterToggle }} <span class="fas" :class="mobileFilterExpanded ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'" />
           </button>
         </div>
       </div>
@@ -307,20 +308,23 @@ const {
   q,
   queryParams,
   sorting,
-  updateContents
+  updateContents,
+  initArray,
+  mobileFilterExpanded,
+  mobileFilterToggle
 } = useContentFilter();
 const { jumpTo, nextPage, pagination, previousPage } = usePagination(updateContents, currentResponse);
 const { preventEnter } = usePreventEnter();
 
-const applications = ref([]);
-const subject = ref(null);
-const toolFunctions = ref([]);
-const potentials = ref([]);
-const operatingSystems = ref([]);
-const dataPrivacy = ref(null);
-const withCosts = ref(null);
-const slider = ref(null);
-const favorites = ref(false);
+const applications = ref(initArray(queryParams.value.applications));
+const subject = ref(queryParams.value.subject || null);
+const toolFunctions = ref(initArray(queryParams.value.toolFunctions));
+const potentials = ref(initArray(queryParams.value.potentials));
+const operatingSystems = ref(initArray(queryParams.value.operatingSystems));
+const dataPrivacy = ref(queryParams.value.dataPrivacy || null);
+const withCosts = ref(queryParams.value.withCosts || null);
+const slider = ref(queryParams.value.slider || null);
+const favorites = ref(queryParams.value.favorites || false);
 
 const potentialSlider = ref();
 const potentialSlides = ref();

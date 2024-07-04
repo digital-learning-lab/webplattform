@@ -67,8 +67,9 @@
             aria-controls="filterForm"
             aria-expanded="false"
             type="button"
+            @click="mobileFilterExpanded = !mobileFilterExpanded"
           >
-            Filter ausklappen <span class="fas fa-chevron-circle-down" ></span>
+            {{ mobileFilterToggle }} <span class="fas" :class="mobileFilterExpanded ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'" />
           </button>
         </div>
       </div>
@@ -126,25 +127,26 @@ import { usePreventEnter } from '../composables/preventEnter';
 //  --------------------------------------------------------------------------------------------------------------------
 //  component variables
 //  --------------------------------------------------------------------------------------------------------------------
-const { contents, currentPage, currentResponse, dataUrl, loading, q, queryParams, sorting, updateContents } =
+const { contents, currentPage, currentResponse, dataUrl, loading, q, queryParams, sorting, updateContents, mobileFilterExpanded, mobileFilterToggle } =
   useContentFilter();
 
 const { jumpTo, nextPage, pagination, previousPage } = usePagination(updateContents, currentResponse);
 const { preventEnter } = usePreventEnter();
 
-const teachingModules = ref(true);
-const trends = ref(true);
-const tools = ref(true);
+const initBool = (val) => {
+  if (val !== undefined) {
+    return val;
+  }
+  return true;
+}
+
+const teachingModules = ref(initBool(queryParams.value.teachingModules));
+const trends = ref(initBool(queryParams.value.trends));
+const tools = ref(initBool(queryParams.value.tools));
 const windowWidth = ref(0);
 
-sorting.value = 'az';
+sorting.value = queryParams.value.sorting || 'az';
 dataUrl.value = '/api/inhalte';
-
-// const competence = ref({
-//   name: 'Kommunizieren & Kooperieren',
-//   description:
-//     'Um im digitalen Raum adäquat KOMMUNIZIEREN & KOOPERIEREN zu können, braucht es entsprechende Kompetenzen, digitale Werkzeuge zur angemessenen und effektiven Kommunikation einsetzen und in digitalen Umgebungen zielgerichtet kooperieren zu können. Dabei geht es vor allem darum, entsprechend der jeweiligen Situation und ausgerichtet an den Kommunikations- bzw. Kooperationspartnern die passenden Werkzeuge auszuwählen und entsprechende Umgangsregeln einzuhalten.',
-// });
 
 //  --------------------------------------------------------------------------------------------------------------------
 //  computed

@@ -4,20 +4,25 @@ import { computed, ref, watch } from 'vue';
 import { useAxios } from './axios';
 import { useQuery } from './query';
 
-const { updateQueryString } = useQuery();
+const { updateQueryString, query } = useQuery();
 
 export function useContentFilter() {
+  const initArray = (val) => {
+    return Array.isArray(val) ? val : val ? [val] : [];
+  }
+ 
   const { axios } = useAxios();
 
-  const currentPage = ref(1);
+  const currentPage = ref(query.page || 1);
   const dataUrl = ref(null);
-  const queryParams = ref({});
+  const queryParams = ref(query || {});
   const contents = ref([]);
   const loading = ref(true);
-  const sorting = ref('-latest');
-  const q = ref('');
-  const competences = ref([]);
+  const sorting = ref(query.sorting || '-latest');
+  const q = ref(query.q || '');
+  const competences = ref(initArray(query.competences));
   const currentResponse = ref(null);
+  const mobileFilterExpanded = ref(false);
 
   const windowDom = computed(() => {
     return window;
@@ -28,6 +33,10 @@ export function useContentFilter() {
   });
 
   const getSubjects = () => window.subjectFilter;
+  const mobileFilterToggle = computed(() => {
+    return mobileFilterExpanded.value ? 'Filter einklappen' : 'Filter ausklappen';
+  })
+
 
   const getParams = (page) => {
     return {
@@ -99,6 +108,9 @@ export function useContentFilter() {
     q,
     queryParams,
     sorting,
-    updateContents
+    updateContents,
+    initArray,
+    mobileFilterExpanded,
+    mobileFilterToggle
   };
 }

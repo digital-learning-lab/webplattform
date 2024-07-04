@@ -86,8 +86,9 @@
             data-bs-target="#filterForm"
             aria-expanded="false"
             aria-controls="filterForm"
+            @click="mobileFilterExpanded = !mobileFilterExpanded"
           >
-            Filter ausklappen <span class="fas fa-chevron-circle-down" />
+            {{ mobileFilterToggle }} <span class="fas" :class="mobileFilterExpanded ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'" />
           </button>
         </div>
       </div>
@@ -141,17 +142,22 @@ const {
   q,
   queryParams,
   sorting,
-  updateContents
+  updateContents,
+  initArray,
+  mobileFilterExpanded,
+  mobileFilterToggle
 } = useContentFilter();
+
+
 
 const { jumpTo, nextPage, pagination, previousPage } = usePagination(updateContents, currentResponse);
 const { preventEnter } = usePreventEnter();
 
-const subjects = ref([]);
-const schoolClassFrom = ref(null);
-const schoolClassTo = ref(null);
-const schoolType = ref(null);
-const hybrid = ref(false);
+const subjects = ref(initArray(queryParams.value.subjects));
+const schoolClassFrom = ref(queryParams.value.schoolClassFrom || null);
+const schoolClassTo = ref(queryParams.value.schoolClassTo || null);
+const schoolType = ref(queryParams.value.schoolType || null);
+const hybrid = ref(queryParams.value.hybrid || false);
 
 dataUrl.value = '/api/unterrichtsbausteine';
 

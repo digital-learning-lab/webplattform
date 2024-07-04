@@ -87,8 +87,9 @@
             data-bs-target="#filterForm"
             aria-expanded="false"
             aria-controls="filterForm"
+            @click="mobileFilterExpanded = !mobileFilterExpanded"
           >
-            Filter ausklappen <span class="fas fa-chevron-circle-down" />
+            {{ mobileFilterToggle }} <span class="fas" :class="mobileFilterExpanded ? 'fa-chevron-circle-up' : 'fa-chevron-circle-down'" />
           </button>
         </div>
       </div>
@@ -144,13 +145,16 @@ const {
   q,
   queryParams,
   sorting,
-  updateContents
+  updateContents,
+  initArray,
+  mobileFilterExpanded,
+  mobileFilterToggle
 } = useContentFilter();
 const { jumpTo, nextPage, pagination, previousPage } = usePagination(updateContents, currentResponse);
 const { preventEnter } = usePreventEnter();
 
-const language = ref(null);
-const trendTypes = ref([]);
+const language = ref(queryParams.value.language || null);
+const trendTypes = ref(initArray(queryParams.value.trendTypes));
 
 dataUrl.value = '/api/trends';
 
